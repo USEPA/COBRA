@@ -1,0 +1,228 @@
+<div>
+  <div class="row content">
+    <div id="location-section" class="col-xl-2 col-lg-2 col-md-4 col-sm-11 col-xs-11">
+      <h4>1.</h4>
+      <div class="emissions-section">
+        <div>
+          <h5>Select a Location</h5>
+          <br>
+        </div>
+        <kendo-treeview [nodes]="statetree_treeview"
+                        [children]="statetree_fetchChildren.bind(this)"
+                        kendoTreeViewExpandable
+                        [hasChildren]="statetree_hasChildren"
+                        textField="text"
+                        [kendoTreeViewCheckable]="statetree_checkableSettings"
+                        [(checkedKeys)]="statetree_checkedKeys"
+                        [checkBy]="statetree_key"
+                        (checkedKeysChange)="statetree_handleChecking($event)"
+                        [isChecked]="statetree_isChecked">
+        </kendo-treeview>
+      </div>
+      <button type="submit" (click)="clearLocations()">Clear Selected States and Counties</button>
+    </div>
+    <div id="tier-section" class="col-xl-3 col-lg-3 col-md-7 col-sm-11 col-xs-11">
+      <h4>2.</h4>
+      <div class="emissions-section">
+        <div>
+          <h5>Select Emissions Tier</h5>
+          <br>
+        </div>
+        <kendo-treeview [nodes]="tiertree_treeview"
+                        [children]="tiertree_fetchChildren.bind(this)"
+                        kendoTreeViewExpandable
+                        [hasChildren]="tiertree_hasChildren"
+                        textField="text"
+                        [kendoTreeViewCheckable]="tiertree_checkableSettings"
+                        [(checkedKeys)]="tiertree_checkedKeys"
+                        [checkBy]="tiertree_key"
+                        (checkedKeysChange)="tiertree_handleChecking($event)"
+                        [isChecked]="tiertree_isChecked">
+        </kendo-treeview>
+      </div>
+      <button type="submit" (click)="clearTiers()">Clear Selected Tiers</button>
+    </div>
+    <div class="col-xl-6 col-lg-6 col-md-11 col-sm-11 col-xs-11" id="modify-emissions">
+      <h4>3.</h4>
+      <div class="emissions-section">
+        <div>
+          <h5>Modify Emissions</h5>
+          <br>
+        </div>
+        <form id="modify-emissions" #modifyform="ngForm" (ngSubmit)="applyChanges(modifyform)">
+          <div>
+            <div class="row">
+              <div class="col-lg-1 col-md-1 col-sm-1 col-xs-3 ">PM<sub>2.5</sub>:</div>
+              <div class="col-lg-2 col-md-2 col-sm-3 col-xs-2 ">
+                <div class="short-div">
+                  <input id="PMr" [(ngModel)]="PM25ri" type="radio" value="reduce" name="PM25ri" />
+                  <label for="PMr"> reduce by</label>
+                </div>
+                <div class="short-div">
+                  <input id="PMi" [(ngModel)]="PM25ri" type="radio" value="increase" name="PM25ri" />
+                  <label for="PMi"> increase by</label>
+                </div>
+              </div>
+              <div class="col-lg-3 col-md-3 col-sm-4 col-xs-6 ">
+                <div><input name="changePM25" [(ngModel)]="cPM25" type="number" min="0" step="0.01" /></div>
+              </div>
+              <div class="col-lg-2 col-md-2 col-sm-4 col-xs-6 ">
+                <div class="short-div">
+                  <input id="PM25p" [(ngModel)]="PM25pt" type="radio" value="percent" name="PM25pt" />
+                  <label for="PM25p"> pct</label>
+                </div>
+                <div class="short-div">
+                  <input id="PM25t" [(ngModel)]="PM25pt" type="radio" value="tons" name="PM25pt" />
+                  <label for="PM25t"> tons</label>
+                </div>
+              </div>
+              <div class="emissions-results col-lg-4 col-md-11 col-sm-11 col-xs-6 " *ngIf="(this.pm25_control != undefined)">
+                {{this.pm25_control.toLocaleString('en-US', {maximumFractionDigits: 2})}} tons / {{this.pm25_baseline.toLocaleString('en-US', {maximumFractionDigits: 2})}} tons
+              </div>
+            </div>
+          </div>
+          <div>
+            <div class="row">
+
+              <div class="col-lg-1 col-md-1 col-sm-1 col-xs-3 ">SO<sub>2</sub>:</div>
+              <div class="col-lg-2 col-md-2 col-sm-3 col-xs-2 ">
+                <div class="short-div">
+                  <input id="SO2r" [(ngModel)]="SO2ri" type="radio" value="reduce" name="SO2ri" />
+                  <label for="SO2r"> reduce by</label>
+                </div>
+                <div class="short-div">
+                  <input id="SO2i" [(ngModel)]="SO2ri" type="radio" value="increase" name="SO2ri" />
+                  <label for="SO2i"> increase by</label>
+                </div>
+              </div>
+              <div class="col-lg-3 col-md-3 col-sm-4 col-xs-6 ">
+                <div><input name="changeSO2" [(ngModel)]="cSO2" type="number" min="0" step="0.01" /></div>
+              </div>
+              <div class="col-lg-2 col-md-2 col-sm-4 col-xs-6 ">
+                <div class="short-div">
+                  <input id="SO2p" [(ngModel)]="SO2pt" type="radio" value="percent" name="SO2pt" />
+                  <label id="SO2p"> pct</label>
+                </div>
+                <div class="short-div">
+                  <input id="SO2t" [(ngModel)]="SO2pt" type="radio" value="tons" name="SO2pt" />
+                  <label for="SO2t"> tons</label>
+                </div>
+              </div>
+              <div class="emissions-results col-lg-4 col-md-11 col-sm-11 col-xs-6 " *ngIf="(this.so2_control != undefined)">
+                {{this.so2_control.toLocaleString('en-US', {maximumFractionDigits: 2})}} tons / {{this.so2_baseline.toLocaleString('en-US', {maximumFractionDigits: 2})}} tons
+              </div>
+            </div>
+          </div>
+          <div>
+            <div class="row">
+
+              <div class="col-lg-1 col-md-1 col-sm-1 col-xs-3 ">NO<sub>x</sub>:</div>
+              <div class="col-lg-2 col-md-2 col-sm-3 col-xs-2 ">
+                <div class="short-div">
+                  <input id="NOXr" [(ngModel)]="NOXri" type="radio" value="reduce" name="NOXri" />
+                  <label for="NOXr"> reduce by</label>
+                </div>
+                <div class="short-div">
+                  <input id="NOXi" [(ngModel)]="NOXri" type="radio" value="increase" name="NOXri" />
+                  <label for="NOXi"> increase by</label>
+                </div>
+              </div>
+              <div class="col-lg-3 col-md-3 col-sm-4 col-xs-6 ">
+                <div><input name="changeNOX" [(ngModel)]="cNOX" type="number" min="0" step="0.01" /></div>
+              </div>
+              <div class="col-lg-2 col-md-2 col-sm-4 col-xs-6 ">
+                <div class="short-div">
+                  <input id="NOXp" [(ngModel)]="NOXpt" value="percent" type="radio" name="NOXpt" />
+                  <label for="NOXp"> pct</label>
+                </div>
+                <div class="short-div">
+                  <input id="NOXt" [(ngModel)]="NOXpt" value="tons" type="radio" name="NOXpt" />
+                  <label for="NOXt"> tons</label>
+                </div>
+              </div>
+              <div class="emissions-results col-lg-4 col-md-11 col-sm-11 col-xs-6 " *ngIf="(this.nox_control != undefined)">
+                {{this.nox_control.toLocaleString('en-US', {maximumFractionDigits: 2})}} tons / {{this.nox_baseline.toLocaleString('en-US', {maximumFractionDigits: 2})}} tons
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <div class="row">
+
+              <div class="col-lg-1 col-md-1 col-sm-1 col-xs-3 ">NH<sub>3</sub>:</div>
+              <div class="col-lg-2 col-md-2 col-sm-3 col-xs-2 ">
+                <div class="short-div">
+                  <input id="NH3r" [(ngModel)]="NH3ri" type="radio" value="reduce" name="NH3ri" />
+                  <label for="NH3r"> reduce by</label>
+                </div>
+                <div class="short-div">
+                  <input id="NH3i" [(ngModel)]="NH3ri" type="radio" value="increase" name="NH3ri" />
+                  <label for="NH3i"> increase by</label>
+                </div>
+              </div>
+              <div class="col-lg-3 col-md-3 col-sm-4 col-xs-6 ">
+                <div><input name="changeNH3" [(ngModel)]="cNH3" type="number" min="0" step="0.01" /></div>
+              </div>
+              <div class="col-lg-2 col-md-2 col-sm-4 col-xs-6 ">
+                <div class="short-div">
+                  <input id="NH3p" [(ngModel)]="NH3pt" value="percent" type="radio" name="NH3pt" />
+                  <label for="NH3p"> pct</label>
+                </div>
+                <div class="short-div">
+                  <input id="NH3t" [(ngModel)]="NH3pt" value="tons" type="radio" name="NH3pt" />
+                  <label for="NH3t"> tons</label>
+                </div>
+              </div>
+              <div class="emissions-results col-lg-4 col-md-11 col-sm-11 col-xs-6 " *ngIf="(this.nh3_control != undefined)">
+                {{this.nh3_control.toLocaleString('en-US', {maximumFractionDigits: 2})}} tons / {{this.nh3_baseline.toLocaleString('en-US', {maximumFractionDigits: 2})}} tons
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <div class="row">
+
+              <div class="col-lg-1 col-md-1 col-sm-1 col-xs-3 ">VOC:</div>
+              <div class="col-lg-2 col-md-2 col-sm-3 col-xs-2 ">
+                <div class="short-div">
+                  <input id="VOCr" [(ngModel)]="VOCri" type="radio" value="reduce" name="VOCri" />
+                  <label for="VOCr"> reduce by</label>
+                </div>
+                <div class="short-div">
+                  <input id="VOCi" [(ngModel)]="VOCri" type="radio" value="increase" name="VOCri" />
+                  <label for="VOCi"> increase by</label>
+                </div>
+              </div>
+              <div class="col-lg-3 col-md-3 col-sm-4 col-xs-6 ">
+                <div><input id="cVOC" name="changeVOC" [(ngModel)]="cVOC" type="number" min="0" step="0.01" /></div>
+              </div>
+              <div class="col-lg-2 col-md-2 col-sm-4 col-xs-6 ">
+                <div class="short-div">
+                  <input id="VOCp" [(ngModel)]="VOCpt" value="percent" type="radio" name="VOCpt" />
+                  <label for="VOCp"> pct</label>
+                </div>
+                <div class="short-div">
+                  <input id="VOCt" [(ngModel)]="VOCpt" value="tons" type="radio" name="VOCpt" />
+                  <label for="VOCt"> tons</label>
+                </div>
+              </div>
+              <div class="emissions-results col-lg-4 col-md-11 col-sm-11 col-xs-6 " *ngIf="(this.voc_control != undefined)">
+                {{this.voc_control.toLocaleString('en-US', {maximumFractionDigits: 2})}} tons / {{this.voc_baseline.toLocaleString('en-US', {maximumFractionDigits: 2})}} tons
+              </div>
+            </div>
+          </div>
+          <button type="submit" id="applychanges">Apply Changes</button>
+        </form>
+      </div>
+      <div id="other-options" class="emissions-section col-xl-3 col-lg-3 col-md-3 col-sm-11 col-xs-11">
+        <div>
+          <h5>Other Options</h5>
+          <br>
+        </div>
+        <button type="submit" (click)="reset()">Reset to baseline</button>
+      </div>
+    </div>
+  </div>
+  </div>
+ 
+

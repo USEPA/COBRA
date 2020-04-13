@@ -1,0 +1,44 @@
+.content {
+  margin: 3em;
+}
+
+#final_results {
+  position: relative;
+}
+
+/* .k-i-loading {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  font-size: 204px;
+  background-color: rgba(255,255,255,.3);
+  color: #ff6757;
+} */
+
+#loading_heart {
+  position: absolute;
+  top: 160px;
+  left: 270px;
+  right: 100;
+  bottom: 0;
+
+}
+svg {
+  width: 100%;
+  height: 600px;
+  align-content: center;
+  fill: none;
+}
+
+
+/* #loading_heart {
+  height: 100px;
+  width: 100px;
+  position: absolute;
+  left: 50%;
+  margin-left: -50px;
+  top: 50%;
+  margin-top: -50px;
+} */
