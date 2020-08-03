@@ -4,8 +4,8 @@
       <kendo-tabstrip-tab title="1) Select a Location" [selected]="selected == 1">
         <ng-template kendoTabContent>
           <div class="row d-flex justify-content-center content">
-            <div class="emissions-section outlined" style="width: 100%">
-              <h5>Select the states or counties where the emissions changes will occur. Click the triangles to display the counties in each state. Note that COBRA will model the impacts of the emissions changes on air quality and health benefits throughout the contiguous United States, which accounts for the transport of emissions from your selected location(s) to other neighboring regions.</h5>
+            <div class="emissions-section outlined" id="location_tab" style="width: 100%">
+              <h5><b>Select the states or counties where the emissions changes will occur.</b></h5>
               <br>
               <kendo-treeview [nodes]="statetree_treeview"
                               [children]="statetree_fetchChildren.bind(this)"
@@ -18,9 +18,15 @@
                               (checkedKeysChange)="statetree_handleChecking($event)"
                               [isChecked]="statetree_isChecked">
               </kendo-treeview>
+              <!-- <div id="tip_box" *ngIf="show_tipbox"> -->
+              <div class="tip_box">
+                <!-- <button id="close_icon" (click)="closeTipBox()"><i class="fas fa-times fa-sm"></i></button>
+                <br> -->
+                <p class="tip_text"><b>Tip:</b> To build scenarios with emissions changes in multiple locations, add the locations one at a time. When you get to step 3 (Modify Emissions), click 'Apply Changes and Add Another Location or Emissions Tier' to add the next location.</p>
+              </div>
               <div id="emissionsBtns">
-                <button class="btn-clear btn btn-outline-primary" type="submit" (click)="clearLocations()">Clear Selected States and Counties</button> &nbsp;
-                <button class="btn-clear btn btn-outline-primary" type="submit" (click)="changeTab(1)">Next</button>
+                <button class="btn-clear btn btn-outline-primary purple_button" kendoButton type="submit" (click)="clearLocations()">Clear Selected States and Counties</button> &nbsp;
+                <button class="btn-clear btn btn-outline-primary purple_button" kendoButton type="submit" (click)="changeTab(1)">Next</button>
               </div>
             </div>
           </div>
@@ -31,7 +37,7 @@
         <ng-template kendoTabContent>
           <div class="row d-flex justify-content-center content">
             <div id="tier-section" class="outlined" style="width: 100%">
-              <h5>Select the industry or sector where the emissions changes will occur. Click the triangles next to the emissions tiers to display sub-tiers. You may select either the top-level tiers or sub-tiers.</h5>
+              <h5><b>Select the industry or sector where the emissions changes will occur.</b></h5>
               <br>
               <kendo-treeview [nodes]="tiertree_treeview"
                               [children]="tiertree_fetchChildren.bind(this)"
@@ -44,9 +50,14 @@
                               (checkedKeysChange)="tiertree_handleChecking($event)"
                               [isChecked]="tiertree_isChecked">
               </kendo-treeview>
+              <div class="tip_box">
+                <!-- <button id="close_icon" (click)="closeTipBox()"><i class="fas fa-times fa-sm"></i></button>
+                <br> -->
+                <p class="tip_text"><b>Tip:</b> To build scenarios with emissions changes in multiple emissions tiers, add the tiers one at a time. When you get to step 3 (Modify Emissions), click 'Apply Changes and Add Another Location or Emissions Tier' to add the next emissions tier.</p>
+              </div>
               <div id="emissionsBtns">
-                <button class="btn-clear btn btn-outline-primary" type="submit" (click)="clearTiers()">Clear Selected Tiers</button> &nbsp;
-                <button class="btn-clear btn btn-outline-primary" type="submit" (click)="changeTab(2)">Next</button>
+                <button class="btn-clear btn btn-outline-primary purple_button" kendoButton type="submit" (click)="clearTiers()">Clear Selected Tiers</button> &nbsp;
+                <button class="btn-clear btn btn-outline-primary purple_button" kendoButton type="submit" (click)="changeTab(2)">Next</button>
               </div>
             </div>
           </div>
@@ -58,8 +69,7 @@
           <div class="row content">
             <div class="emissions-section outlined" style="width: 100%">
               <div>
-                <h5>Enter the emissions changes for each pollutant. You may enter emissions reductions or increases, and you may make changes either in tons or as a percentage of the baseline emissions of each pollutant, which are displayed in the table to the right.</h5><br>
-                <h5>The emissions changes here will be applied to the locations and emissions tier selected in steps 1 and 2. To add emissions changes for another location or emissions tier, click Apply Changes and Add Another Location. If you are ready to run the model, click Apply Changes and Review. </h5>
+                <h5><b>Enter the emissions changes for each pollutant.</b></h5>
                 <br><br>
               </div>
               <form id="modify-emissions" #modifyform="ngForm" (ngSubmit)="applyChanges(modifyform)">
@@ -228,11 +238,11 @@
               </form>
               <br>
               <div class="row justify-content-center">
-                <button type="submit" id="applychanges" class="btn btn-outline-primary" (click)="applyChangesClick(modifyform,'location')">Apply Changes and Add Another Location</button>&nbsp;&nbsp;<button type="submit" id="applychanges" class="btn btn-outline-primary" (click)="applyChangesClick(modifyform,'review')">Apply Changes and Review</button>
+                <button type="submit" id="applychanges" class="btn btn-outline-primary purple_button" kendoButton (click)="applyChangesClick(modifyform,'location')">Apply Changes and Add Another Location or Emissions Tier</button>&nbsp;&nbsp;<button type="submit" id="applychanges" class="btn btn-outline-primary purple_button" kendoButton (click)="applyChangesClick(modifyform,'review')">Apply Changes and Review</button>
               </div>
               <br>
               <div class="row justify-content-center">
-                <button class="btn-clear btn btn-outline-primary" type="submit" (click)="pagereload()">Reset Scenario</button>
+                <button class="btn-clear btn btn-outline-primary purple_button" kendoButton type="submit" (click)="pagereload()">Reset Scenario</button>
               </div>
             </div>
           </div>

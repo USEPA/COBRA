@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Threading.Tasks;
-using CobraCompute;
+﻿using CobraCompute;
 using Microsoft.AspNetCore.Mvc;
-using System.Net.Http;
 using Newtonsoft.Json;
+using System;
 
 namespace CobraComputeAPI.Controllers
 {
@@ -21,25 +16,36 @@ namespace CobraComputeAPI.Controllers
             computeCore = _computeCore;
         }
 
-        // GET api/values
         [HttpGet("{token}")]
         public JsonResult Get(Guid token)
         {
-            return new JsonResult(computeCore.GetControlEmissions(token,""), new JsonSerializerSettings() { Formatting = Formatting.Indented });
+            lock (computeCore)
+            {
+                computeCore.retrieve_userscenario(token);
+                return new JsonResult(computeCore.GetControlEmissions(""), new JsonSerializerSettings() { Formatting = Formatting.Indented });
+            }
         }
 
         [HttpGet("{token}/{criteria}")]
         public JsonResult Get(Guid token, string criteria)
         {
-            return new JsonResult(computeCore.GetControlEmissions(token, criteria), new JsonSerializerSettings() { Formatting = Formatting.Indented });
+            lock (computeCore)
+            {
+                computeCore.retrieve_userscenario(token);
+                return new JsonResult(computeCore.GetControlEmissions(criteria), new JsonSerializerSettings() { Formatting = Formatting.Indented });
+            }
         }
 
-        // POST api/values
         [HttpPost]
         public StatusCodeResult Post([FromBody] CobraUpdateBundle bundle)
         {
-            computeCore.SetControlEmissions(bundle.token, bundle.emissions);
-            return Ok();
+            lock (computeCore)
+            {
+                computeCore.retrieve_userscenario(bundle.token);
+                computeCore.SetControlEmissions(bundle.emissions);
+                computeCore.store_userscenario();
+                return Ok();
+            }
         }
 
 

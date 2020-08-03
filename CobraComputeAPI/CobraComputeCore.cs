@@ -1,18 +1,16 @@
-﻿using System;
+﻿using CobraComputeAPI;
+using CsvHelper;
+using FastMember;
+using ICSharpCode.SharpZipLib.Zip;
+using MathNet.Numerics.Data.Text;
+using MathNet.Numerics.LinearAlgebra;
+using NCalc;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.IO;
 using System.Linq;
-using System.Threading.Tasks;
-using MathNet.Numerics.Data.Text;
-using MathNet.Numerics.LinearAlgebra;
-using CsvHelper;
-using NCalc;
 using System.Text;
-using System.Collections.Concurrent;
-using FastMember;
-using ICSharpCode.SharpZipLib.Zip;
-
 
 namespace CobraCompute
 {
@@ -29,7 +27,31 @@ namespace CobraCompute
 
         public DataTable EmissionsInventory;
         public DataTable SummarizedEmissionsInventory;
-        public ConcurrentDictionary<Guid, UserScenario> Scenarios = new ConcurrentDictionary<Guid, UserScenario>();
+
+        public ScenarioManager Scenarios;
+        private UserScenario currentscenario;
+
+        public Guid create_userscenario()
+        {
+            return Scenarios.createUserScenario();
+        }
+        public UserScenario retrieve_userscenario(Guid token)
+        {
+            currentscenario = null;
+            GC.Collect();
+            GC.WaitForPendingFinalizers();
+            GC.Collect();
+            currentscenario = Scenarios.retrieve(token);
+            return currentscenario;
+        }
+        public void store_userscenario()
+        {
+            Scenarios.store(currentscenario);
+        }
+        public void delete_userscenario(Guid token)
+        {
+            Scenarios.deleteUserScenario(token);
+        }
 
         private List<Cobra_POP> Populations = new List<Cobra_POP>();
         private List<Cobra_Incidence> Incidence = new List<Cobra_Incidence>();
@@ -47,12 +69,16 @@ namespace CobraCompute
 
         public StringBuilder statuslog;
 
+        private CobraComputeAPI.RedisConfig redisOptions;
 
-        public CobraComputeCore()
+        public CobraComputeCore(CobraComputeAPI.RedisConfig redisOptions)
         {
+            this.redisOptions = redisOptions;
+
             this.statuslog = new StringBuilder();
 
             EmissionsInventory = new DataTable("EmissionsInventory");
+
             EmissionsInventory.Columns.Add("ID", typeof(int));
             EmissionsInventory.Columns.Add("typeindx", typeof(int));
             EmissionsInventory.Columns.Add("sourceindx", typeof(int));
@@ -68,13 +94,13 @@ namespace CobraCompute
             EmissionsInventory.Columns.Add("PM25", typeof(double));
             EmissionsInventory.Columns.Add("VOC", typeof(double));
             EmissionsInventory.PrimaryKey = new DataColumn[] { EmissionsInventory.Columns["ID"] }; //key on recno 
+
         }
 
         private void CreateCSVFile(DataTable dt, string strFilePath)
         {
-            // Create the CSV file to which grid data will be exported.
             StreamWriter sw = new StreamWriter(strFilePath, false);
-            // First we will write the headers.
+
             int iColCount = dt.Columns.Count;
             for (int i = 0; i < iColCount; i++)
             {
@@ -85,7 +111,7 @@ namespace CobraCompute
                 }
             }
             sw.Write(sw.NewLine);
-            // Now write all the rows.
+
             foreach (DataRow dr in dt.Rows)
             {
                 for (int i = 0; i < iColCount; i++)
@@ -123,80 +149,64 @@ namespace CobraCompute
         {
             if (this.initilized) { return true; };
 
-
-            Scenarios.Clear();
-            bool result = true; // Directory.Exists(path);
-
+            bool result = true;
             datapath = path;
 
             //proceed setting up
-            if (result)
+            try
             {
-                try
-                {
-                    int recno = 1;
+                int recno = 1;
 
-                    //load pop
-                    recno = LoadPop(path);
+                //load pop
+                recno = LoadPop(path);
 
-                    //load incidence
-                    recno = LoadIncidence(path);
+                //load incidence
+                recno = LoadIncidence(path);
 
-                    //load cr
-                    recno = LoadCR(path);
+                //load cr
+                recno = LoadCR(path);
 
-                    //load valuation
-                    recno = LoadValue(path);
+                //load valuation
+                recno = LoadValue(path);
 
-                    //load dictionar(ies)
-                    recno = LoadDictionary_State(path);
-                    recno = LoadDictionary_Tier(path);
+                //load dictionar(ies)
+                recno = LoadDictionary_State(path);
+                recno = LoadDictionary_Tier(path);
 
-                    //load adjustment factors
-                    recno = LoadAdjustments(path);
+                //load adjustment factors
+                recno = LoadAdjustments(path);
 
-                    //load voc2soa
-                    recno = LoadVOC2SOA(path);
+                //load voc2soa
+                recno = LoadVOC2SOA(path);
 
-                    //load emissions
-                    recno = LoadEmissions(path);
+                //load emissions
+                recno = LoadEmissions(path);
 
-                    //debug
-                    //CreateCSVFile(EmissionsInventory, path + "exportedemissionsbase.csv");
-                    recno = SummarizeEmissions();
+                //debug
+                recno = SummarizeEmissions();
 
-                    GC.Collect();
-                    GC.WaitForPendingFinalizers();
-                    GC.Collect();
+                GC.Collect();
+                GC.WaitForPendingFinalizers();
+                GC.Collect();
 
-                    //debug
-                    //CreateCSVFile(SummarizedEmissionsInventory, path + "exportedsummarizedemissionsbase.csv");
+                //load matrix data
+                LoadSRfrommtx(path);
 
+                GC.Collect();
+                GC.WaitForPendingFinalizers();
+                GC.Collect();
 
-                    //load matrix data
-                    //InitBlankSR();
-                    //recno = LoadSR(path);
-                    LoadSRfrommtx(path);
+                // compute baseline AQ components
+                aqbase = Vectorize(SummarizedEmissionsInventory);
+                pm_base = computePM(aqbase[4], aqbase[0], aqbase[3], aqbase[2], aqbase[1]);
 
-                    GC.Collect();
-                    GC.WaitForPendingFinalizers();
-                    GC.Collect();
-
-
-                    // old order : destindx,NO2,SO2,NH3,SOA,PM25,VOC
-                    //                      0    1  2   3    4   5
-                    // compute baseline AQ components
-                    aqbase = Vectorize(SummarizedEmissionsInventory);
-                    pm_base = computePM(aqbase[4], aqbase[0], aqbase[3], aqbase[2], aqbase[1]);
-
-                }
-                catch (Exception e)
-                {
-                    statuslog.Append("error: " + e.Message);
-                    result = false;
-                }
+                Scenarios = new ScenarioManager(this.EmissionsInventory, this.redisOptions);
             }
-            //clean up if failure
+            catch (Exception e)
+            {
+                statuslog.Append("error: " + e.Message);
+                result = false;
+            }
             if (!result)
             {
                 datapath = "";
@@ -238,6 +248,9 @@ namespace CobraCompute
                 SR_no2[i - 1] = MatrixMarketReader.ReadMatrix<double>(path + "matrix_no2_" + i.ToString() + ".mtx", Compression.GZip);
                 SR_so2[i - 1] = MatrixMarketReader.ReadMatrix<double>(path + "matrix_so2_" + i.ToString() + ".mtx", Compression.GZip);
                 SR_nh3[i - 1] = MatrixMarketReader.ReadMatrix<double>(path + "matrix_nh3_" + i.ToString() + ".mtx", Compression.GZip);
+                GC.Collect();
+                GC.WaitForPendingFinalizers();
+                GC.Collect();
             }
         }
 
@@ -254,7 +267,7 @@ namespace CobraCompute
             {
                 using (TextReader fileReader = new StreamReader(zipfile.GetInputStream(item)))
                 {
-                    CsvReader csv = new CsvReader(fileReader);
+                    CsvReader csv = new CsvReader(fileReader, System.Globalization.CultureInfo.CurrentCulture);
                     foreach (srrecord sr_record in csv.GetRecords<srrecord>())
                     {
                         var index2use = sr_record.typeindx - 1;
@@ -339,13 +352,16 @@ namespace CobraCompute
             recno = 1;
             using (TextReader fileReader = File.OpenText(path + "sys_emissions_inventory.csv"))
             {
-                CsvReader csv = new CsvReader(fileReader);
+                CsvReader csv = new CsvReader(fileReader, System.Globalization.CultureInfo.CurrentCulture);
                 foreach (EmissionsRecord record in csv.GetRecords<EmissionsRecord>())
                 {
                     if (record.ID == 1)
                     {
-                        EmissionsInventory.Rows.Add(new object[] { recno, record.typeindx, record.sourceindx, record.stid, record.cyid, record.TIER1, record.TIER2, record.TIER3, record.NO2.GetValueOrDefault(0), record.SO2.GetValueOrDefault(0), record.NH3.GetValueOrDefault(0), ComputeSOAfromVOC(record.TIER1 + "|" + record.TIER2 + "|" + record.TIER3, record.VOC.GetValueOrDefault(0)), record.PM25.GetValueOrDefault(0), record.VOC.GetValueOrDefault(0) });
-                        recno++;
+                        if (record.NO2 > 0.0 || record.NH3 > 0.0 || record.SOA > 0.0 || record.SO2 > 0.0 || record.PM25 > 0.0 || record.VOC > 0.0)
+                        {
+                            EmissionsInventory.Rows.Add(new object[] { recno, record.typeindx, record.sourceindx, record.stid, record.cyid, record.TIER1, record.TIER2, record.TIER3, record.NO2.GetValueOrDefault(0), record.SO2.GetValueOrDefault(0), record.NH3.GetValueOrDefault(0), ComputeSOAfromVOC(record.TIER1 + "|" + record.TIER2 + "|" + record.TIER3, record.VOC.GetValueOrDefault(0)), record.PM25.GetValueOrDefault(0), record.VOC.GetValueOrDefault(0) });
+                            recno++;
+                        }
                     }
                 }
             }
@@ -360,7 +376,7 @@ namespace CobraCompute
             recno = 1;
             using (TextReader fileReader = File.OpenText(path + "sys_voc2soa.csv"))
             {
-                CsvReader csv = new CsvReader(fileReader);
+                CsvReader csv = new CsvReader(fileReader, System.Globalization.CultureInfo.CurrentCulture);
                 foreach (Cobra_Voc2Soa record in csv.GetRecords<Cobra_Voc2Soa>())
                 {
                     VOC2SOA.Add(record.TIER1 + "|" + record.TIER2 + "|" + record.TIER3, record.FACTOR);
@@ -376,7 +392,7 @@ namespace CobraCompute
             int recno = 1;
             using (TextReader fileReader = File.OpenText(path + "sys_adj.csv"))
             {
-                CsvReader csv = new CsvReader(fileReader);
+                CsvReader csv = new CsvReader(fileReader, System.Globalization.CultureInfo.CurrentCulture);
                 foreach (Cobra_Adjustment record in csv.GetRecords<Cobra_Adjustment>())
                 {
                     Adjustment[record.indx.GetValueOrDefault(0) - 1] = record.F1.GetValueOrDefault(0);
@@ -392,7 +408,7 @@ namespace CobraCompute
             int recno = 1;
             using (TextReader fileReader = File.OpenText(path + "sys_dict.csv"))
             {
-                CsvReader csv = new CsvReader(fileReader);
+                CsvReader csv = new CsvReader(fileReader, System.Globalization.CultureInfo.CurrentCulture);
                 foreach (Cobra_Dict_State record in csv.GetRecords<Cobra_Dict_State>())
                 {
                     dict_state.Add(record);
@@ -408,7 +424,7 @@ namespace CobraCompute
             int recno = 1;
             using (TextReader fileReader = File.OpenText(path + "sys_tiers.csv"))
             {
-                CsvReader csv = new CsvReader(fileReader);
+                CsvReader csv = new CsvReader(fileReader, System.Globalization.CultureInfo.CurrentCulture);
                 foreach (Cobra_Dict_Tier record in csv.GetRecords<Cobra_Dict_Tier>())
                 {
                     dict_tier.Add(record);
@@ -425,7 +441,7 @@ namespace CobraCompute
             int recno = 1;
             using (TextReader fileReader = File.OpenText(path + "sys_valuation_inventory.csv"))
             {
-                CsvReader csv = new CsvReader(fileReader);
+                CsvReader csv = new CsvReader(fileReader, System.Globalization.CultureInfo.CurrentCulture);
                 foreach (Cobra_Valuation record in csv.GetRecords<Cobra_Valuation>())
                 {
                     if (record.ID == 1) //2025
@@ -444,7 +460,7 @@ namespace CobraCompute
             int recno = 1;
             using (TextReader fileReader = File.OpenText(path + "sys_cr_inventory.csv"))
             {
-                CsvReader csv = new CsvReader(fileReader);
+                CsvReader csv = new CsvReader(fileReader, System.Globalization.CultureInfo.CurrentCulture);
                 foreach (Cobra_CR record in csv.GetRecords<Cobra_CR>())
                 {
                     if (record.ID == 1) //2025
@@ -463,7 +479,7 @@ namespace CobraCompute
             int recno = 1;
             using (TextReader fileReader = File.OpenText(path + "sys_incidence_inventory.csv"))
             {
-                CsvReader csv = new CsvReader(fileReader);
+                CsvReader csv = new CsvReader(fileReader, System.Globalization.CultureInfo.CurrentCulture);
                 foreach (Cobra_Incidence record in csv.GetRecords<Cobra_Incidence>())
                 {
                     if (record.ID == 1) //2025
@@ -482,7 +498,7 @@ namespace CobraCompute
             int recno = 1;
             using (TextReader fileReader = File.OpenText(path + "sys_pop_inventory.csv"))
             {
-                CsvReader csv = new CsvReader(fileReader);
+                CsvReader csv = new CsvReader(fileReader, System.Globalization.CultureInfo.CurrentCulture);
                 foreach (Cobra_POP record in csv.GetRecords<Cobra_POP>())
                 {
                     if (record.ID == 1) //2025
@@ -496,58 +512,6 @@ namespace CobraCompute
             return recno;
         }
 
-        public Guid createUserScenario()
-        {
-            //repeat until works
-            Guid result;
-            do
-            {
-                result = Guid.NewGuid();
-            } while (Scenarios.ContainsKey(result));
-            UserScenario scenario = new UserScenario() { ID = result, EmissionsData = EmissionsInventory.Copy(), Year = 2025, createdOn = DateTime.Now };
-            Scenarios.TryAdd(result, scenario);
-            FlushUserScenarios();
-            return result;
-        }
-
-        public Guid renewUserScenario(Guid token)
-        {
-            Guid result = token;
-            if (Scenarios.ContainsKey(token))
-            {
-                Scenarios[token].createdOn = DateTime.Now;
-                FlushUserScenarios();
-            }
-            else
-            {
-                result = createUserScenario();
-            }
-            return result;
-        }
-
-
-        public void deleteUserScenario(Guid token)
-        {
-            UserScenario value;
-            Scenarios.Remove(token, out value);
-        }
-
-        public void FlushUserScenarios()
-        {
-            List<Guid> tokens2flush = new List<Guid>();
-            foreach (UserScenario scenario in Scenarios.Values)
-            {
-                if (scenario.createdOn.AddHours(2) < DateTime.Now)
-                {
-                    tokens2flush.Add(scenario.ID);
-                }
-            }
-            foreach (Guid token in tokens2flush)
-            {
-                UserScenario value;
-                Scenarios.Remove(token, out value);
-            }
-        }
 
         public string buildStringCriteria(EmissionsDataRetrievalRequest spec)
         {
@@ -583,7 +547,6 @@ namespace CobraCompute
                 string[] actualStates = specifiedStates.Except(implicitStates).ToArray<string>();
 
 
-
                 //do state selection selecting all per state as they are implicit by non expansion of the tree
                 string stateselector = "(stid in ('" + String.Join("','", actualStates) + "'))";
                 if (actualStates.Length > 0)
@@ -599,14 +562,7 @@ namespace CobraCompute
                     locationselector.Add(fipsselector);
                 }
 
-
-                /*string fipsselector = "( (stid ='' and cyid in ('" + String.Join("','", trueCounties) + "'))";
-                if (trueCounties.Length > 0)
-                {
-                    locationselector.Add(fipsselector);
-                }*/
-
-                //locations are ors
+                //locations are ORs
                 string locationpart = "( " + String.Join(" or ", locationselector) + " )";
                 //just join to tiers
                 tierselector.Add(locationpart);
@@ -645,11 +601,11 @@ namespace CobraCompute
 
             return result;
         }
-        public List<EmissionsRecord> GetControlEmissions(Guid token, string criteria)
+        public List<EmissionsRecord> GetControlEmissions(string criteria)
         {
             List<EmissionsRecord> result = new List<EmissionsRecord>();
 
-            DataRow[] rows = Scenarios[token].EmissionsData.Select(criteria);
+            DataRow[] rows = currentscenario.EmissionsData.Select(criteria);
 
             foreach (DataRow dr in rows)
             {
@@ -674,10 +630,10 @@ namespace CobraCompute
 
             return result;
         }
-        public bool SetControlEmissions(Guid token, EmissionsRecord[] emissions)
+        public bool SetControlEmissions(EmissionsRecord[] emissions)
         {
-            DataTable emissionsData = Scenarios[token].EmissionsData;
-            Scenarios[token].isDirty = true;
+            DataTable emissionsData = currentscenario.EmissionsData;
+            currentscenario.isDirty = true;
 
             foreach (EmissionsRecord emission in emissions)
             {
@@ -696,7 +652,7 @@ namespace CobraCompute
                 {
                     emissionsData.Rows.Add(new object[] { emission.ID, emission.typeindx, emission.sourceindx, emission.stid, emission.cyid, emission.TIER1, emission.TIER2, emission.TIER3, emission.NO2.GetValueOrDefault(0), emission.SO2.GetValueOrDefault(0), emission.NH3.GetValueOrDefault(0), emission.SOA, emission.PM25.GetValueOrDefault(0), emission.VOC.GetValueOrDefault(0) });
                 }
-                //reget
+                //re-get
                 DataRow foundRow2 = emissionsData.Rows.Find(emission.ID);
                 if (foundRow2 != null)
                 {
@@ -708,9 +664,6 @@ namespace CobraCompute
                     foundRow2[13] = emission.VOC;
                 }
             }
-
-
-
             return true;
         }
 
@@ -718,7 +671,7 @@ namespace CobraCompute
         {
             List<EmissionsRecord> result = new List<EmissionsRecord>();
 
-            DataRow[] rows = SummarizeEmissionsbyType(Scenarios[token].EmissionsData).Select(criteria);
+            DataRow[] rows = SummarizeEmissionsbyType(currentscenario.EmissionsData).Select(criteria);
 
             foreach (DataRow dr in rows)
             {
@@ -853,19 +806,19 @@ namespace CobraCompute
 
             return summarizedemissionsData;
         }
-        public EmissionsSums SummarizeBaseControlEmissionsWithCriteria_resulttable(Guid token, string criteria)
+        public EmissionsSums SummarizeBaseControlEmissionsWithCriteria_resulttable(string criteria)
         {
             EmissionsSums result = new EmissionsSums();
             result.baseline = SummarizeEmissionsbyType_resulttable(this.EmissionsInventory, criteria);
-            result.control = SummarizeEmissionsbyType_resulttable(Scenarios[token].EmissionsData, criteria);
+            result.control = SummarizeEmissionsbyType_resulttable(currentscenario.EmissionsData, criteria);
             return result;
         }
 
-        public EmissionsSums SummarizeBaseControlEmissionsWithCriteria(Guid token, string criteria)
+        public EmissionsSums SummarizeBaseControlEmissionsWithCriteria(string criteria)
         {
             EmissionsSums result = new EmissionsSums();
             result.baseline = SummarizeEmissionsWithCriteria(this.EmissionsInventory, criteria);
-            result.control = SummarizeEmissionsWithCriteria(Scenarios[token].EmissionsData, criteria);
+            result.control = SummarizeEmissionsWithCriteria(currentscenario.EmissionsData, criteria);
             return result;
         }
 
@@ -911,9 +864,9 @@ namespace CobraCompute
         }
 
 
-        public bool UpdateEmissionsWithCriteria(Guid token, EmissionsDataUpdateRequest requestparams)
+        public bool UpdateEmissionsWithCriteria(EmissionsDataUpdateRequest requestparams)
         {
-            UpdateEmissionsWithCriteria(Scenarios[token].EmissionsData, requestparams);
+            UpdateEmissionsWithCriteria(currentscenario.EmissionsData, requestparams);
             return true;
         }
 
@@ -941,7 +894,6 @@ namespace CobraCompute
                 double current_soa = current.control.Rows[0].Field<double?>("SOA").GetValueOrDefault(0);
 
                 //determine ratios
-                // condition? consequent : alternative
                 double ratio_pm25 = current_pm25 == 0 ? 0 : requestparams.payload.PM25 / current_pm25;
                 double ratio_no2 = current_no2 == 0 ? 0 : requestparams.payload.NO2 / current_no2;
                 double ratio_so2 = current_so2 == 0 ? 0 : requestparams.payload.SO2 / current_so2;
@@ -949,18 +901,9 @@ namespace CobraCompute
                 double ratio_voc = current_voc == 0 ? 0 : requestparams.payload.VOC / current_voc;
                 double ratio_soa = current_soa == 0 ? 0 : requestparams.payload.SOA / current_soa;
 
-
-                /*get the records that were used to create sums
-                DataRow[] subrows = table2summarize.Select(str_criteria);
-
-                int rowcount = subrows.Count();
-                    */
-
-
-
                 foreach (DataRow record in subrows)
                 {
-                    //getcurrent vlaue
+                    //get current value
                     double thisrow_pm25 = record.Field<double?>("PM25").GetValueOrDefault(0);
                     double thisrow_no2 = record.Field<double?>("NO2").GetValueOrDefault(0);
                     double thisrow_so2 = record.Field<double?>("SO2").GetValueOrDefault(0);
@@ -1020,14 +963,11 @@ namespace CobraCompute
 
             }
 
-
             //fix up SOA from VOC
             foreach (DataRow record in subrows)
             {
                 record[11] = ComputeSOAfromVOC(record[5] + "|" + record[6] + "|" + record[7], record.Field<double>(13));
             }
-
-
 
             return true;
         }
@@ -1044,7 +984,6 @@ namespace CobraCompute
             string[] implicitStates = (from rec in trueCounties select rec.Substring(0, 2)).Distinct<string>().ToArray<string>();
             string[] actualStates = specifiedStates.Except(implicitStates).ToArray<string>();
 
-
             //do state selection selecting all per state as they are implicit by non expansion of the tree
             string stateselector = "(stfips in ('" + String.Join("','", actualStates) + "'))";
             if (actualStates.Length > 0)
@@ -1060,7 +999,7 @@ namespace CobraCompute
                 locationselector.Add(fipsselector);
             }
 
-            //locations are ors
+            //locations are ORs
             string locationpart = "( " + String.Join(" or ", locationselector) + " )";
 
 
@@ -1132,15 +1071,6 @@ namespace CobraCompute
                 Vctr_soa[typeindex2use][sourceindex2use] = row.Field<double?>("SOA").GetValueOrDefault(0);
             }
 
-            // old order : destindx,NO2,SO2,NH3,SOA,PM25,VOC
-            /*
-            +" sum(" + summarizedemissions + ".NO2 * SYS_Srmatrix_2025.tx_no2) * 28778 * (62.0049 / 46.0055) as NO2,"
-            + " sum(" + summarizedemissions + ".SO2 * SYS_Srmatrix_2025.tx_so2) * 28778 * (96.0626 / 64.0638) as SO2,"
-            + " sum(" + summarizedemissions + ".NH3 * SYS_Srmatrix_2025.tx_nh3) * 28778 * (18.03846 / 17.03052) as NH3,"
-            + " sum(" + summarizedemissions + ".SOA * SYS_Srmatrix_2025.tx_dp) * 28778 as SOA,"
-            + " sum(" + summarizedemissions + ".PM25 * SYS_Srmatrix_2025.tx_dp) * 28778 as PM25,"
-            */
-
             for (int i = 1; i < 5; i++)
             {   //check these
                 Vctr_pm_partial[i - 1] = SR_dp[i - 1].Multiply(Vctr_pm[i - 1]) * 28778;
@@ -1150,8 +1080,6 @@ namespace CobraCompute
                 Vctr_voc_partial[i - 1] = SR_dp[i - 1].Multiply(Vctr_voc[i - 1]) * 0;   //voc short range
                 Vctr_soa_partial[i - 1] = SR_dp[i - 1].Multiply(Vctr_soa[i - 1]) * 28778; //transfers like pm
             }
-
-
 
             Vctr_pm_partial[0] = Vctr_pm_partial[0] + Vctr_pm_partial[1] + Vctr_pm_partial[2] + Vctr_pm_partial[3];
             Vctr_no2_partial[0] = Vctr_no2_partial[0] + Vctr_no2_partial[1] + Vctr_no2_partial[2] + Vctr_no2_partial[3];
@@ -1165,13 +1093,13 @@ namespace CobraCompute
             return new Vector<double>[6] { Vctr_no2_partial[0], Vctr_so2_partial[0], Vctr_nh3_partial[0], Vctr_soa_partial[0], Vctr_pm_partial[0], Vctr_voc_partial[0] };
         }
 
-        public List<Cobra_ResultDetail> GetResults(Guid token)
+        public List<Cobra_ResultDetail> GetResults()
         {
-            if (Scenarios[token].isDirty)
+            if (currentscenario.isDirty)
             {
-                ComputeDeltaPM(token);
+                ComputeDeltaPM();
             }
-            return Scenarios[token].Impacts;
+            return currentscenario.Impacts;
         }
 
 
@@ -1179,11 +1107,17 @@ namespace CobraCompute
         {
             Vector<double> result_pm = Vector<double>.Build.Dense(3080, 0);
 
-            //molar masses
-            double H = 1.00794;
-            double O = 15.9994;
-            double N = 14.0067;
-            double S = 32.065;
+            for (int i = 0; i < 3080; i++)
+            {
+                result_pm[i] = computePM(value_PM25[i], value_NO3[i], value_SOA[i], value_NH4[i], value_SOA[i], Adjustment[i]);
+            }
+
+            return result_pm;
+        }
+
+        public double computePM(double value_PM25, double value_NO3, double value_SOA, double value_NH4, double value_SO4, double adjustment = 1.0)
+        {
+            double result_pm = 0;
             double NO3 = 62.0049;
             double cSO4 = 96.0626;
             double NH4 = 18.03846;
@@ -1191,66 +1125,46 @@ namespace CobraCompute
             double NH4HSO4 = 115.109;
             double NH42SO4 = 132.13952;
 
-            for (int i = 0; i < 3080; i++)
-            {
-                double Moles_SO4 = (value_SO4[i]) / cSO4;
-                double Moles_NH4 = (value_NH4[i]) / NH4;
-                double Moles_Amm_Bisulfate = Math.Min(Moles_SO4, Moles_NH4);
+            double Moles_SO4 = (value_SO4) / cSO4;
+            double Moles_NH4 = (value_NH4) / NH4;
+            double Moles_Amm_Bisulfate = Math.Min(Moles_SO4, Moles_NH4);
 
-                double Moles_SO4_remaining = Moles_SO4 - Moles_Amm_Bisulfate;
-                double Moles_NH4_remaining_step_1 = Moles_NH4 - Moles_Amm_Bisulfate;
+            double Moles_SO4_remaining = Moles_SO4 - Moles_Amm_Bisulfate;
+            double Moles_NH4_remaining_step_1 = Moles_NH4 - Moles_Amm_Bisulfate;
 
-                double Moles_Amm_Sulfate = Math.Min(Moles_Amm_Bisulfate, Moles_NH4_remaining_step_1);
-                double Moles_Amm_Bisulfate_remaining = Moles_Amm_Bisulfate - Moles_Amm_Sulfate;
-                double Moles_NH4_remaining_step_2 = Moles_NH4_remaining_step_1 - Moles_Amm_Sulfate;
-                double Moles_NO3 = (value_NO3[i]) / NO3;
-                double Moles_Amm_Nitrate = 0.25 * Math.Min(Moles_NH4_remaining_step_2, Moles_NO3);
+            double Moles_Amm_Sulfate = Math.Min(Moles_Amm_Bisulfate, Moles_NH4_remaining_step_1);
+            double Moles_Amm_Bisulfate_remaining = Moles_Amm_Bisulfate - Moles_Amm_Sulfate;
+            double Moles_NH4_remaining_step_2 = Moles_NH4_remaining_step_1 - Moles_Amm_Sulfate;
+            double Moles_NO3 = (value_NO3) / NO3;
+            double Moles_Amm_Nitrate = 0.25 * Math.Min(Moles_NH4_remaining_step_2, Moles_NO3);
 
-                double Amm_Sulfate = Moles_Amm_Sulfate * NH42SO4;
-                double Amm_Bisulfate = Moles_Amm_Bisulfate_remaining * NH4HSO4;
-                double SO4 = Moles_SO4_remaining * cSO4;
-                double Amm_Nitrate = Moles_Amm_Nitrate * NH4NO3;
-                double Direct_PM25 = value_PM25[i];
-                double SOA = value_SOA[i];
-                result_pm[i] = Adjustment[i] * (Amm_Sulfate + Amm_Bisulfate + SO4 + Amm_Nitrate + Direct_PM25 + SOA);
-            }
+            double Amm_Sulfate = Moles_Amm_Sulfate * NH42SO4;
+            double Amm_Bisulfate = Moles_Amm_Bisulfate_remaining * NH4HSO4;
+            double SO4 = Moles_SO4_remaining * cSO4;
+            double Amm_Nitrate = Moles_Amm_Nitrate * NH4NO3;
+            double Direct_PM25 = value_PM25;
+            double SOA = value_SOA;
+            result_pm = adjustment * (Amm_Sulfate + Amm_Bisulfate + SO4 + Amm_Nitrate + Direct_PM25 + SOA);
 
             return result_pm;
-
         }
 
-        public bool ComputeDeltaPM(Guid token)
+
+        public bool ComputeDeltaPM()
         {
-            Scenarios[token].EmissionsData.AcceptChanges();
+            currentscenario.EmissionsData.AcceptChanges();
 
-            //CreateCSVFile(Scenarios[token].EmissionsData, datapath + "exportedemissionscontrol.csv");
-
-            DataTable controlemissions = SummarizeEmissionsbyType(Scenarios[token].EmissionsData);
-
-            //debug
-            //CreateCSVFile(controlemissions, datapath + "exportedsummarizedemissionscontrol.csv");
+            DataTable controlemissions = SummarizeEmissionsbyType(currentscenario.EmissionsData);
 
             var aqcontrol = Vectorize(controlemissions);
 
-            //f missing
             // old order : destindx,NO2,SO2,NH3,SOA,PM25,VOC
             //                      0    1  2   3    4   5
             Vector<double> pm_control = computePM(aqcontrol[4], aqcontrol[0], aqcontrol[3], aqcontrol[2], aqcontrol[1]);
             var pm_delta = this.pm_base - pm_control;
 
-
-            /*DelimitedWriter.Write(datapath + "pm25.csv", aqbase[4].ToColumnMatrix(), ",");
-            DelimitedWriter.Write(datapath + "no3.csv", aqbase[0].ToColumnMatrix(), ",");
-            DelimitedWriter.Write(datapath + "soa.csv", aqbase[3].ToColumnMatrix(), ",");
-            DelimitedWriter.Write(datapath + "nh4.csv", aqbase[2].ToColumnMatrix(), ",");
-            DelimitedWriter.Write(datapath + "so4.csv", aqbase[1].ToColumnMatrix(), ",");
-            */
-            /*
-            destination.BASE_FINAL_PM = destination.F * computePM(destination.BASE_PM25.GetValueOrDefault(0), destination.BASE_NO2.GetValueOrDefault(0), destination.BASE_SOA.GetValueOrDefault(0), destination.BASE_NH3.GetValueOrDefault(0), destination.BASE_SO2.GetValueOrDefault(0));
-            destination.CTRL_FINAL_PM = destination.F * computePM(destination.CTRL_PM25.GetValueOrDefault(0), destination.CTRL_NO2.GetValueOrDefault(0), destination.CTRL_SOA.GetValueOrDefault(0), destination.CTRL_NH3.GetValueOrDefault(0), destination.CTRL_SO2.GetValueOrDefault(0));
-            destination.DELTA_FINAL_PM = destination.BASE_FINAL_PM.GetValueOrDefault(0) - destination.CTRL_FINAL_PM.GetValueOrDefault(0);
-            */
             List<Cobra_Destination> Destinations = new List<Cobra_Destination>();
+
             //populate
             for (int i = 0; i < 3080; i++)
             {
@@ -1275,22 +1189,12 @@ namespace CobraCompute
                 Destinations.Add(dest);
             }
 
-
             //compute part 2
-            Scenarios[token].Impacts = ComputeImpacts(Destinations, true);
+            currentscenario.Impacts = ComputeImpacts(Destinations, true);
 
-            /*using (TextWriter fileWriter= File.CreateText(datapath + "FinalResults.csv"))
-            {
-                CsvWriter csv = new CsvWriter(fileWriter);
-                csv.WriteRecords<Cobra_Results>(Scenarios[token].Impacts);
-            }
-            *
-            */
-
-            Scenarios[token].isDirty = false;
+            currentscenario.isDirty = false;
 
             return true;
-
         }
 
         private double crfunc(string rawfunction, string compfunction, double Incidence, double Beta, double DELTAQ, double POP, double A, double B, double C)
@@ -1299,9 +1203,9 @@ namespace CobraCompute
             {
                 case "(1-(1/((1-INCIDENCE)*EXP(BETA*DELTAQ)+INCIDENCE)))*INCIDENCE*POP":
                     return (1 - (1 / ((1 - Incidence) * Math.Exp(Beta * DELTAQ) + Incidence))) * Incidence * POP;
-                case "(1-(1/((1-INCIDENCE)*EXP(BETA*DELTAQ)+INCIDENCE)))*INCIDENCE*A*POP": //this one from CR function is probablyt incorrect
+                case "(1-(1/((1-INCIDENCE)*EXP(BETA*DELTAQ)+INCIDENCE)))*INCIDENCE*A*POP":
                     return (1 - (1 / ((1 - Incidence) * Math.Exp(Beta * DELTAQ) + Incidence))) * Incidence * A * POP;
-                case "(1-(1/((1-INCIDENCE*A)*EXP(BETA*DELTAQ)+INCIDENCE*A)))*INCIDENCE*A*POP": //this one from CR function is probablyt incorrect
+                case "(1-(1/((1-INCIDENCE*A)*EXP(BETA*DELTAQ)+INCIDENCE*A)))*INCIDENCE*A*POP":
                     return (1 - (1 / ((1 - Incidence * A) * Math.Exp(Beta * DELTAQ) + Incidence * A))) * Incidence * A * POP;
                 case "(1-(1/EXP(BETA*DELTAQ)))*INCIDENCE*A*POP":
                     return (1 - (1 / Math.Exp(Beta * DELTAQ))) * Incidence * POP * A;
@@ -1411,7 +1315,6 @@ namespace CobraCompute
                             Incidence = value.incidenceat(age);
                         }
 
-                        //double result = (double)e.Evaluate() * poolingweight * metric_adjustment;
                         double result = this.crfunc(function, cleanfunction, Incidence, Beta, DELTAQ, POP, A, B, C) * poolingweight * metric_adjustment;
 
                         // check if there is an entry already to make pooling work
@@ -1423,6 +1326,7 @@ namespace CobraCompute
                         {
                             results_cr.Add(destination.destindx + "|" + crfunc.Endpoint, new Result { Destinationindex = destination.destindx.GetValueOrDefault(0), Endpoint = crfunc.Endpoint, Value = result });
                         }
+
                         // add to national total
                         if (results_cr.TryGetValue("nation|" + crfunc.Endpoint, out result_cr))
                         {
@@ -1432,10 +1336,6 @@ namespace CobraCompute
                         {
                             results_cr.Add("nation|" + crfunc.Endpoint, new Result { Destinationindex = destination.destindx.GetValueOrDefault(0), Endpoint = crfunc.Endpoint, Value = result });
                         }
-
-
-
-
                     }
                 }
             }
@@ -1488,7 +1388,6 @@ namespace CobraCompute
                             Incidence = value.incidenceat(age);
                         }
 
-                        //double result = (double)e.Evaluate() * poolingweight * metric_adjustment;
                         double result = this.crfunc(function, cleanfunction, Incidence, Beta, DELTAQ, POP, A, B, C) * poolingweight * metric_adjustment;
 
                         if (valat3)
@@ -1499,7 +1398,6 @@ namespace CobraCompute
                         {
                             result = result * valuefunc.valat7pct.GetValueOrDefault(0) * 1.1225;
                         }
-
 
                         // check if there is an entry already to make pooling work
                         if (results_valuation.TryGetValue(destination.destindx + "|" + valuefunc.Endpoint, out result_valuation))
@@ -1519,12 +1417,9 @@ namespace CobraCompute
                         {
                             results_valuation.Add("nation|" + valuefunc.Endpoint, new Result { Destinationindex = destination.destindx.GetValueOrDefault(0), Endpoint = valuefunc.Endpoint, Value = result });
                         }
-
-
                     }
                 }
             }
-
 
             List<Cobra_ResultDetail> results = new List<Cobra_ResultDetail>();
             foreach (var destination in Destinations)
@@ -1573,10 +1468,276 @@ namespace CobraCompute
                 result_record.C__Upper_Respiratory_Symptoms = results_valuation[destination.destindx + "|" + "Upper Respiratory Symptoms"].Value;
                 result_record.C__Work_Loss_Days = results_valuation[destination.destindx + "|" + "Work Loss Days"].Value;
 
+                //now do total health effect dollars
+                double lowvals = 0;
+
+                lowvals += result_record.C__Acute_Bronchitis.GetValueOrDefault(0);
+
+                lowvals += result_record.C__Asthma_Exacerbation.GetValueOrDefault(0);
+                lowvals += result_record.C__Emergency_Room_Visits_Asthma.GetValueOrDefault(0);
+                lowvals += result_record.C__CVD_Hosp_Adm.GetValueOrDefault(0);
+                lowvals += result_record.C__Resp_Hosp_Adm.GetValueOrDefault(0);
+                lowvals += result_record.C__Lower_Respiratory_Symptoms.GetValueOrDefault(0);
+                lowvals += result_record.C__Minor_Restricted_Activity_Days.GetValueOrDefault(0);
+
+                lowvals += result_record.C__Infant_Mortality.GetValueOrDefault(0);
+                lowvals += result_record.C__Upper_Respiratory_Symptoms.GetValueOrDefault(0);
+                lowvals += result_record.C__Work_Loss_Days.GetValueOrDefault(0);
+
+                result_record.C__Total_Health_Benefits_Low_Value = lowvals;
+
+                //add low to high this works
+                result_record.C__Total_Health_Benefits_High_Value = lowvals;
+
+                //and here they diverge
+                result_record.C__Total_Health_Benefits_High_Value += result_record.C__Acute_Myocardial_Infarction_Nonfatal__high_.GetValueOrDefault(0) + result_record.C__Mortality_All_Cause__high_.GetValueOrDefault(0);
+
+                result_record.C__Total_Health_Benefits_Low_Value += result_record.C__Acute_Myocardial_Infarction_Nonfatal__low_.GetValueOrDefault(0) + result_record.C__Mortality_All_Cause__low_.GetValueOrDefault(0);
+
                 results.Add(result_record);
             }
             return results;
         }
+
+        public List<Cobra_ResultDetail> ComputeGenericImpacts(double delta_pm, double base_pm, double control_pm, Cobra_POP population, Cobra_Incidence[] incidence, bool valat3)
+        {
+            Dictionary<string, Result> results_cr = new Dictionary<string, Result>();
+            Dictionary<string, Result> results_valuation = new Dictionary<string, Result>();
+
+
+            List<string> Endpoints_cr = CRfunctions.Select(c => c.Endpoint).Distinct().ToList();
+            List<string> Endpoints_val = Valuationfunctions.Select(c => c.Endpoint).Distinct().ToList();
+
+            Dictionary<string, Cobra_Incidence> dict_incidence = new Dictionary<string, Cobra_Incidence>();
+            foreach (var item in incidence)
+            {
+                dict_incidence.Add(item.Endpoint, item);
+            }
+
+
+            Cobra_Incidence value;
+            Result result_cr;
+            Result result_valuation;
+            Cobra_Incidence incidencerow;
+
+            foreach (var crfunc in CRfunctions)
+            {
+                string function = crfunc.Function;
+
+                function = function.Replace("EXP", "Exp");
+                function = function.Replace("exp", "Exp");
+
+                string cleanfunction = function.ToUpper().Replace(" ", "");
+
+                double metric_adjustment = 1;
+                if (crfunc.Seasonal_Metric.ToUpper() == "DAILY")
+                {
+                    metric_adjustment = 365;
+                }
+
+                {
+                    //fixed params
+                    Expression e = new Expression(function);
+                    double A = crfunc.A.GetValueOrDefault(0);
+                    double B = crfunc.B.GetValueOrDefault(0);
+                    double C = crfunc.C.GetValueOrDefault(0);
+                    double Beta = crfunc.Beta.GetValueOrDefault(0);
+                    double DELTAQ = delta_pm;
+                    double Incidence = 0;
+
+                    //year dependent but with the twist that pop and incidence are containing all year data
+                    Cobra_POP poprow = population;
+                    if (dict_incidence.TryGetValue(crfunc.IncidenceEndpoint, out value))
+                    {
+                        incidencerow = value;
+                    }
+                    else
+                    {
+                        incidencerow = null;
+                        Incidence = 0;
+                    }
+
+                    double poolingweight = crfunc.PoolingWeight.GetValueOrDefault(0);
+                    for (long age = crfunc.Start_Age.GetValueOrDefault(0); age <= crfunc.End_Age.GetValueOrDefault(0); age++)
+                    {
+                        double POP = poprow.popat(age);
+                        if (incidencerow != null)
+                        {
+                            Incidence = value.incidenceat(age);
+                        }
+
+                        double result = this.crfunc(function, cleanfunction, Incidence, Beta, DELTAQ, POP, A, B, C) * poolingweight * metric_adjustment;
+
+                        // check if there is an entry already to make pooling work
+                        if (results_cr.TryGetValue(crfunc.Endpoint, out result_cr))
+                        {
+                            result_cr.Value = result_cr.Value + result;
+                        }
+                        else
+                        {
+                            results_cr.Add(crfunc.Endpoint, new Result { Destinationindex = 0, Endpoint = crfunc.Endpoint, Value = result });
+                        }
+                    }
+                }
+            }
+
+            foreach (var valuefunc in Valuationfunctions)
+            {
+                string function = valuefunc.Function;
+
+                function = function.Replace("EXP", "Exp");
+                function = function.Replace("exp", "Exp");
+
+                string cleanfunction = function.ToUpper().Replace(" ", "");
+
+                double metric_adjustment = 1;
+                if (valuefunc.Seasonal_Metric.ToUpper() == "DAILY")
+                {
+                    metric_adjustment = 365;
+                }
+
+                {
+                    //fixed params
+                    Expression e = new Expression(function);
+                    double A = valuefunc.A.GetValueOrDefault(0);
+                    double B = valuefunc.B.GetValueOrDefault(0);
+                    double C = valuefunc.C.GetValueOrDefault(0);
+                    double Beta = valuefunc.Beta.GetValueOrDefault(0);
+                    double DELTAQ = delta_pm;
+                    double Incidence = 0;
+
+                    //year dependent but with the twist that pop and incidence are containing all year data
+                    Cobra_POP poprow = population;
+                    if (dict_incidence.TryGetValue(valuefunc.IncidenceEndpoint, out value))
+                    {
+                        incidencerow = value;
+                    }
+                    else
+                    {
+                        incidencerow = null;
+                        Incidence = 0;
+                    }
+
+                    double poolingweight = valuefunc.PoolingWeight.GetValueOrDefault(0);
+
+                    for (long age = valuefunc.Start_Age.GetValueOrDefault(0); age <= valuefunc.End_Age.GetValueOrDefault(0); age++)
+                    {
+                        double POP = poprow.popat(age);
+                        if (incidencerow != null)
+                        {
+                            Incidence = value.incidenceat(age);
+                        }
+
+                        double result = this.crfunc(function, cleanfunction, Incidence, Beta, DELTAQ, POP, A, B, C) * poolingweight * metric_adjustment;
+
+                        if (valat3)
+                        {
+                            result = result * valuefunc.valat3pct.GetValueOrDefault(0) * 1.1225;
+                        }
+                        else
+                        {
+                            result = result * valuefunc.valat7pct.GetValueOrDefault(0) * 1.1225;
+                        }
+
+                        // check if there is an entry already to make pooling work
+                        if (results_valuation.TryGetValue(valuefunc.Endpoint, out result_valuation))
+                        {
+                            result_valuation.Value = result_valuation.Value + result;
+                        }
+                        else
+                        {
+                            results_valuation.Add(valuefunc.Endpoint, new Result { Destinationindex = 0, Endpoint = valuefunc.Endpoint, Value = result });
+                        }
+                        // add to national totals as well
+                        if (results_valuation.TryGetValue("nation|" + valuefunc.Endpoint, out result_valuation))
+                        {
+                            result_valuation.Value = result_valuation.Value + result;
+                        }
+                        else
+                        {
+                            results_valuation.Add("nation|" + valuefunc.Endpoint, new Result { Destinationindex = 0, Endpoint = valuefunc.Endpoint, Value = result });
+                        }
+                    }
+                }
+            }
+
+            List<Cobra_ResultDetail> results = new List<Cobra_ResultDetail>();
+            {
+                Cobra_ResultDetail result_record = new Cobra_ResultDetail();
+                result_record.destindx = 0;
+                result_record.BASE_FINAL_PM = base_pm;
+                result_record.CTRL_FINAL_PM = control_pm;
+                result_record.DELTA_FINAL_PM = delta_pm;
+
+                result_record.FIPS = "00000";
+                result_record.STATE = "NA";
+                result_record.COUNTY = "NA";
+
+                result_record.Acute_Bronchitis = results_cr["Acute Bronchitis"].Value;
+                result_record.Acute_Myocardial_Infarction_Nonfatal__high_ = results_cr["Acute Myocardial Infarction, Nonfatal (high)"].Value;
+                result_record.Acute_Myocardial_Infarction_Nonfatal__low_ = results_cr["Acute Myocardial Infarction, Nonfatal (low)"].Value;
+                result_record.Asthma_Exacerbation_Cough = results_cr["Asthma Exacerbation, Cough"].Value;
+                result_record.Asthma_Exacerbation_Shortness_of_Breath = results_cr["Asthma Exacerbation, Shortness of Breath"].Value;
+                result_record.Asthma_Exacerbation_Wheeze = results_cr["Asthma Exacerbation, Wheeze"].Value;
+                result_record.Emergency_Room_Visits_Asthma = results_cr["Emergency Room Visits, Asthma"].Value;
+                result_record.HA_All_Cardiovascular__less_Myocardial_Infarctions_ = results_cr["HA, All Cardiovascular (less Myocardial Infarctions)"].Value;
+                result_record.HA_All_Respiratory = results_cr["HA, All Respiratory"].Value;
+                result_record.HA_Asthma = results_cr["HA, Asthma"].Value;
+                result_record.HA_Chronic_Lung_Disease = results_cr["HA, Chronic Lung Disease"].Value;
+                result_record.Lower_Respiratory_Symptoms = results_cr["Lower Respiratory Symptoms"].Value;
+                result_record.Minor_Restricted_Activity_Days = results_cr["Minor Restricted Activity Days"].Value;
+                result_record.Mortality_All_Cause__low_ = results_cr["Mortality, All Cause (low)"].Value;
+                result_record.Mortality_All_Cause__high_ = results_cr["Mortality, All Cause (high)"].Value;
+                result_record.Infant_Mortality = results_cr["Infant Mortality"].Value;
+                result_record.Upper_Respiratory_Symptoms = results_cr["Upper Respiratory Symptoms"].Value;
+                result_record.Work_Loss_Days = results_cr["Work Loss Days"].Value;
+
+                result_record.C__Acute_Bronchitis = results_valuation["Acute Bronchitis"].Value;
+                result_record.C__Acute_Myocardial_Infarction_Nonfatal__high_ = results_valuation["Acute Myocardial Infarction, Nonfatal (high)"].Value;
+                result_record.C__Acute_Myocardial_Infarction_Nonfatal__low_ = results_valuation["Acute Myocardial Infarction, Nonfatal (low)"].Value;
+                result_record.C__Asthma_Exacerbation = results_valuation["Asthma Exacerbation"].Value;
+                result_record.C__Emergency_Room_Visits_Asthma = results_valuation["Emergency Room Visits, Asthma"].Value;
+                result_record.C__CVD_Hosp_Adm = results_valuation["CVD Hosp. Adm."].Value;
+                result_record.C__Resp_Hosp_Adm = results_valuation["Resp. Hosp. Adm."].Value;
+                result_record.C__Lower_Respiratory_Symptoms = results_valuation["Lower Respiratory Symptoms"].Value;
+                result_record.C__Minor_Restricted_Activity_Days = results_valuation["Minor Restricted Activity Days"].Value;
+                result_record.C__Mortality_All_Cause__low_ = results_valuation["Mortality, All Cause (low)"].Value;
+                result_record.C__Mortality_All_Cause__high_ = results_valuation["Mortality, All Cause (high)"].Value;
+                result_record.C__Infant_Mortality = results_valuation["Infant Mortality"].Value;
+                result_record.C__Upper_Respiratory_Symptoms = results_valuation["Upper Respiratory Symptoms"].Value;
+                result_record.C__Work_Loss_Days = results_valuation["Work Loss Days"].Value;
+
+                //now do total health effect dollars
+                double lowvals = 0;
+
+                lowvals += result_record.C__Acute_Bronchitis.GetValueOrDefault(0);
+
+                lowvals += result_record.C__Asthma_Exacerbation.GetValueOrDefault(0);
+                lowvals += result_record.C__Emergency_Room_Visits_Asthma.GetValueOrDefault(0);
+                lowvals += result_record.C__CVD_Hosp_Adm.GetValueOrDefault(0);
+                lowvals += result_record.C__Resp_Hosp_Adm.GetValueOrDefault(0);
+                lowvals += result_record.C__Lower_Respiratory_Symptoms.GetValueOrDefault(0);
+                lowvals += result_record.C__Minor_Restricted_Activity_Days.GetValueOrDefault(0);
+
+                lowvals += result_record.C__Infant_Mortality.GetValueOrDefault(0);
+                lowvals += result_record.C__Upper_Respiratory_Symptoms.GetValueOrDefault(0);
+                lowvals += result_record.C__Work_Loss_Days.GetValueOrDefault(0);
+
+                result_record.C__Total_Health_Benefits_Low_Value = lowvals;
+
+                //add low to high this works
+                result_record.C__Total_Health_Benefits_High_Value = lowvals;
+
+                //and here they diverge
+                result_record.C__Total_Health_Benefits_High_Value += result_record.C__Acute_Myocardial_Infarction_Nonfatal__high_.GetValueOrDefault(0) + result_record.C__Mortality_All_Cause__high_.GetValueOrDefault(0);
+
+                result_record.C__Total_Health_Benefits_Low_Value += result_record.C__Acute_Myocardial_Infarction_Nonfatal__low_.GetValueOrDefault(0) + result_record.C__Mortality_All_Cause__low_.GetValueOrDefault(0);
+
+                results.Add(result_record);
+            }
+            return results;
+        }
+
     }
 
 }

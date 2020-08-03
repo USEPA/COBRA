@@ -61,6 +61,8 @@ export class EmissionssectionComponent implements OnInit {
   public cNH3: number;
   public cVOC: number;
 
+  // public show_tipbox : boolean = true;
+
   @Output() theEmitter = new EventEmitter<any>();
 
   public table_results: any[] = [];
@@ -106,7 +108,10 @@ export class EmissionssectionComponent implements OnInit {
      this.cobraDataService.updateEmissionsData(this.returned_results["control"][0]).subscribe(
        data => { console.log('Update transmitted.');this.executedatarequest(); this.gatherBaselineAndControl();},
         err => console.error('An error occured during update: '+err),
-        () => {console.log('Done with update.');this.createReviewTable();}
+        () => {
+          this.theEmitter.emit({ action: 'stopspin'});
+          console.log('Done with update.');
+          this.createReviewTable();}
         );
     }
     
@@ -176,6 +181,10 @@ export class EmissionssectionComponent implements OnInit {
     this.tabstrip.selectTab(number);
   }
 
+  // closeTipBox(){
+  //   this.show_tipbox = false;
+  // }
+
   validateApply(): void {
 
   }
@@ -183,30 +192,26 @@ export class EmissionssectionComponent implements OnInit {
   applyVerify(review): void {
     if (review == "location"){
       this.clearLocations();
-      this.clearTiers()
+      this.clearTiers();
       this.tabstrip.selectTab(0);
+      this.cPM25 = null;
+      this.cSO2 = null;
+      this.cNOX = null;
+      this.cNH3 = null;
+      this.cVOC = null;
+        
     }else if (review == "review"){
       this.theEmitter.emit({ action: 'review'});
     }
   }
 
- /* applyChangesNew(apform: NgForm,type): void {
-    this.applyChanges(apform);
-    this.applyVerify("new location")
-  }
-
-  applyChangesReview(apform: NgForm): void{
-    
-    this.applyChanges(apform);
-     
-    this.applyVerify("review")
-      
-    
-  }*/
+ 
   applyChangesClick(apform: NgForm,type){
+    this.theEmitter.emit({ action: 'startspin'});
     this.applyChanges(apform);
     this.applyChangesReview = type;
   }
+ 
   createReviewTable(){
     if (this.tiertree_items_selected != null && this.statetree_items_selected != null) {
       if (this.tiertree_items_selected.length != 0 && this.statetree_items_selected.length != 0) {
@@ -439,6 +444,7 @@ export class EmissionssectionComponent implements OnInit {
     this.cobraDataService.changeData(this.delta_results);
 
   }
+
   public statetree_hasChildren(node: any): boolean {
     // Check if the parent node has children
     return node.items && node.items.length > 0;

@@ -8,13 +8,13 @@ import { ExcelExportData } from '@progress/kendo-angular-excel-export';
 import { Token } from '../Token';
 
 @Component({
-  selector: 'app-d3section',
-  templateUrl: './d3section.component.html',
-  styleUrls: ['./d3section.component.css']
+  selector: 'app-reviewresultssection',
+  templateUrl: './reviewsection.component.html',
+  styleUrls: ['./reviewsection.component.css']
 
 })
 
-export class D3sectionComponent implements OnInit {
+export class ReviewresultsComponent implements OnInit {
   public delta_results: any[] = [];
   public statetree_treeview: any[];
   public results_for_table: any[] = [];

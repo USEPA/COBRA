@@ -1,17 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Threading.Tasks;
-using CobraCompute;
-using Microsoft.AspNetCore.Mvc;
-using System.Net.Http;
-using Newtonsoft.Json;
+﻿using CobraCompute;
 using Export.XLS;
-using System.IO;
-using System.Globalization;
-using System.Net.Http.Headers;
+using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Collections.Generic;
 using System.Data;
+using System.Globalization;
+using System.IO;
 
 namespace CobraComputeAPI.Controllers
 {
@@ -26,30 +20,20 @@ namespace CobraComputeAPI.Controllers
             computeCore = _computeCore;
         }
 
-        // GET api/values
         [HttpGet("{token}/{which}")]
         public FileContentResult Get(Guid token, string which)
         {
 
             lock (computeCore)
             {
+                computeCore.retrieve_userscenario(token);
                 if (which == "results")
                 {
-                    List<Cobra_ResultDetail> results = computeCore.GetResults(token);
+                    List<Cobra_ResultDetail> results = computeCore.GetResults();
 
                     ExcelDocument document = new ExcelDocument();
                     document.UserName = "COBRA WEB API";
                     document.CodePage = CultureInfo.CurrentCulture.TextInfo.ANSICodePage;
-
-                    /*
-                    document.ColumnWidth(0, 120);
-                    document.ColumnWidth(1, 80);
-                    document[0, 0].Value = "ExcelWriter Demo";
-                    document[0, 0].Font = new Font("Tahoma", 10, FontStyle.Bold);
-                    document[0, 0].ForeColor = ExcelColor.DarkRed;
-                    document[0, 0].Alignment = Alignment.Centered;
-                    document[0, 0].BackColor = ExcelColor.Silver;
-                    */
 
                     document[0, 0].Value = "ID";
                     document[0, 1].Value = "destindx";
@@ -146,23 +130,20 @@ namespace CobraComputeAPI.Controllers
                     FileContentResult fcresult = new FileContentResult(stream.GetBuffer(), "application/vnd.ms-excel");
                     fcresult.FileDownloadName = "ExcelReport.xls";
                     return fcresult;
-                } else
+                }
+                else
                 {
-                    //possibly something like this:       DataTable controlemissions = SummarizeEmissionsbyType(Scenarios[token].EmissionsData);
                     DataTable result = null;
                     if (which == "base")
                     {
                         result = computeCore.SummarizeEmissionsForExport(computeCore.EmissionsInventory);
-                    } else
-                    {
-                        result = computeCore.SummarizeEmissionsForExport(computeCore.Scenarios[token].EmissionsData);
                     }
-                   
+
                     ExcelDocument document = new ExcelDocument();
                     document.UserName = "COBRA WEB API";
                     document.CodePage = CultureInfo.CurrentCulture.TextInfo.ANSICodePage;
 
-                    // First we will write the headers.
+                    // First headers.
                     int iColCount = result.Columns.Count;
                     for (int i = 0; i < iColCount; i++)
                     {
@@ -189,19 +170,6 @@ namespace CobraComputeAPI.Controllers
 
 
             }
-
-            /*
-            using (var memoryStream = new MemoryStream())
-            {
-                using (var streamWriter = new StreamWriter(memoryStream))
-                using (var csvWriter = new CsvWriter(streamWriter))
-                {
-                    csvWriter.WriteRecords<T>(records);
-                } // StreamWriter gets flushed here.
-
-                return memoryStream.ToArray();
-            }
-            */
         }
 
 

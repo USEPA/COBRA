@@ -1,9 +1,11 @@
 /* You can add global styles to this file, and also import other style files */
 
 body {
-	width: 1000px;
-    margin: 0 auto !important;
+	/* width: 1000px; */
+    /* margin: 0 auto !important; */
+    margin: 0 !important;
     font-family: 'Roboto', Arial, sans-serif;
+    min-width: 1000px;
 }
 
 .margTop {
@@ -57,6 +59,14 @@ button {
 .k-button {
     margin-right: 10px;
     font-size: 13px;
+}
+
+.download_button {
+    padding: 4px 14px;
+}
+
+.purple_button {
+    padding: 4px 14px;
 }
 
 label {
@@ -176,11 +186,25 @@ label {
     margin-bottom: 12px;
 }
 
-td {
-    padding: 5px 15px;
-    border: 1px solid #ddd;
-}
-
+/* TABLES */
 .resultsTable td:nth-child(2), .resultsTable td:nth-child(3) {
     text-align: center;
 }
+
+.tcell_gray {
+    background-color: rgb(233, 233, 233);
+  }
+  /* TABLES | END */
+
+/* EPA HEADER */
+#EPA_header {
+    min-width: 1000px;
+    width: 100%;
+}
+
+@media(max-width: 1240px) {
+    #EPA_header {
+        width:1450px;
+    }
+}
+/* EPA HEADER | END */

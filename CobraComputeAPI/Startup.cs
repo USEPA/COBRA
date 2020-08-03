@@ -1,17 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using CobraCompute;
+﻿using CobraCompute;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
+using System.Text;
 
 namespace CobraComputeAPI
 {
@@ -27,7 +20,10 @@ namespace CobraComputeAPI
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            CobraComputeCore core = new CobraComputeCore();
+            var RedisOptions = new RedisConfig();
+            Configuration.GetSection("RedisConfig").Bind(RedisOptions);
+
+            CobraComputeCore core = new CobraComputeCore(RedisOptions);
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
             services.AddSingleton(core);
 

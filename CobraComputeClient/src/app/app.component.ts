@@ -26,8 +26,8 @@ export class AppComponent {
   getToken(): void {
     this.cobraDataService.getToken().subscribe(
         data => {this.token$ = data.value; this.global.setToken(data.value)},
-        err => console.error(err),
-        () => console.log('Failed to obtain token.')
+        err => console.error('Failed to obtain token: '+err),
+        () => console.log('Obtained token.')
       );
   }
 }

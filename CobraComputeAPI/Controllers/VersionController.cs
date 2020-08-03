@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using CobraCompute;
+﻿using CobraCompute;
 using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json;
+using System;
 
 namespace CobraComputeAPI.Controllers
 {
@@ -19,16 +15,17 @@ namespace CobraComputeAPI.Controllers
             computeCore = _computeCore;
         }
 
-        // GET api/values
         [HttpGet]
         public String Get()
         {
-            computeCore.FlushUserScenarios();
-            if (!computeCore.initilized)
+            lock (computeCore)
             {
-                computeCore.initialize();
+                if (!computeCore.initilized)
+                {
+                    computeCore.initialize();
+                }
             }
-            return "V0.3" + Environment.NewLine + computeCore.statuslog.ToString();
+            return "V1.0" + Environment.NewLine + computeCore.statuslog.ToString();
         }
 
     }

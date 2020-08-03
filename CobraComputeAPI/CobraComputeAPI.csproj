@@ -7,23 +7,37 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="altdataformats\**" />
+    <Content Remove="altdataformats\**" />
+    <EmbeddedResource Remove="altdataformats\**" />
+    <None Remove="altdataformats\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="Extensions.cs" />
+    <Compile Remove="PBserializer.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Folder Include="wwwroot\" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="CoreCLR-NCalc" Version="2.2.51" />
-    <PackageReference Include="CsvHelper" Version="12.1.2" />
+    <PackageReference Include="Ceras" Version="4.1.7" />
+    <PackageReference Include="CoreCLR-NCalc" Version="2.2.70" />
+    <PackageReference Include="CsvHelper" Version="15.0.5" />
     <PackageReference Include="excel-export" Version="2.1.0" />
     <PackageReference Include="FastMember" Version="1.5.0" />
-    <PackageReference Include="MathNet.Numerics" Version="4.7.0" />
+    <PackageReference Include="MathNet.Numerics" Version="4.9.1" />
     <PackageReference Include="MathNet.Numerics.Data.Text" Version="4.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.App" />
-    <PackageReference Include="Microsoft.AspNetCore.Razor.Design" Version="2.1.2" PrivateAssets="All" />
-    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.1.9" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.1.2" />
     <PackageReference Include="NPOI" Version="2.5.1" />
+    <PackageReference Include="protobuf-net-data" Version="3.0.0" />
+    <PackageReference Include="ServiceStack.Redis.Core" Version="5.8.0" />
     <PackageReference Include="SharpZipLib" Version="1.2.0" />
     <PackageReference Include="System.Data.DataSetExtensions" Version="4.5.0" />
-    <PackageReference Include="System.Text.Encoding.CodePages" Version="4.5.1" />
+    <PackageReference Include="System.Text.Encoding.CodePages" Version="4.7.0" />
   </ItemGroup>
 
   <ItemGroup>

@@ -1,5 +1,8 @@
 # CobraComputeAPI
 
+!Requires REDIS!
+docker run -d -t -p 127.0.0.1:6379:6379 --name rediscontainer redis
+
 # Project is intended for deployment on Azure docker containers.
 
 # assume Dockerfile in C:\docker_deploy\cobra

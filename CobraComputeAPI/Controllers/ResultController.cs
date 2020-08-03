@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Threading.Tasks;
-using CobraCompute;
+﻿using CobraCompute;
 using Microsoft.AspNetCore.Mvc;
-using System.Net.Http;
 using Newtonsoft.Json;
+using System;
 
 namespace CobraComputeAPI.Controllers
 {
@@ -26,30 +21,28 @@ namespace CobraComputeAPI.Controllers
         {
             lock (computeCore)
             {
+                computeCore.retrieve_userscenario(token);
                 Cobra_Result result = new Cobra_Result();
-
-
-                result.Impacts = computeCore.GetResults(token);
+                result.Impacts = computeCore.GetResults();
                 result.Summary = new Cobra_ResultSummary();
-                Formatters.SummaryComposer(0, result);
-
+                Formatters.SummaryComposer("0", result);
+                computeCore.store_userscenario();
                 return new JsonResult(result, new JsonSerializerSettings() { Formatting = Formatting.Indented });
             }
 
         }
 
         [HttpGet("{token}/{filter}")]
-        public JsonResult Get(Guid token, int filter=0)
+        public JsonResult Get(Guid token, string filter = "0")
         {
             lock (computeCore)
             {
+                computeCore.retrieve_userscenario(token);
                 Cobra_Result result = new Cobra_Result();
-
-
-                result.Impacts = computeCore.GetResults(token);
+                result.Impacts = computeCore.GetResults();
                 result.Summary = new Cobra_ResultSummary();
                 Formatters.SummaryComposer(filter, result);
-
+                computeCore.store_userscenario();
                 return new JsonResult(result, new JsonSerializerSettings() { Formatting = Formatting.Indented });
             }
 

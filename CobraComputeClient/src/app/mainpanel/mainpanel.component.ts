@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
 import { ResultssectionComponent } from '../resultssection/resultssection.component';
-import { D3sectionComponent } from '../d3/d3section.component';
+import { ReviewresultsComponent } from '../reviewresults/reviewsection.component';
 import { EmissionssectionComponent } from '../emissionssection/emissionssection.component';
 import { CobraDataService } from '../cobra-data-service.service';
 import { SelectMultipleControlValueAccessor } from '@angular/forms';
@@ -20,7 +20,7 @@ export class MainpanelComponent implements AfterViewInit {
   @ViewChild(ResultssectionComponent) ressection;
   
   /* link between main panel and output table in review scenario section */
-  @ViewChild(D3sectionComponent) d3section;
+  @ViewChild(ReviewresultsComponent) reviewresultssection;
 
   @ViewChild(EmissionssectionComponent) emissionssection;
 
@@ -30,7 +30,7 @@ export class MainpanelComponent implements AfterViewInit {
     this.expandedItem = e.filter(item => item.selected)[0].title;
     for (var i = 0; i < e.length; i++) {
       if(e[i]['expanded'] == true && e[i]['title'] == "Review Scenario"){
-        this.d3section.getTableResults();
+        this.reviewresultssection.getTableResults();
       }else if(e[i]['expanded'] == true && e[i]['title'] == "Results"){
         this.ressection.getTableResults();
       }
@@ -45,6 +45,10 @@ export class MainpanelComponent implements AfterViewInit {
   processEmittedEvent(event: any) {
     if (event['action'] == 'review') {
       this.panelbar.stateChange.next([{ title: 'Review Scenario', expanded: true, selected: true }]);
+    } else if (event['action'] == 'startspin') {
+      this.showLoadAnimation = true;
+    } else if (event['action'] == 'stopspin') {
+      this.showLoadAnimation = false;
     } else {
       this.showLoadAnimation = true;
       if (event['action'] == 'go') {

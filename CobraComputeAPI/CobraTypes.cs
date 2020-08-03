@@ -1,12 +1,7 @@
-﻿using System;
+﻿using MathNet.Numerics.LinearAlgebra;
+using System;
 using System.Collections.Generic;
 using System.Data;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
-using MathNet.Numerics.Data.Text;
-using MathNet.Numerics.LinearAlgebra;
-using CsvHelper;
 
 namespace CobraCompute
 {
@@ -27,6 +22,25 @@ namespace CobraCompute
         public double? PM25 { get; set; }
         public double? VOC { get; set; }
     }
+
+    public class EmissionsRecord_Serializable
+    {
+        public int ID { get; set; } //this may be repurposed
+        public int typeindx { get; set; }
+        public int sourceindx { get; set; }
+        public int stid { get; set; }
+        public int cyid { get; set; }
+        public int TIER1 { get; set; }
+        public int TIER2 { get; set; }
+        public int TIER3 { get; set; }
+        public double NO2 { get; set; }
+        public double SO2 { get; set; }
+        public double NH3 { get; set; }
+        public double SOA { get; set; }
+        public double PM25 { get; set; }
+        public double VOC { get; set; }
+    }
+
     public class srrecord
     {
         public int ID { get; set; }
@@ -41,12 +55,18 @@ namespace CobraCompute
 
     public class UserScenario
     {
-        public DateTime createdOn;
-        public bool isDirty = true;
-        public int Year = 2025;
-        public Guid ID;
+        public DateTime createdOn { get; set; }
+        public bool isDirty { get; set; }
+        public bool isEmissionsDataDirty { get; set; }
+
+        public int Year { get; set; }
+        public Guid Id { get; set; }
         public DataTable EmissionsData;
+        public string EmissionsDataString { get; set; }
+
         public List<Cobra_ResultDetail> Impacts;
+        public string ImpactsString { get; set; }
+
     }
 
     //these are from old COBRA
@@ -56,7 +76,7 @@ namespace CobraCompute
         public string Endpoint { get; set; }
         public double Value { get; set; }
     }
-        public partial class Cobra_Destination
+    public partial class Cobra_Destination
     {
         public long ID { get; set; }
         public Nullable<long> destindx { get; set; }
@@ -591,6 +611,8 @@ namespace CobraCompute
         public Nullable<double> Infant_Mortality { get; set; }
         public Nullable<double> Upper_Respiratory_Symptoms { get; set; }
         public Nullable<double> Work_Loss_Days { get; set; }
+        public Nullable<double> C__Total_Health_Benefits_Low_Value { get; set; }
+        public Nullable<double> C__Total_Health_Benefits_High_Value { get; set; }
         public Nullable<double> C__Acute_Bronchitis { get; set; }
         public Nullable<double> C__Acute_Myocardial_Infarction_Nonfatal__high_ { get; set; }
         public Nullable<double> C__Acute_Myocardial_Infarction_Nonfatal__low_ { get; set; }
@@ -668,7 +690,7 @@ namespace CobraCompute
     }
     public partial class Cobra_Adjustment
     {
-        public int? indx { get; set; } 
+        public int? indx { get; set; }
         public double? F1 { get; set; }
     }
     public partial class Cobra_Voc2Soa
@@ -712,5 +734,22 @@ namespace CobraCompute
         public Emissions payload { get; set; }
     }
 
+    public class RedisMatrix
+    {
+        public long Id { get; set; }
+        public Matrix<double> Content { get; set; }
+        public string Annotation { get; set; }
+
+    }
+
+    public partial class ImpactComputeRequest
+    {
+        public double delta_pm;
+        public double base_pm;
+        public double control_pm;
+        public Cobra_POP population;
+        public Cobra_Incidence[] incidence;
+        public bool valat3;
+    }
 
 }

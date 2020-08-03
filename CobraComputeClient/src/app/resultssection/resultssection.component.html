@@ -1,27 +1,27 @@
 <div id="final_results" class="margTop">
-  <button kendoButton (click)="command({ action: 'results', param1: $event })">Download Results</button>
-  <div class="row content">
-    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12 main-section">
-      <br>
-      <br>
-      <br>
-        <kendo-dropdownlist 
-          [data]="this.states" 
-          [textField]="'text'" 
-          [valueField]="'value'" 
-          [defaultItem]="ddstate_defaultItem" 
-          (selectionChange)="selectionChange($event)"
-          >
-        </kendo-dropdownlist>
-    </div>
+  <div>
+    <button class="download_button" kendoButton (click)="command({ action: 'results', param1: $event })">Download Full Results</button>
+    <button class="download_button" kendoButton (click)="SummaryExport()">Download Results Summary</button>
+  </div>
+  <div id="res_states_dd">
+    <kendo-dropdownlist 
+      [data]="this.states" 
+      [textField]="'text'" 
+      [valueField]="'value'" 
+      [defaultItem]="ddstate_defaultItem" 
+      (selectionChange)="stateselectionChange($event)"
+      >
+    </kendo-dropdownlist>
+    <kendo-dropdownlist #dropdownlistcounties
+      [data]="this.counties" 
+      [textField]="'text'" 
+      [valueField]="'value'" 
+      [defaultItem]="ddstate_defaultCountyItem" 
+      (selectionChange)="countyselectionChange($event)"
+      >
+    </kendo-dropdownlist>    
+  </div>
 
-    <div class="row content">
-      <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12 main-section">
-        <br>
-        <br>
-        <button kendoButton (click)="SummaryExport()">Download Summary</button>
-      </div>
-  
   <div class="row content">
     <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-xs-12 main-section">
       <style type="text/css">
@@ -30,18 +30,18 @@
           border: 1px solid #ddd;
         }
       </style>
-      <table class="hbTable" style="margin: 0 auto; border: 1px solid #ddd;">
+      <table class="hbTable">
         <tbody>
           <tr style="font-weight: bold;">
-            <td colspan="2">Total Health Benefits</td>
+            <td class="tcell_gray" colspan="2" style="text-align: center">Total Health Benefits</td>
           </tr>
           <tr style="font-weight: bold;">
             <td>{{this.TotalHealthBenefitsValue_low}}</td>
             <td>{{this.TotalHealthBenefitsValue_high}}</td>
           </tr>
-          <tr style="font-weight: bold;">
-            <td>Low Value</td>
-            <td>High Value</td>
+          <tr style="font-weight: bold">
+            <td class="tcell_gray">Low Value</td>
+            <td class="tcell_gray">High Value</td>
           </tr>
         </tbody>
       </table>
@@ -56,78 +56,81 @@
       <style type="text/css">
         td {
           padding: 5px 15px;
-          border: 1px solid #ddd;
+          border: 1px solid rgb(163, 163, 163);
         }
       </style>
-      <table class="resultsTable" style="margin: 0 auto; border: 1px solid #ddd;">
+      <table class="resultsTable">
         <tbody>
           <tr style="font-weight: bold;">
-            <td></td>
-            <td colspan="2">Change in Incidence</td>
-            <td colspan="2">Monetary Value</td>
+            <td class="tcell_gray"></td>
+            <td class="tcell_gray" colspan="2">Change in Incidence</td>
+            <td class="tcell_gray" colspan="2">Monetary Value</td>
           </tr>
           <tr style="font-weight: bold;">
-            <td>Mortality</td>
+            <td class="tcell_gray">Mortality<sup> *</sup></td>
             <td colspan="2">{{Mortality_low}} / {{Mortality_high}}</td>
             <td colspan="2">{{MortalityValue_low}} / {{MortalityValue_high}}</td>
           </tr>
           <tr style="font-weight: bold;">
-            <td>Nonfatal Heart Attacks</td>
+            <td class="tcell_gray">Nonfatal Heart Attacks<sup> *</sup></td>
             <td colspan="2">{{NonfatalHeartAttacks_low}} / {{NonfatalHeartAttacks_high}}</td>
             <td colspan="2">{{NonfatalHeartAttacksValue_low}} / {{NonfatalHeartAttacksValue_high}}</td>
           </tr>
           <tr style="font-weight: bold;">
-            <td>Infant Mortality</td>
+            <td class="tcell_gray">Infant Mortality</td>
             <td colspan="2">{{this.InfantMortality}}</td>
             <td colspan="2">{{this.InfantMortalityValue}}</td>
           </tr>
           <tr style="font-weight: bold;">
-            <td> Hospital Admits, All Respiratory</td>
+            <td class="tcell_gray"> Hospital Admits, All Respiratory</td>
             <td colspan="2">{{this.HospitalAdmitsAllRespiratory}}</td>
             <td colspan="2">{{this.HospitalAdmitsAllRespiratoryValue}}</td>
           </tr>
           <tr style="font-weight: bold;">
-            <td>Hospital Admits, Cardiovascular (except heart attacks)</td>
+            <td class="tcell_gray">Hospital Admits, Cardiovascular (except heart attacks)</td>
             <td colspan="2">{{this.HospitalAdmitsCardiovascularexceptheartattacks}}</td>
             <td colspan="2">{{this.HospitalAdmitsCardiovascularexceptheartattacksValue}}</td>
           </tr>
           <tr style="font-weight: bold;">
-            <td>Acute Bronchitis</td>
+            <td class="tcell_gray">Acute Bronchitis</td>
             <td colspan="2">{{this.AcuteBronchitis}}</td>
             <td colspan="2">{{this.AcuteBronchitisValue}}</td>
           </tr>
           <tr style="font-weight: bold;">
-            <td>Upper Respiratory Symptoms</td>
+            <td class="tcell_gray">Upper Respiratory Symptoms</td>
             <td colspan="2">{{this.UpperRespiratorySymptoms}}</td>
             <td colspan="2">{{this.UpperRespiratorySymptomsValue}}</td>
           </tr>
           <tr style="font-weight: bold;">
-            <td>Lower Respiratory Symptoms</td>
+            <td class="tcell_gray">Lower Respiratory Symptoms</td>
             <td colspan="2">{{this.LowerRespiratorySymptoms}}</td>
             <td colspan="2">{{this.LowerRespiratorySymptomsValue}}</td>
           </tr>
           <tr style="font-weight: bold;">
-            <td>Emergency Room Visits, Asthma</td>
+            <td class="tcell_gray">Emergency Room Visits, Asthma</td>
             <td colspan="2">{{this.EmergencyRoomVisitsAsthma}}</td>
             <td colspan="2">{{this.EmergencyRoomVisitsAsthmaValue}}</td>
           </tr>
           <tr style="font-weight: bold;">
-            <td>Asthma Exacerbation</td>
+            <td class="tcell_gray">Asthma Exacerbation</td>
             <td colspan="2">{{this.AsthmaExacerbation}}</td>
             <td colspan="2">{{this.AsthmaExacerbationValue}}</td>
           </tr>
           <tr style="font-weight: bold;">
-            <td>Minor Restricted Activity Days</td>
+            <td class="tcell_gray">Minor Restricted Activity Days</td>
             <td colspan="2">{{this.MinorRestrictedActivityDays}}</td>
             <td colspan="2">{{this.MinorRestrictedActivityDaysValue}}</td>
           </tr>
           <tr style="font-weight: bold;">
-            <td>Work Loss Days</td>
+            <td class="tcell_gray">Work Loss Days</td>
             <td colspan="2">{{this.WorkLossDays}}</td>
             <td colspan="2">{{this.WorkLossDaysValue}}</td>
           </tr>
         </tbody>
       </table>
+      <div class="table_footnote">
+        <p><sup>* </sup>Results for Mortality and Nonfatal Heart Attacks include both high and low estimates. For more information, see the <a href="https://www.epa.gov/statelocalenergy/users-manual-co-benefits-risk-assessment-cobra-screening-model" target="blank">COBRA User's Manual</a>.</p>
+      </div>
     </div>
   </div>
 
@@ -208,7 +211,12 @@
         </kendo-grid>
       </div>
     </div>
-  </div>-->
+  </div>-->  
 </div>
-<svg width="960" height="600">
+<kendo-dropdownlist id="mapdropdown" [data]="this.filterDisplayName" (selectionChange)="mapFilter($event)" [value]="'Filter Type'">
+</kendo-dropdownlist>
+<h1 id="mapTitle" *ngIf = "this.mapTitledisabled == false">{{this.mapVar}}</h1>
+<!--<kendo-dropdownlist id="mapdropdown" [data]="this.scaleName" (selectionChange)="scaleFilter($event)" [disabled] = "disabled" [value]="'Filter Scale'">
+</kendo-dropdownlist>-->
+<svg>
 </svg>

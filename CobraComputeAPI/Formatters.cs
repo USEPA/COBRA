@@ -1,18 +1,14 @@
 ﻿using CobraCompute;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace CobraComputeAPI
 {
     public static class Formatters
     {
-        public static void SummaryComposer(int filter, Cobra_Result result)
+        public static void SummaryComposer(string filter, Cobra_Result result)
         {
             foreach (Cobra_ResultDetail detail in result.Impacts)
             {
-                if ( (filter == 0) || (filter == int.Parse(detail.FIPS.Substring(0, 2))))
+                if ((filter == "0") || (filter == detail.FIPS.Substring(0, filter.Length )) )
                 { //check if FIPS state part matches in case of filter
                     result.Summary.Acute_Bronchitis += detail.Acute_Bronchitis.GetValueOrDefault(0);
                     result.Summary.Asthma_Exacerbation_Cough += detail.Asthma_Exacerbation_Cough.GetValueOrDefault(0);
@@ -49,20 +45,18 @@ namespace CobraComputeAPI
                     result.Summary.Mortality_All_Cause__low_ += detail.Mortality_All_Cause__low_.GetValueOrDefault(0);
                     result.Summary.Mortality_All_Cause__high_ += detail.Mortality_All_Cause__high_.GetValueOrDefault(0);
 
-                    //now sort oot low high stuff, start with low bit that is equal to high bit
+                    //now sort low high stuff, start with low bit that is equal to high bit
                     double lowvals = 0;
 
                     lowvals += detail.C__Acute_Bronchitis.GetValueOrDefault(0);
-                    //lowvals += detail.C__Acute_Myocardial_Infarction_Nonfatal__high_.GetValueOrDefault(0);
-                    //lowvals += detail.C__Acute_Myocardial_Infarction_Nonfatal__low_.GetValueOrDefault(0);
+
                     lowvals += detail.C__Asthma_Exacerbation.GetValueOrDefault(0);
                     lowvals += detail.C__Emergency_Room_Visits_Asthma.GetValueOrDefault(0);
                     lowvals += detail.C__CVD_Hosp_Adm.GetValueOrDefault(0);
                     lowvals += detail.C__Resp_Hosp_Adm.GetValueOrDefault(0);
                     lowvals += detail.C__Lower_Respiratory_Symptoms.GetValueOrDefault(0);
                     lowvals += detail.C__Minor_Restricted_Activity_Days.GetValueOrDefault(0);
-                    //lowvals += detail.C__Mortality_All_Cause__low_.GetValueOrDefault(0);
-                    //lowvals += detail.C__Mortality_All_Cause__high_.GetValueOrDefault(0);
+
                     lowvals += detail.C__Infant_Mortality.GetValueOrDefault(0);
                     lowvals += detail.C__Upper_Respiratory_Symptoms.GetValueOrDefault(0);
                     lowvals += detail.C__Work_Loss_Days.GetValueOrDefault(0);

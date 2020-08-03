@@ -1,19 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Threading.Tasks;
-using CobraCompute;
+﻿using CobraCompute;
 using Microsoft.AspNetCore.Mvc;
-using System.Net.Http;
-using Newtonsoft.Json;
-using Export.XLS;
-using System.IO;
-using System.Globalization;
-using System.Net.Http.Headers;
-using System.Data;
 using NPOI.HSSF.UserModel;
 using NPOI.SS.UserModel;
+using System;
+using System.Globalization;
+using System.IO;
 
 namespace CobraComputeAPI.Controllers
 {
@@ -28,16 +19,15 @@ namespace CobraComputeAPI.Controllers
             computeCore = _computeCore;
         }
 
-        // GET api/values
         [HttpGet("{token}/{filter}")]
-        public FileContentResult Get(Guid token, int filter)
+        public FileContentResult Get(Guid token, string filter = "0")
         {
             lock (computeCore)
             {
+                computeCore.retrieve_userscenario(token);
                 Cobra_Result result = new Cobra_Result();
 
-
-                result.Impacts = computeCore.GetResults(token);
+                result.Impacts = computeCore.GetResults();
                 result.Summary = new Cobra_ResultSummary();
                 Formatters.SummaryComposer(filter, result);
 
@@ -52,7 +42,7 @@ namespace CobraComputeAPI.Controllers
                 sheet.GetRow(3).GetCell(1).SetCellValue(result.Summary.TotalHealthBenefitsValue_low.ToString("C0", CultureInfo.CurrentCulture));
                 sheet.GetRow(3).GetCell(3).SetCellValue(result.Summary.TotalHealthBenefitsValue_high.ToString("C0", CultureInfo.CurrentCulture));
 
-                sheet.GetRow(8).GetCell(1).SetCellValue(result.Summary.Mortality_All_Cause__low_.ToString("F3", CultureInfo.CurrentCulture)+" / "+ result.Summary.Mortality_All_Cause__high_.ToString("F3", CultureInfo.CurrentCulture));
+                sheet.GetRow(8).GetCell(1).SetCellValue(result.Summary.Mortality_All_Cause__low_.ToString("F3", CultureInfo.CurrentCulture) + " / " + result.Summary.Mortality_All_Cause__high_.ToString("F3", CultureInfo.CurrentCulture));
                 sheet.GetRow(8).GetCell(3).SetCellValue(result.Summary.C__Mortality_All_Cause__low_.ToString("C0", CultureInfo.CurrentCulture) + " / " + result.Summary.C__Mortality_All_Cause__high_.ToString("C0", CultureInfo.CurrentCulture));
 
                 sheet.GetRow(9).GetCell(1).SetCellValue(result.Summary.Acute_Myocardial_Infarction_Nonfatal__low_.ToString("F3", CultureInfo.CurrentCulture) + " / " + result.Summary.Acute_Myocardial_Infarction_Nonfatal__high_.ToString("F3", CultureInfo.CurrentCulture));
@@ -61,7 +51,7 @@ namespace CobraComputeAPI.Controllers
                 sheet.GetRow(10).GetCell(1).SetCellValue(result.Summary.Infant_Mortality.ToString("F3", CultureInfo.CurrentCulture));
                 sheet.GetRow(10).GetCell(3).SetCellValue(result.Summary.C__Infant_Mortality.ToString("C0", CultureInfo.CurrentCulture));
 
-                sheet.GetRow(11).GetCell(1).SetCellValue((result.Summary.HA_All_Respiratory+result.Summary.HA_Chronic_Lung_Disease).ToString("F3", CultureInfo.CurrentCulture));
+                sheet.GetRow(11).GetCell(1).SetCellValue((result.Summary.HA_All_Respiratory + result.Summary.HA_Chronic_Lung_Disease).ToString("F3", CultureInfo.CurrentCulture));
                 sheet.GetRow(11).GetCell(3).SetCellValue((result.Summary.C__CVD_Hosp_Adm).ToString("C0", CultureInfo.CurrentCulture));
 
                 sheet.GetRow(12).GetCell(1).SetCellValue((result.Summary.HA_All_Cardiovascular__less_Myocardial_Infarctions_).ToString("F3", CultureInfo.CurrentCulture));
@@ -79,7 +69,7 @@ namespace CobraComputeAPI.Controllers
                 sheet.GetRow(16).GetCell(1).SetCellValue((result.Summary.Emergency_Room_Visits_Asthma).ToString("F3", CultureInfo.CurrentCulture));
                 sheet.GetRow(16).GetCell(3).SetCellValue((result.Summary.C__Emergency_Room_Visits_Asthma).ToString("C0", CultureInfo.CurrentCulture));
 
-                sheet.GetRow(17).GetCell(1).SetCellValue((result.Summary.Asthma_Exacerbation_Cough+ result.Summary.Asthma_Exacerbation_Shortness_of_Breath + result.Summary.Asthma_Exacerbation_Wheeze).ToString("F3", CultureInfo.CurrentCulture));
+                sheet.GetRow(17).GetCell(1).SetCellValue((result.Summary.Asthma_Exacerbation_Cough + result.Summary.Asthma_Exacerbation_Shortness_of_Breath + result.Summary.Asthma_Exacerbation_Wheeze).ToString("F3", CultureInfo.CurrentCulture));
                 sheet.GetRow(17).GetCell(3).SetCellValue((result.Summary.C__Asthma_Exacerbation).ToString("C0", CultureInfo.CurrentCulture));
 
                 sheet.GetRow(18).GetCell(1).SetCellValue((result.Summary.Minor_Restricted_Activity_Days).ToString("F3", CultureInfo.CurrentCulture));

@@ -16,7 +16,7 @@ import { PDFModule } from '@progress/kendo-angular-grid';
 import { EmissionssectionComponent } from './emissionssection/emissionssection.component';
 import { ReviewsectionComponent } from './reviewsection/reviewsection.component';
 import { ResultssectionComponent } from './resultssection/resultssection.component';
-import { D3sectionComponent } from './d3/d3section.component';
+import { ReviewresultsComponent } from './reviewresults/reviewsection.component';
 import { ButtonsModule } from '@progress/kendo-angular-buttons';
 import { ExcelExportModule } from '@progress/kendo-angular-excel-export';
 import { DropDownsModule } from '@progress/kendo-angular-dropdowns';
@@ -32,7 +32,7 @@ import { LoadinganimationComponent } from './loadinganimation/loadinganimation.c
     ResultssectionComponent,
     ReviewsectionComponent,
     EmissionssectionComponent,
-    D3sectionComponent,
+    ReviewresultsComponent,
     LoadinganimationComponent
   ],
   imports: [

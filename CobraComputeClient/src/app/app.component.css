@@ -1,7 +1,5 @@
 .main-section {
   margin: 1em;
-}
-
-img {
-  width:400px;
+  min-width: 1000px;
+  padding: 0 70px;
 }

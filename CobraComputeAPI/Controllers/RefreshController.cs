@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using CobraCompute;
+﻿using CobraCompute;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
+using System;
 
 namespace CobraComputeAPI.Controllers
 {
@@ -22,8 +19,11 @@ namespace CobraComputeAPI.Controllers
         [HttpGet]
         public JsonResult Get(Guid token)
         {
-            Guid _token = computeCore.renewUserScenario(token);
-            return new JsonResult(new { value = _token }, new JsonSerializerSettings() { Formatting = Formatting.Indented });
+            lock (computeCore)
+            {
+                Guid _token = computeCore.Scenarios.renewUserScenario(token);
+                return new JsonResult(new { value = _token }, new JsonSerializerSettings() { Formatting = Formatting.Indented });
+            }
         }
 
     }
