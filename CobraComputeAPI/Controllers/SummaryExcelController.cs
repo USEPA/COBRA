@@ -20,14 +20,14 @@ namespace CobraComputeAPI.Controllers
         }
 
         [HttpGet("{token}/{filter}")]
-        public FileContentResult Get(Guid token, string filter = "0")
+        public FileContentResult Get(Guid token, string filter = "0", [FromQuery] double discountrate=3)
         {
             lock (computeCore)
             {
                 computeCore.retrieve_userscenario(token);
                 Cobra_Result result = new Cobra_Result();
 
-                result.Impacts = computeCore.GetResults();
+                result.Impacts = computeCore.GetResults(discountrate);
                 result.Summary = new Cobra_ResultSummary();
                 Formatters.SummaryComposer(filter, result);
 

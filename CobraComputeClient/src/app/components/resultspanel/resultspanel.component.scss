@@ -1,0 +1,47 @@
+.legend {
+    color: #555;
+    padding: 6px 8px;
+    font: 12px Arial, Helvetica, sans-serif;
+    font-weight: bold;
+    background: white;
+    background: rgba(255,255,255,0.8);
+    box-shadow: 0 0 15px rgba(0,0,0,0.2);
+    border-radius: 5px;
+}
+.legend ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    clear: both;
+}
+.legend li {
+    display: inline-block;
+    width: 30px;
+    height: 22px;
+}
+.legend .min {
+    float: left;
+    padding-bottom: 5px;
+}
+.legend .max {
+    float: right;
+}
+
+.legend p {
+    color: #555;
+    font: 12px Arial, Helvetica, sans-serif;
+    margin-top: 0px;
+}
+/* --- leaflet map --- */
+
+.leaflet-bar a, .leaflet-bar:hover{
+    background-color: '#fff' !important;
+    text-decoration: none !important;
+ }
+
+.home-button {
+    width: 30px;
+    height: 30px;
+    line-height: 30px;
+    border-radius: 2px;
+}

@@ -25,7 +25,7 @@ namespace CobraComputeAPI.Controllers
                     computeCore.initialize();
                 }
             }
-            return "V1.0" + Environment.NewLine + computeCore.statuslog.ToString();
+            return computeCore.version();
         }
 
     }

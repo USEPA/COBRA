@@ -1,0 +1,500 @@
+/*
+* * * * * ==============================
+* * * * * ==============================
+* * * * * ==============================
+* * * * * ==============================
+========================================
+========================================
+========================================
+----------------------------------------
+USWDS THEME CUSTOM STYLES
+----------------------------------------
+!! Copy this file to your project's
+   sass root. Don't edit the version
+   in node_modules.
+----------------------------------------
+Custom project SASS goes here.
+
+i.e.
+@include u-padding-right('05');
+----------------------------------------
+*/
+
+/* --- CLARITY OVERRIDES --- */
+body {
+   @include u-text('ink');
+}
+
+body p {
+   font-size: inherit; 
+   line-height: inherit; 
+   @include u-text('ink');
+}
+
+clr-icon.is-info {
+   fill: $dark-blue;
+}
+
+.tooltip > .tooltip-content, .tooltip.tooltip-top-right > .tooltip-content,
+.tooltip .tooltip-content.tooltip-top-right, .tooltip.tooltip-top-left > .tooltip-content,
+.tooltip .tooltip-content.tooltip-top-left  {
+   background-color: $dark-blue;
+   @include u-font('sans','xs');
+   @include u-line-height('sans',3); 
+}
+
+.tooltip > .tooltip-content::before, .tooltip.tooltip-top-right > .tooltip-content::before,
+.tooltip .tooltip-content.tooltip-top-right::before {
+    border-left-color: $dark-blue;
+    border-top-color: $dark-blue;
+}
+
+.tooltip.tooltip-top-left > .tooltip-content::before,
+.tooltip .tooltip-content.tooltip-top-left::before {
+    border-right-color: $dark-blue;
+    border-top-color: $dark-blue;
+}
+
+.has-tooltip {
+   white-space: nowrap;  
+}
+
+/* --- USWDS THEMING --- */
+.usa-prose h1 {
+   @include u-font('sans','lg');
+   @include u-line-height('sans',3); 
+   font-weight: font-weight('bold');
+   @include u-margin-top(0);
+} 
+
+.usa-prose h2 {
+   @include u-font('sans','lg');
+   @include u-line-height('sans',3); 
+   font-weight: font-weight('bold');
+   color: $teal-green;
+}
+
+.usa-prose h3 {
+   @include u-font('sans','2xs');
+   @include u-line-height('sans',3);
+   font-weight: font-weight('bold');
+}
+
+.usa-prose p {
+   @include u-line-height('sans',3);
+}
+
+.usa-prose a {
+   background-color: transparent;
+   color: $theme-link-color;
+   text-decoration: underline;
+}
+.usa-prose a:hover {
+   color: $theme-link-hover-color;
+}
+.usa-prose a:visited {
+   color: $theme-link-visited-color;
+}
+.usa-prose a:active {
+   color: $theme-link-active-color;
+}
+
+.usa-select {
+   @include u-font('sans','2xs');
+}
+
+.usa-fieldset {
+   @include u-font('sans','2xs');
+}
+
+.usa-fieldset.pollutant  {
+   border-bottom: 1px solid #565c65;
+   @include u-padding-y(2);
+}
+
+.usa-legend {
+   @include u-font('sans','2xs');
+   @include u-line-height('sans',2);
+   font-weight: font-weight('bold');
+}
+
+.usa-select:disabled {
+   @include u-bg('base-lightest');
+}
+
+.usa-label {
+   @include u-font('sans','2xs');
+   font-weight: font-weight('bold');
+}
+
+.usa-input {
+   @include u-font('sans','2xs');
+   @include u-width(9);
+   @include u-height(4);
+}
+
+.usa-radio__label {
+   @include u-font('sans','2xs');
+   @include u-line-height('sans',6);
+   @include u-padding-left(2);
+   font-weight: font-weight('semibold');
+}
+
+.usa-radio__label::before {
+   @include u-circle(2);
+ }
+
+.usa-button {
+   text-transform: uppercase;
+   background-color: $teal-green;
+   @include u-font('sans','2xs');
+   &:hover { 
+      background-color: #016364; 
+   }
+   &:active { 
+      box-shadow: inset 0 0 0 2px $teal-green; 
+   }
+}
+
+.usa-button--outline {
+   color: $blue;
+   background-color: transparent;
+   box-shadow: inset 0 0 0 2px $blue;
+   &:hover {
+      color: $dark-blue;
+      background-color: transparent;
+      box-shadow: inset 0 0 0 2px $dark-blue;
+   }
+   &:active {
+      background-color: $light-blue;
+   }
+}
+
+.usa-button--unstyled {
+   color: $theme-link-color;
+   &:hover {
+      color: $theme-link-hover-color;
+   }
+   &:active {
+      background-color: $theme-link-active-color;
+   }
+}
+
+.usa-table--borderless {
+   width:100%;
+}
+
+.usa-table--borderless th, .usa-table--borderless td {
+   @include u-font('sans','2xs');
+   padding: 0.5rem 0 !important;
+}
+
+.usa-table--borderless th.cell-lg, .usa-table--borderless td.cell-lg {
+   @include u-font('sans','sm');
+   font-weight: bold !important;
+   padding: 0.5rem 4px 0.5rem 2px !important;
+}
+
+.usa-table--borderless td, .usa-table--borderless th {
+   padding: 0.5rem 4px 0.5rem 2px !important;
+}
+
+.usa-table--numeric td {
+   text-align: right;
+   background-color: transparent !important;
+}
+
+.usa-table--numeric th[scope=row] {
+   background-color: transparent !important;
+}
+
+.usa-table--numeric tr:hover {
+   @include u-bg('base-lightest');
+}
+
+.usa-alert--info {
+   background-color: white;
+   background-image: url(../assets/images/info-icon.svg), linear-gradient(transparent, transparent);
+   &::before {
+      background-color: white;
+   }
+   
+   .usa-alert__body {
+      padding-left: 2.75rem;
+   }
+}
+
+.usa-alert--slim {
+   background-position: 0.75rem center;
+   background-size: 2.75rem;
+}
+
+.usa-tag {
+   background-color: $purple;
+   @include u-margin-left(2px);
+}
+
+.usa-tag--big {
+   background-color: $light-blue;
+   @include u-font('sans','2xs');
+   @include u-padding('05');
+}
+
+/* --- MAIN CONTAINERS --- */
+.panel {
+   @extend .usa-prose;
+   @include u-bg('base-lightest');  
+   @include u-padding(4);
+   @include u-shadow(2);
+   border-radius: 2px;
+   
+   .subpanel {
+      @extend .usa-prose;
+      @include u-font('sans','2xs');
+      @include u-shadow(2);
+      @include u-padding('205');
+      @include u-margin-y('205');
+      background-color: white;
+      overflow: hidden;
+      border-radius: 2px;
+
+      .usa-button--outline {
+         @include u-margin-top(2);
+         @include u-margin-right(0);
+      }
+
+      .usa-radio__label {
+         display: inline;
+      }
+   }
+
+   .results {
+      display:flex;
+      flex-direction:column;
+   }
+}
+
+.panel-active {
+   box-shadow: inset 0 0 0 5px $mint-green;
+   position: relative;
+}
+
+/* --- SPECIAL FEATRUES --- */
+//used for 'start' circle 
+.panel-circle {
+   @include u-circle(8);
+   position: absolute;
+   top: -30px;
+   left: -30px;
+	background: $mint-green;
+   text-align: center;
+   text-transform: uppercase;
+
+   .panel-circle__inner {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+   }
+   
+   .panel-circle__wrapper {
+      display: table;
+      width: 100%;
+      height: 100%;
+   }
+   
+   .panel-circle__content {
+      display: table-cell;
+      vertical-align: middle;
+      font-weight: font-weight('bold');
+   }
+}
+
+.no-scenario-screen {
+   @include u-padding-y(0);
+   @include u-margin-bottom(8);
+}
+
+.no-scenario-screen .icon, .pending-results-screen .icon {
+   @include u-height(4);
+   @include u-width(4);
+   @include u-margin-top(5);
+   margin-left: auto;
+   margin-right: auto;
+
+}
+.no-scenario-screen .message, .pending-results-screen .message {
+   @include u-text('base-light'); 
+   @include u-font('sans','md');
+   @include u-line-height('sans',2);
+   @include u-margin-top(2);
+   @include u-padding-x(2);
+   text-align: center;
+   margin-left: auto;
+   margin-right: auto;
+}
+
+.results .no-scenario-screen, .results .pending-results-screen {
+   height: 200vh;
+}
+
+.review-help {
+   @include u-margin-top(8);
+
+   .icon {
+      @include u-width(4);
+      @include u-height(4);
+      @include u-display('inline-block');
+      @include u-margin-right(2);
+      @include u-text('top');
+   }
+
+   .message {
+      @include u-text('base-light'); 
+      @include u-font('sans','md');
+      @include u-line-height('sans',2);
+      @include u-display('inline-block');
+      width: 16rem;
+   }
+}
+
+.switch-field {
+   @include u-margin-bottom(1);
+
+   input[type=radio] {
+      position: absolute !important;
+      opacity:0;
+   }
+
+   input[type=radio]:focus + label {
+      outline: 2px dotted #171717;
+      outline-offset: 1px;
+   }
+
+   input[type=radio]:checked + label {
+      @include u-padding-x(1);
+      @include u-font('sans','3xs');
+      margin-top: 0 !important;
+      background-color: $dark-blue;
+      color: white;
+      font-weight: font-weight('bold');
+      box-shadow: inset 0 0 0 2px $dark-blue; 
+      &:hover { 
+         background-color: #044880;
+         color: white;
+         box-shadow: inset 0 0 0 2px #044880; 
+      }
+      &:active { 
+         box-shadow: inset 0 0 0 2px #044880; 
+      }
+   }
+   label {
+      @include u-padding(1);
+      @include u-font('sans','3xs');
+      margin-top: 0 !important;
+      @include u-bg('base-lightest'); 
+      color: $dark-blue;
+      font-weight: font-weight('bold');
+      box-shadow: inset 0 0 0 2px $dark-blue; 
+      &:hover { 
+         @include u-bg('base-lightest'); 
+         color: #044880; 
+         box-shadow: inset 0 0 0 2px #044880; 
+         cursor: pointer;
+      }
+      &:active { 
+         box-shadow: inset 0 0 0 2px #044880; 
+      }
+   }
+   label:first-of-type {
+      border-radius: 4px 0 0 4px; 
+   } 
+   label:last-of-type {
+      border-radius: 0 4px 4px 0;
+   }
+}
+
+.export {
+   margin-top:0 !important;
+   float: right;
+}
+
+.discount .usa-radio__label {
+   @include u-padding-left('05');
+}
+
+.discount-input {
+   @include u-height(5);
+   @include u-width(10);
+   margin-top:-8px;
+}
+
+
+.remove-button {
+   @include u-padding-y(0);
+   @include u-padding-x('05');
+
+   &:hover {
+      background-color: $light-blue;
+   }
+}
+
+.leaflet-control {
+   background-color: white;
+}
+
+/* --- UTILITIES --- */
+
+.text-headline {
+   @include u-font('sans','lg');
+   @include u-line-height('sans',3); 
+   font-weight: font-weight('bold');
+}
+
+.text-highlight {
+   @include u-padding-x('05');
+   background-color: $purple;
+   color: white;
+}
+
+.text-emphasis {
+   color:purple;
+}
+
+.text-footnote p {
+   @include u-font('sans','3xs');
+   @include u-line-height('sans',2); 
+   padding-left: 10px;
+   text-indent: -10px;
+}
+
+.animation-text {
+   @include u-font('sans','lg');
+   font-weight: font-weight('bold');
+   color: $purple;
+   text-align: center;
+   margin:0;
+}
+
+/* --- MEDIA QUERIES --- */
+
+@media (max-width: 768px) {
+   .review-help {
+      display:none; 
+   }
+}
+
+@media (max-width: 991px) {
+   .panel-circle {
+      display:none; 
+   }
+}
+
+@media (min-width: 992px) and (max-width: 1200px) {
+   // accomodates panel-circle spacing
+   .grid-container {
+      padding-left: 2rem; 
+   }
+}

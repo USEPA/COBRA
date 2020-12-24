@@ -21,7 +21,7 @@ namespace CobraComputeAPI.Controllers
         }
 
         [HttpGet("{token}/{which}")]
-        public FileContentResult Get(Guid token, string which)
+        public FileContentResult Get(Guid token, string which, [FromQuery] double discountrate = 3)
         {
 
             lock (computeCore)
@@ -29,7 +29,7 @@ namespace CobraComputeAPI.Controllers
                 computeCore.retrieve_userscenario(token);
                 if (which == "results")
                 {
-                    List<Cobra_ResultDetail> results = computeCore.GetResults();
+                    List<Cobra_ResultDetail> results = computeCore.GetResults(discountrate);
 
                     ExcelDocument document = new ExcelDocument();
                     document.UserName = "COBRA WEB API";

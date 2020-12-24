@@ -22,8 +22,13 @@ namespace CobraComputeAPI
         {
             var RedisOptions = new RedisConfig();
             Configuration.GetSection("RedisConfig").Bind(RedisOptions);
+            var s3Options = new S3Config();
+            Configuration.GetSection("S3Config").Bind(s3Options);
+            var modelOptions = new ModelConfig();
+            Configuration.GetSection("ModelConfig").Bind(modelOptions);
 
-            CobraComputeCore core = new CobraComputeCore(RedisOptions);
+
+            CobraComputeCore core = new CobraComputeCore(RedisOptions,s3Options,modelOptions);
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
             services.AddSingleton(core);
 

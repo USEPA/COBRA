@@ -25,6 +25,9 @@ namespace CobraComputeAPI.Controllers
                 {
 
                     Guid _token = computeCore.Scenarios.createUserScenario();
+                    GC.Collect();
+                    GC.WaitForPendingFinalizers();
+                    GC.Collect();
                     return new JsonResult(new { value = _token }, new JsonSerializerSettings() { Formatting = Formatting.Indented });
                 }
                 else

@@ -31,7 +31,7 @@
     <PackageReference Include="MathNet.Numerics" Version="4.9.1" />
     <PackageReference Include="MathNet.Numerics.Data.Text" Version="4.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.App" />
-    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.1.2" />
+    <PackageReference Include="Minio" Version="3.1.13" />
     <PackageReference Include="NPOI" Version="2.5.1" />
     <PackageReference Include="protobuf-net-data" Version="3.0.0" />
     <PackageReference Include="ServiceStack.Redis.Core" Version="5.8.0" />
@@ -92,22 +92,7 @@
     <None Update="data\matrix_so2_4.mtx">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="data\sys_adj.csv">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="data\sys_cr_inventory.csv">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="data\sys_dict.csv">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
     <None Update="data\sys_emissions_inventory.csv">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="data\sys_incidence_inventory.csv">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="data\sys_pop_inventory.csv">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="data\sys_srmatrix_2025.csv">
@@ -115,15 +100,6 @@
     </None>
     <None Update="data\sys_srmatrix_2025.zip">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-    </None>
-    <None Update="data\sys_tiers.csv">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="data\sys_valuation_inventory.csv">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="data\sys_voc2soa.csv">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
 

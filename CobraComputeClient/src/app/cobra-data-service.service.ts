@@ -5,9 +5,9 @@ import { Observable, of } from 'rxjs';
 import { Token } from './Token';
 import { catchError, map, tap } from 'rxjs/operators';
 import { GlobalsService } from './globals.service';
-import { RequestOptions } from '@angular/http';
+// import { RequestOptions } from '@angular/http';
 import { JSDocTagName } from '@angular/compiler/src/output/output_ast';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { BehaviorSubject } from 'rxjs/Rx'
 import { saveAs } from 'file-saver';
 
 
@@ -16,26 +16,28 @@ import { saveAs } from 'file-saver';
 })
 export class CobraDataService {
   
-  private dataSource = new BehaviorSubject<any>([]);
+  public dataSource = new BehaviorSubject<any>([]);
+  
   currentData = this.dataSource.asObservable();
   changeData(data: any) {
     this.dataSource.next(data);
   }
-  private stateCountyDataSource = new BehaviorSubject<any>([]);
+  public stateCountyDataSource = new BehaviorSubject<any>([]);
   stateCountyData = this.stateCountyDataSource.asObservable();
   
   changeSCData(data: any) {
     this.stateCountyDataSource.next(data);
   }
 
-  private serverendpoint = 'https://cobraapi.app.cloud.gov/api/';   
-  //private serverendpoint = 'http://localhost/CobraComputeAPI/api/';   
+  //public serverendpoint = 'https://cobraapi.app.cloud.gov/api/';
+  public serverendpoint = 'https://cobradevapi.app.cloud.gov/api/';
+  //private serverendpoint = 'http://localhost/CobraComputeAPI/api/';
   
 
   private tokenUrl = this.serverendpoint + 'token';  // URL to web api
   private resultUrl = this.serverendpoint + 'Result';  // URL to web api
   private datadictUrl = this.serverendpoint + 'datadictionary';  // URL to web api
-  private emissionsUrl = this.serverendpoint + 'SummarizedControlEmissions';  // URL to web api
+  public emissionsUrl = this.serverendpoint + 'SummarizedControlEmissions';  // URL to web api
   private emissionsupdateUrl = this.serverendpoint + 'EmissionsUpdate';  // URL to web api
   private sumemissionsUrl = this.serverendpoint + 'SummarizedEmissions'; 
   private resultExportUrl = this.serverendpoint + 'ExcelExport'; 
@@ -47,12 +49,21 @@ export class CobraDataService {
     return this.http.get<Token>(this.tokenUrl);
   }
 
-  getResults(filterval): Observable<any[]> {
+  // getResults(filterval): Observable<any[]> {
+  //   if (filterval && filterval!='00') {
+  //     return this.http.get<any[]>(this.resultUrl + "/" + this.globals.getToken()+"/" + filterval);
+  //   }
+  //   else {
+  //     return this.http.get<any[]>(this.resultUrl + "/" + this.globals.getToken());
+  //   }
+  // }
+
+  getResults(filterval: any, rate: any): Observable<any[]> {
     if (filterval && filterval!='00') {
-      return this.http.get<any[]>(this.resultUrl + "/" + this.globals.getToken()+"/" + filterval);
+      return this.http.get<any[]>(this.resultUrl + "/" + this.globals.getToken()+"/" + filterval +"?discountrate="+rate);
     }
     else {
-      return this.http.get<any[]>(this.resultUrl + "/" + this.globals.getToken());
+      return this.http.get<any[]>(this.resultUrl + "/" + this.globals.getToken()+"?discountrate="+rate);
     }
   }
 
@@ -133,26 +144,26 @@ export class CobraDataService {
     return this.http.post<any[]>(this.emissionsupdateUrl, body);
   }
 
-  export_results(kind) {
-    return this.http.get(this.resultExportUrl + "/" +this.globals.getToken()+"/" + kind, {responseType: 'blob'});
+  export_results(kind: any, rate: any) {
+    return this.http.get(this.resultExportUrl + "/" +this.globals.getToken()+"/" + kind + "?discountrate=" + rate, {responseType: 'blob'});
   }
   
-  public ExcelExport(kind, callback=null) {
-   var filename = "ExcelResultReport.xls";
-   if (kind=='base') { filename = "BaselineEmissions.xls" };
-   if (kind=='control') { filename = "ControlEmissions.xls" };
-    this.export_results(kind).subscribe(data => {
-      saveAs(data, filename);
-      if(callback) callback();
-    });
-   }
+  public ExcelExport(kind: any, rate: any, callback = null) {
+    var filename = "ExcelResultReport.xls";
+    if (kind == 'base') { filename = "BaselineEmissions.xls" };
+    if (kind == 'control') { filename = "ControlEmissions.xls" };
 
-   public SummaryExcelExport(filter) {
+    this.export_results(kind, rate).subscribe(data => {
+      saveAs(data, filename);
+      if (callback) callback();
+    });
+  }
+
+  public SummaryExcelExport(filter: any, rate: any) {
     var filename = "SummaryExcelReport.xls";
-    this.http.get(this.SummaryExportUrl + "/" +this.globals.getToken()+"/" + filter, {responseType: 'blob'}).subscribe(data => {
-       saveAs(data, filename);
-     });
+    this.http.get(this.SummaryExportUrl + "/" + this.globals.getToken() + "/" + filter + "?discountrate=" + rate, { responseType: 'blob' }).subscribe(data => {
+      saveAs(data, filename);
+    });
   }
  
-
 }

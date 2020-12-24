@@ -5,6 +5,32 @@ using System.Data;
 
 namespace CobraCompute
 {
+    public class RedisConfig
+    {
+        public string Host { get; set; }
+        public int DB { get; set; }
+        public int Port { get; set; }
+        public string URI { get; set; }
+    }
+
+    public class S3Config
+    {
+        public string endpoint { get; set; }
+        public string bucket { get; set; }
+        public string region { get; set; }
+        public string accessKey { get; set; }
+        public string secretKey { get; set; }
+        public bool ssl { get; set; }
+    }
+
+    public class ModelConfig
+    {
+        public int emissionsdatayear { get; set; }
+        public int populationdatayear { get; set; }
+        public int incidencedatayear { get; set; }
+    }
+
+
     public class EmissionsRecord
     {
         public int? ID { get; set; } //this may be repurposed
@@ -58,18 +84,13 @@ namespace CobraCompute
         public DateTime createdOn { get; set; }
         public bool isDirty { get; set; }
         public bool isEmissionsDataDirty { get; set; }
-
         public int Year { get; set; }
         public Guid Id { get; set; }
         public DataTable EmissionsData;
-        public string EmissionsDataString { get; set; }
-
         public List<Cobra_ResultDetail> Impacts;
-        public string ImpactsString { get; set; }
 
     }
 
-    //these are from old COBRA
     class Result
     {
         public long Destinationindex { get; set; }
@@ -751,5 +772,44 @@ namespace CobraCompute
         public Cobra_Incidence[] incidence;
         public bool valat3;
     }
+
+    public partial class CustomImpactComputeRequest : ImpactComputeRequest
+    {
+        public Cobra_CR_Core[] CustomCRFunctions;
+        public Cobra_Valuation_Core[] CustomValuationFunctions;
+    }
+
+    public partial class Cobra_CR_Core
+    {
+        public string Endpoint { get; set; }
+        public Nullable<double> PoolingWeight { get; set; }
+        public string Seasonal_Metric { get; set; }
+        public Nullable<long> Start_Age { get; set; }
+        public Nullable<long> End_Age { get; set; }
+        public string Function { get; set; }
+        public Nullable<double> Beta { get; set; }
+        public Nullable<double> A { get; set; }
+        public Nullable<double> B { get; set; }
+        public Nullable<double> C { get; set; }
+        public string IncidenceEndpoint { get; set; }
+    }
+
+    public partial class Cobra_Valuation_Core
+    {
+        public string Endpoint { get; set; }
+        public Nullable<double> PoolingWeight { get; set; }
+        public string Seasonal_Metric { get; set; }
+        public Nullable<long> Start_Age { get; set; }
+        public Nullable<long> End_Age { get; set; }
+        public string Function { get; set; }
+        public Nullable<double> Beta { get; set; }
+        public Nullable<double> A { get; set; }
+        public Nullable<double> B { get; set; }
+        public Nullable<double> C { get; set; }
+        public Nullable<double> valat3pct { get; set; }
+        public Nullable<double> valat7pct { get; set; }
+        public string IncidenceEndpoint { get; set; }
+    }
+
 
 }

@@ -4,18 +4,23 @@ using FastMember;
 using ICSharpCode.SharpZipLib.Zip;
 using MathNet.Numerics.Data.Text;
 using MathNet.Numerics.LinearAlgebra;
+using Minio;
+using Minio.Exceptions;
 using NCalc;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace CobraCompute
 {
     public class CobraComputeCore
     {
+        
         public bool initilized = false;
 
         private string datapath = "";
@@ -28,8 +33,79 @@ namespace CobraCompute
         public DataTable EmissionsInventory;
         public DataTable SummarizedEmissionsInventory;
 
-        public ScenarioManager Scenarios;
+        public ScenarioManager_Redis Scenarios;
         private UserScenario currentscenario;
+
+        private List<Cobra_POP> Populations = new List<Cobra_POP>();
+        private List<Cobra_Incidence> Incidence = new List<Cobra_Incidence>();
+        private List<Cobra_CR> CRfunctions = new List<Cobra_CR>();
+        private List<Cobra_Valuation> Valuationfunctions = new List<Cobra_Valuation>();
+
+        public List<Cobra_Dict_State> dict_state = new List<Cobra_Dict_State>();
+        public List<Cobra_Dict_Tier> dict_tier = new List<Cobra_Dict_Tier>();
+
+        private Vector<double> Adjustment = Vector<double>.Build.Dense(3080);
+        private Dictionary<string, double> VOC2SOA = new Dictionary<string, double>();
+
+        private Vector<double>[] aqbase;
+        private Vector<double> pm_base;
+
+        public StringBuilder statuslog = new StringBuilder();
+
+        private RedisConfig redisOptions;
+
+        private MinioClient minioClient;
+        private S3Config s3Config;
+
+        private ModelConfig modelConfig;
+
+        public CobraComputeCore(RedisConfig redisOptions, S3Config _s3Config, ModelConfig _modelConfig)
+        {
+            statuslog.Append("initializing configurations");
+
+            this.redisOptions = redisOptions;
+            this.s3Config = _s3Config;
+            this.modelConfig = _modelConfig;
+
+
+            statuslog.Append("initializing minio");
+            
+            try
+            {
+                if (s3Config.ssl)
+                {
+                    minioClient = new MinioClient(s3Config.endpoint, s3Config.accessKey, s3Config.secretKey, s3Config.region).WithSSL();
+                } else
+                {
+                    minioClient = new MinioClient(s3Config.endpoint, s3Config.accessKey, s3Config.secretKey, s3Config.region);
+                }
+            }
+            catch (Exception ex)
+            {
+                statuslog.Append("initializing minio failed");
+            }
+
+
+            EmissionsInventory = new DataTable("EmissionsInventory");
+
+            EmissionsInventory.Columns.Add("ID", typeof(int));
+            EmissionsInventory.Columns.Add("typeindx", typeof(int));
+            EmissionsInventory.Columns.Add("sourceindx", typeof(int));
+            EmissionsInventory.Columns.Add("stid", typeof(int));
+            EmissionsInventory.Columns.Add("cyid", typeof(int));
+            EmissionsInventory.Columns.Add("TIER1", typeof(int));
+            EmissionsInventory.Columns.Add("TIER2", typeof(int));
+            EmissionsInventory.Columns.Add("TIER3", typeof(int));
+            EmissionsInventory.Columns.Add("NO2", typeof(double));
+            EmissionsInventory.Columns.Add("SO2", typeof(double));
+            EmissionsInventory.Columns.Add("NH3", typeof(double));
+            EmissionsInventory.Columns.Add("SOA", typeof(double));
+            EmissionsInventory.Columns.Add("PM25", typeof(double));
+            EmissionsInventory.Columns.Add("VOC", typeof(double));
+            EmissionsInventory.PrimaryKey = new DataColumn[] { EmissionsInventory.Columns["ID"] }; //key on recno 
+
+        }
+
 
         public Guid create_userscenario()
         {
@@ -53,49 +129,6 @@ namespace CobraCompute
             Scenarios.deleteUserScenario(token);
         }
 
-        private List<Cobra_POP> Populations = new List<Cobra_POP>();
-        private List<Cobra_Incidence> Incidence = new List<Cobra_Incidence>();
-        private List<Cobra_CR> CRfunctions = new List<Cobra_CR>();
-        private List<Cobra_Valuation> Valuationfunctions = new List<Cobra_Valuation>();
-
-        public List<Cobra_Dict_State> dict_state = new List<Cobra_Dict_State>();
-        public List<Cobra_Dict_Tier> dict_tier = new List<Cobra_Dict_Tier>();
-
-        private Vector<double> Adjustment = Vector<double>.Build.Dense(3080);
-        private Dictionary<string, double> VOC2SOA = new Dictionary<string, double>();
-
-        private Vector<double>[] aqbase;
-        private Vector<double> pm_base;
-
-        public StringBuilder statuslog;
-
-        private CobraComputeAPI.RedisConfig redisOptions;
-
-        public CobraComputeCore(CobraComputeAPI.RedisConfig redisOptions)
-        {
-            this.redisOptions = redisOptions;
-
-            this.statuslog = new StringBuilder();
-
-            EmissionsInventory = new DataTable("EmissionsInventory");
-
-            EmissionsInventory.Columns.Add("ID", typeof(int));
-            EmissionsInventory.Columns.Add("typeindx", typeof(int));
-            EmissionsInventory.Columns.Add("sourceindx", typeof(int));
-            EmissionsInventory.Columns.Add("stid", typeof(int));
-            EmissionsInventory.Columns.Add("cyid", typeof(int));
-            EmissionsInventory.Columns.Add("TIER1", typeof(int));
-            EmissionsInventory.Columns.Add("TIER2", typeof(int));
-            EmissionsInventory.Columns.Add("TIER3", typeof(int));
-            EmissionsInventory.Columns.Add("NO2", typeof(double));
-            EmissionsInventory.Columns.Add("SO2", typeof(double));
-            EmissionsInventory.Columns.Add("NH3", typeof(double));
-            EmissionsInventory.Columns.Add("SOA", typeof(double));
-            EmissionsInventory.Columns.Add("PM25", typeof(double));
-            EmissionsInventory.Columns.Add("VOC", typeof(double));
-            EmissionsInventory.PrimaryKey = new DataColumn[] { EmissionsInventory.Columns["ID"] }; //key on recno 
-
-        }
 
         private void CreateCSVFile(DataTable dt, string strFilePath)
         {
@@ -143,10 +176,13 @@ namespace CobraCompute
 
         public string version()
         {
-            return "V1.0";
+            return "V1.2";
         }
+
         public bool initialize(string path = "data/")
         {
+            statuslog.Append("beginning initialization " + path);
+            
             if (this.initilized) { return true; };
 
             bool result = true;
@@ -155,32 +191,35 @@ namespace CobraCompute
             //proceed setting up
             try
             {
+                statuslog.Append("entering load data");
+
                 int recno = 1;
 
                 //load pop
-                recno = LoadPop(path);
+                LoadS3Pop().Wait();
 
                 //load incidence
-                recno = LoadIncidence(path);
+                LoadS3Incidence().Wait();
 
                 //load cr
-                recno = LoadCR(path);
+                LoadS3CR().Wait();
 
                 //load valuation
-                recno = LoadValue(path);
+                LoadS3Value().Wait();
 
                 //load dictionar(ies)
-                recno = LoadDictionary_State(path);
-                recno = LoadDictionary_Tier(path);
+                LoadS3Dictionary_State().Wait();
+                LoadS3Dictionary_Tier().Wait();
 
                 //load adjustment factors
-                recno = LoadAdjustments(path);
+                LoadS3Adjustments().Wait();
+
 
                 //load voc2soa
-                recno = LoadVOC2SOA(path);
+                LoadS3VOC2SOA().Wait();
 
                 //load emissions
-                recno = LoadEmissions(path);
+                LoadS3Emissions().Wait();
 
                 //debug
                 recno = SummarizeEmissions();
@@ -190,7 +229,9 @@ namespace CobraCompute
                 GC.Collect();
 
                 //load matrix data
-                LoadSRfrommtx(path);
+                LoadS3SRfrommtx().Wait();
+
+                statuslog.Append("garbage collection");
 
                 GC.Collect();
                 GC.WaitForPendingFinalizers();
@@ -200,11 +241,12 @@ namespace CobraCompute
                 aqbase = Vectorize(SummarizedEmissionsInventory);
                 pm_base = computePM(aqbase[4], aqbase[0], aqbase[3], aqbase[2], aqbase[1]);
 
-                Scenarios = new ScenarioManager(this.EmissionsInventory, this.redisOptions);
+                statuslog.Append("instantiating manager");
+                Scenarios = new ScenarioManager_Redis(this.EmissionsInventory, this.redisOptions, this.minioClient, this.s3Config);
             }
             catch (Exception e)
             {
-                statuslog.Append("error: " + e.Message);
+                statuslog.Append("error initializing");
                 result = false;
             }
             if (!result)
@@ -213,6 +255,7 @@ namespace CobraCompute
                 EmissionsInventory.Clear();
             }
             this.initilized = result;
+            statuslog.Append("init done " + result.ToString());
             return result;
         }
 
@@ -239,6 +282,17 @@ namespace CobraCompute
             }
         }
 
+        private void SaveSR2mtx_nocomp(string path)
+        {
+            for (int i = 1; i < 5; i++)
+            {
+                MatrixMarketWriter.WriteMatrix(path + "matrix_dp_" + i.ToString() + ".mtx_nocomp", SR_dp[i - 1]);
+                MatrixMarketWriter.WriteMatrix(path + "matrix_no2_" + i.ToString() + ".mtx_nocomp", SR_no2[i - 1]);
+                MatrixMarketWriter.WriteMatrix(path + "matrix_so2_" + i.ToString() + ".mtx_nocomp", SR_so2[i - 1]);
+                MatrixMarketWriter.WriteMatrix(path + "matrix_nh3_" + i.ToString() + ".mtx_nocomp", SR_nh3[i - 1]);
+            }
+        }
+
 
         private void LoadSRfrommtx(string path)
         {
@@ -253,6 +307,55 @@ namespace CobraCompute
                 GC.Collect();
             }
         }
+
+        private async Task LoadS3SRfrommtx()
+        {
+            try
+            {
+                // Check whether the object exists using statObject().
+                // If the object is not found, statObject() throws an exception,
+                // else it means that the object exists.
+                // Execution is successful.
+                for (int i = 1; i < 5; i++)
+                {
+                    await minioClient.StatObjectAsync(this.s3Config.bucket, "matrix_dp_" + i.ToString() + ".mtx_nocomp");
+                    await minioClient.StatObjectAsync(this.s3Config.bucket, "matrix_no2_" + i.ToString() + ".mtx_nocomp");
+                    await minioClient.StatObjectAsync(this.s3Config.bucket, "matrix_so2_" + i.ToString() + ".mtx_nocomp");
+                    await minioClient.StatObjectAsync(this.s3Config.bucket, "matrix_nh3_" + i.ToString() + ".mtx_nocomp");
+
+                    await minioClient.GetObjectAsync(this.s3Config.bucket, "matrix_dp_" + i.ToString() + ".mtx_nocomp",
+                                                     (stream) =>
+                                                     {
+                                                         SR_dp[i - 1] = MatrixMarketReader.ReadMatrix<double>(stream);
+                                                     });
+                    await minioClient.GetObjectAsync(this.s3Config.bucket, "matrix_no2_" + i.ToString() + ".mtx_nocomp",
+                                                     (stream) =>
+                                                     {
+                                                         SR_no2[i - 1] = MatrixMarketReader.ReadMatrix<double>(stream);
+                                                     });
+                    await minioClient.GetObjectAsync(this.s3Config.bucket, "matrix_so2_" + i.ToString() + ".mtx_nocomp",
+                                                     (stream) =>
+                                                     {
+                                                         SR_so2[i - 1] = MatrixMarketReader.ReadMatrix<double>(stream);
+                                                     });
+                    await minioClient.GetObjectAsync(this.s3Config.bucket, "matrix_nh3_" + i.ToString() + ".mtx_nocomp",
+                                                     (stream) =>
+                                                     {
+                                                         SR_nh3[i - 1] = MatrixMarketReader.ReadMatrix<double>(stream);
+                                                     });
+                    GC.Collect();
+                    GC.WaitForPendingFinalizers();
+                    GC.Collect();
+                }
+            }
+            catch (MinioException e)
+            {
+                statuslog.Append("Error occurred: " + e);
+            }
+        }
+
+
+
 
         private int LoadSR(string path)
         {
@@ -348,26 +451,64 @@ namespace CobraCompute
         private int LoadEmissions(string path)
         {
             int recno;
+
+
             EmissionsInventory.Clear();
             recno = 1;
-            using (TextReader fileReader = File.OpenText(path + "sys_emissions_inventory.csv"))
+            using (TextReader fileReader = File.OpenText(path + "emissions_inventory_" + modelConfig.emissionsdatayear + ".csv"))
             {
                 CsvReader csv = new CsvReader(fileReader, System.Globalization.CultureInfo.CurrentCulture);
                 foreach (EmissionsRecord record in csv.GetRecords<EmissionsRecord>())
                 {
-                    if (record.ID == 1)
-                    {
                         if (record.NO2 > 0.0 || record.NH3 > 0.0 || record.SOA > 0.0 || record.SO2 > 0.0 || record.PM25 > 0.0 || record.VOC > 0.0)
                         {
                             EmissionsInventory.Rows.Add(new object[] { recno, record.typeindx, record.sourceindx, record.stid, record.cyid, record.TIER1, record.TIER2, record.TIER3, record.NO2.GetValueOrDefault(0), record.SO2.GetValueOrDefault(0), record.NH3.GetValueOrDefault(0), ComputeSOAfromVOC(record.TIER1 + "|" + record.TIER2 + "|" + record.TIER3, record.VOC.GetValueOrDefault(0)), record.PM25.GetValueOrDefault(0), record.VOC.GetValueOrDefault(0) });
                             recno++;
                         }
-                    }
                 }
             }
 
             return recno;
         }
+
+        private async Task LoadS3Emissions()
+        {
+            int recno;
+            EmissionsInventory.Clear();
+            recno = 1;
+
+            try
+            {
+                // Check whether the object exists using statObject().
+                // If the object is not found, statObject() throws an exception,
+                // else it means that the object exists.
+                // Execution is successful.
+                await minioClient.StatObjectAsync(this.s3Config.bucket, "emissions_inventory_" + modelConfig.emissionsdatayear + ".csv");
+
+                await minioClient.GetObjectAsync(this.s3Config.bucket, "emissions_inventory_" + modelConfig.emissionsdatayear + ".csv",
+                                                 (stream) =>
+                                                 {
+                                                     using (TextReader textReader = new StreamReader(stream))
+                                                     {
+                                                         CsvReader csv = new CsvReader(textReader, System.Globalization.CultureInfo.CurrentCulture);
+                                                         foreach (EmissionsRecord record in csv.GetRecords<EmissionsRecord>())
+                                                         {
+                                                                 if (record.NO2 > 0.0 || record.NH3 > 0.0 || record.SOA > 0.0 || record.SO2 > 0.0 || record.PM25 > 0.0 || record.VOC > 0.0)
+                                                                 {
+                                                                     EmissionsInventory.Rows.Add(new object[] { recno, record.typeindx, record.sourceindx, record.stid, record.cyid, record.TIER1, record.TIER2, record.TIER3, record.NO2.GetValueOrDefault(0), record.SO2.GetValueOrDefault(0), record.NH3.GetValueOrDefault(0), ComputeSOAfromVOC(record.TIER1 + "|" + record.TIER2 + "|" + record.TIER3, record.VOC.GetValueOrDefault(0)), record.PM25.GetValueOrDefault(0), record.VOC.GetValueOrDefault(0) });
+                                                                     recno++;
+                                                                 }
+                                                         }
+                                                     }
+
+                                                 });
+            }
+            catch (MinioException e)
+            {
+                statuslog.Append("Error occurred: " + e);
+            }
+        }
+
 
         private int LoadVOC2SOA(string path)
         {
@@ -387,6 +528,34 @@ namespace CobraCompute
             return recno;
         }
 
+        private async Task LoadS3VOC2SOA()
+        {
+            EmissionsInventory.Clear();
+            try
+            {
+                await minioClient.StatObjectAsync(this.s3Config.bucket, "sys_voc2soa.csv");
+
+                await minioClient.GetObjectAsync(this.s3Config.bucket, "sys_voc2soa.csv",
+                                                 (stream) =>
+                                                 {
+                                                     using (TextReader textReader = new StreamReader(stream))
+                                                     {
+                                                         CsvReader csv = new CsvReader(textReader, System.Globalization.CultureInfo.CurrentCulture);
+                                                         foreach (Cobra_Voc2Soa record in csv.GetRecords<Cobra_Voc2Soa>())
+                                                         {
+                                                             VOC2SOA.Add(record.TIER1 + "|" + record.TIER2 + "|" + record.TIER3, record.FACTOR);
+                                                         }
+                                                     }
+
+                                                 });
+            }
+            catch (MinioException e)
+            {
+                statuslog.Append("Error occurred: " + e);
+            }
+        }
+
+
         private int LoadAdjustments(string path)
         {
             int recno = 1;
@@ -402,6 +571,33 @@ namespace CobraCompute
 
             return recno;
         }
+
+        private async Task LoadS3Adjustments()
+        {
+            try
+            {
+                await minioClient.StatObjectAsync(this.s3Config.bucket, "sys_adj.csv");
+
+                await minioClient.GetObjectAsync(this.s3Config.bucket, "sys_adj.csv",
+                                                 (stream) =>
+                                                 {
+                                                     using (TextReader textReader = new StreamReader(stream))
+                                                     {
+                                                         CsvReader csv = new CsvReader(textReader, System.Globalization.CultureInfo.CurrentCulture);
+                                                         foreach (Cobra_Adjustment record in csv.GetRecords<Cobra_Adjustment>())
+                                                         {
+                                                             Adjustment[record.indx.GetValueOrDefault(0) - 1] = record.F1.GetValueOrDefault(0);
+                                                         }
+                                                     }
+
+                                                 });
+            }
+            catch (MinioException e)
+            {
+                statuslog.Append("Error occurred: " + e);
+            }
+        }
+
 
         private int LoadDictionary_State(string path)
         {
@@ -419,14 +615,47 @@ namespace CobraCompute
             return recno;
         }
 
+        private async Task LoadS3Dictionary_State()
+        {
+            try
+            {
+                await minioClient.StatObjectAsync(this.s3Config.bucket, "sys_dict.csv");
+
+                await minioClient.GetObjectAsync(this.s3Config.bucket, "sys_dict.csv",
+                                                 (stream) =>
+                                                 {
+                                                     using (TextReader textReader = new StreamReader(stream))
+                                                     {
+                                                         CsvReader csv = new CsvReader(textReader, System.Globalization.CultureInfo.CurrentCulture);
+                                                         foreach (Cobra_Dict_State record in csv.GetRecords<Cobra_Dict_State>())
+                                                         {
+                                                             dict_state.Add(record);
+                                                         }
+                                                     }
+                                                 });
+            }
+            catch (MinioException e)
+            {
+                statuslog.Append("Error occurred: " + e);
+            }
+        }
+
+
         private int LoadDictionary_Tier(string path)
         {
             int recno = 1;
+            
+            // Creates a TextInfo based on the "en-US" culture.
+            TextInfo myTI = new CultureInfo("en-US", false).TextInfo;
+
             using (TextReader fileReader = File.OpenText(path + "sys_tiers.csv"))
             {
                 CsvReader csv = new CsvReader(fileReader, System.Globalization.CultureInfo.CurrentCulture);
                 foreach (Cobra_Dict_Tier record in csv.GetRecords<Cobra_Dict_Tier>())
                 {
+                    record.TIER1NAME = myTI.ToTitleCase(record.TIER1NAME.ToLower());
+                    record.TIER2NAME = myTI.ToTitleCase(record.TIER2NAME.ToLower());
+                    record.TIER3NAME = myTI.ToTitleCase(record.TIER3NAME.ToLower());
                     dict_tier.Add(record);
                     recno++;
                 }
@@ -434,6 +663,38 @@ namespace CobraCompute
 
             return recno;
         }
+
+        private async Task LoadS3Dictionary_Tier()
+        {
+            try
+            {
+                TextInfo myTI = new CultureInfo("en-US", false).TextInfo;
+
+                await minioClient.StatObjectAsync(this.s3Config.bucket, "sys_tiers.csv");
+
+                await minioClient.GetObjectAsync(this.s3Config.bucket, "sys_tiers.csv",
+                                                 (stream) =>
+                                                 {
+                                                     using (TextReader textReader = new StreamReader(stream))
+                                                     {
+                                                         CsvReader csv = new CsvReader(textReader, System.Globalization.CultureInfo.CurrentCulture);
+                                                         foreach (Cobra_Dict_Tier record in csv.GetRecords<Cobra_Dict_Tier>())
+                                                         {
+                                                             record.TIER1NAME = myTI.ToTitleCase(record.TIER1NAME.ToLower());
+                                                             record.TIER2NAME = myTI.ToTitleCase(record.TIER2NAME.ToLower());
+                                                             record.TIER3NAME = myTI.ToTitleCase(record.TIER3NAME.ToLower());
+                                                             dict_tier.Add(record);
+                                                         }
+                                                     }
+                                                 });
+            }
+            catch (MinioException e)
+            {
+                statuslog.Append("Error occurred: " + e);
+            }
+        }
+
+
 
 
         private int LoadValue(string path)
@@ -455,6 +716,36 @@ namespace CobraCompute
             return recno;
         }
 
+        private async Task LoadS3Value()
+        {
+            try
+            {
+                await minioClient.StatObjectAsync(this.s3Config.bucket, "sys_valuation_inventory.csv");
+
+                await minioClient.GetObjectAsync(this.s3Config.bucket, "sys_valuation_inventory.csv",
+                                                 (stream) =>
+                                                 {
+                                                     using (TextReader textReader = new StreamReader(stream))
+                                                     {
+                                                         CsvReader csv = new CsvReader(textReader, System.Globalization.CultureInfo.CurrentCulture);
+                                                         foreach (Cobra_Valuation record in csv.GetRecords<Cobra_Valuation>())
+                                                         {
+                                                             if (record.ID == 1) //2025
+                                                             {
+                                                                 Valuationfunctions.Add(record);
+                                                             }
+                                                         }
+                                                     }
+                                                 });
+            }
+            catch (MinioException e)
+            {
+                statuslog.Append("Error occurred: " + e);
+            }
+        }
+
+
+
         private int LoadCR(string path)
         {
             int recno = 1;
@@ -474,44 +765,117 @@ namespace CobraCompute
             return recno;
         }
 
+        private async Task LoadS3CR()
+        {
+            try
+            {
+                await minioClient.StatObjectAsync(this.s3Config.bucket, "sys_cr_inventory.csv");
+
+                await minioClient.GetObjectAsync(this.s3Config.bucket, "sys_cr_inventory.csv",
+                                                 (stream) =>
+                                                 {
+                                                     using (TextReader textReader = new StreamReader(stream))
+                                                     {
+                                                         CsvReader csv = new CsvReader(textReader, System.Globalization.CultureInfo.CurrentCulture);
+                                                         foreach (Cobra_CR record in csv.GetRecords<Cobra_CR>())
+                                                         {
+                                                             if (record.ID == 1) //2025
+                                                             {
+                                                                 CRfunctions.Add(record);
+                                                             }
+                                                         }
+                                                     }
+
+                                                 });
+            }
+            catch (MinioException e)
+            {
+                statuslog.Append("Error occurred: " + e);
+            }
+        }
+
+
         private int LoadIncidence(string path)
         {
             int recno = 1;
-            using (TextReader fileReader = File.OpenText(path + "sys_incidence_inventory.csv"))
+            using (TextReader fileReader = File.OpenText(path + "incidence_inventory_" + modelConfig.incidencedatayear + ".csv"))
             {
                 CsvReader csv = new CsvReader(fileReader, System.Globalization.CultureInfo.CurrentCulture);
                 foreach (Cobra_Incidence record in csv.GetRecords<Cobra_Incidence>())
                 {
-                    if (record.ID == 1) //2025
-                    {
                         Incidence.Add(record);
                         recno++;
-                    }
                 }
             }
 
             return recno;
+        }
+
+        private async Task LoadS3Incidence()
+        {
+            try
+            {
+                await minioClient.StatObjectAsync(this.s3Config.bucket, "incidence_inventory_" + modelConfig.incidencedatayear + ".csv");
+
+                await minioClient.GetObjectAsync(this.s3Config.bucket, "incidence_inventory_" + modelConfig.incidencedatayear + ".csv",
+                                                 (stream) =>
+                                                 {
+                                                     using (TextReader textReader = new StreamReader(stream))
+                                                     {
+                                                         CsvReader csv = new CsvReader(textReader, System.Globalization.CultureInfo.CurrentCulture);
+                                                         foreach (Cobra_Incidence record in csv.GetRecords<Cobra_Incidence>())
+                                                         {
+                                                                 Incidence.Add(record);
+                                                         }
+                                                     }
+                                                 });
+            }
+            catch (MinioException e)
+            {
+                statuslog.Append("Error occurred: " + e);
+            }
         }
 
         private int LoadPop(string path)
         {
             int recno = 1;
-            using (TextReader fileReader = File.OpenText(path + "sys_pop_inventory.csv"))
+            using (TextReader fileReader = File.OpenText(path + "pop_inventory_" + modelConfig.populationdatayear + ".csv"))
             {
                 CsvReader csv = new CsvReader(fileReader, System.Globalization.CultureInfo.CurrentCulture);
                 foreach (Cobra_POP record in csv.GetRecords<Cobra_POP>())
                 {
-                    if (record.ID == 1) //2025
-                    {
                         Populations.Add(record);
                         recno++;
-                    }
                 }
             }
 
             return recno;
         }
 
+        private async Task LoadS3Pop()
+        {
+            try
+            {
+                await minioClient.StatObjectAsync(this.s3Config.bucket, "pop_inventory_" + modelConfig.populationdatayear + ".csv");
+
+                await minioClient.GetObjectAsync(this.s3Config.bucket, "pop_inventory_" + modelConfig.populationdatayear + ".csv",
+                                                 (stream) =>
+                                                 {
+                                                 using (TextReader textReader = new StreamReader(stream)) 
+                                                     {
+                                                         CsvReader csv = new CsvReader(textReader, System.Globalization.CultureInfo.CurrentCulture);
+                                                         foreach (Cobra_POP record in csv.GetRecords<Cobra_POP>())
+                                                         {
+                                                                 Populations.Add(record);
+                                                         }
+                                                     }
+                                                 });
+            }
+            catch (MinioException e)
+            {
+                statuslog.Append("Error occurred: " + e);
+            }
+        }
 
         public string buildStringCriteria(EmissionsDataRetrievalRequest spec)
         {
@@ -1063,16 +1427,21 @@ namespace CobraCompute
             {
                 int typeindex2use = row.Field<int>("typeindx") - 1;
                 int sourceindex2use = row.Field<int>("sourceindx") - 1;
-                Vctr_pm[typeindex2use][sourceindex2use] = row.Field<double?>("PM25").GetValueOrDefault(0);
-                Vctr_no2[typeindex2use][sourceindex2use] = row.Field<double?>("NO2").GetValueOrDefault(0);
-                Vctr_so2[typeindex2use][sourceindex2use] = row.Field<double?>("SO2").GetValueOrDefault(0);
-                Vctr_nh3[typeindex2use][sourceindex2use] = row.Field<double?>("NH3").GetValueOrDefault(0);
-                Vctr_voc[typeindex2use][sourceindex2use] = row.Field<double?>("VOC").GetValueOrDefault(0);
-                Vctr_soa[typeindex2use][sourceindex2use] = row.Field<double?>("SOA").GetValueOrDefault(0);
+                try
+                {
+                    Vctr_pm[typeindex2use][sourceindex2use] = row.Field<double?>("PM25").GetValueOrDefault(0);
+                    Vctr_no2[typeindex2use][sourceindex2use] = row.Field<double?>("NO2").GetValueOrDefault(0);
+                    Vctr_so2[typeindex2use][sourceindex2use] = row.Field<double?>("SO2").GetValueOrDefault(0);
+                    Vctr_nh3[typeindex2use][sourceindex2use] = row.Field<double?>("NH3").GetValueOrDefault(0);
+                    Vctr_voc[typeindex2use][sourceindex2use] = row.Field<double?>("VOC").GetValueOrDefault(0);
+                    Vctr_soa[typeindex2use][sourceindex2use] = row.Field<double?>("SOA").GetValueOrDefault(0);
+                } catch (Exception e) {
+                    statuslog.Append("encountered unkown source or type index");
+                }
             }
 
             for (int i = 1; i < 5; i++)
-            {   //check these
+            {   
                 Vctr_pm_partial[i - 1] = SR_dp[i - 1].Multiply(Vctr_pm[i - 1]) * 28778;
                 Vctr_no2_partial[i - 1] = SR_no2[i - 1].Multiply(Vctr_no2[i - 1]) * 28778 * (62.0049 / 46.0055);
                 Vctr_so2_partial[i - 1] = SR_so2[i - 1].Multiply(Vctr_so2[i - 1]) * 28778 * (96.0626 / 64.0638);
@@ -1093,12 +1462,9 @@ namespace CobraCompute
             return new Vector<double>[6] { Vctr_no2_partial[0], Vctr_so2_partial[0], Vctr_nh3_partial[0], Vctr_soa_partial[0], Vctr_pm_partial[0], Vctr_voc_partial[0] };
         }
 
-        public List<Cobra_ResultDetail> GetResults()
+        public List<Cobra_ResultDetail> GetResults(double discountrate)
         {
-            if (currentscenario.isDirty)
-            {
-                ComputeDeltaPM();
-            }
+            ComputeDeltaPM(discountrate);
             return currentscenario.Impacts;
         }
 
@@ -1150,7 +1516,7 @@ namespace CobraCompute
         }
 
 
-        public bool ComputeDeltaPM()
+        public bool ComputeDeltaPM(double discountrate)
         {
             currentscenario.EmissionsData.AcceptChanges();
 
@@ -1190,7 +1556,7 @@ namespace CobraCompute
             }
 
             //compute part 2
-            currentscenario.Impacts = ComputeImpacts(Destinations, true);
+            currentscenario.Impacts = ComputeImpacts(Destinations, discountrate);
 
             currentscenario.isDirty = false;
 
@@ -1241,7 +1607,39 @@ namespace CobraCompute
                     return (double)e.Evaluate();
             }
         }
-        public List<Cobra_ResultDetail> ComputeImpacts(List<Cobra_Destination> Destinations, bool valat3)
+
+        private double perannumvalue(int year, double weight, double factor)
+        {
+            return weight / Math.Pow(1 + factor, year);
+        }
+
+        private double adjustmentfactorfromdiscountrate(double factor)
+        {
+            double result = 0;
+            result = result + perannumvalue(0, 0.3, factor);
+            result = result + perannumvalue(1, 0.1, factor);
+            result = result + perannumvalue(2, 0.1, factor);
+            result = result + perannumvalue(3, 0.1, factor);
+            result = result + perannumvalue(4, 0.1, factor);
+            result = result + perannumvalue(5, 0.1, factor);
+            result = result + perannumvalue(6, 0.0142857142857143, factor);
+            result = result + perannumvalue(7, 0.0142857142857143, factor);
+            result = result + perannumvalue(8, 0.0142857142857143, factor);
+            result = result + perannumvalue(9, 0.0142857142857143, factor);
+            result = result + perannumvalue(10, 0.0142857142857143, factor);
+            result = result + perannumvalue(11, 0.0142857142857143, factor);
+            result = result + perannumvalue(12, 0.0142857142857143, factor);
+            result = result + perannumvalue(13, 0.0142857142857143, factor);
+            result = result + perannumvalue(14, 0.0142857142857143, factor);
+            result = result + perannumvalue(15, 0.0142857142857143, factor);
+            result = result + perannumvalue(16, 0.0142857142857143, factor);
+            result = result + perannumvalue(17, 0.0142857142857143, factor);
+            result = result + perannumvalue(18, 0.0142857142857143, factor);
+            result = result + perannumvalue(19, 0.0142857142857143, factor);
+            return result;
+        }
+
+        public List<Cobra_ResultDetail> ComputeImpacts(List<Cobra_Destination> Destinations, double valat)
         {
             Dictionary<string, Result> results_cr = new Dictionary<string, Result>();
             Dictionary<string, Result> results_valuation = new Dictionary<string, Result>();
@@ -1388,34 +1786,48 @@ namespace CobraCompute
                             Incidence = value.incidenceat(age);
                         }
 
-                        double result = this.crfunc(function, cleanfunction, Incidence, Beta, DELTAQ, POP, A, B, C) * poolingweight * metric_adjustment;
+                        double numCases = this.crfunc(function, cleanfunction, Incidence, Beta, DELTAQ, POP, A, B, C) * poolingweight * metric_adjustment;
+                        double valueCases = 0;
 
-                        if (valat3)
+                        if (valat==3) //the default, just go with original
                         {
-                            result = result * valuefunc.valat3pct.GetValueOrDefault(0) * 1.1225;
+                            valueCases = numCases * valuefunc.valat3pct.GetValueOrDefault(0) * 1.1225;
                         }
                         else
                         {
-                            result = result * valuefunc.valat7pct.GetValueOrDefault(0) * 1.1225;
+                            //compare if vatat 3 equal valat 7 then just take it
+                            if ( valuefunc.valat7pct.GetValueOrDefault(0)== valuefunc.valat3pct.GetValueOrDefault(0))
+                            {
+                                valueCases = numCases * valuefunc.valat3pct.GetValueOrDefault(0) * 1.1225;
+                            } else
+                            {
+                                //more complicated case, back out 3 pct and apply new
+                                double val3 = adjustmentfactorfromdiscountrate(0.03);
+                                double valtarget = adjustmentfactorfromdiscountrate(valat/100);
+
+                                valueCases = numCases * valuefunc.valat3pct.GetValueOrDefault(0) / val3 * valtarget * 1.1225;
+
+                            }
+
                         }
 
                         // check if there is an entry already to make pooling work
                         if (results_valuation.TryGetValue(destination.destindx + "|" + valuefunc.Endpoint, out result_valuation))
                         {
-                            result_valuation.Value = result_valuation.Value + result;
+                            result_valuation.Value = result_valuation.Value + valueCases;
                         }
                         else
                         {
-                            results_valuation.Add(destination.destindx + "|" + valuefunc.Endpoint, new Result { Destinationindex = destination.destindx.GetValueOrDefault(0), Endpoint = valuefunc.Endpoint, Value = result });
+                            results_valuation.Add(destination.destindx + "|" + valuefunc.Endpoint, new Result { Destinationindex = destination.destindx.GetValueOrDefault(0), Endpoint = valuefunc.Endpoint, Value = valueCases });
                         }
                         // add to national totals as well
                         if (results_valuation.TryGetValue("nation|" + valuefunc.Endpoint, out result_valuation))
                         {
-                            result_valuation.Value = result_valuation.Value + result;
+                            result_valuation.Value = result_valuation.Value + valueCases;
                         }
                         else
                         {
-                            results_valuation.Add("nation|" + valuefunc.Endpoint, new Result { Destinationindex = destination.destindx.GetValueOrDefault(0), Endpoint = valuefunc.Endpoint, Value = result });
+                            results_valuation.Add("nation|" + valuefunc.Endpoint, new Result { Destinationindex = destination.destindx.GetValueOrDefault(0), Endpoint = valuefunc.Endpoint, Value = valueCases });
                         }
                     }
                 }
@@ -1737,6 +2149,247 @@ namespace CobraCompute
             }
             return results;
         }
+
+
+        public List<Cobra_ResultDetail> CustomComputeGenericImpacts(double delta_pm, double base_pm, double control_pm, Cobra_POP population, Cobra_Incidence[] incidence, bool valat3, Cobra_CR_Core[] CustomCRFunctions, Cobra_Valuation_Core[] CustomValuationFunctions)
+        {
+            Dictionary<string, Result> results_cr = new Dictionary<string, Result>();
+            Dictionary<string, Result> results_valuation = new Dictionary<string, Result>();
+
+
+            List<string> Endpoints_cr = CRfunctions.Select(c => c.Endpoint).Distinct().ToList();
+            List<string> Endpoints_val = Valuationfunctions.Select(c => c.Endpoint).Distinct().ToList();
+
+            Dictionary<string, Cobra_Incidence> dict_incidence = new Dictionary<string, Cobra_Incidence>();
+            foreach (var item in incidence)
+            {
+                dict_incidence.Add(item.Endpoint, item);
+            }
+
+
+            Cobra_Incidence value;
+            Result result_cr;
+            Result result_valuation;
+            Cobra_Incidence incidencerow;
+
+            foreach (var crfunc in CustomCRFunctions)
+            {
+                string function = crfunc.Function;
+
+                function = function.Replace("EXP", "Exp");
+                function = function.Replace("exp", "Exp");
+
+                string cleanfunction = function.ToUpper().Replace(" ", "");
+
+                double metric_adjustment = 1;
+                if (crfunc.Seasonal_Metric.ToUpper() == "DAILY")
+                {
+                    metric_adjustment = 365;
+                }
+
+                {
+                    //fixed params
+                    Expression e = new Expression(function);
+                    double A = crfunc.A.GetValueOrDefault(0);
+                    double B = crfunc.B.GetValueOrDefault(0);
+                    double C = crfunc.C.GetValueOrDefault(0);
+                    double Beta = crfunc.Beta.GetValueOrDefault(0);
+                    double DELTAQ = delta_pm;
+                    double Incidence = 0;
+
+                    //year dependent but with the twist that pop and incidence are containing all year data
+                    Cobra_POP poprow = population;
+                    if (dict_incidence.TryGetValue(crfunc.IncidenceEndpoint, out value))
+                    {
+                        incidencerow = value;
+                    }
+                    else
+                    {
+                        incidencerow = null;
+                        Incidence = 0;
+                    }
+
+                    double poolingweight = crfunc.PoolingWeight.GetValueOrDefault(0);
+                    for (long age = crfunc.Start_Age.GetValueOrDefault(0); age <= crfunc.End_Age.GetValueOrDefault(0); age++)
+                    {
+                        double POP = poprow.popat(age);
+                        if (incidencerow != null)
+                        {
+                            Incidence = value.incidenceat(age);
+                        }
+
+                        double result = this.crfunc(function, cleanfunction, Incidence, Beta, DELTAQ, POP, A, B, C) * poolingweight * metric_adjustment;
+
+                        // check if there is an entry already to make pooling work
+                        if (results_cr.TryGetValue(crfunc.Endpoint, out result_cr))
+                        {
+                            result_cr.Value = result_cr.Value + result;
+                        }
+                        else
+                        {
+                            results_cr.Add(crfunc.Endpoint, new Result { Destinationindex = 0, Endpoint = crfunc.Endpoint, Value = result });
+                        }
+                    }
+                }
+            }
+
+            foreach (var valuefunc in CustomValuationFunctions)
+            {
+                string function = valuefunc.Function;
+
+                function = function.Replace("EXP", "Exp");
+                function = function.Replace("exp", "Exp");
+
+                string cleanfunction = function.ToUpper().Replace(" ", "");
+
+                double metric_adjustment = 1;
+                if (valuefunc.Seasonal_Metric.ToUpper() == "DAILY")
+                {
+                    metric_adjustment = 365;
+                }
+
+                {
+                    //fixed params
+                    Expression e = new Expression(function);
+                    double A = valuefunc.A.GetValueOrDefault(0);
+                    double B = valuefunc.B.GetValueOrDefault(0);
+                    double C = valuefunc.C.GetValueOrDefault(0);
+                    double Beta = valuefunc.Beta.GetValueOrDefault(0);
+                    double DELTAQ = delta_pm;
+                    double Incidence = 0;
+
+                    //year dependent but with the twist that pop and incidence are containing all year data
+                    Cobra_POP poprow = population;
+                    if (dict_incidence.TryGetValue(valuefunc.IncidenceEndpoint, out value))
+                    {
+                        incidencerow = value;
+                    }
+                    else
+                    {
+                        incidencerow = null;
+                        Incidence = 0;
+                    }
+
+                    double poolingweight = valuefunc.PoolingWeight.GetValueOrDefault(0);
+
+                    for (long age = valuefunc.Start_Age.GetValueOrDefault(0); age <= valuefunc.End_Age.GetValueOrDefault(0); age++)
+                    {
+                        double POP = poprow.popat(age);
+                        if (incidencerow != null)
+                        {
+                            Incidence = value.incidenceat(age);
+                        }
+
+                        double result = this.crfunc(function, cleanfunction, Incidence, Beta, DELTAQ, POP, A, B, C) * poolingweight * metric_adjustment;
+
+                        if (valat3)
+                        {
+                            result = result * valuefunc.valat3pct.GetValueOrDefault(0) * 1.1225;
+                        }
+                        else
+                        {
+                            result = result * valuefunc.valat7pct.GetValueOrDefault(0) * 1.1225;
+                        }
+
+                        // check if there is an entry already to make pooling work
+                        if (results_valuation.TryGetValue(valuefunc.Endpoint, out result_valuation))
+                        {
+                            result_valuation.Value = result_valuation.Value + result;
+                        }
+                        else
+                        {
+                            results_valuation.Add(valuefunc.Endpoint, new Result { Destinationindex = 0, Endpoint = valuefunc.Endpoint, Value = result });
+                        }
+                        // add to national totals as well
+                        if (results_valuation.TryGetValue("nation|" + valuefunc.Endpoint, out result_valuation))
+                        {
+                            result_valuation.Value = result_valuation.Value + result;
+                        }
+                        else
+                        {
+                            results_valuation.Add("nation|" + valuefunc.Endpoint, new Result { Destinationindex = 0, Endpoint = valuefunc.Endpoint, Value = result });
+                        }
+                    }
+                }
+            }
+
+            List<Cobra_ResultDetail> results = new List<Cobra_ResultDetail>();
+            {
+                Cobra_ResultDetail result_record = new Cobra_ResultDetail();
+                result_record.destindx = 0;
+                result_record.BASE_FINAL_PM = base_pm;
+                result_record.CTRL_FINAL_PM = control_pm;
+                result_record.DELTA_FINAL_PM = delta_pm;
+
+                result_record.FIPS = "00000";
+                result_record.STATE = "NA";
+                result_record.COUNTY = "NA";
+
+                result_record.Acute_Bronchitis = results_cr["Acute Bronchitis"].Value;
+                result_record.Acute_Myocardial_Infarction_Nonfatal__high_ = results_cr["Acute Myocardial Infarction, Nonfatal (high)"].Value;
+                result_record.Acute_Myocardial_Infarction_Nonfatal__low_ = results_cr["Acute Myocardial Infarction, Nonfatal (low)"].Value;
+                result_record.Asthma_Exacerbation_Cough = results_cr["Asthma Exacerbation, Cough"].Value;
+                result_record.Asthma_Exacerbation_Shortness_of_Breath = results_cr["Asthma Exacerbation, Shortness of Breath"].Value;
+                result_record.Asthma_Exacerbation_Wheeze = results_cr["Asthma Exacerbation, Wheeze"].Value;
+                result_record.Emergency_Room_Visits_Asthma = results_cr["Emergency Room Visits, Asthma"].Value;
+                result_record.HA_All_Cardiovascular__less_Myocardial_Infarctions_ = results_cr["HA, All Cardiovascular (less Myocardial Infarctions)"].Value;
+                result_record.HA_All_Respiratory = results_cr["HA, All Respiratory"].Value;
+                result_record.HA_Asthma = results_cr["HA, Asthma"].Value;
+                result_record.HA_Chronic_Lung_Disease = results_cr["HA, Chronic Lung Disease"].Value;
+                result_record.Lower_Respiratory_Symptoms = results_cr["Lower Respiratory Symptoms"].Value;
+                result_record.Minor_Restricted_Activity_Days = results_cr["Minor Restricted Activity Days"].Value;
+                result_record.Mortality_All_Cause__low_ = results_cr["Mortality, All Cause (low)"].Value;
+                result_record.Mortality_All_Cause__high_ = results_cr["Mortality, All Cause (high)"].Value;
+                result_record.Infant_Mortality = results_cr["Infant Mortality"].Value;
+                result_record.Upper_Respiratory_Symptoms = results_cr["Upper Respiratory Symptoms"].Value;
+                result_record.Work_Loss_Days = results_cr["Work Loss Days"].Value;
+
+                result_record.C__Acute_Bronchitis = results_valuation["Acute Bronchitis"].Value;
+                result_record.C__Acute_Myocardial_Infarction_Nonfatal__high_ = results_valuation["Acute Myocardial Infarction, Nonfatal (high)"].Value;
+                result_record.C__Acute_Myocardial_Infarction_Nonfatal__low_ = results_valuation["Acute Myocardial Infarction, Nonfatal (low)"].Value;
+                result_record.C__Asthma_Exacerbation = results_valuation["Asthma Exacerbation"].Value;
+                result_record.C__Emergency_Room_Visits_Asthma = results_valuation["Emergency Room Visits, Asthma"].Value;
+                result_record.C__CVD_Hosp_Adm = results_valuation["CVD Hosp. Adm."].Value;
+                result_record.C__Resp_Hosp_Adm = results_valuation["Resp. Hosp. Adm."].Value;
+                result_record.C__Lower_Respiratory_Symptoms = results_valuation["Lower Respiratory Symptoms"].Value;
+                result_record.C__Minor_Restricted_Activity_Days = results_valuation["Minor Restricted Activity Days"].Value;
+                result_record.C__Mortality_All_Cause__low_ = results_valuation["Mortality, All Cause (low)"].Value;
+                result_record.C__Mortality_All_Cause__high_ = results_valuation["Mortality, All Cause (high)"].Value;
+                result_record.C__Infant_Mortality = results_valuation["Infant Mortality"].Value;
+                result_record.C__Upper_Respiratory_Symptoms = results_valuation["Upper Respiratory Symptoms"].Value;
+                result_record.C__Work_Loss_Days = results_valuation["Work Loss Days"].Value;
+
+                //now do total health effect dollars
+                double lowvals = 0;
+
+                lowvals += result_record.C__Acute_Bronchitis.GetValueOrDefault(0);
+
+                lowvals += result_record.C__Asthma_Exacerbation.GetValueOrDefault(0);
+                lowvals += result_record.C__Emergency_Room_Visits_Asthma.GetValueOrDefault(0);
+                lowvals += result_record.C__CVD_Hosp_Adm.GetValueOrDefault(0);
+                lowvals += result_record.C__Resp_Hosp_Adm.GetValueOrDefault(0);
+                lowvals += result_record.C__Lower_Respiratory_Symptoms.GetValueOrDefault(0);
+                lowvals += result_record.C__Minor_Restricted_Activity_Days.GetValueOrDefault(0);
+
+                lowvals += result_record.C__Infant_Mortality.GetValueOrDefault(0);
+                lowvals += result_record.C__Upper_Respiratory_Symptoms.GetValueOrDefault(0);
+                lowvals += result_record.C__Work_Loss_Days.GetValueOrDefault(0);
+
+                result_record.C__Total_Health_Benefits_Low_Value = lowvals;
+
+                //add low to high this works
+                result_record.C__Total_Health_Benefits_High_Value = lowvals;
+
+                //and here they diverge
+                result_record.C__Total_Health_Benefits_High_Value += result_record.C__Acute_Myocardial_Infarction_Nonfatal__high_.GetValueOrDefault(0) + result_record.C__Mortality_All_Cause__high_.GetValueOrDefault(0);
+
+                result_record.C__Total_Health_Benefits_Low_Value += result_record.C__Acute_Myocardial_Infarction_Nonfatal__low_.GetValueOrDefault(0) + result_record.C__Mortality_All_Cause__low_.GetValueOrDefault(0);
+
+                results.Add(result_record);
+            }
+            return results;
+        }
+
 
     }
 

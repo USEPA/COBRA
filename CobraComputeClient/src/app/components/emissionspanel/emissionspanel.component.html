@@ -1,0 +1,212 @@
+<div id="step1" class="panel panel-active">
+  <div id="panel_circle_id" class="panel-circle">
+    <div class="panel-circle__inner">
+      <div class="panel-circle__wrapper">
+        <div class="panel-circle__content">Start</div>
+      </div>
+    </div>
+  </div>
+  <div class="usa-prose">
+	  <h1>Step 1: Build Scenario</h1>
+	  <p>Complete the sections below and click "Add to Scenario."</p>
+  </div>
+  <div class="subpanel">
+    <h3>A. Select Location <span class="usa-tag">Required</span></h3>
+    <p>Select the states or counties where the emissions changes will <span class="has-tooltip">occur.
+      <clr-tooltip>
+        <clr-icon clrTooltipTrigger shape="info-circle" class="is-solid is-info" size="22" aria-label="If you select multiple states or counties, COBRA will distribute the emissions changes you enter under C. Modify Emissions below to each county based on the proportion of baseline emissions in each county."></clr-icon>
+        <clr-tooltip-content clrPosition="top-right" clrSize="lg" *clrIfOpen>
+          <span>If you select multiple states or counties, COBRA will distribute the emissions changes you enter under "C. Modify Emissions" below to each county based on the proportion of baseline emissions in each county.</span>
+        </clr-tooltip-content>
+      </clr-tooltip>
+    </span>
+    <div class="states_tree_view">
+      <clr-tree [@.disabled]="true">
+        <clr-tree-node *ngFor="let state of state_clr_structure"
+                       [(clrSelected)]="state.selected"
+                       [clrExpanded]="false" (change)="updateStatetreeItemsSelected(); checkIfBaselinesShow()">
+            {{state.STNAME}}
+            <clr-tree-node *ngFor="let county of state.counties" [(clrSelected)]="county.selected">
+                {{county.county}}
+            </clr-tree-node>
+        </clr-tree-node>
+      </clr-tree>
+    </div>
+    <button class="usa-button--unstyled margin-top-1" id="select_all_btn" type="button" (click)="selectAllStates(); checkIfBaselinesShow()">Select All</button>
+    <span>&nbsp;|&nbsp;</span>
+    <button class="usa-button--unstyled margin-top-1" id="clear_btn_1" type="button" (click)="clearStateSelections(); checkIfBaselinesShow()">Deselect All</button>
+  </div>
+  <form class="usa-form subpanel">
+    <h3>B. Select Sector <span class="usa-tag">Required</span></h3>
+    <p>Select the industry or sector where the emissions changes will <span class="has-tooltip">occur.
+        <clr-tooltip>
+          <clr-icon clrTooltipTrigger shape="info-circle" class="is-solid is-info" size="22" aria-label="You may select subsectors if you have data on specific subsectors that will be impacted by the emissions changes. Alternatively, you may select “All subsectors” and COBRA will distribute the emissions changes to each subsector based on the proportion of baseline emissions from each subsector."></clr-icon>
+          <clr-tooltip-content clrPosition="top-right" clrSize="lg" *clrIfOpen>
+            <span>You may select subsectors if you have data on specific subsectors that will be impacted by the emissions changes. Alternatively, you may select “All subsectors” and COBRA will distribute the emissions changes to each subsector based on the proportion of baseline emissions from each subsector.</span>
+          </clr-tooltip-content>
+        </clr-tooltip>
+      </span>
+    </p>
+      <label class="usa-label" for="tier1">Sector</label>
+      <select class="usa-select" id="tier1" name="tier1" (change)="updateTier2Dropdown(selectTier1.value); checkIfBaselinesShow()" #selectTier1>
+        <option id="tier1_default" value="" disabled selected>Select a sector</option>
+        <option *ngFor="let tier1_item of tiertree_treeview" value="{{tier1_item.TIER1}}">{{tier1_item.text}}</option>
+      </select>
+      <label class="usa-label" for="tier2">Subsector (optional)</label>
+      <select disabled class="usa-select" id="tier2" name="tier2" (change)="updateTier3Dropdown(selectTier2.value)" #selectTier2>
+        <option value="all">All subsectors</option>
+        <option *ngFor="let tier2_item of tier2_items" value="{{tier2_item.uniqueid}}">{{tier2_item.text}}</option>
+      </select>
+      <label class="usa-label" for="tier3">Subsector (optional)</label>
+      <select disabled class="usa-select" id="tier3" name="tier3" (change)="updateItemsSelectedTier3(selectTier3.value)" #selectTier3>
+        <option value="all">All subsectors</option>
+        <option *ngFor="let tier3_item of tier3_items" value="{{tier3_item.uniqueid}}">{{tier3_item.text}}</option>
+      </select>
+  </form>
+  <form class="subpanel usa-form" id="modify-emissions" #modifyemissions="ngForm" (ngSubmit)="addComponentToScenario(modifyemissions)">
+      <h3>C. Modify Emissions <span class="usa-tag">Required</span></h3>
+      <p>Enter emissions changes for <span class="text-bold">at least one</span> of the five pollutants <span class="has-tooltip">below.
+        <clr-tooltip>
+          <clr-icon clrTooltipTrigger shape="info-circle" class="is-solid is-info" size="22" aria-label="COBRA provides projected baseline emissions for 2023 for the sector and location(s) you select. You cannot reduce emissions below this baseline level. There are no restrictions on the amount of increased emissions you can enter."></clr-icon>
+          <clr-tooltip-content clrPosition="top-right" clrSize="lg" *clrIfOpen>
+            <span>COBRA provides projected baseline emissions for 2023 for the sector and location(s) you select. You cannot reduce emissions below this baseline level. There are no restrictions on the amount of increased emissions you can enter.</span>
+          </clr-tooltip-content>
+        </clr-tooltip>
+      </span>
+
+      <fieldset class="usa-fieldset pollutant">
+        <legend class="usa-label">PM<sub>2.5</sub>
+          <span *ngIf="this.showBaselines && (this.pm25_control != undefined)">
+            (Baseline = {{this.pm25_baseline_rounded_up.toLocaleString('en-US', {maximumFractionDigits: 2}) }} tons)
+          </span>
+        </legend>
+
+        <div class="switch-field">
+          <input type="radio" id="PMr" [(ngModel)]="PM25ri" name="PM25ri" value="reduce" (change)="validateEmissionsPanelInput(0)" checked/>
+          <label for="PMr">reduce by</label>
+          <input type="radio" id="PMi" [(ngModel)]="PM25ri" name="PM25ri" value="increase" (change)="validateEmissionsPanelInput(0)"/>
+          <label for="PMi">increase by</label>
+        </div>
+
+        <input aria-label="PM25 input" placeholder="enter #" class="usa-input usa-input--inline display-inline-block" name="changePM25" [(ngModel)]="cPM25" type="text" min="0" step="0.01" pattern="^[0-9]+(\.[0-9]{1,10})?$" (input)="validateEmissionsPanelInput(0)" (input)="activateDeactivateAddToScenarioButton()">
+        <div class="usa-radio display-inline-block">
+          <input class="usa-radio__input" type="radio" id="PM25t" [(ngModel)]="PM25pt" name="PM25pt" value="tons" (change)="validateEmissionsPanelInput(0)" checked/>
+          <label class="usa-radio__label" for="PM25t">tons</label>
+          <input class="usa-radio__input" type="radio" id="PM25p" [(ngModel)]="PM25pt" name="PM25pt" value="percent" (change)="validateEmissionsPanelInput(0)"/>
+          <label class="usa-radio__label" for="PM25p">percent</label>           
+        </div>
+
+        <span class="emissions_error_message" *ngIf="this.showErrorNotNumber[0]">Enter a positive numeric value.</span>
+        <span class="emissions_error_message" *ngIf="this.showErrorOutOfRange[0]">Enter a value between 0 and 100%.</span>
+        <span class="emissions_error_message" *ngIf="this.showErrorLargerThanBaseline[0]">Reductions entered exceed baseline emissions.</span>
+        <span class="emissions_error_message" *ngIf="this.showErrorCantReduceBaseline[0]">Baseline is 0 tons and cannot be reduced.</span>
+
+      </fieldset>
+     
+      <fieldset class="usa-fieldset pollutant">
+      <legend class="usa-label padding-top-2">SO<sub>2</sub>
+          <span *ngIf="this.showBaselines && (this.so2_control != undefined)">
+            (Baseline = {{this.so2_baseline_rounded_up.toLocaleString('en-US', {maximumFractionDigits: 2})}} tons)
+          </span>
+        </legend>
+        <div class="switch-field">
+            <input type="radio" id="SO2r" [(ngModel)]="SO2ri" name="SO2ri" value="reduce" (change)="validateEmissionsPanelInput(1)" checked/>
+            <label tabindex="0" for="SO2r">reduce by</label>
+            <input type="radio" id="SO2i" [(ngModel)]="SO2ri" name="SO2ri" value="increase" (change)="validateEmissionsPanelInput(1)"/>
+            <label tabindex="0" for="SO2i">increase by</label>
+        </div>
+
+        <input aria-label="SO2 input" placeholder="enter #" class="usa-input usa-input--inline display-inline-block" name="changeSO2" [(ngModel)]="cSO2" type="text" min="0" step="0.01" pattern="^[0-9]+(\.[0-9]{1,10})?$" (input)="validateEmissionsPanelInput(1)" (input)="activateDeactivateAddToScenarioButton()">
+        <div class="usa-radio display-inline-block">
+            <input class="usa-radio__input" type="radio" id="SO2t" [(ngModel)]="SO2pt" name="SO2pt" value="tons" (change)="validateEmissionsPanelInput(1)" checked/>
+            <label class="usa-radio__label" for="SO2t">tons</label>
+            <input class="usa-radio__input" type="radio" id="SO2p" [(ngModel)]="SO2pt" name="SO2pt" value="percent" (change)="validateEmissionsPanelInput(1)"/>
+            <label class="usa-radio__label" for="SO2p">percent</label>
+        </div>
+        
+        <span class="emissions_error_message" *ngIf="this.showErrorNotNumber[1]">Enter a positive numeric value.</span>
+        <span class="emissions_error_message" *ngIf="this.showErrorOutOfRange[1]">Enter a value between 0 and 100%.</span>
+        <span class="emissions_error_message" *ngIf="this.showErrorLargerThanBaseline[1]">Reductions entered exceed baseline emissions.</span>
+        <span class="emissions_error_message" *ngIf="this.showErrorCantReduceBaseline[1]">Baseline is 0 tons and cannot be reduced.</span>
+      </fieldset>
+
+      <fieldset class="usa-fieldset pollutant">
+        <legend class="usa-label padding-top-2">NO<sub>x</sub> 
+          <span *ngIf="this.showBaselines && (this.nox_control != undefined)">
+            (Baseline = {{this.nox_baseline_rounded_up.toLocaleString('en-US', {maximumFractionDigits: 2})}} tons)
+          </span>
+        </legend>
+        <div class="switch-field">
+            <input type="radio" id="NOXr" [(ngModel)]="NOXri" name="NOXri" value="reduce" (change)="validateEmissionsPanelInput(2)" checked/>
+            <label tabindex="0" for="NOXr">reduce by</label>
+            <input type="radio" id="NOXi" [(ngModel)]="NOXri" name="NOXri" value="increase" (change)="validateEmissionsPanelInput(2)"/>
+            <label tabindex="0" for="NOXi">increase by</label>
+        </div>
+
+        <input aria-label="NOx input" placeholder="enter #" class="usa-input usa-input--inline display-inline-block" id="changeNOX" name="changeNOX" [(ngModel)]="cNOX" type="text" min="0" step="0.01" pattern="^[0-9]+(\.[0-9]{1,10})?$" (input)="validateEmissionsPanelInput(2)" (input)="activateDeactivateAddToScenarioButton()">          
+        <div class="usa-radio display-inline-block">
+            <input class="usa-radio__input" type="radio" id="NOXt" [(ngModel)]="NOXpt" name="NOXpt" value="tons" (change)="validateEmissionsPanelInput(2)" checked/>
+            <label class="usa-radio__label" for="NOXt">tons</label>
+            <input class="usa-radio__input" type="radio" id="NOXp" [(ngModel)]="NOXpt" name="NOXpt" value="percent" (change)="validateEmissionsPanelInput(2)"/>
+            <label class="usa-radio__label" for="NOXp">percent</label>
+        </div>
+        <span class="emissions_error_message" *ngIf="this.showErrorNotNumber[2]">Enter a positive numeric value.</span>
+        <span class="emissions_error_message" *ngIf="this.showErrorOutOfRange[2]">Enter a value between 0 and 100%.</span>
+        <span class="emissions_error_message" *ngIf="this.showErrorLargerThanBaseline[2]">Reductions entered exceed baseline emissions.</span>
+        <span class="emissions_error_message" *ngIf="this.showErrorCantReduceBaseline[2]">Baseline is 0 tons and cannot be reduced.</span>
+      </fieldset>
+
+      <fieldset class="usa-fieldset pollutant">
+        <legend class="usa-label padding-top-2">NH<sub>3</sub>
+          <span *ngIf="this.showBaselines && (this.nh3_control != undefined)">
+            (Baseline = {{this.nh3_baseline_rounded_up.toLocaleString('en-US', {maximumFractionDigits: 2})}} tons)
+          </span>
+        </legend>
+        <div class="switch-field">
+            <input type="radio" id="NH3r" [(ngModel)]="NH3ri" name="NH3ri" value="reduce" (change)="validateEmissionsPanelInput(3)" checked/>
+            <label tabindex="0" for="NH3r">reduce by</label>
+            <input type="radio" id="NH3i" [(ngModel)]="NH3ri" name="NH3ri" value="increase" (change)="validateEmissionsPanelInput(3)"/>
+            <label tabindex="0" for="NH3i">increase by</label>
+        </div>
+
+        <input aria-label="NH3 input" placeholder="enter #" class="usa-input usa-input--inline display-inline-block" id="changeNH3" name="changeNH3" [(ngModel)]="cNH3" type="text" min="0" step="0.01" pattern="^[0-9]+(\.[0-9]{1,10})?$" (input)="validateEmissionsPanelInput(3)" (input)="activateDeactivateAddToScenarioButton()">             
+        <div class="usa-radio display-inline-block">
+            <input class="usa-radio__input" type="radio" id="NH3t" [(ngModel)]="NH3pt" name="NH3pt" value="tons" (change)="validateEmissionsPanelInput(3)" checked/>
+            <label class="usa-radio__label" for="NH3t">tons</label>
+            <input class="usa-radio__input" type="radio" id="NH3p" [(ngModel)]="NH3pt" name="NH3pt" value="percent" (change)="validateEmissionsPanelInput(3)"/>
+            <label class="usa-radio__label" for="NH3p">percent</label>
+        </div>
+        <span class="emissions_error_message" *ngIf="this.showErrorNotNumber[3]">Enter a positive numeric value.</span>
+        <span class="emissions_error_message" *ngIf="this.showErrorOutOfRange[3]">Enter a value between 0 and 100%.</span>
+        <span class="emissions_error_message" *ngIf="this.showErrorLargerThanBaseline[3]">Reductions entered exceed baseline emissions.</span>
+        <span class="emissions_error_message" *ngIf="this.showErrorCantReduceBaseline[3]">Baseline is 0 tons and cannot be reduced.</span>
+      </fieldset>
+
+      <fieldset class="usa-fieldset pollutant">
+        <legend class="usa-label padding-top-2">VOC  
+          <span *ngIf="this.showBaselines && (this.voc_control != undefined)">
+            (Baseline = {{this.voc_baseline_rounded_up.toLocaleString('en-US', {maximumFractionDigits: 2})}} tons)
+          </span>
+        </legend>
+        <div class="switch-field">
+            <input type="radio" id="VOCr" [(ngModel)]="VOCri" name="VOCri" value="reduce" (change)="validateEmissionsPanelInput(4)" checked/>
+            <label tabindex="0" for="VOCr">reduce by</label>
+            <input type="radio" id="VOCi" [(ngModel)]="VOCri" name="VOCri" value="increase" (change)="validateEmissionsPanelInput(4)"/>
+            <label tabindex="0" for="VOCi">increase by</label>
+        </div>
+
+          <input aria-label="VOC input" placeholder="enter #" class="usa-input usa-input--inline display-inline-block" id="changeVOC" name="changeVOC" [(ngModel)]="cVOC" type="text" min="0" step="0.01" pattern="^[0-9]+(\.[0-9]{1,10})?$" (input)="validateEmissionsPanelInput(4)" (input)="activateDeactivateAddToScenarioButton()">              
+          <div class="usa-radio display-inline-block">
+            <input class="usa-radio__input" type="radio" id="VOCt" [(ngModel)]="VOCpt" name="VOCpt" value="tons" (change)="validateEmissionsPanelInput(4)" checked/>
+            <label class="usa-radio__label" for="VOCt">tons</label>
+            <input class="usa-radio__input" type="radio" id="VOCp" [(ngModel)]="VOCpt" name="VOCpt" value="percent" (change)="validateEmissionsPanelInput(4)"/>
+            <label class="usa-radio__label" for="VOCp">percent</label>
+        </div>
+        <span class="emissions_error_message" *ngIf="this.showErrorNotNumber[4]">Enter a positive numeric value.</span>
+        <span class="emissions_error_message" *ngIf="this.showErrorOutOfRange[4]">Enter a value between 0 and 100%.</span>
+        <span class="emissions_error_message" *ngIf="this.showErrorLargerThanBaseline[4]">Reductions entered exceed baseline emissions.</span>
+        <span class="emissions_error_message" *ngIf="this.showErrorCantReduceBaseline[4]">Baseline is 0 tons and cannot be reduced.</span>
+      </fieldset>
+  </form>
+  <button class="usa-button width-full" id="add_to_scenario_btn" type="button" (click)="addComponentToScenario(modifyemissions)" onClick="location.href='#step2'" disabled>Add to Scenario</button>
+</div>
