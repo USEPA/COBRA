@@ -1,20 +1,31 @@
 import { Component, ViewEncapsulation, OnInit, Input, Output, EventEmitter } from '@angular/core';
+
+import L from 'leaflet';
+import 'leaflet-choropleth';
+import {featureLayer} from 'esri-leaflet';
+
+import { saveAs } from 'file-saver';
+
 import { Token } from '../../Token';
 import { CobraDataService } from '../../cobra-data-service.service';
-import * as L from 'leaflet';
-import 'leaflet-choropleth';
+
 import county_data from '../resultspanel/map_data/county_map.json';
 import state_data from '../resultspanel/map_data/state_data.json';
+
 
 @Component({
   selector: 'app-resultspanel',
   templateUrl: './resultspanel.component.html',
-  styleUrls: ['../../../theme/styles.scss','./resultspanel.component.scss'],
+  styleUrls: ['./resultspanel.component.scss'],
   encapsulation: ViewEncapsulation.None
 })
 
 export class ResultspanelComponent implements OnInit {
   @Input() token: Token;
+  @Output() resultspanelToEmissionspanelBuildNewScenarioEmitter = new EventEmitter<any>();
+  @Output() resultspanelToReviewpanelBuildNewScenarioEmitter = new EventEmitter<any>();
+  @Output() resultspanelToReviewpanelRetrievedResultsEmitter = new EventEmitter<any>();
+
 
   constructor(private cobraDataService: CobraDataService) { }
 
@@ -25,13 +36,16 @@ export class ResultspanelComponent implements OnInit {
   public showHeartbeat = false;
   // public showResultsPanelContent = false;
 
+  /* variable to show and hide build new scenario confirmation modal */
+  public showBuildNewConfirmationModal: boolean = false;
+  
   /* variables related to state and county dropdowns for filtering */
   public state_clr_structure: any[] = [];
   public counties_for_state: any[] = [];
-  public showStateName: boolean = false;
-  public showCountyName: boolean = false;
   public countyFIPS: any;
   public countyName: any;
+  public selectedTableState: string  = "all state";
+  public tableStates: any = {"all state": "All Contiguous U.S. States", "selected state": "", "selected county": ""};
 
   /* variables that store data after running scenario */
   public items: any[] = null;
@@ -73,6 +87,10 @@ export class ResultspanelComponent implements OnInit {
   public filtervalue = "00";
   public discountRate = "3";
 
+  /* variables to show and hide Exporting status for CSV exports */
+  public showAllResultsBtn = true;
+  public showCurrentViewBtn = true;
+
   //map parts
   private map;
   statesLayer;
@@ -80,43 +98,43 @@ export class ResultspanelComponent implements OnInit {
   selectedMapLayer = 'C__Total_Health_Benefits_Low_Value';
   legend;
   mapLayerDisplayName = [
-      {value: "BASE_FINAL_PM", name: "Baseline PM2.5 Concentrations", legendTitle: "PM2.5 concentration (&#181;g/m<sup>3</sup>)", units1: "", units2: "&#181;g/m<sup>3</sup>",popupStyle: 1, popupTextName: 'baseline PM2.5 concentration'},
-      {value: "CTRL_FINAL_PM", name: "Scenario PM2.5 Concentrations", legendTitle: "PM2.5 concentration (&#181;g/m<sup>3</sup>)", units1: "", units2: "&#181;g/m<sup>3</sup>",popupStyle: 1, popupTextName: ''},
-      {value: "DELTA_FINAL_PM", name: "Delta PM2.5 Concentrations", legendTitle: "PM2.5 concentration (&#181;g/m<sup>3</sup>)", units1: "", units2: "&#181;g/m<sup>3</sup>",popupStyle: 1, popupTextName: ''},
-      {value: "C__Total_Health_Benefits_Low_Value", name: "Total Health Benefits ($, low estimate)", legendTitle: "Monetary value ($)", units1: "$", units2: "",popupStyle:2, popupTextName:''},
-      {value: "C__Total_Health_Benefits_High_Value", name: "Total Health Benefits ($, high estimate)", legendTitle: "Monetary value ($)", units1: "$", units2: "",popupStyle:2, popupTextName:''},
-      {value: "Acute_Bronchitis", name: "Acute Bronchitis (cases)", legendTitle: "Change in Incidence (cases)", units1: "", units2: "",popupStyle:3, popupTextName:''},
-      {value: "C__Acute_Bronchitis", name: "Acute Bronchitis ($)", legendTitle: "Monetary value ($)", units1: "$", units2: "cases of",popupStyle:4, popupTextName:''},
-      {value: "Asthma_Exacerbation_Cough", name: "Asthma Exacerbation, Cough (cases)", legendTitle: "Change in Incidence (cases)", units1: "", units2: "cases of",popupStyle:3, popupTextName:''},
-      {value: "Asthma_Exacerbation_Shortness_of_Breath", name: "Asthma Exacerbation, Shortness of Breath (cases)", legendTitle: "Change in Incidence (cases)", units1: "", units2: "cases of",popupStyle:3, popupTextName:''},
-      {value: "Asthma_Exacerbation_Wheeze", name: "Asthma Exacerbation, Wheeze (cases)", legendTitle: "Change in Incidence (cases)", units1: "", units2: "cases of",popupStyle:3, popupTextName:''},
-      {value: "C__Asthma_Exacerbation", name: "Asthma Exacerbation ($)", legendTitle: "Monetary value ($)", units1: "$", units2: "",popupStyle:4, popupTextName:''},
-      {value: "Emergency_Room_Visits_Asthma", name: "Emergency Room Visits, Asthma (cases)", legendTitle: "Change in Incidence (cases)", units1: "", units2: "cases of",popupStyle:3, popupTextName:''},
-      {value: "C__Emergency_Room_Visits_Asthma", name: "Emergency Room Visits, Asthma ($)", legendTitle: "Monetary value ($)", units1: "$", units2: "",popupStyle:4, popupTextName:''},
-      {value: "HA_All_Respiratory", name: "Hospital Admits, All Respiratory (cases)", legendTitle: "Change in Incidence (cases)", units1: "", units2: "cases of",popupStyle:3, popupTextName:''},
-      {value: "HA_Asthma", name: "Hospital Admits, Asthma (cases)", legendTitle: "Change in Incidence (cases)", units1: "", units2: "cases of",popupStyle:3, popupTextName:''},
-      {value: "HA_Chronic_Lung_Disease", name: "Hospital Admits, Chronic Lung Disease (cases)", legendTitle: "Change in Incidence (cases)", units1: "", units2: "cases of",popupStyle:3, popupTextName:''},
-      {value: "C__Resp_Hosp_Adm", name: "Hospital Admits, All Respiratory ($)", legendTitle: "Monetary value ($)", units1: "$", units2: "",popupStyle:4, popupTextName:''},
-      {value: "HA_All_Cardiovascular__less_Myocardial_Infarctions_", name: "Hospital Admits, Cardiovascular (except heart attacks) (cases)", legendTitle: "Change in Incidence (cases)", units1: "", units2: "cases of",popupStyle:3, popupTextName:''},
-      {value: "C__CVD_Hosp_Adm", name: "$ Hospital Admits, Cardiovascular (except heart attacks) ($)", legendTitle: "Monetary value ($)", units1: "$", units2: "",popupStyle:4, popupTextName:''},
-      {value: "Infant_Mortality", name: "Infant Mortality (cases)", legendTitle: "Change in Incidence (cases)", units1: "", units2: "cases of",popupStyle:3, popupTextName:''},
-      {value: "C__Infant_Mortality", name: "Infant Mortality ($)", legendTitle: "Monetary value ($)", units1: "$", units2: "",popupStyle:4, popupTextName:''},
-      {value: "Lower_Respiratory_Symptoms", name: "Lower Respiratory Symptoms (cases)", legendTitle: "Change in Incidence (cases)", units1: "", units2: "cases of",popupStyle:3, popupTextName:''},
-      {value: "C__Lower_Respiratory_Symptoms", name: "Lower Respiratory Symptoms ($)", legendTitle: "Monetary value ($)", units1: "$", units2: "",popupStyle:4, popupTextName:''},
-      {value: "Minor_Restricted_Activity_Days", name: "Minor Restricted Activity Days (cases)", legendTitle: "Change in Incidence (cases)", units1: "", units2: "cases of",popupStyle:3, popupTextName:''},
-      {value: "C__Minor_Restricted_Activity_Days", name: "Minor Restricted Activity Days ($)", legendTitle: "Monetary value ($)", units1: "$", units2: "",popupStyle:4, popupTextName:''},
-      {value: "Mortality_All_Cause__low_", name: "Mortality (cases, low estimate)", legendTitle: "Change in Incidence (cases)", units1: "", units2: "cases of",popupStyle:3, popupTextName:''},
-      {value: "C__Mortality_All_Cause__low_", name: "Mortality ($, low estimate)", legendTitle: "Monetary value ($)", units1: "$", units2: "",popupStyle:4, popupTextName:''},
-      {value: "Mortality_All_Cause__high_", name: "Mortality (cases, high estimate)", legendTitle: "Change in Incidence (cases)", units1: "", units2: "cases of",popupStyle:3, popupTextName:''},
-      {value: "C__Mortality_All_Cause__high_", name: "Mortality ($, high estimate)", legendTitle: "Monetary value ($)", units1: "$", units2: "",popupStyle:4, popupTextName:''},
-      {value: "Acute_Myocardial_Infarction_Nonfatal__low_", name: "Nonfatal Heart Attacks (cases, low estimate)", legendTitle: "Change in Incidence (cases)", units1: "", units2: "cases of",popupStyle:3, popupTextName:''},
-      {value: "C__Acute_Myocardial_Infarction_Nonfatal__low_", name: "Nonfatal Heart Attacks ($, low estimate)", legendTitle: "Monetary value ($)", units1: "$", units2: "",popupStyle:4, popupTextName:''},
-      {value: "Acute_Myocardial_Infarction_Nonfatal__high_", name: "Nonfatal Heart Attacks (cases, high estimate)", legendTitle: "Change in Incidence (cases)", units1: "", units2: "cases of",popupStyle:3, popupTextName:''},
-      {value: "C__Acute_Myocardial_Infarction_Nonfatal__high_", name: "$ Nonfatal Heart Attacks ($, high estimate)", legendTitle: "Monetary value ($)", units1: "$", units2: "",popupStyle:4, popupTextName:''},
-      {value: "Upper_Respiratory_Symptoms", name: "Upper Respiratory Symptoms (cases)", legendTitle: "Change in Incidence (cases)", units1: "", units2: "cases of",popupStyle:3, popupTextName:''},
-      {value: "C__Upper_Respiratory_Symptoms", name: "$ Upper Respiratory Symptoms ($)", legendTitle: "Monetary value ($)", units1: "$", units2: "",popupStyle:4, popupTextName:''},
-      {value: "Work_Loss_Days", name: "Work Loss Days (cases)", legendTitle: "Change in Incidence (cases)", units1: "", units2: "cases of",popupStyle:3, popupTextName:''},
-      {value: "C__Work_Loss_Days", name: "Work Loss Days ($)", legendTitle: "Monetary value ($)", units1: "$", units2: "",popupStyle:4, popupTextName:''}
+      {value: "BASE_FINAL_PM", name: "Baseline PM\u2082.\u2085  Concentrations", legendTitle: "PM<sub>2.5</sub> concentration (&#181;g/m<sup>3</sup>)", units1: "", units2: "&#181;g/m<sup>3</sup>",popupStyle: 1, popupTextName: 'Baseline PM<sub>2.5</sub> concentrations'},
+      {value: "CTRL_FINAL_PM", name: "Scenario PM\u2082.\u2085 Concentrations", legendTitle: "PM<sub>2.5</sub> concentration (&#181;g/m<sup>3</sup>)", units1: "", units2: "&#181;g/m<sup>3</sup>",popupStyle: 1, popupTextName: 'Scenario PM<sub>2.5</sub> concentrations'},
+      {value: "DELTA_FINAL_PM", name: "Delta PM\u2082.\u2085  Concentrations", legendTitle: "PM<sub>2.5</sub> concentration (&#181;g/m<sup>3</sup>)", units1: "", units2: "&#181;g/m<sup>3</sup>",popupStyle: 1, popupTextName: 'Delta PM<sub>2.5</sub> concentrations'},
+      {value: "C__Total_Health_Benefits_Low_Value", name: "Total Health Benefits ($, low estimate)", legendTitle: "Monetary value ($)", units1: "$", units2: "",popupStyle:2, popupTextName:'Total Health Benefits'},
+      {value: "C__Total_Health_Benefits_High_Value", name: "Total Health Benefits ($, high estimate)", legendTitle: "Monetary value ($)", units1: "$", units2: "",popupStyle:2, popupTextName:'Total Health Benefits'},
+      {value: "Acute_Bronchitis", name: "Acute Bronchitis (cases)", legendTitle: "Change in Incidence (cases)", units1: "", units2: "cases of",popupStyle:3, popupTextName:'Acute Bronchitis'},
+      {value: "C__Acute_Bronchitis", name: "Acute Bronchitis ($)", legendTitle: "Monetary value ($)", units1: "$", units2: "cases of",popupStyle:4, popupTextName:'Acute Bronchitis'},
+      {value: "Asthma_Exacerbation_Cough", name: "Asthma Exacerbation, Cough (cases)", legendTitle: "Change in Incidence (cases)", units1: "", units2: "cases of",popupStyle:3, popupTextName:'Asthma Exacerbation, Cough'},
+      {value: "Asthma_Exacerbation_Shortness_of_Breath", name: "Asthma Exacerbation, Shortness of Breath (cases)", legendTitle: "Change in Incidence (cases)", units1: "", units2: "cases of",popupStyle:3, popupTextName:'Asthma Exacerbation, Shortness of Breath'},
+      {value: "Asthma_Exacerbation_Wheeze", name: "Asthma Exacerbation, Wheeze (cases)", legendTitle: "Change in Incidence (cases)", units1: "", units2: "cases of",popupStyle:3, popupTextName:'Asthma Exacerbation, Wheeze'},
+      {value: "C__Asthma_Exacerbation", name: "Asthma Exacerbation ($)", legendTitle: "Monetary value ($)", units1: "$", units2: "",popupStyle:4, popupTextName:'Asthma Exacerbation'},
+      {value: "Emergency_Room_Visits_Asthma", name: "Emergency Room Visits, Asthma (cases)", legendTitle: "Change in Incidence (cases)", units1: "", units2: "cases of",popupStyle:3, popupTextName:'Emergency Room Visits, Asthma'},
+      {value: "C__Emergency_Room_Visits_Asthma", name: "Emergency Room Visits, Asthma ($)", legendTitle: "Monetary value ($)", units1: "$", units2: "",popupStyle:4, popupTextName:'Emergency Room Visits, Asthma'},
+      {value: "HA_All_Respiratory", name: "Hospital Admits, All Respiratory (cases)", legendTitle: "Change in Incidence (cases)", units1: "", units2: "cases of",popupStyle:3, popupTextName:'Hospital Admits, All Respiratory'},
+      {value: "HA_Asthma", name: "Hospital Admits, Asthma (cases)", legendTitle: "Change in Incidence (cases)", units1: "", units2: "cases of",popupStyle:3, popupTextName:'Hospital Admits, Asthma'},
+      {value: "HA_Chronic_Lung_Disease", name: "Hospital Admits, Chronic Lung Disease (cases)", legendTitle: "Change in Incidence (cases)", units1: "", units2: "cases of",popupStyle:3, popupTextName:'Hospital Admits, Chronic Lung Disease'},
+      {value: "C__Resp_Hosp_Adm", name: "Hospital Admits, All Respiratory ($)", legendTitle: "Monetary value ($)", units1: "$", units2: "",popupStyle:4, popupTextName:'Hospital Admits, All Respiratory'},
+      {value: "HA_All_Cardiovascular__less_Myocardial_Infarctions_", name: "Hospital Admits, Cardiovascular (except heart attacks) (cases)", legendTitle: "Change in Incidence (cases)", units1: "", units2: "cases of",popupStyle:3, popupTextName:'Hospital Admits, Cardiovascular <br>(except heart attacks)'},
+      {value: "C__CVD_Hosp_Adm", name: "Hospital Admits, Cardiovascular (except heart attacks) ($)", legendTitle: "Monetary value ($)", units1: "$", units2: "cases of",popupStyle:4, popupTextName:'Hospital Admits, Cardiovascular <br>(except heart attacks)'},
+      {value: "Infant_Mortality", name: "Infant Mortality (cases)", legendTitle: "Change in Incidence (cases)", units1: "", units2: "cases of",popupStyle:3, popupTextName:'Infant Mortality'},
+      {value: "C__Infant_Mortality", name: "Infant Mortality ($)", legendTitle: "Monetary value ($)", units1: "$", units2: "",popupStyle:4, popupTextName:'Infant Mortality'},
+      {value: "Lower_Respiratory_Symptoms", name: "Lower Respiratory Symptoms (cases)", legendTitle: "Change in Incidence (cases)", units1: "", units2: "cases of",popupStyle:3, popupTextName:'Lower Respiratory Symptoms'},
+      {value: "C__Lower_Respiratory_Symptoms", name: "Lower Respiratory Symptoms ($)", legendTitle: "Monetary value ($)", units1: "$", units2: "",popupStyle:4, popupTextName:'Lower Respiratory Symptoms'},
+      {value: "Minor_Restricted_Activity_Days", name: "Minor Restricted Activity Days (cases)", legendTitle: "Change in Incidence (cases)", units1: "", units2: "cases of",popupStyle:3, popupTextName:'Minor Restricted Activity Days'},
+      {value: "C__Minor_Restricted_Activity_Days", name: "Minor Restricted Activity Days ($)", legendTitle: "Monetary value ($)", units1: "$", units2: "",popupStyle:4, popupTextName:'Minor Restricted Activity Days'},
+      {value: "Mortality_All_Cause__low_", name: "Mortality (cases, low estimate)", legendTitle: "Change in Incidence (cases)", units1: "", units2: "cases of",popupStyle:3, popupTextName:'Mortality'},
+      {value: "C__Mortality_All_Cause__low_", name: "Mortality ($, low estimate)", legendTitle: "Monetary value ($)", units1: "$", units2: "",popupStyle:4, popupTextName:'Mortality'},
+      {value: "Mortality_All_Cause__high_", name: "Mortality (cases, high estimate)", legendTitle: "Change in Incidence (cases)", units1: "", units2: "cases of",popupStyle:3, popupTextName:'Mortality'},
+      {value: "C__Mortality_All_Cause__high_", name: "Mortality ($, high estimate)", legendTitle: "Monetary value ($)", units1: "$", units2: "",popupStyle:4, popupTextName:'Mortality'},
+      {value: "Acute_Myocardial_Infarction_Nonfatal__low_", name: "Nonfatal Heart Attacks (cases, low estimate)", legendTitle: "Change in Incidence (cases)", units1: "", units2: "cases of",popupStyle:3, popupTextName:'Nonfatal Heart Attacks'},
+      {value: "C__Acute_Myocardial_Infarction_Nonfatal__low_", name: "Nonfatal Heart Attacks ($, low estimate)", legendTitle: "Monetary value ($)", units1: "$", units2: "",popupStyle:4, popupTextName:'Nonfatal Heart Attacks'},
+      {value: "Acute_Myocardial_Infarction_Nonfatal__high_", name: "Nonfatal Heart Attacks (cases, high estimate)", legendTitle: "Change in Incidence (cases)", units1: "", units2: "cases of",popupStyle:3, popupTextName:'Nonfatal Heart Attacks'},
+      {value: "C__Acute_Myocardial_Infarction_Nonfatal__high_", name: "Nonfatal Heart Attacks ($, high estimate)", legendTitle: "Monetary value ($)", units1: "$", units2: "",popupStyle:4, popupTextName:'Nonfatal Heart Attacks'},
+      {value: "Upper_Respiratory_Symptoms", name: "Upper Respiratory Symptoms (cases)", legendTitle: "Change in Incidence (cases)", units1: "", units2: "cases of",popupStyle:3, popupTextName:'Upper Respiratory Symptoms'},
+      {value: "C__Upper_Respiratory_Symptoms", name: "Upper Respiratory Symptoms ($)", legendTitle: "Monetary value ($)", units1: "$", units2: "",popupStyle:4, popupTextName:'Upper Respiratory Symptoms'},
+      {value: "Work_Loss_Days", name: "Work Loss Days (cases)", legendTitle: "Change in Incidence (cases)", units1: "", units2: "cases of",popupStyle:3, popupTextName:'Work Loss Days'},
+      {value: "C__Work_Loss_Days", name: "Work Loss Days ($)", legendTitle: "Monetary value ($)", units1: "$", units2: "",popupStyle:4, popupTextName:'Work Loss Days'}
     ];
 
     stateAbbrev = [
@@ -181,34 +199,48 @@ export class ResultspanelComponent implements OnInit {
       {name: "Wyoming",abbrev: "WY"}
   ]
 
+  centerMap(map){
+    map.setView([37, -96],3.8);
+  }
+
   ngOnInit(): void {
     //build map
     this.map = L.map('map',{
       center: [37, -96],
+      zoomSnap: 0.1,
       zoomDelta: 0.1,
       zoom: 3.8
     });
 
-    function centerMap(){
-      this.map.setView([37, -96],3.5);
+    function centerMap(map){
+      map.setView([37, -96],3.8);
     }
 
-    var homeControl = L.Control.extend({
+    L.Control.HomeControl = L.Control.extend({
       options:{
         position: 'topleft'
       },
       
       onAdd: function(map){ 
-        var homeButton = L.DomUtil.create('input', 'homeButton');
-        homeButton.innerHTML = '<clr-icon shape="home" class="solid"></clr-icon>';
-        homeButton.type = 'button';
-        homeButton.setAttribute('class', 'leaflet-control leaflet-touch home-button leaflet-control-command');
+        var homeButton = L.DomUtil.create('div', 'homeButton');
+        homeButton.innerHTML = '<a title="National View" role="button" aria-label="National View"><clr-icon shape="home" class="is-solid"></clr-icon></a>';
+        homeButton.setAttribute('class', 'leaflet-control leaflet-touch leaflet-control-command control-zoom-full');
         homeButton.onclick = function(){
-          centerMap()
+          centerMap(map)
         };
         return homeButton;
+      },
+
+      onRemove: function(map){
+        //nothing
       }
     });
+
+    L.control.homecontrol = function(opts) {
+      return new L.Control.HomeControl(opts);
+    }
+
+    L.control.homecontrol({position: 'topleft'}).addTo(this.map);
     //this.map.addControl(homeControl);
 
     var OpenStreetMap_Mapnik = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -224,12 +256,27 @@ export class ResultspanelComponent implements OnInit {
       }
     });
 
+    var tribalLands = featureLayer({
+      url: 'https://geopub.epa.gov/arcgis/rest/services/EMEF/tribal/MapServer/4',
+      style: {
+        color: '#404040',
+        weight: 1,
+        fill: false
+      }
+    });
+
+    var overlayLayers = {
+      "Tribal Lands": tribalLands
+    };
+
+    L.control.layers(null, overlayLayers).addTo(this.map);
+
     this.map.addLayer(OpenStreetMap_Mapnik);
     this.map.addLayer(this.statesLayer);
   }
 
   // <--------------------------------------------- Receives data from emissionspanel ----------------------------------------->
-  /* This function receives state_clr_structure from emissionspanel when the page is loaded. The emitter "emissionspanelToResultspanelEmitter" sends this data to resultspanle component. state_clr_structure is needed in results panel in order to create state and county dropdowns for filtering. */
+  /* This function receives state_clr_structure from emissionspanel when the page is loaded. The emitter "emissionspanelToResultspanelEmitter" sends this data to resultspanel component. state_clr_structure is needed in results panel in order to create state and county dropdowns for filtering. */
   receiveStateClrStructure(data: any) {
     this.state_clr_structure = data;
   }
@@ -245,12 +292,21 @@ export class ResultspanelComponent implements OnInit {
   // <------------------------------ Shows pending screen when runScenario() is called in reviewpanel ------------------------->
   /* This function is called when Run Scenario button is clicked to show heartbeat animation and hide the content in the results panel. */
   showHeartbeatAnimation() {
+    // show results-screen
+    // var pending_results_screen = document.getElementById("pending-results-screen-id");
+    // pending_results_screen.setAttribute("hidden", "true");
     this.showPendingResultsScreen = false;
     var results_screen = document.getElementById("results-screen");
     results_screen.removeAttribute("hidden");
+    // this.showResultsScreen = true;
+
+    // show heartbeat animation
+    // var heartbeat = document.getElementById("heartbeat");
+    // heartbeat.removeAttribute("hidden");
     var results_panel_content = document.getElementById("results_panel_content");
     results_panel_content.setAttribute("hidden", "true");
     this.showHeartbeat = true;
+    // this.showResultsPanelContent = false;
   }
   // <---------------------------- Shows pending screen when runScenario() is called in reviewpanel/End ----------------------->
 
@@ -264,6 +320,50 @@ export class ResultspanelComponent implements OnInit {
     this.getResults();
   }
   // <--------------------------------------------- Receives data from reviewpanel/End ---------------------------------------->
+
+  // <------------------------------- Calls resultspanelToEmissionspanelBuildNewScenarioEmitter ------------------------------->
+  emitFromResultspanelToEmissionspanelBuildNewScenario() {
+    this.resultspanelToEmissionspanelBuildNewScenarioEmitter.emit(null);
+  }
+  // <----------------------------- Calls resultspanelToEmissionspanelBuildNewScenarioEmitter/End ----------------------------->
+
+  // <--------------------------------- Calls resultspanelToReviewpanelBuildNewScenarioEmitter -------------------------------->
+  emitFromResultspanelToReviewpanelBuildNewScenario() {
+    this.resultspanelToReviewpanelBuildNewScenarioEmitter.emit(null);
+  }
+  // <------------------------------- Calls resultspanelToReviewpanelBuildNewScenarioEmitter/End ------------------------------>
+
+  // <------------------------------------- Resets all dropdowns and data in results panel ------------------------------------>
+  resetResultspanelDropdownsAndData() {
+    // set state and county dropdowns to default, update filtervalue and update table results to be shown for all states
+    var state_dropdown = document.getElementById("state_dd") as HTMLSelectElement;
+    var county_dropdown = document.getElementById("county_dd") as HTMLSelectElement;
+    state_dropdown.selectedIndex = 0;
+    county_dropdown.selectedIndex = 0;
+    this.updateCountyDropDownAndFilterVal("");
+    // set map dropdown and map view to default
+    var map_dropdown = document.getElementById("maplayer") as HTMLSelectElement;
+    map_dropdown.selectedIndex = 3;
+    this.selectedMapLayer = 'C__Total_Health_Benefits_Low_Value';
+    this.styleMap(this.selectedMapLayer);
+  }
+  // <----------------------------------- Resets all dropdowns and data in results panel/End ---------------------------------->
+
+  // <--------------------------- Returns the app to its initial state in order to build a new scenario ----------------------->
+  /* This function is called when the user confirms to build a new scenario. The confirmation happens in the modal that pops up after clicking on Build New Scenario button. This returns the app to its initial state. */
+  buildNewScenario() {
+    this.showBuildNewConfirmationModal = false;
+    this.showNoResultsScreen = true;
+    document.getElementById("results-screen").setAttribute("hidden", "true");
+    this.resetResultspanelDropdownsAndData();
+    if (window.screen.width <= 991){
+      document.getElementById("step2").style.visibility = "hidden";
+      document.getElementById("step3").style.visibility = "hidden";
+    }
+    this.emitFromResultspanelToEmissionspanelBuildNewScenario();
+    this.emitFromResultspanelToReviewpanelBuildNewScenario();
+  }
+  // <------------------------- Returns the app to its initial state in order to build a new scenario/End --------------------->
 
   // <---------------------------------- Removes filters and shows table data for all states ---------------------------------->
   showTableDataForAllStates() {
@@ -403,22 +503,26 @@ export class ResultspanelComponent implements OnInit {
 
   // <--------------------------- Updates county dropdown once changing selection in state dropdown --------------------------->
   updateCountyDropDownAndFilterVal(index: any) {
-    var counties_dd = document.getElementById("county");
+    var county_dropdown = document.getElementById("county_dd");
+    var info_text_table = document.getElementById("info_text_table");
     if (index == "") {
       this.counties_for_state = [];
-      counties_dd.setAttribute("disabled", "");
+      county_dropdown.setAttribute("disabled", "");
       this.filtervalue = "00";
+      this.selectedTableState = "all state";
       this.showTableDataForAllStates();
+      info_text_table.removeAttribute("hidden");
     } else {
       this.counties_for_state = this.state_clr_structure[index].counties;
-      counties_dd.removeAttribute("disabled");
+      county_dropdown.removeAttribute("disabled");
       this.filtervalue = this.state_clr_structure[index].STFIPS;
+      this.tableStates["selected state"] = this.state_clr_structure[index].STNAME;
+      this.selectedTableState = "selected state";
       this.filterDataForStateSelection();
+      info_text_table.setAttribute("hidden", "true");
     }
     var countyValue = "";
     this.showHideStateCountyNameAndUpdateFilterVal(index, countyValue);
-    var info_text_table = document.getElementById("info_text_table");
-    info_text_table.setAttribute("hidden", "true");
   }
   // <------------------------- Updates county dropdown once changing selection in state dropdown/End ------------------------->
 
@@ -465,27 +569,39 @@ export class ResultspanelComponent implements OnInit {
 
   // <----------------------------------------- Shows and hides state and county names ---------------------------------------->
   showHideStateCountyNameAndUpdateFilterVal(index: any, countyValue: any) {
-    this.showStateName = false;
-    this.showCountyName = false;
     if (index != "" && countyValue == "") {
-      this.showStateName = true;
+      this.selectedTableState = "selected state";
       this.filtervalue = this.state_clr_structure[index].STFIPS;
+      this.filterDataForStateSelection();
     }
     if (countyValue != "") {
       this.countyFIPS = countyValue.substr(countyValue.length - 5);
       this.countyName = countyValue.substr(0, countyValue.length - 5);
-      this.showCountyName = true;
+      this.tableStates["selected county"] = this.countyName + ', ' + this.tableStates["selected state"];
+      this.selectedTableState = "selected county";
       this.filtervalue = this.countyFIPS;
       this.filterDataForCountySelection();
     }
   }
   // <--------------------------------------- Shows and hides state and county names/End -------------------------------------->
 
+  // <--------------------------------- Calls resultspanelToReviewpanelRetrievedResultsEmitter -------------------------------->
+  emitFromResultspanelToReviewpanelRetrievedResults() {
+    this.resultspanelToReviewpanelRetrievedResultsEmitter.emit(null);
+  }
+  // <------------------------------- Calls resultspanelToReviewpanelRetrievedResultsEmitter/End ------------------------------>
+
   // <-------------------------------------------------- getResults() function ------------------------------------------------>
   getResults(): void {
+    // var heartbeat = document.getElementById("heartbeat");
+    // heartbeat.removeAttribute("hidden");
     var results_panel_content = document.getElementById("results_panel_content");
     results_panel_content.setAttribute("hidden", "true");
     this.showHeartbeat = true;
+    // this.showResultsPanelContent = false;
+
+    this.items = [];
+    this.summary = [];
 
     this.cobraDataService.getResults(this.filtervalue, this.discountRate).subscribe(
       data => {
@@ -533,6 +649,7 @@ export class ResultspanelComponent implements OnInit {
         //add geojson data layer to the map
         this.countyLayer = L.geoJSON(county_data);
         this.styleMap(this.selectedMapLayer);
+        this.centerMap(this.map)
         if(!this.map.hasLayer(this.countyLayer)){
           this.map.addLayer(this.countyLayer);
           this.map.addLayer(this.statesLayer);
@@ -543,9 +660,11 @@ export class ResultspanelComponent implements OnInit {
         alert('An error occured retrieving results: ' + err);
       },
       () => {
-        console.log('Retrieved results.');
+        // heartbeat.setAttribute("hidden", "true");
         this.showHeartbeat = false;
+        this.emitFromResultspanelToReviewpanelRetrievedResults();
         results_panel_content.removeAttribute("hidden");
+        // this.showResultsPanelContent = true;
       }
     );
   }
@@ -553,15 +672,57 @@ export class ResultspanelComponent implements OnInit {
 
   // <-------------------------------------------------- updates results panel ------------------------------------------------>
   updateResultsPanelAfterAllComponentsRemoved() {
+    // var no_results_screen = document.getElementById("no-results-screen");
+    // var pending_results_screen = document.getElementById("pending-results-screen-id");
+    // no_results_screen.removeAttribute("hidden");
+    // pending_results_screen.setAttribute("hidden", "true");
     var results_screen = document.getElementById("results-screen");
     results_screen.setAttribute("hidden", "true");
     if(this.map.hasLayer(this.countyLayer)){
       this.map.removeLayer(this.countyLayer);
+      this.centerMap(this.map);
     }
     this.showPendingResultsScreen = false;
     this.showNoResultsScreen = true;
+    // this.showResultsScreen = false;
   }
   // <------------------------------------------------ updates results panel/End ---------------------------------------------->
+
+  // <--------------------------------------------------- exportAll() function ------------------------------------------------>
+  allResultsExcelExport(kind: any, data: any) {
+    var filename = "ExcelResultReport.xls";
+    if (kind == 'base') { filename = "BaselineEmissions.xls" };
+    if (kind == 'control') { filename = "ControlEmissions.xls" };
+    saveAs(data, filename);
+  }
+  
+  exportAll() {
+    this.showAllResultsBtn = false;
+    this.cobraDataService.exportAllResults("results", this.discountRate).subscribe(
+      data => {
+        this.allResultsExcelExport("results", data);
+        this.showAllResultsBtn = true;
+      }
+    );
+  }
+  // <------------------------------------------------- exportAll() function/End ---------------------------------------------->
+
+  // <------------------------------------------------ summaryExport() function ----------------------------------------------->
+  summaryExcelExport(data: any) {
+    var filename = "SummaryExcelReport.xls";
+    saveAs(data, filename);
+  }
+  
+  summaryExport() {
+    this.showCurrentViewBtn = false;
+    this.cobraDataService.exportSummary(this.filtervalue, this.discountRate).subscribe(
+      data => {
+        this.summaryExcelExport(data);
+        this.showCurrentViewBtn = true;
+      }
+    )
+  }
+  // <---------------------------------------------- SummaryExport() function/End --------------------------------------------->
 
   //change map styling on dropdown selection
   styleMap(layerValue){
@@ -594,14 +755,21 @@ export class ResultspanelComponent implements OnInit {
     bindPopup(function (layer){
       let state = stateAbbrev.find( x => x.name == layer.feature.properties.DATA.STATE);
       let rateChange = 'avoided'
-      if(layer.feature.properties.DATA[dataValue] > 0){
+      let caseNumber = layer.feature.properties.DATA[dataValue];
+      if(caseNumber < 0){
         rateChange = 'increased'
+        caseNumber = caseNumber*-1;
+      }
+      if(caseNumber < .1 && caseNumber != 0) {
+        caseNumber = caseNumber.toExponential(2);
+      } else {
+        caseNumber = number.format(caseNumber);
       }
       switch(mapTitle.popupStyle){
-        case 1: return 'The ' + mapTitle.name + ' in ' + layer.feature.properties.NAME + ', ' + state.abbrev + ' is ' + mapTitle.units1 + number.format(layer.feature.properties.DATA[dataValue]) + ' ' + mapTitle.units2;
-        case 2: return 'The ' + mapTitle.name + ' in ' + layer.feature.properties.NAME + ', ' + state.abbrev + ' are ' + mapTitle.units1 + number.format(layer.feature.properties.DATA[dataValue]);
-        case 3: return layer.feature.properties.NAME + ', ' + state.abbrev + ' ' + rateChange + ' ' + number.format(layer.feature.properties.DATA[dataValue]) + ' ' + mapTitle.units2 + ' ' + mapTitle.name;
-        case 4: return 'The monetary value of the change in ' + mapTitle.name + ' in ' + layer.feature.properties.NAME + ', ' + state.abbrev + ' are ' + mapTitle.units1 + number.format(layer.feature.properties.DATA[dataValue]);
+        case 1: return 'The ' + mapTitle.popupTextName + ' in ' + layer.feature.properties.NAME + ', ' + state.abbrev + ' are ' + mapTitle.units1 + number.format(layer.feature.properties.DATA[dataValue]) + ' ' + mapTitle.units2 + '.';
+        case 2: return 'The ' + mapTitle.popupTextName + ' in ' + layer.feature.properties.NAME + ', ' + state.abbrev + ' are ' + mapTitle.units1 + number.format(layer.feature.properties.DATA[dataValue]) + '.';
+        case 3: return layer.feature.properties.NAME + ', ' + state.abbrev + ' ' + rateChange + ' ' + caseNumber + ' ' + mapTitle.units2 + ' ' + mapTitle.popupTextName + '.';
+        case 4: return 'The monetary value of the change in ' + mapTitle.popupTextName + ' in ' + layer.feature.properties.NAME + ', ' + state.abbrev + ' is ' + mapTitle.units1 + number.format(layer.feature.properties.DATA[dataValue]) + '.';
       }
     });
     if(this.legend != undefined){
@@ -621,9 +789,30 @@ export class ResultspanelComponent implements OnInit {
       limits.forEach(function (limit, index) {
         labels.push('<li style="background-color: ' + colors[index] + '"></li>')
       })
+
+      let legendUnits1, legendUnits2;
+      if(limits[0] > -0.01 && limits[0] < 0){
+        legendUnits1 = limits[0].toExponential(2);
+      } else if (limits[0] <= -1000000000){
+        legendUnits1 = number.format(limits[0] / 1000000000) +"B"
+      }else if (limits[0] <= -1000000){
+        legendUnits1 = number.format(limits[0] / 1000000) +"M"
+      } else {
+        legendUnits1 = number.format(limits[0]);
+      }
+
+      if(limits[limits.length - 1] < 0.01 && limits[limits.length - 1] > 0){
+        legendUnits2 = limits[limits.length - 1].toExponential(2);
+      } else if (limits[limits.length - 1] >= 1000000000){
+        legendUnits2 = number.format(limits[limits.length - 1] / 1000000000) +"B"
+      } else if (limits[limits.length - 1] >= 1000000){
+        legendUnits2 = number.format(limits[limits.length - 1] / 1000000) +"M"
+      } else{
+        legendUnits2 = number.format(limits[limits.length - 1]);
+      }
   
-      div.innerHTML += '<ul>' + labels.join('') + '</ul><div class="min">' + mapTitle.units1 + number.format(limits[0]) + '</div> \
-        <div class="max">' + mapTitle.units1 + number.format(limits[limits.length - 1]) + '</div></div>'
+      div.innerHTML += '<ul>' + labels.join('') + '</ul><div class="min">' + mapTitle.units1 + legendUnits1 + '</div> \
+        <div class="max">' + mapTitle.units1 + legendUnits2 + '</div></div>'
       return div;
     };
     this.legend.addTo(this.map)

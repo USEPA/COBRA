@@ -32,7 +32,11 @@ namespace CobraComputeAPI.Controllers
                 Formatters.SummaryComposer(filter, result);
 
                 HSSFWorkbook hssfwb;
-                using (FileStream file = new FileStream(@"data\CobraTemplate.xls", FileMode.Open, FileAccess.Read))
+
+                string[] paths = { @"data", "CobraTemplate.xls" };
+                string templatePath = Path.Combine(paths);
+
+                using (FileStream file = new FileStream(templatePath, FileMode.Open, FileAccess.Read))
                 {
                     hssfwb = new HSSFWorkbook(file);
                 }
@@ -82,7 +86,15 @@ namespace CobraComputeAPI.Controllers
                 hssfwb.Write(stream);
                 stream.Seek(0, SeekOrigin.Begin);
                 FileContentResult fcresult = new FileContentResult(stream.GetBuffer(), "application/vnd.ms-excel");
-                fcresult.FileDownloadName = "SummaryExcelReport.xls";
+                string fipsindicator = "";
+                if (filter!="0" && filter != "00")
+                {
+                    fipsindicator = "_FIPS" + filter;
+                } else
+                {
+                    fipsindicator = "_Nation";
+                }
+                fcresult.FileDownloadName = "COBRA_Summary"+fipsindicator+".xls";
                 return fcresult;
 
             }

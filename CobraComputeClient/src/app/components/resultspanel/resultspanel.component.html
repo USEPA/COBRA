@@ -1,497 +1,300 @@
 <div id="step3" class="panel results">
 
-	<div id="no-results-screen" class="no-scenario-screen" *ngIf="showNoResultsScreen">
-		<h1 class="text-base-light margin-top-0">Step 3: View Results</h1>
-		<div class="icon">
-			<svg viewBox="0 0 512 512" aria-label="Build scenario to begin">
-			<title>Build scenario to begin</title><g><g id="no-circle-arrow-left">
-			<path fill="#a9aeb1" d="M8 256c0 137 111 248 248 248s248-111 248-248S393 8 256 8 8 119 8 256zm448 0c0 110.5-89.5 200-200 200S56 366.5 56 256 145.5 56 256 56s200 89.5 200 200zm-72-20v40c0 6.6-5.4 12-12 12H256v67c0 10.7-12.9 16-20.5 8.5l-99-99c-4.7-4.7-4.7-12.3 0-17l99-99c7.6-7.6 20.5-2.2 20.5 8.5v67h116c6.6 0 12 5.4 12 12z"></path>
-			</g></g></svg>
-		</div>
-		<div class="message">Build scenario to begin</div>
-	</div>
+  <!-- WHEN INITIAL VIEW IS ACTIVE -->
+  <div id="no-results-screen" class="no-scenario-screen" *ngIf="showNoResultsScreen">
+    <h1 class="text-base margin-top-0">Step 3: View Results</h1>
+    <div class="icon">
+      <svg viewBox="0 0 512 512" aria-label="Build scenario to begin">
+        <title>Build scenario to begin</title>
+        <g>
+          <g id="no-circle-arrow-left">
+            <path fill="#71767a"
+              d="M8 256c0 137 111 248 248 248s248-111 248-248S393 8 256 8 8 119 8 256zm448 0c0 110.5-89.5 200-200 200S56 366.5 56 256 145.5 56 256 56s200 89.5 200 200zm-72-20v40c0 6.6-5.4 12-12 12H256v67c0 10.7-12.9 16-20.5 8.5l-99-99c-4.7-4.7-4.7-12.3 0-17l99-99c7.6-7.6 20.5-2.2 20.5 8.5v67h116c6.6 0 12 5.4 12 12z">
+            </path>
+          </g>
+        </g>
+      </svg>
+    </div>
+    <div class="message">Build scenario to begin</div>
+  </div>
 
-	<div id="pending-results-screen-id" class="pending-results-screen" *ngIf="showPendingResultsScreen">
-		<h1 class="text-base-light margin-top-0">Step 3: View Results</h1>
-		<div class="icon">
-			<svg viewBox="0 0 512 512" style="transform: rotate(90deg);" aria-label="Review and select Run Scenario to view your results.">
-			<title>Review and select "Run Scenario" to view your results.</title><g><g id="no-circle-arrow-left">
-			<path fill="#a9aeb1" d="M8 256c0 137 111 248 248 248s248-111 248-248S393 8 256 8 8 119 8 256zm448 0c0 110.5-89.5 200-200 200S56 366.5 56 256 145.5 56 256 56s200 89.5 200 200zm-72-20v40c0 6.6-5.4 12-12 12H256v67c0 10.7-12.9 16-20.5 8.5l-99-99c-4.7-4.7-4.7-12.3 0-17l99-99c7.6-7.6 20.5-2.2 20.5 8.5v67h116c6.6 0 12 5.4 12 12z"></path>
-			</g></g></svg>
-		</div>
-		<div class="message">Review and select "Run Scenario" to view your results.</div>
-	</div>
+  <!-- WHEN REVIEW VIEW IS ACTIVE -->
+  <div id="pending-results-screen-id" class="pending-results-screen" *ngIf="showPendingResultsScreen">
+    <h1 class="text-base margin-top-0">Step 3: View Results</h1>
+    <div class="icon">
+      <svg viewBox="0 0 512 512" style="transform: rotate(90deg);"
+        aria-label="Review and select Run Scenario to view your results.">
+        <title>Review and select "Run Scenario" to view your results.</title>
+        <g>
+          <g id="no-circle-arrow-left">
+            <path fill="#71767a"
+              d="M8 256c0 137 111 248 248 248s248-111 248-248S393 8 256 8 8 119 8 256zm448 0c0 110.5-89.5 200-200 200S56 366.5 56 256 145.5 56 256 56s200 89.5 200 200zm-72-20v40c0 6.6-5.4 12-12 12H256v67c0 10.7-12.9 16-20.5 8.5l-99-99c-4.7-4.7-4.7-12.3 0-17l99-99c7.6-7.6 20.5-2.2 20.5 8.5v67h116c6.6 0 12 5.4 12 12z">
+            </path>
+          </g>
+        </g>
+      </svg>
+    </div>
+    <div class="message">Review and select "Run Scenario"<br> to view your results.</div>
+  </div>
 
-	<div id="results-screen" [hidden]="true">
-		<app-loadinganimation id="heartbeat" *ngIf="showHeartbeat"></app-loadinganimation>
-		<div id="results_panel_content" [hidden]="true">
-			<div class="grid-row flex- flex-justify">
-				<div class="grid-auto">
-					<h1>Step 3: View Results</h1>
-				</div>
-			</div>
-			<h2>A. Summary of Health Effects Results</h2>
-			<p>Below is a table with the health effects results based on your scenario.</p>
-			<div class="subpanel">
-				<div class="usa-alert usa-alert--info usa-alert--slim" id="info_text_table">
-					<div class="usa-alert__body">
-					<p class="usa-alert__text"><span class="text-highlight">You are viewing results for all contiguous U.S. states.</span> This is because changes in air quality can impact health endpoints in multiple locations due to the transportation of emissions across state and county lines.</p>
-					</div>
-				</div>
-				<p class="text-bold font-sans-sm">Use filters below to see health effects for a specific state or county.</p>
+  <!-- MAIN SCREEN -->
+  <div id="results-screen" [hidden]="true">
+    <app-loadinganimation id="heartbeat" *ngIf="showHeartbeat"></app-loadinganimation>
+    <clr-modal [(clrModalOpen)]="showBuildNewConfirmationModal" [clrModalClosable]="true"
+      [clrModalStaticBackdrop]="false">
+      <h3 class="modal-title">Delete current scenario?</h3>
+      <div class="modal-body">
+        <p>Building a new scenario will delete your current scenario’s configuration and results.</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="usa-button usa-button--outline"
+          (click)="showBuildNewConfirmationModal=false">Cancel</button>
+        <button type="button" class="usa-button usa-button--secondary" (click)="buildNewScenario()">Ok</button>
+      </div>
+    </clr-modal>
+    <div id="results_panel_content" [hidden]="true">
+      <div class="grid-row flex- flex-justify">
+        <div class="grid-auto">
+          <h1>Step 3: View Results</h1>
+        </div>
+        <div class="grid-auto">
+          <button class="usa-button width-card-lg margin-right-0" type="button"
+            (click)="showBuildNewConfirmationModal=true">Build New Scenario</button>
+        </div>
+      </div>
+      <h2>A. Summary of Health Effects Results</h2>
+      <p>Below is a table with the health effects results based on your scenario.</p>
+      <div class="subpanel">
+        <div class="usa-alert usa-alert--info usa-alert--slim" id="info_text_table">
+          <div class="usa-alert__body">
+            <p class="usa-alert__text"><span class="text-highlight">You are viewing results for all contiguous U.S.
+                states.</span> This is because changes in air quality can impact health endpoints in multiple locations
+              due to the transportation of emissions across state and county lines.</p>
+          </div>
+        </div>
+        <p class="text-bold font-sans-sm padding-top-2">Use the filters below to see health effects for a specific state or county.</p>
 
-				<div class="clr-row">
-					<div class="clr-col-sm-12 clr-col-md-6">
-						<label class="usa-label" for="state">1. Filter by state:</label>
-						<select class="usa-select" id="state" name="state" (change)="updateCountyDropDownAndFilterVal(selectState.value)" #selectState>
-						<option id="state_default" value="" selected>All contiguous U.S. states</option>
-							<option *ngFor="let state of state_clr_structure" value="{{state.index}}">{{state.STNAME}}</option>
-						</select>
-					</div>
-					<div class="clr-col-sm-12 clr-col-md-6">
-						<label class="usa-label" for="county">2. Filter by county: (optional)</label>
-						<select class="usa-select" id="county" name="county" (change)="showHideStateCountyNameAndUpdateFilterVal(selectState.value, selectCounty.value)" disabled #selectCounty>
-							<option id="county_default" value="" selected>Select a county...</option>
-							<option *ngFor="let county of counties_for_state" value="{{county.county}}{{county.FIPS}}">{{county.county}}</option>
-						</select>
-					</div>
-				</div>
+        <div class="clr-row">
+          <div class="clr-col-sm-12 clr-col-md-6">
+            <label class="usa-label" for="state_dd">1. Filter by state:</label>
+            <select class="usa-select" id="state_dd" name="state_dd"
+              (change)="updateCountyDropDownAndFilterVal(selectState.value)" #selectState>
+              <option id="state_default" value="" selected>All contiguous U.S. states</option>
+              <option *ngFor="let state of state_clr_structure" value="{{state.index}}">{{state.STNAME}}</option>
+            </select>
+          </div>
+          <div class="clr-col-sm-12 clr-col-md-6">
+            <label class="usa-label" for="county_dd">2. Filter by county: (optional)</label>
+            <select class="usa-select" id="county_dd" name="county_dd"
+              (change)="showHideStateCountyNameAndUpdateFilterVal(selectState.value, selectCounty.value)" disabled
+              #selectCounty>
+              <option id="county_default" value="" selected>All counties</option>
+              <option *ngFor="let county of counties_for_state" value="{{county.county}}{{county.FIPS}}">
+                {{county.county}}</option>
+            </select>
+          </div>
+        </div>
 
-				<h2 *ngIf="selectState.value==''">Results for: All Contiguous U.S. States</h2>
-				<h2 *ngIf="showStateName">Results for: {{state_clr_structure[selectState.value].STNAME}}</h2>
-				<h2 *ngIf="showCountyName">Results for: {{countyName}}, {{state_clr_structure[selectState.value].STNAME}}</h2>
+        <h2>Results for: {{tableStates[selectedTableState]}}</h2>
+        <div class="export-container">
+          <p class="export"><img alt="" class="margin-bottom-1" src="../../../assets/images/file-xls.svg" /> Export:
+            <button class="usa-button--unstyled" *ngIf="showAllResultsBtn" (click)="exportAll()">All
+              results</button><span class="export-indicator" *ngIf="!showAllResultsBtn">Exporting</span> | <button
+              class="usa-button--unstyled" *ngIf="showCurrentViewBtn" (click)="summaryExport()">Current
+              filter</button><span class="export-indicator" *ngIf="!showCurrentViewBtn">Exporting</span></p>
+        </div>
+        <div class="usa-table-container--scrollable">
+          <table id="result-table" attr.aria-label="{{tableStates[selectedTableState]}}"
+            class="usa-table usa-table--borderless usa-table--numeric">
+            <tbody>
+              <col>
+              <colgroup span="2"></colgroup>
+              <colgroup span="2"></colgroup>
+              <tr class="border-y-2px">
+                <th rowspan="2" class="cell-lg" id="health_endpoint">Health <span class="has-tooltip">Endpoint
+                    <clr-tooltip>
+                      <clr-icon clrTooltipTrigger shape="info-circle" class="is-solid is-info" size="22"
+                        aria-label="In the results table, positive numbers indicate annual reductions in the number of cases and the associated costs avoided. Negative numbers signify increases in the number of cases and associated costs accrued.">
+                      </clr-icon>
+                      <clr-tooltip-content clrPosition="top-right" clrSize="lg" *clrIfOpen>
+                        <span>In the results table, positive numbers indicate annual reductions in the number of cases
+                          and the associated costs avoided. Negative numbers signify increases in the number of cases
+                          and associated costs accrued.</span>
+                      </clr-tooltip-content>
+                    </clr-tooltip>
+                  </span></th>
+                <th colspan="2" scope="colgroup" class="cell-lg text-center" id="change_in_incidence">Change in <span
+                    class="has-tooltip">Incidence
+                    <clr-tooltip>
+                      <clr-icon clrTooltipTrigger shape="info-circle" class="is-solid is-info" size="22"
+                        aria-label="Incidence refers to the number of new cases of a health endpoint over a specified period of time. The change in incidence is not necessarily a whole number because COBRA calculates statistical risk reductions which are then aggregated over the population. For example, if 150,000 people experience a 0.001% reduction in mortality risk, this would be reported as 1.5 statistical lives saved. This statistical life, and its associated monetary value, represents the sum of many small risk reductions and does not correspond to the loss or value of an individual life.">
+                      </clr-icon>
+                      <clr-tooltip-content clrPosition="top-right" clrSize="lg" *clrIfOpen>
+                        <span>Incidence refers to the number of new cases of a health endpoint over a specified period
+                          of time. The change in incidence is not necessarily a whole number because COBRA calculates
+                          statistical risk reductions which are then aggregated over the population. For example, if
+                          150,000 people experience a 0.001% reduction in mortality risk, this would be reported as 1.5
+                          “statistical lives saved.” This statistical life, and its associated monetary value,
+                          represents the sum of many small risk reductions and does not correspond to the loss or value
+                          of an individual life.</span>
+                      </clr-tooltip-content>
+                    </clr-tooltip>
+                  </span>
+                  <br>(cases, annual)
+                </th>
+                <th colspan="2" scope="colgroup" class="cell-lg text-center" id="monetary_value">Monetary <span
+                    class="has-tooltip">Value
+                    <clr-tooltip>
+                      <clr-icon clrTooltipTrigger shape="info-circle" class="is-solid is-info" size="22"
+                        aria-label="COBRA calculates the monetary value of each health endpoint based on data on the healthcare costs of the health endpoint and research into the willingness to pay to avoid the health endpoint. Results are presented in 2017$.">
+                      </clr-icon>
+                      <clr-tooltip-content clrPosition="top-left" clrSize="lg" *clrIfOpen>
+                        <span>COBRA calculates the monetary value of each health endpoint based on data on the
+                          healthcare costs of the health endpoint and research into the willingness to pay to avoid the
+                          health endpoint. Results are presented in 2017 dollars.</span>
+                      </clr-tooltip-content>
+                    </clr-tooltip>
+                  </span>
+                  <br>(dollars, annual)
+                </th>
+              </tr>
+              <tr class="border-y-2px">
+                <th class="text-center" scope="col" id="change_in_incidence_low" headers="change_in_incidence">Low</th>
+                <th class="text-center" scope="col" id="change_in_incidence_high" headers="change_in_incidence">High
+                </th>
+                <th class="text-center" scope="col" id="monetary_value_low" headers="monetary_value">Low</th>
+                <th class="text-center" scope="col" id="monetary_value_high" headers="monetary_value">High</th>
+              </tr>
+              <tr>
+                <th scope="row" headers="health_endpoint" id="mortality">Mortality <span
+                    class="text-bold"><sup>*</sup></span></th>
+                <td headers="change_in_incidence change_in_incidence_low mortality">{{Mortality_low}}</td>
+                <td headers="change_in_incidence change_in_incidence_high mortality">{{Mortality_high}}</td>
+                <td headers="monetary_value monetary_value_low mortality">{{MortalityValue_low}}</td>
+                <td headers="monetary_value monetary_value_high mortality">{{MortalityValue_high}}</td>
+              </tr>
+              <tr>
+                <th scope="row" headers="health_endpoint" id="nonfatal_heart_attacks">Nonfatal Heart Attacks <span
+                    class="text-bold"><sup>*</sup></span></th>
+                <td headers="change_in_incidence change_in_incidence_low nonfatal_heart_attacks">
+                  {{NonfatalHeartAttacks_low}}</td>
+                <td headers="change_in_incidence change_in_incidence_high nonfatal_heart_attacks">
+                  {{NonfatalHeartAttacks_high}}</td>
+                <td headers="monetary_value monetary_value_low nonfatal_heart_attacks">{{NonfatalHeartAttacksValue_low}}
+                </td>
+                <td headers="monetary_value monetary_value_high nonfatal_heart_attacks">
+                  {{NonfatalHeartAttacksValue_high}}</td>
+              </tr>
+              <tr>
+                <th scope="row">Infant Mortality</th>
+                <td>{{InfantMortality}}</td>
+                <td>{{InfantMortality}}</td>
+                <td>{{InfantMortalityValue}}</td>
+                <td>{{InfantMortalityValue}}</td>
+              </tr>
+              <tr>
+                <th scope="row"> Hospital Admits, All Respiratory</th>
+                <td>{{HospitalAdmitsAllRespiratory}}</td>
+                <td>{{HospitalAdmitsAllRespiratory}}</td>
+                <td>{{HospitalAdmitsAllRespiratoryValue}}</td>
+                <td>{{HospitalAdmitsAllRespiratoryValue}}</td>
+              </tr>
+              <tr>
+                <th scope="row">Hospital Admits, Cardiovascular <span class="text-bold"><sup>**</sup></span></th>
+                <td>{{HospitalAdmitsCardiovascularexceptheartattacks}}</td>
+                <td>{{HospitalAdmitsCardiovascularexceptheartattacks}}</td>
+                <td>{{HospitalAdmitsCardiovascularexceptheartattacksValue}}</td>
+                <td>{{HospitalAdmitsCardiovascularexceptheartattacksValue}}</td>
+              </tr>
+              <tr>
+                <th scope="row">Acute Bronchitis</th>
+                <td>{{AcuteBronchitis}}</td>
+                <td>{{AcuteBronchitis}}</td>
+                <td>{{AcuteBronchitisValue}}</td>
+                <td>{{AcuteBronchitisValue}}</td>
+              </tr>
+              <tr>
+                <th scope="row">Upper Respiratory Symptoms</th>
+                <td>{{UpperRespiratorySymptoms}}</td>
+                <td>{{UpperRespiratorySymptoms}}</td>
+                <td>{{UpperRespiratorySymptomsValue}}</td>
+                <td>{{UpperRespiratorySymptomsValue}}</td>
+              </tr>
+              <tr>
+                <th scope="row">Lower Respiratory Symptoms</th>
+                <td>{{LowerRespiratorySymptoms}}</td>
+                <td>{{LowerRespiratorySymptoms}}</td>
+                <td>{{LowerRespiratorySymptomsValue}}</td>
+                <td>{{LowerRespiratorySymptomsValue}}</td>
+              </tr>
+              <tr>
+                <th scope="row">Emergency Room Visits, Asthma</th>
+                <td>{{EmergencyRoomVisitsAsthma}}</td>
+                <td>{{EmergencyRoomVisitsAsthma}}</td>
+                <td>{{EmergencyRoomVisitsAsthmaValue}}</td>
+                <td>{{EmergencyRoomVisitsAsthmaValue}}</td>
+              </tr>
+              <tr>
+                <th scope="row">Asthma Exacerbation</th>
+                <td>{{AsthmaExacerbation}}</td>
+                <td>{{AsthmaExacerbation}}</td>
+                <td>{{AsthmaExacerbationValue}}</td>
+                <td>{{AsthmaExacerbationValue}}</td>
+              </tr>
+              <tr>
+                <th scope="row">Minor Restricted Activity Days</th>
+                <td>{{MinorRestrictedActivityDays}}</td>
+                <td>{{MinorRestrictedActivityDays}}</td>
+                <td>{{MinorRestrictedActivityDaysValue}}</td>
+                <td>{{MinorRestrictedActivityDaysValue}}</td>
+              </tr>
+              <tr>
+                <th scope="row">Work Loss Days</th>
+                <td>{{WorkLossDays}}</td>
+                <td>{{WorkLossDays}}</td>
+                <td>{{WorkLossDaysValue}}</td>
+                <td>{{WorkLossDaysValue}}</td>
+              </tr>
+              <tr class="border-y-2px">
+                <th scope="row" class="cell-lg text-emphasis padding-left-05"><img
+                    src="../../assets/images/heartbeat-icon.svg" alt="heartbeat health icon" /> Total Health Effects
+                </th>
+                <td class="cell-lg text-emphasis"></td>
+                <td class="cell-lg text-emphasis"></td>
+                <td class="cell-lg text-emphasis">{{TotalHealthBenefitsValue_low}}</td>
+                <td class="cell-lg text-emphasis">{{TotalHealthBenefitsValue_high}}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="text-footnote">
+          <p id="note1"><span class="text-bold"><sup>*&nbsp;</sup></span> The Low and High values represent differences
+            in the methods used to estimate some of the health impacts in COBRA. For example, high and low results for
+            avoided premature mortality are based on two different epidemiological studies of the impacts of
+            PM<sub>2.5</sub> on mortality in the United States.</p>
+          <p id="note2"><span class="text-bold"><sup>**</sup></span> Except heart attacks.</p>
+        </div>
+      </div>
 
-				<!--<p class="export"><img alt="" class="padding-bottom-1" src="../../../assets/images/file-csv.svg" /> Export: <button class="usa-button--unstyled" (click)="ExportAll()">All results</button> | <button class="usa-button--unstyled" (click)="SummaryExport()">Current view</button></p>-->
-				<table id="result-table" *ngIf="selectState.value==''" aria-label="All Contiguous U.S. States" class="usa-table--borderless usa-table--numeric">
-					<tbody>
-						<col>
-						<colgroup span="2"></colgroup>
-						<colgroup span="2"></colgroup>
-						<tr class="border-y-2px">
-						<th rowspan="2" class="cell-lg">Health <span class="has-tooltip">Endpoint							
-								<clr-tooltip>
-								<clr-icon clrTooltipTrigger shape="info-circle" class="is-solid is-info" size="22" aria-label="In the results table, positive numbers indicate annual reductions in the number of cases and the associated costs avoided. Negative numbers signify increases in the number of cases and associated costs accrued."></clr-icon>
-								<clr-tooltip-content clrPosition="top-right" clrSize="lg" *clrIfOpen>
-									<span>In the results table, positive numbers indicate annual reductions in the number of cases and the associated costs avoided. Negative numbers signify increases in the number of cases and associated costs accrued.</span>
-								</clr-tooltip-content>
-							</clr-tooltip>
-						</span></th>
-						<th colspan="2" scope="colgroup" class="cell-lg text-center">Change in <span class="has-tooltip">Incidence
-							<clr-tooltip>
-								<clr-icon clrTooltipTrigger shape="info-circle" class="is-solid is-info" size="22" aria-label="Incidence refers to the number of new cases of a health endpoint over a specified period of time. The change in incidence is not necessarily a whole number because COBRA calculates statistical risk reductions which are then aggregated over the population. For example, if 150,000 people experience a 0.001% reduction in mortality risk, this would be reported as 1.5 statistical lives saved. This statistical life, and its associated monetary value, represents the sum of many small risk reductions and does not correspond to the loss or value of an individual life."></clr-icon>
-								<clr-tooltip-content clrPosition="top-right" clrSize="lg" *clrIfOpen>
-									<span>Incidence refers to the number of new cases of a health endpoint over a specified period of time. The change in incidence is not necessarily a whole number because COBRA calculates statistical risk reductions which are then aggregated over the population. For example, if 150,000 people experience a 0.001% reduction in mortality risk, this would be reported as 1.5 “statistical lives saved.” This statistical life, and its associated monetary value, represents the sum of many small risk reductions and does not correspond to the loss or value of an individual life.</span>
-								</clr-tooltip-content>
-							</clr-tooltip>
-						</span>
-						<br>(cases, annual)
-						</th>
-						<th colspan="2" scope="colgroup" class="cell-lg text-center">Monetary <span class="has-tooltip">Value
-							<clr-tooltip>
-								<clr-icon clrTooltipTrigger shape="info-circle" class="is-solid is-info" size="22" aria-label="COBRA calculates the monetary value of each health endpoint based on data on the healthcare costs of the health endpoint and research into the willingness to pay to avoid the health endpoint. Results are presented in 2017$."></clr-icon>
-								<clr-tooltip-content clrPosition="top-left" clrSize="lg" *clrIfOpen>
-									<span>COBRA calculates the monetary value of each health endpoint based on data on the healthcare costs of the health endpoint and research into the willingness to pay to avoid the health endpoint. Results are presented in 2017$.</span>
-								</clr-tooltip-content>
-							</clr-tooltip>	
-						</span>
-						<br>(2017$, annual)
-						</th>
-						</tr>
-						<tr class="border-y-2px">
-							<th class="text-center" scope="col">Low</th>
-							<th class="text-center" scope="col">High</th>
-							<th class="text-center" scope="col">Low</th>
-							<th class="text-center" scope="col">High</th>
-						</tr>
-						<tr>
-							<th scope="row">Mortality <sup><a class="text-bold" href="#note1">*</a></sup></th>
-							<td>{{Mortality_low}}</td>
-							<td>{{Mortality_high}}</td>
-							<td>{{MortalityValue_low}}</td>
-							<td>{{MortalityValue_high}}</td>
-						</tr>
-						<tr>
-							<th scope="row">Nonfatal Heart Attacks <sup><a class="text-bold" href="#note1">*</a></sup></th>
-							<td>{{NonfatalHeartAttacks_low}}</td>
-							<td>{{NonfatalHeartAttacks_high}}</td>
-							<td>{{NonfatalHeartAttacksValue_low}}</td>
-							<td>{{NonfatalHeartAttacksValue_high}}</td>
-						</tr>
-						<tr>
-							<th scope="row">Infant Mortality</th>
-							<td>{{this.InfantMortality}}</td>
-							<td>{{this.InfantMortality}}</td>
-							<td>{{this.InfantMortalityValue}}</td>
-							<td>{{this.InfantMortalityValue}}</td>
-						</tr>
-						<tr>
-							<th scope="row"> Hospital Admits, All Respiratory</th>
-							<td>{{this.HospitalAdmitsAllRespiratory}}</td>
-							<td>{{this.HospitalAdmitsAllRespiratory}}</td>
-							<td>{{this.HospitalAdmitsAllRespiratoryValue}}</td>
-							<td>{{this.HospitalAdmitsAllRespiratoryValue}}</td>
-						</tr>
-						<tr>
-							<th scope="row">Hospital Admits, Cardiovascular <sup><a class="text-bold" href="#note2">**</a></sup></th>
-							<td>{{this.HospitalAdmitsCardiovascularexceptheartattacks}}</td>
-							<td>{{this.HospitalAdmitsCardiovascularexceptheartattacks}}</td>
-							<td>{{this.HospitalAdmitsCardiovascularexceptheartattacksValue}}</td>
-							<td>{{this.HospitalAdmitsCardiovascularexceptheartattacksValue}}</td>
-						</tr>
-						<tr>
-							<th scope="row">Acute Bronchitis</th>
-							<td>{{this.AcuteBronchitis}}</td>
-							<td>{{this.AcuteBronchitis}}</td>
-							<td>{{this.AcuteBronchitisValue}}</td>
-							<td>{{this.AcuteBronchitisValue}}</td>
-						</tr>
-						<tr>
-							<th scope="row">Upper Respiratory Symptoms</th>
-							<td>{{this.UpperRespiratorySymptoms}}</td>
-							<td>{{this.UpperRespiratorySymptoms}}</td>
-							<td>{{this.UpperRespiratorySymptomsValue}}</td>
-							<td>{{this.UpperRespiratorySymptomsValue}}</td>
-						</tr>
-						<tr>
-							<th scope="row">Lower Respiratory Symptoms</th>
-							<td>{{this.LowerRespiratorySymptoms}}</td>
-							<td>{{this.LowerRespiratorySymptoms}}</td>
-							<td>{{this.LowerRespiratorySymptomsValue}}</td>
-							<td>{{this.LowerRespiratorySymptomsValue}}</td>
-						</tr>
-						<tr>
-							<th scope="row">Emergency Room Visits, Asthma</th>
-							<td>{{this.EmergencyRoomVisitsAsthma}}</td>
-							<td>{{this.EmergencyRoomVisitsAsthma}}</td>
-							<td>{{this.EmergencyRoomVisitsAsthmaValue}}</td>
-							<td>{{this.EmergencyRoomVisitsAsthmaValue}}</td>
-						</tr>
-						<tr>
-							<th scope="row">Asthma Exacerbation</th>
-							<td>{{this.AsthmaExacerbation}}</td>
-							<td>{{this.AsthmaExacerbation}}</td>
-							<td>{{this.AsthmaExacerbationValue}}</td>
-							<td>{{this.AsthmaExacerbationValue}}</td>
-						</tr>
-						<tr>
-							<th scope="row">Minor Restricted Activity Days</th>
-							<td>{{this.MinorRestrictedActivityDays}}</td>
-							<td>{{this.MinorRestrictedActivityDays}}</td>
-							<td>{{this.MinorRestrictedActivityDaysValue}}</td>
-							<td>{{this.MinorRestrictedActivityDaysValue}}</td>
-						</tr>
-						<tr>
-							<th scope="row">Work Loss Days</th>
-							<td>{{this.WorkLossDays}}</td>
-							<td>{{this.WorkLossDays}}</td>
-							<td>{{this.WorkLossDaysValue}}</td>
-							<td>{{this.WorkLossDaysValue}}</td>
-						</tr>
-						<tr class="border-y-2px">
-							<th scope="row" class="cell-lg text-emphasis padding-left-05"><img src="../../assets/images/heartbeat-icon.svg" alt="heartbeat health icon" /> Total Health Effects</th>
-							<td class="cell-lg text-emphasis"></td>
-							<td class="cell-lg text-emphasis"></td>
-							<td class="cell-lg text-emphasis">{{this.TotalHealthBenefitsValue_low}}</td>
-							<td class="cell-lg text-emphasis">{{this.TotalHealthBenefitsValue_high}}</td>
-						</tr>
-					</tbody>
-				</table>
+      <h2>B. Map of Health Effects and Air Quality Results</h2>
+      <p>Below is a map showing health effects and air quality data based on your scenario.</p>
 
-				<table id="result-table" *ngIf="showStateName" attr.aria-label="{{state_clr_structure[selectState.value].STNAME}}" class="usa-table--borderless usa-table--numeric">
-					<tbody>
-						<col>
-						<colgroup span="2"></colgroup>
-						<colgroup span="2"></colgroup>
-						<tr class="border-y-2px">
-						<th rowspan="2" class="cell-lg">Health <span class="has-tooltip">Endpoint							
-								<clr-tooltip>
-								<clr-icon clrTooltipTrigger shape="info-circle" class="is-solid is-info" size="22" aria-label="In the results table, positive numbers indicate annual reductions in the number of cases and the associated costs avoided. Negative numbers signify increases in the number of cases and associated costs accrued."></clr-icon>
-								<clr-tooltip-content clrPosition="top-right" clrSize="lg" *clrIfOpen>
-									<span>In the results table, positive numbers indicate annual reductions in the number of cases and the associated costs avoided. Negative numbers signify increases in the number of cases and associated costs accrued.</span>
-								</clr-tooltip-content>
-							</clr-tooltip>
-						</span></th>
-						<th colspan="2" scope="colgroup" class="cell-lg text-center">Change in <span class="has-tooltip">Incidence
-							<clr-tooltip>
-								<clr-icon clrTooltipTrigger shape="info-circle" class="is-solid is-info" size="22" aria-label="Incidence refers to the number of new cases of a health endpoint over a specified period of time. The change in incidence is not necessarily a whole number because COBRA calculates statistical risk reductions which are then aggregated over the population. For example, if 150,000 people experience a 0.001% reduction in mortality risk, this would be reported as 1.5 statistical lives saved. This statistical life, and its associated monetary value, represents the sum of many small risk reductions and does not correspond to the loss or value of an individual life."></clr-icon>
-								<clr-tooltip-content clrPosition="top-right" clrSize="lg" *clrIfOpen>
-									<span>Incidence refers to the number of new cases of a health endpoint over a specified period of time. The change in incidence is not necessarily a whole number because COBRA calculates statistical risk reductions which are then aggregated over the population. For example, if 150,000 people experience a 0.001% reduction in mortality risk, this would be reported as 1.5 “statistical lives saved.” This statistical life, and its associated monetary value, represents the sum of many small risk reductions and does not correspond to the loss or value of an individual life.</span>
-								</clr-tooltip-content>
-							</clr-tooltip>
-						</span>
-						<br>(cases, annual)
-						</th>
-						<th colspan="2" scope="colgroup" class="cell-lg text-center">Monetary <span class="has-tooltip">Value
-							<clr-tooltip>
-								<clr-icon clrTooltipTrigger shape="info-circle" class="is-solid is-info" size="22" aria-label="COBRA calculates the monetary value of each health endpoint based on data on the healthcare costs of the health endpoint and research into the willingness to pay to avoid the health endpoint. Results are presented in 2017$."></clr-icon>
-								<clr-tooltip-content clrPosition="top-left" clrSize="lg" *clrIfOpen>
-									<span>COBRA calculates the monetary value of each health endpoint based on data on the healthcare costs of the health endpoint and research into the willingness to pay to avoid the health endpoint. Results are presented in 2017$.</span>
-								</clr-tooltip-content>
-							</clr-tooltip>	
-						</span>
-						<br>(2017$, annual)
-						</th>
-						</tr>
-						<tr class="border-y-2px">
-							<th class="text-center" scope="col">Low</th>
-							<th class="text-center" scope="col">High</th>
-							<th class="text-center" scope="col">Low</th>
-							<th class="text-center" scope="col">High</th>
-						</tr>
-						<tr>
-							<th scope="row">Mortality <sup><a class="text-bold" href="#note1">*</a></sup></th>
-							<td>{{Mortality_low}}</td>
-							<td>{{Mortality_high}}</td>
-							<td>{{MortalityValue_low}}</td>
-							<td>{{MortalityValue_high}}</td>
-						</tr>
-						<tr>
-							<th scope="row">Nonfatal Heart Attacks <sup><a class="text-bold" href="#note1">*</a></sup></th>
-							<td>{{NonfatalHeartAttacks_low}}</td>
-							<td>{{NonfatalHeartAttacks_high}}</td>
-							<td>{{NonfatalHeartAttacksValue_low}}</td>
-							<td>{{NonfatalHeartAttacksValue_high}}</td>
-						</tr>
-						<tr>
-							<th scope="row">Infant Mortality</th>
-							<td>{{this.InfantMortality}}</td>
-							<td>{{this.InfantMortality}}</td>
-							<td>{{this.InfantMortalityValue}}</td>
-							<td>{{this.InfantMortalityValue}}</td>
-						</tr>
-						<tr>
-							<th scope="row"> Hospital Admits, All Respiratory</th>
-							<td>{{this.HospitalAdmitsAllRespiratory}}</td>
-							<td>{{this.HospitalAdmitsAllRespiratory}}</td>
-							<td>{{this.HospitalAdmitsAllRespiratoryValue}}</td>
-							<td>{{this.HospitalAdmitsAllRespiratoryValue}}</td>
-						</tr>
-						<tr>
-							<th scope="row">Hospital Admits, Cardiovascular <sup><a class="text-bold" href="#note2">**</a></sup></th>
-							<td>{{this.HospitalAdmitsCardiovascularexceptheartattacks}}</td>
-							<td>{{this.HospitalAdmitsCardiovascularexceptheartattacks}}</td>
-							<td>{{this.HospitalAdmitsCardiovascularexceptheartattacksValue}}</td>
-							<td>{{this.HospitalAdmitsCardiovascularexceptheartattacksValue}}</td>
-						</tr>
-						<tr>
-							<th scope="row">Acute Bronchitis</th>
-							<td>{{this.AcuteBronchitis}}</td>
-							<td>{{this.AcuteBronchitis}}</td>
-							<td>{{this.AcuteBronchitisValue}}</td>
-							<td>{{this.AcuteBronchitisValue}}</td>
-						</tr>
-						<tr>
-							<th scope="row">Upper Respiratory Symptoms</th>
-							<td>{{this.UpperRespiratorySymptoms}}</td>
-							<td>{{this.UpperRespiratorySymptoms}}</td>
-							<td>{{this.UpperRespiratorySymptomsValue}}</td>
-							<td>{{this.UpperRespiratorySymptomsValue}}</td>
-						</tr>
-						<tr>
-							<th scope="row">Lower Respiratory Symptoms</th>
-							<td>{{this.LowerRespiratorySymptoms}}</td>
-							<td>{{this.LowerRespiratorySymptoms}}</td>
-							<td>{{this.LowerRespiratorySymptomsValue}}</td>
-							<td>{{this.LowerRespiratorySymptomsValue}}</td>
-						</tr>
-						<tr>
-							<th scope="row">Emergency Room Visits, Asthma</th>
-							<td>{{this.EmergencyRoomVisitsAsthma}}</td>
-							<td>{{this.EmergencyRoomVisitsAsthma}}</td>
-							<td>{{this.EmergencyRoomVisitsAsthmaValue}}</td>
-							<td>{{this.EmergencyRoomVisitsAsthmaValue}}</td>
-						</tr>
-						<tr>
-							<th scope="row">Asthma Exacerbation</th>
-							<td>{{this.AsthmaExacerbation}}</td>
-							<td>{{this.AsthmaExacerbation}}</td>
-							<td>{{this.AsthmaExacerbationValue}}</td>
-							<td>{{this.AsthmaExacerbationValue}}</td>
-						</tr>
-						<tr>
-							<th scope="row">Minor Restricted Activity Days</th>
-							<td>{{this.MinorRestrictedActivityDays}}</td>
-							<td>{{this.MinorRestrictedActivityDays}}</td>
-							<td>{{this.MinorRestrictedActivityDaysValue}}</td>
-							<td>{{this.MinorRestrictedActivityDaysValue}}</td>
-						</tr>
-						<tr>
-							<th scope="row">Work Loss Days</th>
-							<td>{{this.WorkLossDays}}</td>
-							<td>{{this.WorkLossDays}}</td>
-							<td>{{this.WorkLossDaysValue}}</td>
-							<td>{{this.WorkLossDaysValue}}</td>
-						</tr>
-						<tr class="border-y-2px">
-							<th scope="row" class="cell-lg text-emphasis padding-left-05"><img src="../../assets/images/heartbeat-icon.svg" alt="heartbeat health icon" /> Total Health Effects</th>
-							<td class="cell-lg text-emphasis"></td>
-							<td class="cell-lg text-emphasis"></td>
-							<td class="cell-lg text-emphasis">{{this.TotalHealthBenefitsValue_low}}</td>
-							<td class="cell-lg text-emphasis">{{this.TotalHealthBenefitsValue_high}}</td>
-						</tr>
-					</tbody>
-				</table>
+      <div class="subpanel">
+        <p class="text-bold font-sans-sm padding-bottom-2">Use the filter below to change the map's data layer. Click on a county on the map to
+          explore the data.</p>
 
-				<table id="result-table" *ngIf="showCountyName" attr.aria-label="{{countyName}}, {{state_clr_structure[selectState.value].STNAME}}" class="usa-table--borderless usa-table--numeric">
-					<tbody>
-						<col>
-						<colgroup span="2"></colgroup>
-						<colgroup span="2"></colgroup>
-						<tr class="border-y-2px">
-						<th rowspan="2" class="cell-lg">Health <span class="has-tooltip">Endpoint							
-								<clr-tooltip>
-								<clr-icon clrTooltipTrigger shape="info-circle" class="is-solid is-info" size="22" aria-label="In the results table, positive numbers indicate annual reductions in the number of cases and the associated costs avoided. Negative numbers signify increases in the number of cases and associated costs accrued."></clr-icon>
-								<clr-tooltip-content clrPosition="top-right" clrSize="lg" *clrIfOpen>
-									<span>In the results table, positive numbers indicate annual reductions in the number of cases and the associated costs avoided. Negative numbers signify increases in the number of cases and associated costs accrued.</span>
-								</clr-tooltip-content>
-							</clr-tooltip>
-						</span></th>
-						<th colspan="2" scope="colgroup" class="cell-lg text-center">Change in <span class="has-tooltip">Incidence
-							<clr-tooltip>
-								<clr-icon clrTooltipTrigger shape="info-circle" class="is-solid is-info" size="22" aria-label="Incidence refers to the number of new cases of a health endpoint over a specified period of time. The change in incidence is not necessarily a whole number because COBRA calculates statistical risk reductions which are then aggregated over the population. For example, if 150,000 people experience a 0.001% reduction in mortality risk, this would be reported as 1.5 statistical lives saved. This statistical life, and its associated monetary value, represents the sum of many small risk reductions and does not correspond to the loss or value of an individual life."></clr-icon>
-								<clr-tooltip-content clrPosition="top-right" clrSize="lg" *clrIfOpen>
-									<span>Incidence refers to the number of new cases of a health endpoint over a specified period of time. The change in incidence is not necessarily a whole number because COBRA calculates statistical risk reductions which are then aggregated over the population. For example, if 150,000 people experience a 0.001% reduction in mortality risk, this would be reported as 1.5 “statistical lives saved.” This statistical life, and its associated monetary value, represents the sum of many small risk reductions and does not correspond to the loss or value of an individual life.</span>
-								</clr-tooltip-content>
-							</clr-tooltip>
-						</span>
-						<br>(cases, annual)
-						</th>
-						<th colspan="2" scope="colgroup" class="cell-lg text-center">Monetary <span class="has-tooltip">Value
-							<clr-tooltip>
-								<clr-icon clrTooltipTrigger shape="info-circle" class="is-solid is-info" size="22" aria-label="COBRA calculates the monetary value of each health endpoint based on data on the healthcare costs of the health endpoint and research into the willingness to pay to avoid the health endpoint. Results are presented in 2017$."></clr-icon>
-								<clr-tooltip-content clrPosition="top-left" clrSize="lg" *clrIfOpen>
-									<span>COBRA calculates the monetary value of each health endpoint based on data on the healthcare costs of the health endpoint and research into the willingness to pay to avoid the health endpoint. Results are presented in 2017$.</span>
-								</clr-tooltip-content>
-							</clr-tooltip>	
-						</span>
-						<br>(2017$, annual)
-						</th>
-						</tr>
-						<tr class="border-y-2px">
-							<th class="text-center" scope="col">Low</th>
-							<th class="text-center" scope="col">High</th>
-							<th class="text-center" scope="col">Low</th>
-							<th class="text-center" scope="col">High</th>
-						</tr>
-						<tr>
-							<th scope="row">Mortality <sup><a class="text-bold" href="#note1">*</a></sup></th>
-							<td>{{Mortality_low}}</td>
-							<td>{{Mortality_high}}</td>
-							<td>{{MortalityValue_low}}</td>
-							<td>{{MortalityValue_high}}</td>
-						</tr>
-						<tr>
-							<th scope="row">Nonfatal Heart Attacks <sup><a class="text-bold" href="#note1">*</a></sup></th>
-							<td>{{NonfatalHeartAttacks_low}}</td>
-							<td>{{NonfatalHeartAttacks_high}}</td>
-							<td>{{NonfatalHeartAttacksValue_low}}</td>
-							<td>{{NonfatalHeartAttacksValue_high}}</td>
-						</tr>
-						<tr>
-							<th scope="row">Infant Mortality</th>
-							<td>{{this.InfantMortality}}</td>
-							<td>{{this.InfantMortality}}</td>
-							<td>{{this.InfantMortalityValue}}</td>
-							<td>{{this.InfantMortalityValue}}</td>
-						</tr>
-						<tr>
-							<th scope="row"> Hospital Admits, All Respiratory</th>
-							<td>{{this.HospitalAdmitsAllRespiratory}}</td>
-							<td>{{this.HospitalAdmitsAllRespiratory}}</td>
-							<td>{{this.HospitalAdmitsAllRespiratoryValue}}</td>
-							<td>{{this.HospitalAdmitsAllRespiratoryValue}}</td>
-						</tr>
-						<tr>
-							<th scope="row">Hospital Admits, Cardiovascular <sup><a class="text-bold" href="#note2">**</a></sup></th>
-							<td>{{this.HospitalAdmitsCardiovascularexceptheartattacks}}</td>
-							<td>{{this.HospitalAdmitsCardiovascularexceptheartattacks}}</td>
-							<td>{{this.HospitalAdmitsCardiovascularexceptheartattacksValue}}</td>
-							<td>{{this.HospitalAdmitsCardiovascularexceptheartattacksValue}}</td>
-						</tr>
-						<tr>
-							<th scope="row">Acute Bronchitis</th>
-							<td>{{this.AcuteBronchitis}}</td>
-							<td>{{this.AcuteBronchitis}}</td>
-							<td>{{this.AcuteBronchitisValue}}</td>
-							<td>{{this.AcuteBronchitisValue}}</td>
-						</tr>
-						<tr>
-							<th scope="row">Upper Respiratory Symptoms</th>
-							<td>{{this.UpperRespiratorySymptoms}}</td>
-							<td>{{this.UpperRespiratorySymptoms}}</td>
-							<td>{{this.UpperRespiratorySymptomsValue}}</td>
-							<td>{{this.UpperRespiratorySymptomsValue}}</td>
-						</tr>
-						<tr>
-							<th scope="row">Lower Respiratory Symptoms</th>
-							<td>{{this.LowerRespiratorySymptoms}}</td>
-							<td>{{this.LowerRespiratorySymptoms}}</td>
-							<td>{{this.LowerRespiratorySymptomsValue}}</td>
-							<td>{{this.LowerRespiratorySymptomsValue}}</td>
-						</tr>
-						<tr>
-							<th scope="row">Emergency Room Visits, Asthma</th>
-							<td>{{this.EmergencyRoomVisitsAsthma}}</td>
-							<td>{{this.EmergencyRoomVisitsAsthma}}</td>
-							<td>{{this.EmergencyRoomVisitsAsthmaValue}}</td>
-							<td>{{this.EmergencyRoomVisitsAsthmaValue}}</td>
-						</tr>
-						<tr>
-							<th scope="row">Asthma Exacerbation</th>
-							<td>{{this.AsthmaExacerbation}}</td>
-							<td>{{this.AsthmaExacerbation}}</td>
-							<td>{{this.AsthmaExacerbationValue}}</td>
-							<td>{{this.AsthmaExacerbationValue}}</td>
-						</tr>
-						<tr>
-							<th scope="row">Minor Restricted Activity Days</th>
-							<td>{{this.MinorRestrictedActivityDays}}</td>
-							<td>{{this.MinorRestrictedActivityDays}}</td>
-							<td>{{this.MinorRestrictedActivityDaysValue}}</td>
-							<td>{{this.MinorRestrictedActivityDaysValue}}</td>
-						</tr>
-						<tr>
-							<th scope="row">Work Loss Days</th>
-							<td>{{this.WorkLossDays}}</td>
-							<td>{{this.WorkLossDays}}</td>
-							<td>{{this.WorkLossDaysValue}}</td>
-							<td>{{this.WorkLossDaysValue}}</td>
-						</tr>
-						<tr class="border-y-2px">
-							<th scope="row" class="cell-lg text-emphasis padding-left-05"><img src="../../assets/images/heartbeat-icon.svg" alt="heartbeat health icon" /> Total Health Effects</th>
-							<td class="cell-lg text-emphasis"></td>
-							<td class="cell-lg text-emphasis"></td>
-							<td class="cell-lg text-emphasis">{{this.TotalHealthBenefitsValue_low}}</td>
-							<td class="cell-lg text-emphasis">{{this.TotalHealthBenefitsValue_high}}</td>
-						</tr>
-					</tbody>
-				</table>
+        <label class="usa-label" for="maplayer">Select the map's data layer:</label>
+        <select class="usa-select" id="maplayer" name="maplayer" (change)="styleMap(selectedMapLayer.value)"
+          #selectedMapLayer>
+          <option *ngFor="let layer of mapLayerDisplayName; let i = index;" value="{{layer.value}}" [selected]="i==3">
+            {{layer.name}}</option>
+        </select>
 
-				<div class="text-footnote"> 
-					<p id="note1"><span class="text-bold"><sup>*&nbsp;</sup></span> The Low and High values represent differences in the methods used to estimate some of the health impacts in COBRA.  For example, high and low results for avoided premature mortality are based on two different epidemiological studies of the impacts of PM2.5 on mortality in the United States.</p>
-					<p id="note2"><span class="text-bold"><sup>**</sup></span> Except heart attacks.</p>
-				</div>
-			</div>
-
-			<h2>B. Map of Health Effects and Air Quality Results</h2>
-			<p>Below is a map showing health effects and air quality data based on your scenario.</p>
-
-			<div class="subpanel">
-				<p class="text-bold font-sans-sm">Use the filter below to change the map's data layer. Zoom into the map to explore the data for geographies that interest you.</p>
-
-				<label class="usa-label" for="maplayer">Select the map's data layer:</label>
-				<select class="usa-select" id="maplayer" name="maplayer" (change)="styleMap(selectedMapLayer.value)" #selectedMapLayer>
-					<option *ngFor="let layer of mapLayerDisplayName; let i = index;" value="{{layer.value}}" [selected]="i==3">{{layer.name}}</option>
-				</select>
-
-				<h2 id="mapTitle">Displaying: Base PM 2.5</h2>
-				<div class="clearfix">
-					<!--<p class="export"><img alt="" class="padding-bottom-1" src="../../../assets/images/file-image.svg" /> Export image: <button class="usa-button--unstyled">PNG</button> | <button class="usa-button--unstyled">PDF</button></p>-->
-				</div>
-				<div style="width:100%;height:400px;border:1px solid darkgray;text-align:center;">
-					<div id="map" style="height: 100%;"></div>
-				</div>
-			</div>
-		</div>
-	</div>
+        <h2 id="mapTitle">Displaying: Base PM 2.5</h2>
+        <div class="clearfix">
+        </div>
+        <div id="map" class="map"></div>
+      </div>
+    </div>
+  </div>
 </div>

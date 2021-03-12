@@ -8,7 +8,7 @@ namespace CobraComputeAPI
         {
             foreach (Cobra_ResultDetail detail in result.Impacts)
             {
-                if ((filter == "0") || (filter == detail.FIPS.Substring(0, filter.Length )) )
+                if ((filter == "0") || (filter == "00") || (filter == detail.FIPS.Substring(0, filter.Length )) )
                 { //check if FIPS state part matches in case of filter
                     result.Summary.Acute_Bronchitis += detail.Acute_Bronchitis.GetValueOrDefault(0);
                     result.Summary.Asthma_Exacerbation_Cough += detail.Asthma_Exacerbation_Cough.GetValueOrDefault(0);

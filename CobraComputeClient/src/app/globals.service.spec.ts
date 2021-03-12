@@ -1,5 +1,4 @@
 import { TestBed } from '@angular/core/testing';
-
 import { GlobalsService } from './globals.service';
 
 describe('GlobalsService', () => {

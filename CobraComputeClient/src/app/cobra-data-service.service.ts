@@ -1,15 +1,9 @@
 import { Injectable } from '@angular/core';
-import { HttpClientModule, HttpParams }    from '@angular/common/http';
-import { HttpClient, HttpRequest, HttpHeaders } from '@angular/common/http';
-import { Observable, of } from 'rxjs';
+import { HttpClient, HttpParams }    from '@angular/common/http';
+import { Observable} from 'rxjs';
+import { BehaviorSubject } from 'rxjs/Rx';
 import { Token } from './Token';
-import { catchError, map, tap } from 'rxjs/operators';
 import { GlobalsService } from './globals.service';
-// import { RequestOptions } from '@angular/http';
-import { JSDocTagName } from '@angular/compiler/src/output/output_ast';
-import { BehaviorSubject } from 'rxjs/Rx'
-import { saveAs } from 'file-saver';
-
 
 @Injectable({
   providedIn: 'root'
@@ -29,10 +23,7 @@ export class CobraDataService {
     this.stateCountyDataSource.next(data);
   }
 
-  //public serverendpoint = 'https://cobraapi.app.cloud.gov/api/';
-  public serverendpoint = 'https://cobradevapi.app.cloud.gov/api/';
-  //private serverendpoint = 'http://localhost/CobraComputeAPI/api/';
-  
+  public serverendpoint = 'https://cobraapi.app.cloud.gov/api/';
 
   private tokenUrl = this.serverendpoint + 'token';  // URL to web api
   private resultUrl = this.serverendpoint + 'Result';  // URL to web api
@@ -42,21 +33,17 @@ export class CobraDataService {
   private sumemissionsUrl = this.serverendpoint + 'SummarizedEmissions'; 
   private resultExportUrl = this.serverendpoint + 'ExcelExport'; 
   private SummaryExportUrl = this.serverendpoint + 'SummaryExcel'; 
+  private resetUrl = this.serverendpoint + 'reset';  // URL to web api
 
   constructor( private http: HttpClient, private globals: GlobalsService) { }
+
+  createRandomNumber() {
+    return Math.floor(10000000 + Math.random() * 90000000);
+  }
   
   getToken (): Observable<Token> {
-    return this.http.get<Token>(this.tokenUrl);
+    return this.http.get<Token>(this.tokenUrl + "?" + this.createRandomNumber());
   }
-
-  // getResults(filterval): Observable<any[]> {
-  //   if (filterval && filterval!='00') {
-  //     return this.http.get<any[]>(this.resultUrl + "/" + this.globals.getToken()+"/" + filterval);
-  //   }
-  //   else {
-  //     return this.http.get<any[]>(this.resultUrl + "/" + this.globals.getToken());
-  //   }
-  // }
 
   getResults(filterval: any, rate: any): Observable<any[]> {
     if (filterval && filterval!='00') {
@@ -85,6 +72,13 @@ export class CobraDataService {
     });
     return this.http.get<any[]>(this.emissionsUrl,{ params: params });
   }
+
+  resetEmissionsData(): Observable<any[]> {
+    let body = {
+      'token' : this.globals.getToken()
+    }
+    return this.http.post<any>(this.resetUrl, body);
+  }
 
   updateEmissionsData(results): Observable<any[]> {
     let body = {
@@ -144,26 +138,12 @@ export class CobraDataService {
     return this.http.post<any[]>(this.emissionsupdateUrl, body);
   }
 
-  export_results(kind: any, rate: any) {
+  public exportAllResults(kind: any, rate: any) {
     return this.http.get(this.resultExportUrl + "/" +this.globals.getToken()+"/" + kind + "?discountrate=" + rate, {responseType: 'blob'});
   }
   
-  public ExcelExport(kind: any, rate: any, callback = null) {
-    var filename = "ExcelResultReport.xls";
-    if (kind == 'base') { filename = "BaselineEmissions.xls" };
-    if (kind == 'control') { filename = "ControlEmissions.xls" };
-
-    this.export_results(kind, rate).subscribe(data => {
-      saveAs(data, filename);
-      if (callback) callback();
-    });
+  public exportSummary(filter: any, rate: any) {
+    return this.http.get(this.SummaryExportUrl + "/" + this.globals.getToken() + "/" + filter + "?discountrate=" + rate, { responseType: 'blob' });
   }
 
-  public SummaryExcelExport(filter: any, rate: any) {
-    var filename = "SummaryExcelReport.xls";
-    this.http.get(this.SummaryExportUrl + "/" + this.globals.getToken() + "/" + filter + "?discountrate=" + rate, { responseType: 'blob' }).subscribe(data => {
-      saveAs(data, filename);
-    });
-  }
- 
 }

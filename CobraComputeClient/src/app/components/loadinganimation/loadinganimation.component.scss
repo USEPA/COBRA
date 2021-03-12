@@ -1,16 +1,24 @@
 #loading_heart {
-	/*transform: translate(-50% -50%);
-	position: absolute;
-	left: 50%;
-  right: 50%;*/
   margin: 0 auto;
   display: table;
 }
-  
+
+.st0 {
+  fill: #f0f0f0;
+}
+
+.heart-shape {
+  fill: #662F8D;
+}
+
 .heart-path {
   stroke-dasharray: 500;
   stroke-dashoffset: 500;
   animation: line 3.5s linear infinite;
+  fill: none;
+  stroke: #f0f0f0;
+  stroke-width: 7;
+  stroke-miterlimit: 10;
 }
 
 @keyframes line {

@@ -28,17 +28,12 @@
 							"src/assets"
 						],
 						"styles": [
-							"node_modules/@clr/icons/clr-icons.min.css",
-							"node_modules/@clr/ui/clr-ui.min.css",
-							"node_modules/uswds/dist/css/uswds.min.css",
-							"node_modules/leaflet/dist/leaflet.css"
+							"src/styles.scss"
 						],
 						"scripts": [
 							"node_modules/@webcomponents/webcomponentsjs/custom-elements-es5-adapter.js",
 							"node_modules/@webcomponents/webcomponentsjs/webcomponents-bundle.js",
-							"node_modules/@clr/icons/clr-icons.min.js",
-							"node_modules/uswds/dist/js/uswds.min.js",
-							"node_modules/leaflet-choropleth/dist/choropleth.js"
+							"node_modules/@clr/icons/clr-icons.min.js"
 						]
 					},
 					"configurations": {
@@ -104,10 +99,12 @@
 							"src/assets"
 						],
 						"styles": [
-							"node_modules/uswds/dist/css/uswds.min.css"
+							"src/styles.scss"
 						],
 						"scripts": [
-							"node_modules/uswds/dist/js/uswds.min.js"
+							"node_modules/@webcomponents/webcomponentsjs/custom-elements-es5-adapter.js",
+							"node_modules/@webcomponents/webcomponentsjs/webcomponents-bundle.js",
+							"node_modules/@clr/icons/clr-icons.min.js"
 						]
 					}
 				},

@@ -27,7 +27,9 @@ namespace CobraCompute
     {
         public int emissionsdatayear { get; set; }
         public int populationdatayear { get; set; }
+        public int srdatayear { get; set; }
         public int incidencedatayear { get; set; }
+        public int valuationdatayear { get; set; }
     }
 
 
@@ -809,6 +811,10 @@ namespace CobraCompute
         public Nullable<double> valat3pct { get; set; }
         public Nullable<double> valat7pct { get; set; }
         public string IncidenceEndpoint { get; set; }
+    }
+    public class ResetRequest
+    {
+        public Guid token { get; set; }
     }
 
 

@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.IO;
+using System.Reactive.Linq;
 using System.Threading.Tasks;
 using RedisConfig = CobraCompute.RedisConfig;
 
@@ -218,8 +219,32 @@ namespace CobraComputeAPI
             putBufferToS3("emissions", token.ToString(), this.GlobalEmissionsInventory);
 
             scenario = null;
+            cleanCache();
             return token;
         }
+
+        public Guid resetUserScenario(Guid token)
+        {
+            this.deleteUserScenario(token);
+
+            UserScenario scenario = new UserScenario()
+            {
+                Id = token,
+                Year = 2025,
+                createdOn = DateTime.Now,
+                isEmissionsDataDirty = false
+            };
+
+            var redisScenario = redis.As<UserScenario>();
+
+            scenario.isDirty = true;
+
+            redisScenario.SetValue(token.ToString(), scenario, redisCachingDuration);
+            putBufferToS3("emissions", scenario.Id.ToString(), this.GlobalEmissionsInventory);
+
+            return token;
+        }
+
 
         public Guid renewUserScenario(Guid token)
         {
@@ -242,6 +267,7 @@ namespace CobraComputeAPI
         public void deleteUserScenario(Guid token)
         {
             redis.Remove(token.ToString());
+            
             if (probeS3Object("emissions", token.ToString()).Result)
             {
                 deleteS3Object("emissions", token.ToString());
@@ -251,6 +277,78 @@ namespace CobraComputeAPI
                 deleteS3Object("impacts", token.ToString());
             }
         }
+
+        public async void cleanCache()
+        {
+            try
+            {
+                // Check whether 'mybucket' exists or not.
+                bool found = await minioClient.BucketExistsAsync(s3Config.bucket);
+                if (found)
+                {
+                    // List objects from 'my-bucketname'
+                    List<string> bucketKeys = new List<string>();
+
+                    IObservable<Item> observable = minioClient.ListObjectsAsync(s3Config.bucket);
+
+                    IDisposable subscription = observable.Subscribe(
+                            item => bucketKeys.Add(item.Key),
+                            ex => Console.WriteLine("OnError: {0}", ex.Message),
+                            () => Console.WriteLine("OnComplete: {0}"));
+
+                    observable.Wait();
+                    
+                    foreach (var item in bucketKeys)
+                    {
+                        try
+                        {
+                            string ext = Path.GetExtension(item);
+                            if (ext != null)
+                            {
+                                if (ext == ".emissions" || ext == ".impacts")
+                                {
+                                    //try to get redis scenario
+                                    String token = Path.GetFileNameWithoutExtension(item);
+                                    var redisScenario = redis.As<UserScenario>();
+                                    //not found easy - remove file;
+                                    if (!redisScenario.ContainsKey(token))
+                                    {
+                                        if (probeS3Object(ext.Remove(0,1), token).Result)
+                                        {
+                                            deleteS3Object(ext.Remove(0, 1), token);
+                                        }
+                                    } else {
+                                        //check if expired but still in cache
+                                        UserScenario scenario = redisScenario.GetValue(token);
+                                        TimeSpan duration = DateTime.Now - scenario.createdOn;
+                                        if (duration.TotalHours > 24)
+                                        {
+                                            //old, issue with redis cache, delete
+                                            try
+                                            {
+                                                deleteUserScenario(new Guid(token));
+                                            } catch (Exception exe)
+                                            {
+
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                        }
+                    }
+                }
+            }
+            catch (MinioException e)
+            {
+            }
+
+        }
+
+        
 
     }
 }

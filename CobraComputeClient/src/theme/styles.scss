@@ -1,16 +1,4 @@
-/*
-* * * * * ==============================
-* * * * * ==============================
-* * * * * ==============================
-* * * * * ==============================
-========================================
-========================================
-========================================
-*/
-
-// -------------------------------------
 // Import individual theme settings
-
 @import "uswds-theme-general";
 @import "uswds-theme-typography";
 @import "uswds-theme-spacing";
@@ -20,7 +8,6 @@
 // components import needs to be last
 @import "uswds-theme-components";
 
-// -------------------------------------
 // Import individual USWDS packages...
 // See https://designsystem.digital.gov/components/
 
@@ -30,44 +17,24 @@
 
 // Then import individual component packages...
 @import 'node_modules/uswds/dist/scss/packages/form-controls';
-// @import 'packages/form-templates';
 @import 'node_modules/uswds/dist/scss/packages/layout-grid';
 @import 'node_modules/uswds/dist/scss/packages/typography';
 @import 'node_modules/uswds/dist/scss/packages/validation';
-// @import 'packages/usa-accordion';
 @import 'node_modules/uswds/dist/scss/packages/usa-alert';
-// @import 'packages/usa-banner';
-// @import 'packages/usa-breadcrumb';
 @import 'node_modules/uswds/dist/scss/packages/usa-button';
 @import 'node_modules/uswds/dist/scss/packages/usa-button-group';
-// @import 'packages/usa-card';
 @import 'node_modules/uswds/dist/scss/packages/usa-checklist';
-// @import 'packages/usa-footer';
-// @import 'packages/usa-header';
-// @import 'packages/usa-hero';
-// @import 'packages/usa-layout';
 @import 'node_modules/uswds/dist/scss/packages/usa-media-block';
-// @import 'packages/usa-megamenu';
-// @import 'packages/usa-nav-container';
-// @import 'packages/usa-nav';
-// @import 'packages/usa-navbar';
-// @import 'packages/usa-section';
-// @import 'packages/usa-search';
-// @import 'packages/usa-sidenav';
-// @import 'packages/usa-skipnav';
 @import 'node_modules/uswds/dist/scss/packages/usa-table';
 @import 'node_modules/uswds/dist/scss/packages/usa-tag';
+@import 'node_modules/uswds/dist/scss/packages/uswds-utilities';
 
-// or package sets...
-// @import 'packages/uswds-components';
- @import 'node_modules/uswds/dist/scss/packages/uswds-utilities';
+// Import clarity styles
+@import "@clr/icons/clr-icons.min";
+@import "@clr/ui/clr-ui.min";
 
-// -------------------------------------
-// ...or import the complete USWDS kit
+// Import leaflet styles
+@import "leaflet/dist/leaflet";
 
-//@import "uswds";
-
-// -------------------------------------
 // Import theme custom styles
-
 @import "uswds-theme-custom-styles";

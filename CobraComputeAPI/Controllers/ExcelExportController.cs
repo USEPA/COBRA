@@ -128,7 +128,7 @@ namespace CobraComputeAPI.Controllers
                     document.Save(stream);
                     stream.Seek(0, SeekOrigin.Begin);
                     FileContentResult fcresult = new FileContentResult(stream.GetBuffer(), "application/vnd.ms-excel");
-                    fcresult.FileDownloadName = "ExcelReport.xls";
+                    fcresult.FileDownloadName = "Detailed_COBRA_Report.xls";
                     return fcresult;
                 }
                 else
@@ -164,7 +164,7 @@ namespace CobraComputeAPI.Controllers
                     document.Save(stream);
                     stream.Seek(0, SeekOrigin.Begin);
                     FileContentResult fcresult = new FileContentResult(stream.GetBuffer(), "application/vnd.ms-excel");
-                    fcresult.FileDownloadName = "ExcelReport.xls";
+                    fcresult.FileDownloadName = "COBRA_Baseline_Report.xls";
                     return fcresult;
                 }
 

@@ -1,24 +1,17 @@
 /*
-* * * * * ==============================
-* * * * * ==============================
-* * * * * ==============================
-* * * * * ==============================
-========================================
-========================================
-========================================
 ----------------------------------------
 USWDS THEME CUSTOM STYLES
 ----------------------------------------
-!! Copy this file to your project's
-   sass root. Don't edit the version
-   in node_modules.
-----------------------------------------
-Custom project SASS goes here.
-
-i.e.
-@include u-padding-right('05');
-----------------------------------------
 */
+
+/* --- EPA PADDING RESET --- */
+dd, ol, p, ul, .fieldset-description, .form-actions, .form-item, .pane-content > .node, .node-teaser, .view-mode-teaser:not(.file), 
+.view-mode-teaser2, .view-mode-title2, ul.accordion ul, section dd, section ol, section p, section ul, section .fieldset-description, 
+section .form-actions, section .form-item, section .pane-content>.node, section .node-teaser, section :not(.file).view-mode-teaser, 
+section .view-mode-teaser2, section .view-mode-title2, section ul.accordion ul {
+   padding-bottom: 0;
+}
+
 
 /* --- CLARITY OVERRIDES --- */
 body {
@@ -32,27 +25,34 @@ body p {
 }
 
 clr-icon.is-info {
-   fill: $dark-blue;
+   fill: $cobra-dark-blue;
+}
+
+clr-modal .modal-header--accessible .modal-title {
+   @extend .usa-prose;
+   @include u-font('sans','md');
+   @include u-line-height('sans',3);
+   font-weight: font-weight('bold');
 }
 
 .tooltip > .tooltip-content, .tooltip.tooltip-top-right > .tooltip-content,
 .tooltip .tooltip-content.tooltip-top-right, .tooltip.tooltip-top-left > .tooltip-content,
 .tooltip .tooltip-content.tooltip-top-left  {
-   background-color: $dark-blue;
+   background-color: $cobra-dark-blue;
    @include u-font('sans','xs');
    @include u-line-height('sans',3); 
 }
 
 .tooltip > .tooltip-content::before, .tooltip.tooltip-top-right > .tooltip-content::before,
 .tooltip .tooltip-content.tooltip-top-right::before {
-    border-left-color: $dark-blue;
-    border-top-color: $dark-blue;
+    border-left-color: $cobra-dark-blue;
+    border-top-color: $cobra-dark-blue;
 }
 
 .tooltip.tooltip-top-left > .tooltip-content::before,
 .tooltip .tooltip-content.tooltip-top-left::before {
-    border-right-color: $dark-blue;
-    border-top-color: $dark-blue;
+    border-right-color: $cobra-dark-blue;
+    border-top-color: $cobra-dark-blue;
 }
 
 .has-tooltip {
@@ -60,6 +60,7 @@ clr-icon.is-info {
 }
 
 /* --- USWDS THEMING --- */
+/* --- text --- */
 .usa-prose h1 {
    @include u-font('sans','lg');
    @include u-line-height('sans',3); 
@@ -70,18 +71,24 @@ clr-icon.is-info {
 .usa-prose h2 {
    @include u-font('sans','lg');
    @include u-line-height('sans',3); 
+   @include u-padding-top(3);
    font-weight: font-weight('bold');
-   color: $teal-green;
+   color: $cobra-teal-green;
+   @include u-margin-top(0);
 }
 
 .usa-prose h3 {
-   @include u-font('sans','2xs');
+   @include u-font('sans','sm');
    @include u-line-height('sans',3);
    font-weight: font-weight('bold');
 }
 
 .usa-prose p {
    @include u-line-height('sans',3);
+}
+
+.usa-prose > h1 + * {
+   @include u-margin-top(0);
 }
 
 .usa-prose a {
@@ -99,17 +106,21 @@ clr-icon.is-info {
    color: $theme-link-active-color;
 }
 
-.usa-select {
-   @include u-font('sans','2xs');
-}
-
-.usa-fieldset {
+/* --- forms --- */
+.usa-fieldset, .usa-hint, .usa-select, .usa-range, .usa-input, .usa-textarea, .usa-combo-box__input, .usa-combo-box__list {
    @include u-font('sans','2xs');
 }
 
 .usa-fieldset.pollutant  {
    border-bottom: 1px solid #565c65;
    @include u-padding-y(2);
+   @include u-margin-top(0);
+}
+
+.usa-combo-box__toggle-list, .usa-combo-box__clear-input {
+   background-size: auto 0.6rem;
+   padding-right: 1.75rem;
+   top: 4px;
 }
 
 .usa-legend {
@@ -133,6 +144,10 @@ clr-icon.is-info {
    @include u-height(4);
 }
 
+.usa-input::placeholder {
+   color: #1b1b1b !important;
+ }
+ 
 .usa-radio__label {
    @include u-font('sans','2xs');
    @include u-line-height('sans',6);
@@ -144,29 +159,42 @@ clr-icon.is-info {
    @include u-circle(2);
  }
 
+ /* --- buttons --- */
 .usa-button {
    text-transform: uppercase;
-   background-color: $teal-green;
+   background-color: $cobra-teal-green;
    @include u-font('sans','2xs');
    &:hover { 
-      background-color: #016364; 
+      background-color: $cobra-dark-teal-green; 
    }
    &:active { 
-      box-shadow: inset 0 0 0 2px $teal-green; 
+      box-shadow: inset 0 0 0 2px $cobra-teal-green; 
+   }
+}
+
+.usa-button--secondary {
+   color: white;
+   background-color: $cobra-blue;
+   &:hover {
+      color: white;
+      background-color: $cobra-dark-blue;
+   }
+   &:active {
+      box-shadow: inset 0 0 0 2px $cobra-blue; 
    }
 }
 
 .usa-button--outline {
-   color: $blue;
+   color: $cobra-blue;
    background-color: transparent;
-   box-shadow: inset 0 0 0 2px $blue;
+   box-shadow: inset 0 0 0 2px $cobra-blue;
    &:hover {
-      color: $dark-blue;
+      color: $cobra-dark-blue;
       background-color: transparent;
-      box-shadow: inset 0 0 0 2px $dark-blue;
+      box-shadow: inset 0 0 0 2px $cobra-dark-blue;
    }
    &:active {
-      background-color: $light-blue;
+      background-color: $cobra-light-blue;
    }
 }
 
@@ -180,6 +208,7 @@ clr-icon.is-info {
    }
 }
 
+/* --- tables --- */
 .usa-table--borderless {
    width:100%;
 }
@@ -212,6 +241,12 @@ clr-icon.is-info {
    @include u-bg('base-lightest');
 }
 
+.usa-table-container--scrollable {
+   margin: 0.25rem 0 !important;
+}
+
+/* --- alerts --- */
+
 .usa-alert--info {
    background-color: white;
    background-image: url(../assets/images/info-icon.svg), linear-gradient(transparent, transparent);
@@ -229,16 +264,12 @@ clr-icon.is-info {
    background-size: 2.75rem;
 }
 
+/* --- tags --- */
 .usa-tag {
-   background-color: $purple;
+   background-color: $cobra-purple;
    @include u-margin-left(2px);
 }
 
-.usa-tag--big {
-   background-color: $light-blue;
-   @include u-font('sans','2xs');
-   @include u-padding('05');
-}
 
 /* --- MAIN CONTAINERS --- */
 .panel {
@@ -247,7 +278,7 @@ clr-icon.is-info {
    @include u-padding(4);
    @include u-shadow(2);
    border-radius: 2px;
-   
+
    .subpanel {
       @extend .usa-prose;
       @include u-font('sans','2xs');
@@ -258,9 +289,8 @@ clr-icon.is-info {
       overflow: hidden;
       border-radius: 2px;
 
-      .usa-button--outline {
-         @include u-margin-top(2);
-         @include u-margin-right(0);
+      >p + *, h3, p {
+         @include u-margin-top(0);
       }
 
       .usa-radio__label {
@@ -275,18 +305,30 @@ clr-icon.is-info {
 }
 
 .panel-active {
-   box-shadow: inset 0 0 0 5px $mint-green;
+   box-shadow: inset 0 0 0 5px $cobra-mint-green;
    position: relative;
 }
 
+
+.usa-form, .emissions .subpanel, .emissions > .usa-button {
+    max-width: 20rem;
+}
+
+
 /* --- SPECIAL FEATRUES --- */
+
+.export-container {
+   @extend .clearfix;
+   margin-top: 0 !important;
+}
+
 //used for 'start' circle 
 .panel-circle {
    @include u-circle(8);
    position: absolute;
    top: -30px;
    left: -30px;
-	background: $mint-green;
+	background: $cobra-mint-green;
    text-align: center;
    text-transform: uppercase;
 
@@ -314,21 +356,22 @@ clr-icon.is-info {
 
 .no-scenario-screen {
    @include u-padding-y(0);
-   @include u-margin-bottom(8);
+   height: 295px;
+}
+
+.results .no-scenario-screen, .pending-results-screen {
+   height: 150vh;
 }
 
 .no-scenario-screen .icon, .pending-results-screen .icon {
-   @include u-height(4);
-   @include u-width(4);
-   @include u-margin-top(5);
+   width: 36px;
+   height: 36px;
+   @include u-margin-top(9);
    margin-left: auto;
    margin-right: auto;
-
 }
+
 .no-scenario-screen .message, .pending-results-screen .message {
-   @include u-text('base-light'); 
-   @include u-font('sans','md');
-   @include u-line-height('sans',2);
    @include u-margin-top(2);
    @include u-padding-x(2);
    text-align: center;
@@ -336,28 +379,68 @@ clr-icon.is-info {
    margin-right: auto;
 }
 
-.results .no-scenario-screen, .results .pending-results-screen {
-   height: 200vh;
+.no-scenario-screen .message {
+   @include u-text('base'); 
+   @include u-font('sans','xl');
+   @include u-line-height('sans',3);
+}
+
+.pending-results-screen .message {
+   @include u-text('base-dark'); 
+   @include u-font('sans','sm');
+   @include u-line-height('sans',3);
 }
 
 .review-help {
    @include u-margin-top(8);
 
    .icon {
-      @include u-width(4);
-      @include u-height(4);
+      width: 36px;
+      height: 36px;
       @include u-display('inline-block');
       @include u-margin-right(2);
       @include u-text('top');
    }
-
+   
    .message {
-      @include u-text('base-light'); 
-      @include u-font('sans','md');
-      @include u-line-height('sans',2);
+      @include u-text('base-dark'); 
+      @include u-font('sans','sm');
+      @include u-line-height('sans',3);
       @include u-display('inline-block');
       width: 16rem;
    }
+}
+
+.edit-help {
+
+   .icon {
+      width: 36px;
+      height: 36px;
+      @include u-display('inline-block');
+      @include u-margin-right(6);
+      @include u-text('bottom');
+      transform: rotate(180deg);
+   }
+
+   .message {
+      @include u-text('base-dark'); 
+      @include u-font('sans','sm');
+      @include u-line-height('sans',3);
+      @include u-display('inline-block');
+      width: 18rem;
+   }
+}
+
+.edit-help--4line {
+   margin-top: 8rem;
+}
+
+.edit-help--3line {
+   margin-top: 9.5rem;
+}
+
+.review-form {
+   width:15rem;
 }
 
 .switch-field {
@@ -377,10 +460,10 @@ clr-icon.is-info {
       @include u-padding-x(1);
       @include u-font('sans','3xs');
       margin-top: 0 !important;
-      background-color: $dark-blue;
+      background-color: $cobra-dark-blue;
       color: white;
       font-weight: font-weight('bold');
-      box-shadow: inset 0 0 0 2px $dark-blue; 
+      box-shadow: inset 0 0 0 2px $cobra-dark-blue; 
       &:hover { 
          background-color: #044880;
          color: white;
@@ -395,9 +478,9 @@ clr-icon.is-info {
       @include u-font('sans','3xs');
       margin-top: 0 !important;
       @include u-bg('base-lightest'); 
-      color: $dark-blue;
+      color: $cobra-dark-blue;
       font-weight: font-weight('bold');
-      box-shadow: inset 0 0 0 2px $dark-blue; 
+      box-shadow: inset 0 0 0 2px $cobra-dark-blue; 
       &:hover { 
          @include u-bg('base-lightest'); 
          color: #044880; 
@@ -433,16 +516,15 @@ clr-icon.is-info {
 
 
 .remove-button {
+   background: none !important;
+   border: none;
+   cursor: pointer; 
    @include u-padding-y(0);
    @include u-padding-x('05');
 
    &:hover {
-      background-color: $light-blue;
+      background-color: $cobra-light-blue;
    }
-}
-
-.leaflet-control {
-   background-color: white;
 }
 
 /* --- UTILITIES --- */
@@ -450,12 +532,12 @@ clr-icon.is-info {
 .text-headline {
    @include u-font('sans','lg');
    @include u-line-height('sans',3); 
-   font-weight: font-weight('bold');
+   font-weight: font-weight('semibold');
 }
 
 .text-highlight {
    @include u-padding-x('05');
-   background-color: $purple;
+   background-color: $cobra-purple;
    color: white;
 }
 
@@ -473,16 +555,42 @@ clr-icon.is-info {
 .animation-text {
    @include u-font('sans','lg');
    font-weight: font-weight('bold');
-   color: $purple;
+   color: $cobra-purple;
    text-align: center;
    margin:0;
 }
 
 /* --- MEDIA QUERIES --- */
 
-@media (max-width: 768px) {
-   .review-help {
+@media (max-width: 575px) {
+   .review-form {
+      width:20rem;
+   }
+   .export {
+      float: left;
+   }
+   .units{
+      @include u-padding-left('05');
+   }
+   .usa-alert--info {
+      background-position: 0.5rem 0.75rem;
+      background-size: 1.75rem;
+      .usa-alert__body {
+         padding-left: 1.75rem;
+     }
+   }
+   .img-headline {
+      width: 35%;
+   }
+}
+
+@media (max-width: 767px) {
+   .review-help, .edit-help {
       display:none; 
+   }
+
+   .headline {
+      @include u-padding-x(4);
    }
 }
 
@@ -490,6 +598,15 @@ clr-icon.is-info {
    .panel-circle {
       display:none; 
    }
+   
+   #step2 {
+      visibility: hidden;
+   }
+
+   #step3 {
+      visibility: hidden;
+   }
+
 }
 
 @media (min-width: 992px) and (max-width: 1200px) {

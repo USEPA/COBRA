@@ -17,6 +17,7 @@ namespace CobraComputeAPI.Controllers
         }
 
         [HttpGet]
+        [ResponseCache(NoStore = true, Location = ResponseCacheLocation.None)]
         public JsonResult Get()
         {
             lock (computeCore)

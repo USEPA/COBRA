@@ -1,12 +1,14 @@
-import { Component, ViewEncapsulation, OnInit, Input, Output, EventEmitter } from '@angular/core';
-import { Token } from '../../Token';
-import { CobraDataService } from '../../cobra-data-service.service';
+import { Component, ViewEncapsulation, OnInit, Input, Output, EventEmitter} from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { ClrSelectedState } from '@clr/angular';
+
+import { Token } from '../../Token';
+import { CobraDataService } from '../../cobra-data-service.service';
+
 @Component({
   selector: 'app-emissionspanel',
   templateUrl: './emissionspanel.component.html',
-  styleUrls: ['../../../../node_modules/@clr/ui/clr-ui.css','../../../theme/styles.scss','./emissionspanel.component.scss'],
+  styleUrls: ['./emissionspanel.component.scss'],
   encapsulation: ViewEncapsulation.None
 })
 
@@ -17,65 +19,136 @@ export class EmissionspanelComponent implements OnInit {
   
   constructor(private cobraDataService: CobraDataService) { }
   
+  /* Error messages */
+  public error_notnumber: string = "Enter a positive numeric value.";
+  public error_outofrange: string = "Enter a value between 0 and 100%.";
+  public error_largerthanbaseline: string = "Reductions entered exceed baseline emissions.";
+  public error_cantreducebaseline: string = "Baseline is 0 tons and cannot be reduced.";
+
   /* Location variables */
   private statetree_items: any[] = null;
   public statetree_treeview: any[];
-  public state_clr_structure: any[] = [];
-  public statetree_items_selected: any = null;
+  public state_clr_structure: any[] = []; /* */
+  public statetree_items_selected: any = null; /* */
 
   /* Tier variables */
   public tiertree_items: any[] = null;
   public tiertree_treeview: any[];
-  public tiertree_items_selected: any[] = null;
+  public tiertree_items_selected: any[] = null; /* */
   public index_tier1 = '';
   public index_tier2 = '';
-  public tier2_items: any[] = [];
-  public tier3_items: any[] = [];
+  public tier2_items: any[] = []; /* */
+  public tier3_items: any[] = []; /* */
   
   /* Emissions variables */
-  public last_returned_emissions: any = {baseline: [], control: []};
-  public pm25_baseline: number;
-  public so2_baseline: number;
-  public nox_baseline: number;
-  public nh3_baseline: number;
-  public voc_baseline: number;
-  public pm25_baseline_rounded_up: number;
-  public so2_baseline_rounded_up: number;
-  public nox_baseline_rounded_up: number;
-  public nh3_baseline_rounded_up: number;
-  public voc_baseline_rounded_up: number;
-  public pm25_control: number;
-  public so2_control: number;
-  public nox_control: number;
-  public nh3_control: number;
-  public voc_control: number;
-  PM25ri = 'reduce';
-  PM25pt = 'tons';
-  SO2ri = 'reduce';
-  SO2pt = 'tons';
-  NOXri = 'reduce';
-  NOXpt = 'tons';
-  NH3ri = 'reduce';
-  NH3pt = 'tons';
-  VOCri = 'reduce';
-  VOCpt = 'tons';
-  public cPM25: any;
-  public cSO2: any;
-  public cNOX: any;
-  public cNH3: any;
-  public cVOC: any;
+  public last_returned_emissions: any = {baseline: [], control: []}; /* */
+  public pm25_baseline: number; /* */
+  public so2_baseline: number; /* */
+  public nox_baseline: number; /* */
+  public nh3_baseline: number; /* */
+  public voc_baseline: number; /* */
+  public pm25_control: number = null; /* */
+  public so2_control: number = null; /* */
+  public nox_control: number = null; /* */
+  public nh3_control: number = null; /* */
+  public voc_control: number = null; /* */
+  public pollutants = [
+                        {
+                          index: 0,
+                          name: "PM25",
+                          name_sub: "PM<sub>2.5</sub>",
+                          baseline_rounded_up: null,
+                          ri_switch_name: "PM25ri",
+                          ri_switch_model: "reduce",
+                          ri_switch_reduce_id: "PM25r",
+                          ri_switch_increase_id: "PM25i",
+                          input_name: "changePM25",
+                          input_model: null,
+                          pt_switch_name: "PM25pt",
+                          pt_switch_model: "tons",
+                          pt_switch_tons_id: "PM25t",
+                          pt_switch_percent_id: "PM25p"
+                        },
+                        {
+                          index: 1,
+                          name: "SO2",
+                          name_sub: "SO<sub>2</sub>",
+                          baseline_rounded_up: null,
+                          ri_switch_name: "SO2ri",
+                          ri_switch_model: "reduce",
+                          ri_switch_reduce_id: "SO2r",
+                          ri_switch_increase_id: "SO2i",
+                          input_name: "changeSO2",
+                          input_model: null,
+                          pt_switch_name: "SO2pt",
+                          pt_switch_model: "tons",
+                          pt_switch_tons_id: "SO2t",
+                          pt_switch_percent_id: "SO2p"
+                        },
+                        {
+                          index: 2,
+                          name: "NOX",
+                          name_sub: "NO<sub>x</sub>",
+                          baseline_rounded_up: null,
+                          ri_switch_name: "NOXri",
+                          ri_switch_model: "reduce",
+                          ri_switch_reduce_id: "NOXr",
+                          ri_switch_increase_id: "NOXi",
+                          input_name: "changeNOX",
+                          input_model: null,
+                          pt_switch_name: "NOXpt",
+                          pt_switch_model: "tons",
+                          pt_switch_tons_id: "NOXt",
+                          pt_switch_percent_id: "NOXp"
+                        },
+                        {
+                          index: 3,
+                          name: "NH3",
+                          name_sub: "NH<sub>3</sub>",
+                          baseline_rounded_up: null,
+                          ri_switch_name: "NH3ri",
+                          ri_switch_model: "reduce",
+                          ri_switch_reduce_id: "NH3r",
+                          ri_switch_increase_id: "NH3i",
+                          input_name: "changeNH3",
+                          input_model: null,
+                          pt_switch_name: "NH3pt",
+                          pt_switch_model: "tons",
+                          pt_switch_tons_id: "NH3t",
+                          pt_switch_percent_id: "NH3p"
+                        },
+                        {
+                          index: 4,
+                          name: "VOC",
+                          name_sub: "VOC",
+                          baseline_rounded_up: null,
+                          ri_switch_name: "VOCri",
+                          ri_switch_model: "reduce",
+                          ri_switch_reduce_id: "VOCr",
+                          ri_switch_increase_id: "VOCi",
+                          input_name: "changeVOC",
+                          input_model: null,
+                          pt_switch_name: "VOCpt",
+                          pt_switch_model: "tons",
+                          pt_switch_tons_id: "VOCt",
+                          pt_switch_percent_id: "VOCp"
+                        }
+                      ]
 
   /* variables to show and hide baseline values */
-  public locationPresent: boolean = false;
-  public tierPresent: boolean = false;
+  public locationPresent: boolean = false; /* */
+  public tierPresent: boolean = false; /* */
   public showBaselines: boolean = false;
 
   /* variables to show and hide error messages */
-  public showErrorNotNumber: any = [false, false, false, false, false];
+  public showErrorNotNumber: any = [false, false, false, false, false]; /* */
   // the input should be in the range of 0<=x<=100
-  public showErrorOutOfRange: any = [false, false, false, false, false];
-  public showErrorLargerThanBaseline: any = [false, false, false, false, false];
-  public showErrorCantReduceBaseline: any = [false, false, false, false, false];
+  public showErrorOutOfRange: any = [false, false, false, false, false]; /* */
+  public showErrorLargerThanBaseline: any = [false, false, false, false, false]; /* */
+  public showErrorCantReduceBaseline: any = [false, false, false, false, false]; /* */
+
+  /* variable to show and hide conflict modal */
+  public showConflictModal: boolean = false;
 
   /* Other variables */
   public endApiCall: boolean;
@@ -96,14 +169,14 @@ export class EmissionspanelComponent implements OnInit {
                 this.createStateAndTierTrees('tiers');
               },
       err => console.error('An error occured retrieving tier items: ' + err),
-      () => console.log('Retrieved tier items')
+      () => {}
     );
     this.cobraDataService.getDataDictionary_State().subscribe(
       data => { this.statetree_items = data;
                 this.createStateAndTierTrees('states');
               },
       err => console.error('An error occured retrieving state items: ' + err),
-      () => console.log('Retrieved state items')
+      () => {}
     );
   }
   // <--------------------------------------- Requests state and tier data from API/End --------------------------------------->
@@ -166,21 +239,21 @@ export class EmissionspanelComponent implements OnInit {
     this.component_data_for_reviewpanel["tier1Text"] = this.tier1_selection_text;
     this.component_data_for_reviewpanel["tier2Text"] = this.tier2_selection_text;
     this.component_data_for_reviewpanel["tier3Text"] = this.tier3_selection_text;
-    this.component_data_for_reviewpanel["PM25ri"] = this.PM25ri;
-    this.component_data_for_reviewpanel["SO2ri"] = this.SO2ri;
-    this.component_data_for_reviewpanel["NOXri"] = this.NOXri;
-    this.component_data_for_reviewpanel["NH3ri"] = this.NH3ri;
-    this.component_data_for_reviewpanel["VOCri"] = this.VOCri;
-    this.component_data_for_reviewpanel["cPM25"] = this.cPM25;
-    this.component_data_for_reviewpanel["cSO2"] = this.cSO2;
-    this.component_data_for_reviewpanel["cNOX"] = this.cNOX;
-    this.component_data_for_reviewpanel["cNH3"] = this.cNH3;
-    this.component_data_for_reviewpanel["cVOC"] = this.cVOC;
-    this.component_data_for_reviewpanel["PM25pt"] = this.PM25pt;
-    this.component_data_for_reviewpanel["SO2pt"] = this.SO2pt;
-    this.component_data_for_reviewpanel["NOXpt"] = this.NOXpt;
-    this.component_data_for_reviewpanel["NH3pt"] = this.NH3pt;
-    this.component_data_for_reviewpanel["VOCpt"] = this.VOCpt;
+    this.component_data_for_reviewpanel["PM25ri"] = this.pollutants[0].ri_switch_model;
+    this.component_data_for_reviewpanel["SO2ri"] = this.pollutants[1].ri_switch_model;
+    this.component_data_for_reviewpanel["NOXri"] = this.pollutants[2].ri_switch_model;
+    this.component_data_for_reviewpanel["NH3ri"] = this.pollutants[3].ri_switch_model;
+    this.component_data_for_reviewpanel["VOCri"] = this.pollutants[4].ri_switch_model;
+    this.component_data_for_reviewpanel["cPM25"] = this.pollutants[0].input_model;
+    this.component_data_for_reviewpanel["cSO2"] = this.pollutants[1].input_model;
+    this.component_data_for_reviewpanel["cNOX"] = this.pollutants[2].input_model;
+    this.component_data_for_reviewpanel["cNH3"] = this.pollutants[3].input_model;
+    this.component_data_for_reviewpanel["cVOC"] = this.pollutants[4].input_model;
+    this.component_data_for_reviewpanel["PM25pt"] = this.pollutants[0].pt_switch_model;
+    this.component_data_for_reviewpanel["SO2pt"] = this.pollutants[1].pt_switch_model;
+    this.component_data_for_reviewpanel["NOXpt"] = this.pollutants[2].pt_switch_model;
+    this.component_data_for_reviewpanel["NH3pt"] = this.pollutants[3].pt_switch_model;
+    this.component_data_for_reviewpanel["VOCpt"] = this.pollutants[4].pt_switch_model;
     // values used for the backend computations
     this.component_data_for_reviewpanel["statetree_items_selected"] = this.statetree_items_selected;
     this.component_data_for_reviewpanel["tiertree_items_selected"] = this.tiertree_items_selected;
@@ -196,6 +269,7 @@ export class EmissionspanelComponent implements OnInit {
       this.clearTierSelections();
       this.clearEmissionChanges();
       this.showBaselines = false;
+      document.getElementById("step2").style.visibility = "visible";
       this.emitFromEmissionspanelToReviewpanel(this.component_data_for_reviewpanel);
     }
   }
@@ -238,6 +312,11 @@ export class EmissionspanelComponent implements OnInit {
       this.nox_baseline = 0;
       this.nh3_baseline = 0;
       this.voc_baseline = 0;
+      this.pollutants[0].baseline_rounded_up = 0;
+      this.pollutants[1].baseline_rounded_up = 0;
+      this.pollutants[2].baseline_rounded_up = 0;
+      this.pollutants[3].baseline_rounded_up = 0;
+      this.pollutants[4].baseline_rounded_up = 0;
     }
     if (this.last_returned_emissions["control"].length == 0) {
       this.pm25_control = 0;
@@ -261,11 +340,11 @@ export class EmissionspanelComponent implements OnInit {
       this.nox_baseline = baseline["NO2"];
       this.nh3_baseline = baseline["NH3"];
       this.voc_baseline = baseline["VOC"];
-      this.pm25_baseline_rounded_up = Math.ceil(baseline["PM25"]*100)/100;
-      this.so2_baseline_rounded_up = Math.ceil(baseline["SO2"]*100)/100;
-      this.nox_baseline_rounded_up = Math.ceil(baseline["NO2"]*100)/100;
-      this.nh3_baseline_rounded_up = Math.ceil(baseline["NH3"]*100)/100;
-      this.voc_baseline_rounded_up = Math.ceil(baseline["VOC"]*100)/100;
+      this.pollutants[0].baseline_rounded_up = Math.ceil(baseline["PM25"]*100)/100;
+      this.pollutants[1].baseline_rounded_up = Math.ceil(baseline["SO2"]*100)/100;
+      this.pollutants[2].baseline_rounded_up = Math.ceil(baseline["NO2"]*100)/100;
+      this.pollutants[3].baseline_rounded_up = Math.ceil(baseline["NH3"]*100)/100;
+      this.pollutants[4].baseline_rounded_up = Math.ceil(baseline["VOC"]*100)/100;
     }
     this.endApiCall = true;
 
@@ -290,7 +369,6 @@ export class EmissionspanelComponent implements OnInit {
           },
           err => console.error('An error occured getting tier items: ' + err),
           () => {
-            console.log('Retrieved tier items.');
           }
         );
       } else {
@@ -356,6 +434,32 @@ export class EmissionspanelComponent implements OnInit {
         var tier2index = this.findWithAttr(uniqueNamestier1[tier1index]['items'], 'text', tier[k].TIER2NAME);
         uniqueNamestier1[tier1index]['items'][tier2index]['items'].push({ 'text': tier[k].TIER3NAME, 'TIER1': tier[k].TIER1, 'TIER2': tier[k].TIER2, 'TIER3': tier[k].TIER3, 'uniqueid': tier[k].TIER1.toString() + ',' + tier[k].TIER2.toString() + ',' + tier[k].TIER3.toString() });
       }
+
+      /* Sorts uniqueNamestier1 and its nested arrays */
+      uniqueNamestier1.sort(function(a,b) {
+        var textA = a.text.toUpperCase();
+        var textB = b.text.toUpperCase();
+        return (textA < textB) ? -1 : (textA > textB) ? 1 : 0;
+      });
+      for (var i = 0; i < uniqueNamestier1.length; i++) {
+        uniqueNamestier1[i].tier1_dd_order = i;
+        uniqueNamestier1[i].items.sort(function(a,b) {
+          var textA = a.text.toUpperCase();
+          var textB = b.text.toUpperCase();
+          return (textA < textB) ? -1 : (textA > textB) ? 1 : 0;
+        });
+        for (var j = 0; j < uniqueNamestier1[i].items.length; j++) {
+          uniqueNamestier1[i].items[j].tier2_dd_order = j;
+          uniqueNamestier1[i].items[j].items.sort(function(a,b) {
+            var textA = a.text.toUpperCase();
+            var textB = b.text.toUpperCase();
+            return (textA < textB) ? -1 : (textA > textB) ? 1 : 0;
+          });
+          for (var k = 0; k < uniqueNamestier1[i].items[j].items.length; k++) {
+            uniqueNamestier1[i].items[j].items[k].tier3_dd_order = k;
+          }
+        }
+      }
       this.tiertree_treeview = uniqueNamestier1;
     }
 
@@ -390,7 +494,8 @@ export class EmissionspanelComponent implements OnInit {
             'STNAME': county[i].STNAME,
             'STFIPS': county[i].FIPS.substring(0,2),
             'index': i,
-            'selected': ClrSelectedState.UNSELECTED, 
+            'selected': ClrSelectedState.UNSELECTED,
+            'expanded': false,
             'counties': [
               {
                 'county': county[i].CYNAME,
@@ -416,7 +521,8 @@ export class EmissionspanelComponent implements OnInit {
               'STNAME': county[i+1].STNAME,
               'STFIPS': county[i+1].FIPS.substring(0,2),
               'index': j,
-              'selected': ClrSelectedState.UNSELECTED, 
+              'selected': ClrSelectedState.UNSELECTED,
+              'expanded': false,
               'counties': [ 
                 {
                   'county': county[i+1].CYNAME,
@@ -428,6 +534,7 @@ export class EmissionspanelComponent implements OnInit {
           }
         }
       }
+
       this.emitFromEmissionspanelToResultspanel(this.state_clr_structure);
     // <............................................. Creates state_clr_structure/End ........................................>
 
@@ -464,20 +571,25 @@ export class EmissionspanelComponent implements OnInit {
     this.stateCountyBadgesList = [];
     for (var i = 0; i < this.state_clr_structure.length; i++ ) {
       if (this.state_clr_structure[i].selected === 1) {
+        for (var j = 0; j < this.state_clr_structure[i].counties.length; j++) {
+          this.state_clr_structure[i].counties[j].selected = 1;
+        }
         this.statetree_items_selected.push(this.state_clr_structure[i].STFIPS);
         if (this.state_clr_structure[i].STFIPS != 11) {
           this.stateCountyBadgesList.push(this.state_clr_structure[i].STNAME + " - All Counties");
         } else {
           this.stateCountyBadgesList.push("District of Columbia - DC");
         }
-      } else {
-        if (this.state_clr_structure[i].selected === 2) {
+      } else if (this.state_clr_structure[i].selected === 2) {
           for (var j = 0; j < this.state_clr_structure[i].counties.length; j++) {
             if (this.state_clr_structure[i].counties[j].selected === 1) {
               this.statetree_items_selected.push(this.state_clr_structure[i].counties[j].FIPS);
               this.stateCountyBadgesList.push(this.state_clr_structure[i].counties[j].county + ", " + this.state_clr_structure[i].STNAME);
             }
           }
+      } else {
+        for (var j = 0; j < this.state_clr_structure[i].counties.length; j++) {
+          this.state_clr_structure[i].counties[j].selected = 0;
         }
       }
     }
@@ -503,6 +615,7 @@ export class EmissionspanelComponent implements OnInit {
     var add_to_scenario_btn = document.getElementById("add_to_scenario_btn");
     for (var i = 0; i < this.state_clr_structure.length; i++) {
       this.state_clr_structure[i].selected = ClrSelectedState.UNSELECTED;
+      this.state_clr_structure[i].expanded = false;
       for (var j = 0; j < this.state_clr_structure[i].counties.length; j++) {
         this.state_clr_structure[i].counties[j].selected = ClrSelectedState.UNSELECTED;
       }
@@ -532,23 +645,22 @@ export class EmissionspanelComponent implements OnInit {
   // <------------------------------------------------ Selects all states entirely -------------------------------------------->
 
   // <--------------------- Updates Tier2 Dropdown and updates tiertree_items_selected once changing Tier1 -------------------->
-  /* index_tier1 is the value of the selected option in the dropdown and index1 refers to the index of that Tier1 option in the related array in tiertree_treeview */
+  /* index_tier1 is the value of the selected option in the dropdown and is the same as tier1_dd_order. */
   /* In the case that no option is selected, index1 equals -1 */
   public updateTier2Dropdown(index: any) {
-    var index1 = null;
-    index1 = index-1;
+    var tier1_current_item = this.tiertree_treeview[index];
     this.index_tier1 = index;
-    this.tier2_items = this.tiertree_treeview[index1].items;
+    this.tier2_items = tier1_current_item.items;
     var target_dd2 = document.getElementById("tier2");
     target_dd2.removeAttribute("disabled");
     this.tier3_items = [];
     var target_dd3 = document.getElementById("tier3");
     target_dd3.setAttribute("disabled", "");
-    this.tiertree_items_selected = [index];
+    this.tiertree_items_selected = [(tier1_current_item.TIER1).toString()];
     this.activateDeactivateAddToScenarioButton();
     this.executedatarequest();
-    this.tierPresent = true;
-    this.tier1_selection_text = this.tiertree_treeview[index1].text;
+    this.tierPresent = true; 
+    this.tier1_selection_text = tier1_current_item.text;
     this.tier2_selection_text = null;
     this.tier3_selection_text = null;
   }
@@ -556,23 +668,19 @@ export class EmissionspanelComponent implements OnInit {
 
   // <--------------------- Updates Tier3 Dropdown and updates tiertree_items_selected once changing Tier2 -------------------->
   public updateTier3Dropdown(index: any) {
-    var index1 = null;
-    var index2 = null;
+    var tier2_current_item = this.tiertree_treeview[this.index_tier1].items[index];
     this.index_tier2 = index;
     if (index !== "all") {
-      var indexArr = index.split(',');
-      index1 = indexArr[0]-1;
-      index2 = indexArr[1]-1;
-      this.tier3_items = this.tiertree_treeview[index1].items[index2].items;
+      this.tier3_items = tier2_current_item.items;
       var target_dd = document.getElementById("tier3");
       target_dd.removeAttribute("disabled");
-      this.tiertree_items_selected = [index];
-      this.tier2_selection_text = this.tiertree_treeview[index1].items[index2].text;
+      this.tiertree_items_selected = [tier2_current_item.TIER1 + "," + tier2_current_item.TIER2];
+      this.tier2_selection_text = tier2_current_item.text;
     } else {
       this.tier3_items = [];
       var target_dd3 = document.getElementById("tier3");
       target_dd3.setAttribute("disabled", "");
-      this.tiertree_items_selected = [this.index_tier1];
+      this.tiertree_items_selected = [(this.index_tier1).toString()];
       this.tier2_selection_text = null;
     }
     this.executedatarequest();
@@ -582,31 +690,19 @@ export class EmissionspanelComponent implements OnInit {
 
   // <---------------------------------- Updates tiertree_items_selected once changing Tier3 ---------------------------------->
   public updateItemsSelectedTier3(index: any) {
-    var index3 = null;
+    var tier3_current_item = this.tiertree_treeview[this.index_tier1].items[this.index_tier2].items[index];
     if (index !== "all") {
-
-      if (index == "5,2,6") {
-        index = "5,2,3";
-      }
-
-      this.tiertree_items_selected = [index];
-
-      if (index == "5,2,3") {
-        this.tiertree_items_selected = ["5,2,6"];
-      }
-
-      var indexArr = index.split(',');
-      if (indexArr[2] == 99) {
+      this.tiertree_items_selected = [tier3_current_item.TIER1 + "," + tier3_current_item.TIER2 + "," + tier3_current_item.TIER3];
+      if (tier3_current_item.TIER3 == 99) {
         this.tier3_selection_text = "OTHER";
       } else {
-        index3 = indexArr[2]-1;
-        this.tier3_selection_text = this.tier3_items[index3].text;
+        this.tier3_selection_text = tier3_current_item.text;
       }
 
     } else if (this.index_tier2 !== "all") {
-      this.tiertree_items_selected = [this.index_tier2];
+      this.tiertree_items_selected = [tier3_current_item.TIER1 + "," + tier3_current_item.TIER2];
     } else {
-      this.tiertree_items_selected = [this.index_tier1];
+      this.tiertree_items_selected = [(tier3_current_item.TIER1).toString()];
     }
     if (index == "all") {
       this.tier3_selection_text = null;
@@ -651,27 +747,32 @@ export class EmissionspanelComponent implements OnInit {
   // <--------------------------------------------- Clears emissions subpanel inputs ------------------------------------------>
   clearEmissionChanges() {
     var add_to_scenario_btn = document.getElementById("add_to_scenario_btn");
-    this.PM25ri = 'reduce';
-    this.PM25pt = 'tons';
-    this.SO2ri = 'reduce';
-    this.SO2pt = 'tons';
-    this.NOXri = 'reduce';
-    this.NOXpt = 'tons';
-    this.NH3ri = 'reduce';
-    this.NH3pt = 'tons';
-    this.VOCri = 'reduce';
-    this.VOCpt = 'tons';
-    this.cPM25 = null;
-    this.cSO2 = null;
-    this.cNOX = null;
-    this.cNH3 = null;
-    this.cVOC = null;
+    this.pollutants[0].ri_switch_model = 'reduce';
+    this.pollutants[0].pt_switch_model = 'tons';
+    this.pollutants[1].ri_switch_model = 'reduce';
+    this.pollutants[1].pt_switch_model = 'tons';
+    this.pollutants[2].ri_switch_model = 'reduce';
+    this.pollutants[2].pt_switch_model = 'tons';
+    this.pollutants[3].ri_switch_model = 'reduce';
+    this.pollutants[3].pt_switch_model = 'tons';
+    this.pollutants[4].ri_switch_model = 'reduce';
+    this.pollutants[4].pt_switch_model = 'tons';
+    this.pollutants[0].input_model = null;
+    this.pollutants[1].input_model = null;
+    this.pollutants[2].input_model = null;
+    this.pollutants[3].input_model = null;
+    this.pollutants[4].input_model = null;
     if (this.last_returned_emissions["baseline"].length == 0) {
       this.pm25_baseline = 0;
       this.so2_baseline = 0;
       this.nox_baseline = 0;
       this.nh3_baseline = 0;
       this.voc_baseline = 0;
+      this.pollutants[0].baseline_rounded_up = 0;
+      this.pollutants[1].baseline_rounded_up = 0;
+      this.pollutants[2].baseline_rounded_up = 0;
+      this.pollutants[3].baseline_rounded_up = 0;
+      this.pollutants[4].baseline_rounded_up = 0;
     }
     if (this.last_returned_emissions["control"].length == 0) {
       this.pm25_control = 0;
@@ -703,13 +804,13 @@ export class EmissionspanelComponent implements OnInit {
 
   // <-------------------------------------------- Validates inputs in Emissions panel ---------------------------------------->
   public validateEmissionsPanelInput(i: number) {
-    var inputValues = [this.cPM25, this.cSO2, this.cNOX, this.cNH3, this.cVOC];
+    var inputValues = [this.pollutants[0].input_model, this.pollutants[1].input_model, this.pollutants[2].input_model, this.pollutants[3].input_model, this.pollutants[4].input_model];
     var inputValue = inputValues[i];
-    var baselines = [this.pm25_baseline_rounded_up, this.so2_baseline_rounded_up, this.nox_baseline_rounded_up, this.nh3_baseline_rounded_up, this.voc_baseline_rounded_up];
+    var baselines = [this.pollutants[0].baseline_rounded_up, this.pollutants[1].baseline_rounded_up, this.pollutants[2].baseline_rounded_up, this.pollutants[3].baseline_rounded_up, this.pollutants[4].baseline_rounded_up];
     var baselineValue = baselines[i];
-    var reduceIncreaseToggles = [this.PM25ri, this.SO2ri, this.NOXri, this.NH3ri, this.VOCri];
+    var reduceIncreaseToggles = [this.pollutants[0].ri_switch_model, this.pollutants[1].ri_switch_model, this.pollutants[2].ri_switch_model, this.pollutants[3].ri_switch_model, this.pollutants[4].ri_switch_model];
     var reduceIncreaseToggle = reduceIncreaseToggles[i];
-    var tonsPercentToggles = [this.PM25pt, this.SO2pt, this.NOXpt, this.NH3pt, this.VOCpt];
+    var tonsPercentToggles = [this.pollutants[0].pt_switch_model, this.pollutants[1].pt_switch_model, this.pollutants[2].pt_switch_model, this.pollutants[3].pt_switch_model, this.pollutants[4].pt_switch_model];
     var tonsPercentToggle = tonsPercentToggles[i];
     // remove all error messages for current input to validate again
     this.showErrorNotNumber[i] = false;
@@ -726,14 +827,19 @@ export class EmissionspanelComponent implements OnInit {
           this.showErrorOutOfRange[i] = true;
         }
       }
-      if (reduceIncreaseToggle == "reduce" && tonsPercentToggle == "tons" && baselineValue != undefined && this.last_returned_emissions["baseline"].length != 0 && this.statetree_items_selected.length != 0) {
-        if (inputValue > baselineValue) {
-          this.showErrorLargerThanBaseline[i] = true;
+      if (this.statetree_items_selected != null && this.tiertree_items_selected != null && this.statetree_items_selected.length != 0 && this.last_returned_emissions["baseline"].length != 0  && baselineValue != undefined) {
+        if (reduceIncreaseToggle == "reduce" && tonsPercentToggle == "tons") {
+          if (baselineValue != 0 && inputValue > baselineValue) {
+            this.showErrorLargerThanBaseline[i] = true;
+          }
+          if (baselineValue == 0 && inputValue > baselineValue) {
+            this.showErrorCantReduceBaseline[i] = true;
+          }
         }
-      }
-      if (reduceIncreaseToggle == "reduce" && tonsPercentToggle == "percent" && baselineValue != undefined && this.last_returned_emissions["baseline"].length != 0 && this.statetree_items_selected.length != 0) {
-        if (baselineValue == 0 && inputValue > 0) {
-          this.showErrorCantReduceBaseline[i] = true;
+        if (reduceIncreaseToggle == "reduce" && tonsPercentToggle == "percent") {
+          if (baselineValue == 0 && inputValue > 0) {
+            this.showErrorCantReduceBaseline[i] = true;
+          }
         }
       }
     }
@@ -743,7 +849,7 @@ export class EmissionspanelComponent implements OnInit {
 
   // <------------------------------------- Activates and deactivates Add to Scenario button ---------------------------------->
   public activateDeactivateAddToScenarioButton() {
-    var inputValues = [this.cPM25, this.cSO2, this.cNOX, this.cNH3, this.cVOC];
+    var inputValues = [this.pollutants[0].input_model, this.pollutants[1].input_model, this.pollutants[2].input_model, this.pollutants[3].input_model, this.pollutants[4].input_model];
     var add_to_scenario_btn = document.getElementById("add_to_scenario_btn");
     if (this.statetree_items_selected == null || this.tiertree_items_selected == null) {
       add_to_scenario_btn.setAttribute("disabled", "");
@@ -760,7 +866,7 @@ export class EmissionspanelComponent implements OnInit {
   // <----------------------------------- Activates and deactivates Add to Scenario button/End -------------------------------->
 
   // <----------------------------------- Checks if there is any conflicts between components --------------------------------->
-  /* This function checks if the new component that we are trying to create is in conflict with any other component that is already added to scenario. If any conflict is detected; 'foundConflict' is set to true, an alert appears on the page and the new component is not added to scenario. */
+  /* This function checks if the new component that we are trying to create is in conflict with any other component that is already added to scenario. If any conflict is detected; 'foundConflict' is set to true, an alert modal appears on the page and the new component is not added to scenario. */
   public checkForPossibleConflicts(newComponentData: any) {
     this.foundConflict = false;
  
@@ -833,7 +939,7 @@ export class EmissionspanelComponent implements OnInit {
         // Check for explicit conflicts(type1).
         if (componentFromListExistingCombinations.indexOf(newComponentExistingCombinations[j]) > -1) {
           this.foundConflict = true;
-          alert("The emission changes for this sector and location(s) conflict with emissions changes you have already entered. Please enter emission changes for a different sector or location.");
+          this.showConflictModal = true;
           return
         }
       }
@@ -841,7 +947,7 @@ export class EmissionspanelComponent implements OnInit {
         // Check if any of the possible parent combinations of the new component already exists in review panel(type2).
         if (componentFromListExistingCombinations.indexOf(possibleParentCombinationsForNewComponent[j]) > -1) {
           this.foundConflict = true;
-          alert("The emission changes for this sector and location(s) conflict with emissions changes you have already entered. Please enter emission changes for a different sector or location.");
+          this.showConflictModal = true;
           return
         }
       }
@@ -853,7 +959,7 @@ export class EmissionspanelComponent implements OnInit {
       for (var j = 0; j < componentFromListPossibleParentCombinations.length; j++) {
         if (newComponentExistingCombinations.indexOf(componentFromListPossibleParentCombinations[j]) > -1) {
           this.foundConflict = true;
-          alert("The emission changes for this sector and location(s) conflict with emissions changes you have already entered. Please enter emission changes for a different sector or location.");
+          this.showConflictModal = true;
           return
         }
       }
@@ -872,4 +978,33 @@ export class EmissionspanelComponent implements OnInit {
     this.reviewPanelComponents.splice(index, 1);
   }
   // <----------------------------------- Removes component from reviewPanelComponents array ---------------------------------->
+
+  // <----------------------------- Resets emissions panel when Build New Scenario button is clicked -------------------------->
+  resetEmissionsPanel() {
+    this.clearStateSelections();
+    this.clearTierSelections();
+    this.clearEmissionChanges();
+    this.showBaselines = false;
+    this.index_tier1 = '';
+    this.index_tier2 = '';
+    this.tier2_items = []; 
+    this.tier3_items = []; 
+    this.last_returned_emissions = {baseline: [], control: []};
+    this.foundConflict = false;
+    this.reviewPanelComponents = [];
+    this.stateCountyBadgesList = [];
+    this.tier1_selection_text = null;
+    this.tier2_selection_text = null;
+    this.tier3_selection_text = null;
+    this.component_data_for_reviewpanel = null;
+  }
+  // <--------------------------- Resets emissions panel when Build New Scenario button is clicked/End ------------------------>
+
+  // <------------------------------------ Clears are selections and inputs on emissions panel -------------------------------->
+  clearEmissionsPanel() {
+    this.clearStateSelections();
+    this.clearTierSelections();
+    this.clearEmissionChanges();
+  }
+  // <---------------------------------- Clears are selections and inputs on emissions panel/End ------------------------------>
 }
