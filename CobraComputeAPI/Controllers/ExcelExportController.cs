@@ -61,20 +61,20 @@ namespace CobraComputeAPI.Controllers
                     document[0, 23].Value = "Infant_Mortality";
                     document[0, 24].Value = "Upper_Respiratory_Symptoms";
                     document[0, 25].Value = "Work_Loss_Days";
-                    document[0, 26].Value = "C__Acute_Bronchitis";
-                    document[0, 27].Value = "C__Acute_Myocardial_Infarction_Nonfatal__high_";
-                    document[0, 28].Value = "C__Acute_Myocardial_Infarction_Nonfatal__low_";
-                    document[0, 29].Value = "C__Asthma_Exacerbation";
-                    document[0, 30].Value = "C__Emergency_Room_Visits_Asthma";
-                    document[0, 31].Value = "C__CVD_Hosp_Adm";
-                    document[0, 32].Value = "C__Resp_Hosp_Adm";
-                    document[0, 33].Value = "C__Lower_Respiratory_Symptoms";
-                    document[0, 34].Value = "C__Minor_Restricted_Activity_Days";
-                    document[0, 35].Value = "C__Mortality_All_Cause__low_";
-                    document[0, 36].Value = "C__Mortality_All_Cause__high_";
-                    document[0, 37].Value = "C__Infant_Mortality";
-                    document[0, 38].Value = "C__Upper_Respiratory_Symptoms";
-                    document[0, 39].Value = "C__Work_Loss_Days";
+                    document[0, 26].Value = "$_Acute_Bronchitis";
+                    document[0, 27].Value = "$_Acute_Myocardial_Infarction_Nonfatal__high_";
+                    document[0, 28].Value = "$_Acute_Myocardial_Infarction_Nonfatal__low_";
+                    document[0, 29].Value = "$_Asthma_Exacerbation";
+                    document[0, 30].Value = "$_Emergency_Room_Visits_Asthma";
+                    document[0, 31].Value = "$_CVD_Hosp_Adm";
+                    document[0, 32].Value = "$_Resp_Hosp_Adm";
+                    document[0, 33].Value = "$_Lower_Respiratory_Symptoms";
+                    document[0, 34].Value = "$_Minor_Restricted_Activity_Days";
+                    document[0, 35].Value = "$_Mortality_All_Cause__low_";
+                    document[0, 36].Value = "$_Mortality_All_Cause__high_";
+                    document[0, 37].Value = "$_Infant_Mortality";
+                    document[0, 38].Value = "$_Upper_Respiratory_Symptoms";
+                    document[0, 39].Value = "$_Work_Loss_Days";
 
 
                     int rowcount = 1;

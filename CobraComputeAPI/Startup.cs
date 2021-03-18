@@ -51,7 +51,9 @@ namespace CobraComputeAPI
             {
                 builder.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod();
             });
-            app.UseHttpsRedirection();
+
+
+            //app.UseHttpsRedirection();
             app.UseMvc();
         }
     }
