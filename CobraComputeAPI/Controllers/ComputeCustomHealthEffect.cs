@@ -21,8 +21,8 @@ namespace CobraComputeAPI.Controllers
         public JsonResult Post([FromBody] CustomImpactComputeRequest req)
         {
             List<Cobra_ResultDetail> result;
-            lock (computeCore)
-                result = computeCore.CustomComputeGenericImpacts(req.delta_pm, req.base_pm, req.control_pm, req.population, req.incidence, req.valat3, req.CustomCRFunctions, req.CustomValuationFunctions);
+            lock(computeCore)
+              result = computeCore.CustomComputeGenericImpacts(req.delta_pm, req.base_pm, req.control_pm, req.population, req.incidence, req.valat3, req.CustomCRFunctions, req.CustomValuationFunctions);
             return new JsonResult(result, new JsonSerializerSettings() { Formatting = Formatting.Indented });
         }
 

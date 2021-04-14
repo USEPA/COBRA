@@ -1,7 +1,102 @@
-/* You can add global styles to this file, and also import other style files */
+/* APP STYLES */
 body {
     overflow-x: hidden;
 }
+
+/* --- EPA STYLES  --- */
+@import "src/theme/_epa-standalone-core.scss";
+@import "src/theme/_epa-drop-down-menu.scss";
+
+/* --- SITE STYLES  --- */
 app-root {
     @import "/src/theme/styles.scss";
+}
+
+/* --- EXTRA EPA STYLES MODIFIED FROM DESIGN.CSS  --- */
+.microsite-name {
+    padding: 0 0 .4em;
+ }
+ @media screen and (min-width: 40em)
+ {
+    .microsite-name {
+       float: left;
+       max-width: calc(100% - 23.8rem);
+       padding-top: .8em;
+    }
+ }
+ .region-preface {
+    margin: 0 -1em;
+    padding: .5em 1em;
+ }
+ @media screen and (min-width: 40em) {
+    .region-preface {
+       text-align: right;
+    }
+ }
+ #block-pane-epa-web-area-connect, #block-pane-social-sharing {
+    display: inline-block;
+    margin-left: 1em;
+    vertical-align: top;
+    font-size: 100% !important;
+    padding-top:0 !important;
+ }
+ .connect-title {
+    display: inline-block;
+    line-height: 1.882353;
+    margin-right: .5em;
+    text-transform: uppercase;
+ }
+ .connect-title__link {
+    text-decoration: none;
+ }
+ .share-links {
+    display: inline-block;
+    list-style: none;
+    margin: 0 0 .75em;
+    padding: 0;
+}
+.share-links__item {
+    display: -moz-inline-stack;
+    display: inline-block;
+    margin: 0;
+    vertical-align: middle;
+    white-space: nowrap;
+}
+li.share-links__item:not(:last-of-type) {
+    padding-right: 0.5em;
+}
+
+.share-links__link {
+    border: 1px solid #0071bc;
+    border-radius: 50%;
+    color: #0071bc;
+    display: inline-block;
+    font-size: 2.875rem;
+    height: .666666em;
+    line-height: .666666em;
+    vertical-align: middle;
+    width: .666666em;
+}
+.share-links__link:focus,.share-links__link:hover {
+    background-color:#0071bc;
+    color:#fff;
+    text-decoration:none
+}
+.icon {
+    display: inline-block;
+    fill: currentColor;
+    height: 1em;
+    position: relative;
+    top: -.0625em;
+    vertical-align: middle;
+    width: 1em;
+}
+.icon--social-link {
+    left: -9px;
+    top: -9px;
+}
+.clearfix:after {
+    clear: both;
+    content: "";
+    display: table;
 }

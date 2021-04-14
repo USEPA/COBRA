@@ -195,13 +195,32 @@ namespace CobraComputeAPI
 
         public Guid createUserScenario()
         {
-            //repeat until works
             Guid token;
-            do
-            {
-                token = Guid.NewGuid();
-            } while (redis.ContainsKey(token.ToString()));
 
+            lock (redis)
+            {
+                bool go_on = false;
+                int attemp = 0;
+                //repeat until works
+                do
+                {
+                    attemp++;
+                    token = Guid.NewGuid();
+                    try
+                    {
+                        go_on = !redis.ContainsKey(token.ToString());
+
+                    }
+                    catch (Exception)
+                    {
+                        if (attemp >= 3)
+                        {
+                            throw new System.ArgumentException("REDIS fails key check.");
+                        }
+                        System.Threading.Thread.Sleep(50);
+                    }
+                } while (!go_on);
+            }
 
             UserScenario scenario = new UserScenario()
             {

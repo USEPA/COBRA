@@ -22,7 +22,9 @@ namespace CobraComputeAPI.Controllers
         {
             List<Cobra_ResultDetail> result;
             lock (computeCore)
+            {
                 result = computeCore.ComputeGenericImpacts(req.delta_pm, req.base_pm, req.control_pm, req.population, req.incidence, req.valat3);
+            }
             return new JsonResult(result, new JsonSerializerSettings() { Formatting = Formatting.Indented });
         }
 

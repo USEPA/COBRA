@@ -12,7 +12,6 @@ section .view-mode-teaser2, section .view-mode-title2, section ul.accordion ul {
    padding-bottom: 0;
 }
 
-
 /* --- CLARITY OVERRIDES --- */
 body {
    @include u-text('ink');
@@ -363,7 +362,7 @@ clr-modal .modal-header--accessible .modal-title {
    height: 150vh;
 }
 
-.no-scenario-screen .icon, .pending-results-screen .icon {
+.no-scenario-screen .icons, .pending-results-screen .icons {
    width: 36px;
    height: 36px;
    @include u-margin-top(9);
@@ -394,7 +393,7 @@ clr-modal .modal-header--accessible .modal-title {
 .review-help {
    @include u-margin-top(8);
 
-   .icon {
+   .icons {
       width: 36px;
       height: 36px;
       @include u-display('inline-block');
@@ -407,13 +406,13 @@ clr-modal .modal-header--accessible .modal-title {
       @include u-font('sans','sm');
       @include u-line-height('sans',3);
       @include u-display('inline-block');
-      width: 16rem;
+      width: 14rem;
    }
 }
 
 .edit-help {
 
-   .icon {
+   .icons {
       width: 36px;
       height: 36px;
       @include u-display('inline-block');
@@ -427,7 +426,7 @@ clr-modal .modal-header--accessible .modal-title {
       @include u-font('sans','sm');
       @include u-line-height('sans',3);
       @include u-display('inline-block');
-      width: 18rem;
+      width: 17rem;
    }
 }
 
@@ -563,6 +562,13 @@ clr-modal .modal-header--accessible .modal-title {
 /* --- MEDIA QUERIES --- */
 
 @media (max-width: 575px) {
+   .grid-container {
+      padding-left: 0;
+      padding-right: 0;
+   }
+   .panel {
+      padding: 1.25rem;
+   }
    .review-form {
       width:20rem;
    }
@@ -598,7 +604,13 @@ clr-modal .modal-header--accessible .modal-title {
    .panel-circle {
       display:none; 
    }
-   
+
+   .review-help {
+      .icons {
+         transform: rotate(90deg);
+      }
+   }
+
    #step2 {
       visibility: hidden;
    }
@@ -613,5 +625,13 @@ clr-modal .modal-header--accessible .modal-title {
    // accomodates panel-circle spacing
    .grid-container {
       padding-left: 2rem; 
+   }
+   
+   .edit-help--4line {
+      margin-top: 6rem;
+   }
+
+   .edit-help--3line {
+      margin-top: 7rem;
    }
 }

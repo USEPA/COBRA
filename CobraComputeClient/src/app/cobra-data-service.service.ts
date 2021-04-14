@@ -24,7 +24,7 @@ export class CobraDataService {
   }
 
   public serverendpoint = 'https://cobraapi.app.cloud.gov/api/';
-
+  
   private tokenUrl = this.serverendpoint + 'token';  // URL to web api
   private resultUrl = this.serverendpoint + 'Result';  // URL to web api
   private datadictUrl = this.serverendpoint + 'datadictionary';  // URL to web api

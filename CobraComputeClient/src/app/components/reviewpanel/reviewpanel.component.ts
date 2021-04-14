@@ -114,6 +114,7 @@ export class ReviewpanelComponent implements OnInit {
     }
     this.components.push(component);
 
+    document.getElementById("panel_circle_id").setAttribute("hidden", "true");
     selection.selectAll(".panel-active").classed("panel-active", false);
     selection.select("#step2").classed("panel-active", true);
     document.querySelector(".panel-active").scrollIntoView({behavior:'smooth'});

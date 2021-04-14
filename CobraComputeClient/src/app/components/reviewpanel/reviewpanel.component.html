@@ -2,7 +2,7 @@
   <!-- WHEN INITIAL VIEW IS ACTIVE -->
   <div id="no-review-screen" class="no-scenario-screen" *ngIf="showNoReviewScreen">
     <h1 class="text-base margin-top-0">Step 2: Review Scenario</h1>
-    <div class="icon">
+    <div class="icons">
       <svg viewBox="0 0 512 512" aria-label="Build scenario to begin">
         <title>Build scenario to begin</title>
         <g>
@@ -86,10 +86,10 @@
       </table>
     </div>
 
-    <div class="grid-row flex- flex-justify" id="help_discountRate_run">
+    <div class="grid-row flex- flex-justify flex-no-wrap" id="help_discountRate_run">
       <div>
         <div class="review-help width-mobile grid-auto" *ngIf="showReviewHelp">
-          <div class="icon">
+          <div class="icons">
             <svg viewBox="0 0 512 512" aria-labelledby="title" role="img">
               <title id="title">Need to continue adding locations, sectors or emissions changes? Repeat Step 1.</title>
               <g>
@@ -109,7 +109,7 @@
           <div class="message text-left">Your results are below. This "Run Scenario" button will re-enable if you edit
             your current scenario.
           </div>
-          <div class="icon">
+          <div class="icons">
             <svg viewBox="0 0 512 512" aria-labelledby="title" role="img">
               <title id="title">Your results are below. This "Run Scenario" button will re-enable if you edit your
                 current scenario.</title>
@@ -128,7 +128,7 @@
           <div class="message text-left"><span class="usa-tag">Reminder</span><br>You have pending scenario edits that
             are not reflected below.
             Click "Run Scenario" to update the results.</div>
-          <div class="icon">
+          <div class="icons">
             <svg viewBox="0 0 512 512" aria-labelledby="title" role="img">
               <title id="title">You have pending scenario edits that are not reflected below. Click Run Scenario to
                 update the results.</title>
