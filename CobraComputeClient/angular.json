@@ -44,7 +44,16 @@
 									"with": "src/environments/environment.prod.ts"
 								}
 							],
-							"optimization": true,
+							"optimization": {
+								"scripts": true,
+								"fonts": {
+									"inline": true
+								},
+								"styles": {
+									"minify": true,
+									"inlineCritical": false
+								}
+							},
 							"outputHashing": "all",
 							"sourceMap": false,
 							"extractCss": true,
@@ -56,7 +65,7 @@
 								{
 									"type": "initial",
 									"maximumWarning": "2mb",
-									"maximumError": "5mb"
+									"maximumError": "7mb"
 								},
 								{
 									"type": "anyComponentStyle",
@@ -64,8 +73,26 @@
 									"maximumError": "10kb"
 								}
 							]
+						},
+						"development": {
+							"optimization": {
+								"scripts": false,
+								"fonts": {
+									"inline": false
+								},
+								"styles": {
+									"minify": false,
+									"inlineCritical": false
+								}
+							},
+							"sourceMap": true,
+							"namedChunks": true,
+							"extractLicenses": false,
+							"vendorChunk": true,
+ 							"buildOptimizer": false
 						}
-					}
+					},
+					"defaultConfiguration": "development"
 				},
 				"serve": {
 					"builder": "@angular-devkit/build-angular:dev-server",
@@ -78,8 +105,12 @@
 						},
 						"es5": {
 							"browserTarget": "CobraApp:build:es5"
+						},
+						"development": {
+							"browserTarget": "CobraApp:build:development"
 						}
-					}
+					},
+					"defaultConfiguration": "development"
 				},
 				"extract-i18n": {
 					"builder": "@angular-devkit/build-angular:extract-i18n",

@@ -1,15 +1,20 @@
 <div id="step2" class="panel review">
   <!-- WHEN INITIAL VIEW IS ACTIVE -->
-  <div id="no-review-screen" class="no-scenario-screen" *ngIf="showNoReviewScreen">
+  <div
+    id="no-review-screen"
+    class="no-scenario-screen"
+    *ngIf="showNoReviewScreen"
+  >
     <h1 class="text-base margin-top-0">Step 2: Review Scenario</h1>
     <div class="icons">
       <svg viewBox="0 0 512 512" aria-label="Build scenario to begin">
         <title>Build scenario to begin</title>
         <g>
           <g id="no-circle-arrow-left">
-            <path fill="#71767a"
-              d="M8 256c0 137 111 248 248 248s248-111 248-248S393 8 256 8 8 119 8 256zm448 0c0 110.5-89.5 200-200 200S56 366.5 56 256 145.5 56 256 56s200 89.5 200 200zm-72-20v40c0 6.6-5.4 12-12 12H256v67c0 10.7-12.9 16-20.5 8.5l-99-99c-4.7-4.7-4.7-12.3 0-17l99-99c7.6-7.6 20.5-2.2 20.5 8.5v67h116c6.6 0 12 5.4 12 12z">
-            </path>
+            <path
+              fill="#71767a"
+              d="M8 256c0 137 111 248 248 248s248-111 248-248S393 8 256 8 8 119 8 256zm448 0c0 110.5-89.5 200-200 200S56 366.5 56 256 145.5 56 256 56s200 89.5 200 200zm-72-20v40c0 6.6-5.4 12-12 12H256v67c0 10.7-12.9 16-20.5 8.5l-99-99c-4.7-4.7-4.7-12.3 0-17l99-99c7.6-7.6 20.5-2.2 20.5 8.5v67h116c6.6 0 12 5.4 12 12z"
+            ></path>
           </g>
         </g>
       </svg>
@@ -19,105 +24,229 @@
   <!-- MAIN SCREEN -->
   <div id="review-screen" *ngIf="showReviewScreen">
     <h1 id="step2_title">Step 2: Review Scenario</h1>
-    <p id="step2_text">Review the scenario below. To add changes to more locations or sectors, repeat Step 1 to continue
-      building your scenario.</p>
+    <p id="step2_text">
+      Review the scenario below. To add changes to more locations or sectors,
+      repeat Step 1 to continue building your scenario.
+    </p>
 
-    <div class="subpanel">
-      <table class="usa-table usa-table--borderless usa-table--stacked">
-        <tr>
-          <th class="cell-lg" scope="col">Location(s)</th>
-          <th class="cell-lg" scope="col">Sector</th>
-          <th class="cell-lg" scope="col">Emissions Modification(s)</th>
-          <th aria-label="Remove buttons" scope="col"></th>
-        </tr>
-        <tr *ngFor="let component of components">
-          <td data-label="Location(s)">
-            <div *ngIf="5>component.stateCountyBadgesList.length || component.stateCountyBadgesList.length==5">
-              <div *ngFor="let item of component.stateCountyBadgesList">
-                <span>
-                  {{item}}
+    <div class="subpanel review-table-section">
+      <div
+        class="display-flex flex-row flex-align-center"
+        *ngIf="mode == 'AVERT'"
+      >
+        <div class="margin-right-105">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            fill="#33D198"
+            viewBox="0 0 24 24"
+          >
+            <path
+              d="M12 0c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12-5.373-12-12-12zm-1.25 16.518l-4.5-4.319 1.396-1.435 3.078 2.937 6.105-6.218 1.421 1.409-7.5 7.626z"
+            />
+          </svg>
+        </div>
+        <p>
+          <b>Success!</b> Your AVERT data has been successfully imported into
+          COBRA. Review and run your scenario below.
+        </p>
+      </div>
+      <div
+        class="review-table-container"
+        style="max-height: 500px; overflow: auto"
+        tabindex="0"
+      >
+        <table
+          class="usa-table usa-table--borderless usa-table--stacked"
+          id="review-table"
+        >
+          <tr>
+            <th class="cell-lg review-table__header" scope="col">
+              Location(s)
+            </th>
+            <th class="cell-lg review-table__header" scope="col">Sector</th>
+            <th class="cell-lg review-table__header" scope="col">
+              Emissions Modification(s)
+            </th>
+            <th aria-label="Remove buttons" scope="col"></th>
+          </tr>
+          <tr
+            class="review-table__row"
+            *ngFor="let component of components | slice : 0 : tableRowsToShow"
+          >
+            <td data-label="Location(s)">
+              <div
+                *ngIf="
+                  5 > component.stateCountyBadgesList.length ||
+                  component.stateCountyBadgesList.length == 5
+                "
+              >
+                <div *ngFor="let item of component.stateCountyBadgesList">
+                  <span>
+                    {{ item }}
+                  </span>
+                </div>
+              </div>
+              <div
+                *ngIf="
+                  component.stateCountyBadgesList.length > 5 &&
+                  component.ShowUpToFiveBadges
+                "
+              >
+                <div
+                  *ngFor="
+                    let item of component.stateCountyBadgesList | slice : 0 : 5
+                  "
+                >
+                  <span>
+                    {{ item }}
+                  </span>
+                </div>
+                <button
+                  class="usa-button--unstyled margin-top-1 text-italic"
+                  (click)="toggleShowMoreOrFewerInOneRow(component.index)"
+                >
+                  Show more locations...
+                </button>
+              </div>
+              <div
+                *ngIf="
+                  component.stateCountyBadgesList.length > 5 &&
+                  !component.ShowUpToFiveBadges
+                "
+              >
+                <div *ngFor="let item of component.stateCountyBadgesList">
+                  <span>
+                    {{ item }}
+                  </span>
+                </div>
+                <button
+                  class="usa-button--unstyled margin-top-1 text-italic"
+                  (click)="toggleShowMoreOrFewerInOneRow(component.index)"
+                >
+                  Show fewer locations...
+                </button>
+              </div>
+            </td>
+            <td data-label="Sector">
+              <div *ngFor="let tier of component.tierSelections">
+                <span *ngIf="tier != null">
+                  {{ tier }}
                 </span>
               </div>
-            </div>
-            <div *ngIf="component.stateCountyBadgesList.length>5 && component.ShowUpToFiveBadges">
-              <div *ngFor="let item of component.stateCountyBadgesList | slice:0:5">
-                <span>
-                  {{item}}
-                </span>
+            </td>
+            <td data-label="Emissions Modification(s)">
+              <div *ngFor="let pollutant of component.pollutantsList">
+                <span
+                  *ngIf="
+                    pollutant.value != null &&
+                    pollutant.value != '' &&
+                    pollutant.name !== 'NH3'
+                  "
+                  ><span [innerHTML]="pollutant.name_sub"></span>
+                  {{ pollutant.reduce_increase }} by
+                  {{ pollutant.value_formatted
+                  }}<span *ngIf="pollutant.percent_tons == 'percent'">%</span
+                  ><span *ngIf="pollutant.percent_tons == 'tons'">
+                    tons</span
+                  ></span
+                >
               </div>
-              <button class="usa-button--unstyled margin-top-1 text-italic"
-                (click)="toggleShowMoreOrFewer(component.index)">Show more locations...</button>
-            </div>
-            <div *ngIf="component.stateCountyBadgesList.length>5 && !component.ShowUpToFiveBadges">
-              <div *ngFor="let item of component.stateCountyBadgesList">
-                <span>
-                  {{item}}
-                </span>
-              </div>
-              <button class="usa-button--unstyled margin-top-1 text-italic"
-                (click)="toggleShowMoreOrFewer(component.index)">Show fewer locations...</button>
-            </div>
-          </td>
-          <td data-label="Sector">
-            <div *ngFor="let tier of component.tierSelections">
-              <span *ngIf="tier != null">
-                {{tier}}
-              </span>
-            </div>
-          </td>
-          <td data-label="Emissions Modification(s)">
-            <div *ngFor="let pollutant of component.pollutantsList">
-              <span *ngIf="(pollutant.value != null) && (pollutant.value != '')"><span
-                  [innerHTML]="pollutant.name_sub"></span> {{pollutant.reduce_increase}} by
-                {{pollutant.value_formatted}}<span *ngIf="pollutant.percent_tons == 'percent'">%</span><span
-                  *ngIf="pollutant.percent_tons == 'tons'"> tons</span></span>
-            </div>
-          </td>
-          <td>
-            <button class="remove-button" title="Remove" (click)="removeComponent(component.index)">
-              <svg xmlns="http://www.w3.org/2000/svg" aria-labelledby="remove-button" focusable="true" width="12"
-                height="12" viewBox="0 0 24 24">
-                <path fill="#565c65"
-                  d="M24 20.188l-8.315-8.209 8.2-8.282-3.697-3.697-8.212 8.318-8.31-8.203-3.666 3.666 8.321 8.24-8.206 8.313 3.666 3.666 8.237-8.318 8.285 8.203z" />
+            </td>
+            <td>
+              <button
+                class="remove-button"
+                title="Remove"
+                (click)="removeComponent(component.index)"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  aria-labelledby="remove-button"
+                  focusable="true"
+                  width="12"
+                  height="12"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    fill="#565c65"
+                    d="M24 20.188l-8.315-8.209 8.2-8.282-3.697-3.697-8.212 8.318-8.31-8.203-3.666 3.666 8.321 8.24-8.206 8.313 3.666 3.666 8.237-8.318 8.285 8.203z"
+                  />
                 </svg>
-            </button>
-          </td>
-        </tr>
-      </table>
+              </button>
+            </td>
+          </tr>
+        </table>
+      </div>
+      <div
+        class="toggle-btn-container"
+        *ngIf="components.length > tableRowsDefaultLimit && !showAllTableRows"
+      >
+        <button
+          class="usa-button usa-button--outline toggle-btn margin-top-2"
+          (click)="toggleShowMoreOrFewerRowsInTable()"
+        >
+          Show all {{ components.length }} rows
+        </button>
+      </div>
+      <div
+        class="toggle-btn-container"
+        *ngIf="components.length > tableRowsDefaultLimit && showAllTableRows"
+      >
+        <button
+          class="usa-button usa-button--outline toggle-btn margin-top-2"
+          (click)="toggleShowMoreOrFewerRowsInTable()"
+        >
+          Show fewer rows
+        </button>
+      </div>
     </div>
 
-    <div class="grid-row flex- flex-justify flex-no-wrap" id="help_discountRate_run">
+    <div
+      class="grid-row flex- flex-justify flex-no-wrap"
+      id="help_discountRate_run"
+    >
       <div>
         <div class="review-help width-mobile grid-auto" *ngIf="showReviewHelp">
           <div class="icons">
             <svg viewBox="0 0 512 512" aria-labelledby="title" role="img">
-              <title id="title">Need to continue adding locations, sectors or emissions changes? Repeat Step 1.</title>
+              <title id="title">
+                Need to continue adding locations, sectors or emissions changes?
+                Repeat Step 1.
+              </title>
               <g>
                 <g id="no-circle-arrow-left">
-                  <path fill="#71767a"
-                    d="M8 256c0 137 111 248 248 248s248-111 248-248S393 8 256 8 8 119 8 256zm448 0c0 110.5-89.5 200-200 200S56 366.5 56 256 145.5 56 256 56s200 89.5 200 200zm-72-20v40c0 6.6-5.4 12-12 12H256v67c0 10.7-12.9 16-20.5 8.5l-99-99c-4.7-4.7-4.7-12.3 0-17l99-99c7.6-7.6 20.5-2.2 20.5 8.5v67h116c6.6 0 12 5.4 12 12z">
-                  </path>
+                  <path
+                    fill="#71767a"
+                    d="M8 256c0 137 111 248 248 248s248-111 248-248S393 8 256 8 8 119 8 256zm448 0c0 110.5-89.5 200-200 200S56 366.5 56 256 145.5 56 256 56s200 89.5 200 200zm-72-20v40c0 6.6-5.4 12-12 12H256v67c0 10.7-12.9 16-20.5 8.5l-99-99c-4.7-4.7-4.7-12.3 0-17l99-99c7.6-7.6 20.5-2.2 20.5 8.5v67h116c6.6 0 12 5.4 12 12z"
+                  ></path>
                 </g>
               </g>
             </svg>
           </div>
-          <div class="message text-left">Need to continue adding emissions changes to locations or sectors? Repeat Step
-            1.</div>
+          <div class="message text-left">
+            Need to continue adding emissions changes to locations or sectors?
+            Repeat Step 1.
+          </div>
         </div>
 
         <div class="edit-help edit-help--3line grid-auto" *ngIf="showEditHelp3">
-          <div class="message text-left">Your results are below. This "Run Scenario" button will re-enable if you edit
-            your current scenario.
+          <div class="message text-left">
+            Your results are below. This "Run Scenario" button will re-enable if
+            you edit your current scenario.
           </div>
           <div class="icons">
             <svg viewBox="0 0 512 512" aria-labelledby="title" role="img">
-              <title id="title">Your results are below. This "Run Scenario" button will re-enable if you edit your
-                current scenario.</title>
+              <title id="title">
+                Your results are below. This "Run Scenario" button will
+                re-enable if you edit your current scenario.
+              </title>
               <g>
                 <g id="no-circle-arrow-left">
-                  <path fill="#71767a"
-                    d="M8 256c0 137 111 248 248 248s248-111 248-248S393 8 256 8 8 119 8 256zm448 0c0 110.5-89.5 200-200 200S56 366.5 56 256 145.5 56 256 56s200 89.5 200 200zm-72-20v40c0 6.6-5.4 12-12 12H256v67c0 10.7-12.9 16-20.5 8.5l-99-99c-4.7-4.7-4.7-12.3 0-17l99-99c7.6-7.6 20.5-2.2 20.5 8.5v67h116c6.6 0 12 5.4 12 12z">
-                  </path>
+                  <path
+                    fill="#71767a"
+                    d="M8 256c0 137 111 248 248 248s248-111 248-248S393 8 256 8 8 119 8 256zm448 0c0 110.5-89.5 200-200 200S56 366.5 56 256 145.5 56 256 56s200 89.5 200 200zm-72-20v40c0 6.6-5.4 12-12 12H256v67c0 10.7-12.9 16-20.5 8.5l-99-99c-4.7-4.7-4.7-12.3 0-17l99-99c7.6-7.6 20.5-2.2 20.5 8.5v67h116c6.6 0 12 5.4 12 12z"
+                  ></path>
                 </g>
               </g>
             </svg>
@@ -125,18 +254,23 @@
         </div>
 
         <div class="edit-help edit-help--4line grid-auto" *ngIf="showEditHelp4">
-          <div class="message text-left"><span class="usa-tag">Reminder</span><br>You have pending scenario edits that
-            are not reflected below.
-            Click "Run Scenario" to update the results.</div>
+          <div class="message text-left">
+            <span class="usa-tag">Reminder</span><br />You have pending scenario
+            edits that are not reflected below. Click "Run Scenario" to update
+            the results.
+          </div>
           <div class="icons">
             <svg viewBox="0 0 512 512" aria-labelledby="title" role="img">
-              <title id="title">You have pending scenario edits that are not reflected below. Click Run Scenario to
-                update the results.</title>
+              <title id="title">
+                You have pending scenario edits that are not reflected below.
+                Click Run Scenario to update the results.
+              </title>
               <g>
                 <g id="no-circle-arrow-left">
-                  <path fill="#71767a"
-                    d="M8 256c0 137 111 248 248 248s248-111 248-248S393 8 256 8 8 119 8 256zm448 0c0 110.5-89.5 200-200 200S56 366.5 56 256 145.5 56 256 56s200 89.5 200 200zm-72-20v40c0 6.6-5.4 12-12 12H256v67c0 10.7-12.9 16-20.5 8.5l-99-99c-4.7-4.7-4.7-12.3 0-17l99-99c7.6-7.6 20.5-2.2 20.5 8.5v67h116c6.6 0 12 5.4 12 12z">
-                  </path>
+                  <path
+                    fill="#71767a"
+                    d="M8 256c0 137 111 248 248 248s248-111 248-248S393 8 256 8 8 119 8 256zm448 0c0 110.5-89.5 200-200 200S56 366.5 56 256 145.5 56 256 56s200 89.5 200 200zm-72-20v40c0 6.6-5.4 12-12 12H256v67c0 10.7-12.9 16-20.5 8.5l-99-99c-4.7-4.7-4.7-12.3 0-17l99-99c7.6-7.6 20.5-2.2 20.5 8.5v67h116c6.6 0 12 5.4 12 12z"
+                  ></path>
                 </g>
               </g>
             </svg>
@@ -144,54 +278,124 @@
         </div>
       </div>
 
-
       <div class="review-form grid-col-auto" id="discountRate_run">
         <form class="usa-form subpanel width-full margin-top-0">
           <fieldset class="usa-fieldset discount">
-            <legend class="usa-legend">Discount rate:
+            <legend class="usa-legend">
+              Discount rate:
               <clr-tooltip>
-                <clr-icon clrTooltipTrigger shape="info-circle" class="is-solid is-info" size="22"
-                  aria-label="COBRA uses a discount rate to express future economic values in present terms because not all health effects and associated economic values occur in the year of analysis. (COBRA assumes changes in adult mortality and non-fatal heart attacks occur over a 20-year period.) EPA recommends using both 3% and 7% discount rates. You may also enter a custom discount rate.">
+                <clr-icon
+                  clrTooltipTrigger
+                  shape="info-circle"
+                  class="is-solid is-info"
+                  size="22"
+                  aria-label="COBRA uses a discount rate to express future economic values in present terms because not all health effects and associated economic values occur in the year of analysis. (For example, COBRA assumes changes in adult mortality and non-fatal heart attacks occur over a 20-year period.) EPA recommends using a 2% discount rate based on the U.S. Office of Management and Budget Circular No. A-4 guidance. You may also enter a custom discount rate."
+                >
                 </clr-icon>
-                <clr-tooltip-content clrPosition="top-left" clrSize="lg" *clrIfOpen>
-                  <span>COBRA uses a discount rate to express future economic values in present terms because not all
-                    health effects and associated economic values occur in the year of analysis. (COBRA assumes changes
-                    in adult mortality and non-fatal heart attacks occur over a 20-year period.) EPA recommends using
-                    both 3% and 7% discount rates. You may also enter a custom discount rate.</span>
+                <clr-tooltip-content
+                  clrPosition="top-left"
+                  clrSize="lg"
+                  *clrIfOpen
+                >
+                  <span
+                    >COBRA uses a discount rate to express future economic
+                    values in present terms because not all health effects and
+                    associated economic values occur in the year of analysis.
+                    (For example, COBRA assumes changes in adult mortality and
+                    non-fatal heart attacks occur over a 20-year period.) EPA
+                    recommends using a 2% discount rate based on the U.S. Office
+                    of Management and Budget Circular No. A-4 guidance. You may
+                    also enter a custom discount rate.</span
+                  >
                 </clr-tooltip-content>
               </clr-tooltip>
             </legend>
             <div class="usa-radio">
-              <input class="usa-radio__input" id="discount_three" type="radio" title="3 percent discount rate"
-                [(ngModel)]="discountRate" name="rates_discount" value="3"
-                (change)="clearCustomValue(); activateDeactivateRunScenarioButton()">
-              <label class="usa-radio__label" for="discount_three">3%</label>
+              <input
+                class="usa-radio__input"
+                id="discount_two"
+                type="radio"
+                title="2 percent discount rate"
+                [(ngModel)]="discountRate"
+                name="rates_discount"
+                value="2"
+                (change)="
+                  clearCustomValue(); activateDeactivateRunScenarioButton()
+                "
+              />
+              <label
+                class="usa-radio__label radio-btn__label"
+                for="discount_two"
+                >2%</label
+              >
             </div>
-            <div class="usa-radio">
-              <input class="usa-radio__input" id="discount_seven" type="radio" title="7 percent discount rate"
-                [(ngModel)]="discountRate" name="rates_discount" value="7"
-                (change)="clearCustomValue(); activateDeactivateRunScenarioButton()">
-              <label class="usa-radio__label" for="discount_seven">7%</label>
-            </div>
+            <!--<div class="usa-radio">
+              <input
+                class="usa-radio__input"
+                id="discount_seven"
+                type="radio"
+                title="7 percent discount rate"
+                [(ngModel)]="discountRate"
+                name="rates_discount"
+                value="7"
+                (change)="
+                  clearCustomValue(); activateDeactivateRunScenarioButton()
+                "
+              />
+              <label
+                class="usa-radio__label radio-btn__label"
+                for="discount_seven"
+                >7%</label
+              >
+            </div>-->
             <div class="grid-row flex-row">
               <div class="usa-radio grid-col-auto margin-right-1">
-                <input class="usa-radio__input" id="discount_custom" type="radio" title="custom discount rate"
-                  [(ngModel)]="discountRate" name="rates_discount" value="custom"
-                  (change)="activateDeactivateRunScenarioButton()">
-                <label class="usa-radio__label" for="discount_custom">Custom:</label>
+                <input
+                  class="usa-radio__input"
+                  id="discount_custom"
+                  type="radio"
+                  title="custom discount rate"
+                  [(ngModel)]="discountRate"
+                  name="rates_discount"
+                  value="custom"
+                  (change)="activateDeactivateRunScenarioButton()"
+                />
+                <label
+                  class="usa-radio__label radio-btn__label"
+                  for="discount_custom"
+                  >Custom:</label
+                >
               </div>
               <div class="grid-col">
-                <input aria-label="discount rate custom value input" class="usa-input discount-input"
-                  id="discount_custom_value" [(ngModel)]="disCusValue" name="discount_custom_value" type="text" min="0"
-                  placeholder="enter %" aria-placeholder="enter percent" (click)="setDiscountRateToCustom()"
-                  (input)="validateDiscountRateInput()">
+                <input
+                  aria-label="discount rate custom value input"
+                  class="usa-input discount-input"
+                  id="discount_custom_value"
+                  [(ngModel)]="disCusValue"
+                  name="discount_custom_value"
+                  type="text"
+                  min="0"
+                  placeholder="enter %"
+                  aria-placeholder="enter percent"
+                  (click)="setDiscountRateToCustom()"
+                  (input)="validateDiscountRateInput()"
+                />
               </div>
             </div>
-            <span class="usa-error-message" *ngIf="showErrorNotValid">Enter a positive numeric value.</span>
+            <span class="usa-error-message" *ngIf="showErrorNotValid"
+              >Enter a positive numeric value.</span
+            >
           </fieldset>
         </form>
 
-        <button class="usa-button width-full margin-right-0" id="run_scenario_btn" type="button" (click)="runScenario()">Run Scenario</button>
+        <button
+          class="usa-button width-full margin-right-0"
+          id="run_scenario_btn"
+          type="button"
+          (click)="runScenario()"
+        >
+          Run Scenario
+        </button>
       </div>
     </div>
   </div>

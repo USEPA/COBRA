@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp2.1</TargetFramework>
+    <TargetFramework>net6.0</TargetFramework>
     <UserSecretsId>e8fb80c9-db33-4563-bb9b-7d738739988f</UserSecretsId>
     <Platforms>AnyCPU;x64</Platforms>
   </PropertyGroup>
@@ -22,85 +22,142 @@
     <Folder Include="wwwroot\" />
   </ItemGroup>
 
+
+  <ItemGroup>
+    <Content Include="data\CobraTemplate.xlsx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+
+
+
   <ItemGroup>
     <PackageReference Include="Ceras" Version="4.1.7" />
+    <PackageReference Include="ClosedXML" Version="0.95.4" />
     <PackageReference Include="CoreCLR-NCalc" Version="2.2.70" />
     <PackageReference Include="CsvHelper" Version="15.0.5" />
     <PackageReference Include="excel-export" Version="2.1.0" />
     <PackageReference Include="FastMember" Version="1.5.0" />
     <PackageReference Include="MathNet.Numerics" Version="4.9.1" />
     <PackageReference Include="MathNet.Numerics.Data.Text" Version="4.0.0" />
-    <PackageReference Include="Microsoft.AspNetCore.App" />
     <PackageReference Include="Minio" Version="3.1.13" />
     <PackageReference Include="NPOI" Version="2.5.1" />
     <PackageReference Include="protobuf-net-data" Version="3.0.0" />
-    <PackageReference Include="ServiceStack.Redis.Core" Version="5.8.0" />
     <PackageReference Include="SharpZipLib" Version="1.2.0" />
+    <PackageReference Include="StackExchange.Redis" Version="2.2.62" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
     <PackageReference Include="System.Data.DataSetExtensions" Version="4.5.0" />
-    <PackageReference Include="System.Text.Encoding.CodePages" Version="4.7.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="6.0.16" />
+    <PackageReference Include="System.Text.Encoding.CodePages" Version="6.0.0" />
   </ItemGroup>
 
-  <ItemGroup>
-    <None Update="data\CobraTemplate.xls">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="data\matrix_dp_1.mtx">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="data\matrix_dp_2.mtx">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="data\matrix_dp_3.mtx">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="data\matrix_dp_4.mtx">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="data\matrix_nh3_1.mtx">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="data\matrix_nh3_2.mtx">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="data\matrix_nh3_3.mtx">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="data\matrix_nh3_4.mtx">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="data\matrix_no2_1.mtx">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="data\matrix_no2_2.mtx">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="data\matrix_no2_3.mtx">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="data\matrix_no2_4.mtx">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="data\matrix_so2_1.mtx">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="data\matrix_so2_2.mtx">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="data\matrix_so2_3.mtx">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="data\matrix_so2_4.mtx">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="data\sys_emissions_inventory.csv">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="data\sys_srmatrix_2025.csv">
-      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-    </None>
-    <None Update="data\sys_srmatrix_2025.zip">
-      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
+	<ItemGroup>
+		<None Update="data\CobraTemplate.xlsx">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</None>
+		<None Update="data\matrix_dp_1.mtx">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</None>
+		<None Update="data\matrix_dp_2.mtx">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</None>
+		<None Update="data\matrix_dp_3.mtx">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</None>
+		<None Update="data\matrix_dp_4.mtx">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</None>
+		<!--<None Update="data\matrix_nh3_1.mtx">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</None>
+		<None Update="data\matrix_nh3_2.mtx">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</None>
+		<None Update="data\matrix_nh3_3.mtx">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</None>
+		<None Update="data\matrix_nh3_4.mtx">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</None>-->
+		<None Update="data\matrix_NOx_1.mtx">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</None>
+		<None Update="data\matrix_NOx_2.mtx">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</None>
+		<None Update="data\matrix_NOx_3.mtx">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</None>
+		<None Update="data\matrix_NOx_4.mtx">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</None>
+		<None Update="data\matrix_so2_1.mtx">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</None>
+		<None Update="data\matrix_so2_2.mtx">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</None>
+		<None Update="data\matrix_so2_3.mtx">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</None>
+		<None Update="data\matrix_so2_4.mtx">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</None>
+
+		<None Update="data\matrix_O3N_1.mtx">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</None>
+		<None Update="data\matrix_O3N_2.mtx">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</None>
+		<None Update="data\matrix_O3N_3.mtx">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</None>
+		<None Update="data\matrix_O3N_4.mtx">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</None>
+		<None Update="data\matrix_O3V_1.mtx">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</None>
+		<None Update="data\matrix_O3V_2.mtx">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</None>
+		<None Update="data\matrix_O3V_3.mtx">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</None>
+		<None Update="data\matrix_O3V_4.mtx">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</None>
+
+
+
+
+
+		<None Update="data\sr_matrix.zip">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</None>
+		<None Update="data\sr_matrix_2016.zip">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</None>
+		<None Update="data\sr_matrix_2023.zip">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</None>
+		<None Update="data\sr_matrix_2028.zip">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</None>
+		<None Update="data\sys_adj_desktop.csv">
+			<CopyToOutputDirectory>Never</CopyToOutputDirectory>
+		</None>
+		<None Update="data\sys_emissions_inventory.csv">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</None>
+		<None Update="data\sys_srmatrix_2025.csv">
+			<CopyToOutputDirectory>Never</CopyToOutputDirectory>
+		</None>
+		<None Update="data\sys_srmatrix_2025.zip">
+			<CopyToOutputDirectory>Never</CopyToOutputDirectory>
+		</None>
+	</ItemGroup>
 
 </Project>

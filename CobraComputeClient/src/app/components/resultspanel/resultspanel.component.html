@@ -1,16 +1,20 @@
 <div id="step3" class="panel results">
-
   <!-- WHEN INITIAL VIEW IS ACTIVE -->
-  <div id="no-results-screen" class="no-scenario-screen" *ngIf="showNoResultsScreen">
+  <div
+    id="no-results-screen"
+    class="no-scenario-screen"
+    *ngIf="showNoResultsScreen"
+  >
     <h1 class="text-base margin-top-0">Step 3: View Results</h1>
     <div class="icons">
       <svg viewBox="0 0 512 512" aria-label="Build scenario to begin">
         <title>Build scenario to begin</title>
         <g>
           <g id="no-circle-arrow-left">
-            <path fill="#71767a"
-              d="M8 256c0 137 111 248 248 248s248-111 248-248S393 8 256 8 8 119 8 256zm448 0c0 110.5-89.5 200-200 200S56 366.5 56 256 145.5 56 256 56s200 89.5 200 200zm-72-20v40c0 6.6-5.4 12-12 12H256v67c0 10.7-12.9 16-20.5 8.5l-99-99c-4.7-4.7-4.7-12.3 0-17l99-99c7.6-7.6 20.5-2.2 20.5 8.5v67h116c6.6 0 12 5.4 12 12z">
-            </path>
+            <path
+              fill="#71767a"
+              d="M8 256c0 137 111 248 248 248s248-111 248-248S393 8 256 8 8 119 8 256zm448 0c0 110.5-89.5 200-200 200S56 366.5 56 256 145.5 56 256 56s200 89.5 200 200zm-72-20v40c0 6.6-5.4 12-12 12H256v67c0 10.7-12.9 16-20.5 8.5l-99-99c-4.7-4.7-4.7-12.3 0-17l99-99c7.6-7.6 20.5-2.2 20.5 8.5v67h116c6.6 0 12 5.4 12 12z"
+            ></path>
           </g>
         </g>
       </svg>
@@ -19,37 +23,69 @@
   </div>
 
   <!-- WHEN REVIEW VIEW IS ACTIVE -->
-  <div id="pending-results-screen-id" class="pending-results-screen" *ngIf="showPendingResultsScreen">
+  <div
+    id="pending-results-screen-id"
+    class="pending-results-screen"
+    *ngIf="showPendingResultsScreen"
+  >
     <h1 class="text-base margin-top-0">Step 3: View Results</h1>
     <div class="icons">
-      <svg viewBox="0 0 512 512" style="transform: rotate(90deg);"
-        aria-label="Review and select Run Scenario to view your results.">
+      <svg
+        viewBox="0 0 512 512"
+        style="transform: rotate(90deg)"
+        aria-label="Review and select Run Scenario to view your results."
+      >
         <title>Review and select "Run Scenario" to view your results.</title>
         <g>
           <g id="no-circle-arrow-left">
-            <path fill="#71767a"
-              d="M8 256c0 137 111 248 248 248s248-111 248-248S393 8 256 8 8 119 8 256zm448 0c0 110.5-89.5 200-200 200S56 366.5 56 256 145.5 56 256 56s200 89.5 200 200zm-72-20v40c0 6.6-5.4 12-12 12H256v67c0 10.7-12.9 16-20.5 8.5l-99-99c-4.7-4.7-4.7-12.3 0-17l99-99c7.6-7.6 20.5-2.2 20.5 8.5v67h116c6.6 0 12 5.4 12 12z">
-            </path>
+            <path
+              fill="#71767a"
+              d="M8 256c0 137 111 248 248 248s248-111 248-248S393 8 256 8 8 119 8 256zm448 0c0 110.5-89.5 200-200 200S56 366.5 56 256 145.5 56 256 56s200 89.5 200 200zm-72-20v40c0 6.6-5.4 12-12 12H256v67c0 10.7-12.9 16-20.5 8.5l-99-99c-4.7-4.7-4.7-12.3 0-17l99-99c7.6-7.6 20.5-2.2 20.5 8.5v67h116c6.6 0 12 5.4 12 12z"
+            ></path>
           </g>
         </g>
       </svg>
     </div>
-    <div class="message">Review and select "Run Scenario"<br> to view your results.</div>
+    <div class="message">
+      Review and select "Run Scenario"<br />
+      to view your results.
+    </div>
   </div>
 
   <!-- MAIN SCREEN -->
+  <!-- REMEMBER TO ADD BACK [hidden] = "true" to div below -- temp removed-->
   <div id="results-screen" [hidden]="true">
-    <app-loadinganimation id="heartbeat" *ngIf="showHeartbeat"></app-loadinganimation>
-    <clr-modal [(clrModalOpen)]="showBuildNewConfirmationModal" [clrModalClosable]="true"
-      [clrModalStaticBackdrop]="false">
+    <app-loadinganimation
+      id="heartbeat"
+      *ngIf="showHeartbeat"
+    ></app-loadinganimation>
+    <clr-modal
+      [(clrModalOpen)]="showBuildNewConfirmationModal"
+      [clrModalClosable]="true"
+      [clrModalStaticBackdrop]="false"
+    >
       <h3 class="modal-title">Delete current scenario?</h3>
       <div class="modal-body">
-        <p>Building a new scenario will delete your current scenario’s configuration and results.</p>
+        <p>
+          Building a new scenario will delete your current scenario’s
+          configuration and results.
+        </p>
       </div>
       <div class="modal-footer">
-        <button type="button" class="usa-button usa-button--outline"
-          (click)="showBuildNewConfirmationModal=false">Cancel</button>
-        <button type="button" class="usa-button usa-button--secondary" (click)="buildNewScenario()">Ok</button>
+        <button
+          type="button"
+          class="usa-button usa-button--outline"
+          (click)="showBuildNewConfirmationModal = false"
+        >
+          Cancel
+        </button>
+        <button
+          type="button"
+          class="usa-button usa-button--secondary"
+          (click)="buildNewScenario()"
+        >
+          Ok
+        </button>
       </div>
     </clr-modal>
     <div id="results_panel_content" [hidden]="true">
@@ -58,243 +94,1148 @@
           <h1>Step 3: View Results</h1>
         </div>
         <div class="grid-auto">
-          <button class="usa-button width-card-lg margin-right-0" type="button"
-            (click)="showBuildNewConfirmationModal=true">Build New Scenario</button>
+          <button
+            class="usa-button width-card-lg margin-right-0"
+            type="button"
+            (click)="showBuildNewConfirmationModal = true"
+          >
+            Build New Scenario
+          </button>
         </div>
       </div>
       <h2>A. Summary of Health Effects Results</h2>
-      <p>Below is a table with the health effects results based on your scenario.</p>
+      <p>
+        Below is a table with the health effects results based on your scenario.
+      </p>
       <div class="subpanel">
-        <div class="usa-alert usa-alert--info usa-alert--slim" id="info_text_table">
+        <div
+          class="usa-alert usa-alert--info usa-alert--slim"
+          id="info_text_table"
+        >
           <div class="usa-alert__body">
-            <p class="usa-alert__text"><span class="text-highlight">You are viewing results for all contiguous U.S.
-                states.</span> This is because changes in air quality can impact health endpoints in multiple locations
-              due to the transportation of emissions across state and county lines.</p>
+            <p class="usa-alert__text">
+              <span class="text-highlight"
+                >You are viewing results for all contiguous U.S. states.</span
+              >
+              This is because changes in air quality can impact health endpoints
+              in multiple locations due to the transportation of emissions
+              across state and county lines.
+            </p>
           </div>
         </div>
-        <p class="text-bold font-sans-sm padding-top-2">Use the filters below to see health effects for a specific state or county.</p>
+        <p class="text-bold font-sans-sm padding-top-2">
+          Use the filters below to see health effects for a specific state or
+          county.
+        </p>
 
         <div class="clr-row">
           <div class="clr-col-sm-12 clr-col-md-6">
             <label class="usa-label" for="state_dd">1. Filter by state:</label>
-            <select class="usa-select" id="state_dd" name="state_dd"
-              (change)="updateCountyDropDownAndFilterVal(selectState.value)" #selectState>
-              <option id="state_default" value="" selected>All contiguous U.S. states</option>
-              <option *ngFor="let state of state_clr_structure" value="{{state.index}}">{{state.STNAME}}</option>
+            <select
+              class="usa-select"
+              id="state_dd"
+              name="state_dd"
+              (change)="updateCountyDropDownAndFilterVal(selectState.value)"
+              #selectState
+            >
+              <option id="state_default" value="" selected>
+                All contiguous U.S. states
+              </option>
+              <option
+                *ngFor="let state of state_clr_structure"
+                value="{{ state.index }}"
+              >
+                {{ state.STNAME }}
+              </option>
             </select>
           </div>
           <div class="clr-col-sm-12 clr-col-md-6">
-            <label class="usa-label" for="county_dd">2. Filter by county: (optional)</label>
-            <select class="usa-select" id="county_dd" name="county_dd"
-              (change)="showHideStateCountyNameAndUpdateFilterVal(selectState.value, selectCounty.value)" disabled
-              #selectCounty>
-              <option id="county_default" value="" selected>All counties</option>
-              <option *ngFor="let county of counties_for_state" value="{{county.county}}{{county.FIPS}}">
-                {{county.county}}</option>
+            <label class="usa-label" for="county_dd"
+              >2. Filter by county: (optional)</label
+            >
+            <select
+              class="usa-select"
+              id="county_dd"
+              name="county_dd"
+              (change)="
+                showHideStateCountyNameAndUpdateFilterVal(
+                  selectState.value,
+                  selectCounty.value
+                )
+              "
+              disabled
+              #selectCounty
+            >
+              <option id="county_default" value="" selected>
+                All counties
+              </option>
+              <option
+                *ngFor="let county of counties_for_state"
+                value="{{ county.county }}{{ county.FIPS }}"
+              >
+                {{ county.county }}
+              </option>
             </select>
           </div>
         </div>
 
-        <h2>Results for: {{tableStates[selectedTableState]}}</h2>
+        <h2>Results for: {{ tableStates[selectedTableState] }}</h2>
         <div class="export-container">
-          <p class="export"><img alt="" class="margin-bottom-1" src="../../../assets/images/file-xls.svg" /> Export:
-            <button class="usa-button--unstyled" *ngIf="showAllResultsBtn" (click)="exportAll()">All
-              results</button><span class="export-indicator" *ngIf="!showAllResultsBtn">Exporting</span> | <button
-              class="usa-button--unstyled" *ngIf="showCurrentViewBtn" (click)="summaryExport()">Current
-              filter</button><span class="export-indicator" *ngIf="!showCurrentViewBtn">Exporting</span></p>
+          <a id="export-results">
+          <p class="export">
+            <img
+              alt=""
+              class="margin-bottom-1"
+              src="../../../assets/images/file-xls.svg"
+            />
+            Export:
+            <button
+              class="usa-button--unstyled"
+              *ngIf="showAllResultsBtn"
+              (click)="exportAll()"
+            >
+              All results</button
+            ><span class="export-indicator" *ngIf="!showAllResultsBtn"
+              >Exporting</span
+            >
+            |
+            <button
+              class="usa-button--unstyled"
+              *ngIf="showCurrentViewBtn"
+              (click)="summaryExport()"
+            >
+              Current filter</button
+            ><span class="export-indicator" *ngIf="!showCurrentViewBtn"
+              >Exporting</span
+            >
+          </a>
         </div>
         <div class="usa-table-container--scrollable">
-          <table id="result-table" attr.aria-label="{{tableStates[selectedTableState]}}"
-            class="usa-table usa-table--borderless usa-table--numeric">
+          <table
+            id="result-table"
+            attr.aria-label="{{ tableStates[selectedTableState] }}"
+            class="usa-table usa-table--borderless usa-table--numeric"
+          >
             <tbody>
-              <col>
+              <col />
               <colgroup span="2"></colgroup>
               <colgroup span="2"></colgroup>
               <tr class="border-y-2px">
-                <th rowspan="2" class="cell-lg" id="health_endpoint">Health <span class="has-tooltip">Endpoint
+                <th rowspan="2" colspan="1" class="cell-lg" id="health_endpoint">
+                  Health
+                  <span class="has-tooltip"
+                    >Endpoint
                     <clr-tooltip>
-                      <clr-icon clrTooltipTrigger shape="info-circle" class="is-solid is-info" size="22"
-                        aria-label="In the results table, positive numbers indicate annual reductions in the number of cases and the associated costs avoided. Negative numbers signify increases in the number of cases and associated costs accrued.">
+                      <clr-icon
+                        clrTooltipTrigger
+                        shape="info-circle"
+                        class="is-solid is-info"
+                        size="22"
+                        aria-label="In the results table, positive numbers indicate annual reductions in the number of cases and the associated costs avoided. Negative numbers signify increases in the number of cases and associated costs accrued."
+                      >
                       </clr-icon>
-                      <clr-tooltip-content clrPosition="top-right" clrSize="lg" *clrIfOpen>
-                        <span>In the results table, positive numbers indicate annual reductions in the number of cases
-                          and the associated costs avoided. Negative numbers signify increases in the number of cases
-                          and associated costs accrued.</span>
-                      </clr-tooltip-content>
-                    </clr-tooltip>
-                  </span></th>
-                <th colspan="2" scope="colgroup" class="cell-lg text-center" id="change_in_incidence">Change in <span
-                    class="has-tooltip">Incidence
-                    <clr-tooltip>
-                      <clr-icon clrTooltipTrigger shape="info-circle" class="is-solid is-info" size="22"
-                        aria-label="Incidence refers to the number of new cases of a health endpoint over a specified period of time. The change in incidence is not necessarily a whole number because COBRA calculates statistical risk reductions which are then aggregated over the population. For example, if 150,000 people experience a 0.001% reduction in mortality risk, this would be reported as 1.5 statistical lives saved. This statistical life, and its associated monetary value, represents the sum of many small risk reductions and does not correspond to the loss or value of an individual life.">
-                      </clr-icon>
-                      <clr-tooltip-content clrPosition="top-right" clrSize="lg" *clrIfOpen>
-                        <span>Incidence refers to the number of new cases of a health endpoint over a specified period
-                          of time. The change in incidence is not necessarily a whole number because COBRA calculates
-                          statistical risk reductions which are then aggregated over the population. For example, if
-                          150,000 people experience a 0.001% reduction in mortality risk, this would be reported as 1.5
-                          “statistical lives saved.” This statistical life, and its associated monetary value,
-                          represents the sum of many small risk reductions and does not correspond to the loss or value
-                          of an individual life.</span>
+                      <clr-tooltip-content
+                        clrPosition="top-right"
+                        clrSize="lg"
+                        *clrIfOpen
+                      >
+                        <span
+                          >In the results table, positive numbers indicate
+                          annual reductions in the number of cases and the
+                          associated costs avoided. Negative numbers signify
+                          increases in the number of cases and associated costs
+                          accrued.</span
+                        >
                       </clr-tooltip-content>
                     </clr-tooltip>
                   </span>
-                  <br>(cases, annual)
                 </th>
-                <th colspan="2" scope="colgroup" class="cell-lg text-center" id="monetary_value">Monetary <span
-                    class="has-tooltip">Value
+                <th rowspan="2" class="cell-lg" id="pollutant">
+                  Pollutant
+                
+                </th>
+                <th
+                  colspan="2"
+                  scope="colgroup"
+                  class="cell-lg text-center"
+                  id="change_in_incidence"
+                >
+                  Change in
+                  <span class="has-tooltip"
+                    >Incidence
                     <clr-tooltip>
-                      <clr-icon clrTooltipTrigger shape="info-circle" class="is-solid is-info" size="22"
-                        aria-label="COBRA calculates the monetary value of each health endpoint based on data on the healthcare costs of the health endpoint and research into the willingness to pay to avoid the health endpoint. Results are presented in 2017$.">
+                      <clr-icon
+                        clrTooltipTrigger
+                        shape="info-circle"
+                        class="is-solid is-info"
+                        size="22"
+                        aria-label="Incidence refers to the number of new cases of a health endpoint over a specified period of time. The change in incidence is not necessarily a whole number because COBRA calculates statistical risk reductions which are then aggregated over the population. For example, if 150,000 people experience a 0.001% reduction in mortality risk, this would be reported as 1.5 statistical lives saved. This statistical life, and its associated monetary value, represents the sum of many small risk reductions and does not correspond to the loss or value of an individual life."
+                      >
                       </clr-icon>
-                      <clr-tooltip-content clrPosition="top-left" clrSize="lg" *clrIfOpen>
-                        <span>COBRA calculates the monetary value of each health endpoint based on data on the
-                          healthcare costs of the health endpoint and research into the willingness to pay to avoid the
-                          health endpoint. Results are presented in 2017 dollars.</span>
+                      <clr-tooltip-content
+                        clrPosition="top-right"
+                        clrSize="lg"
+                        *clrIfOpen
+                      >
+                        <span
+                          >Incidence refers to the number of new cases of a
+                          health endpoint over a specified period of time. The
+                          change in incidence is not necessarily a whole number
+                          because COBRA calculates statistical risk reductions
+                          which are then aggregated over the population. For
+                          example, if 150,000 people experience a 0.001%
+                          reduction in mortality risk, this would be reported as
+                          1.5 “statistical lives saved.” This statistical life,
+                          and its associated monetary value, represents the sum
+                          of many small risk reductions and does not correspond
+                          to the loss or value of an individual life.</span
+                        >
                       </clr-tooltip-content>
                     </clr-tooltip>
                   </span>
-                  <br>(dollars, annual)
+                  <br />(cases, annual)
+                </th>
+                <th
+                  colspan="2"
+                  scope="colgroup"
+                  class="cell-lg text-center"
+                  id="monetary_value"
+                >
+                  Monetary
+                  <span class="has-tooltip"
+                    >Value
+                    <clr-tooltip>
+                      <clr-icon
+                        clrTooltipTrigger
+                        shape="info-circle"
+                        class="is-solid is-info"
+                        size="22"
+                        aria-label="COBRA calculates the monetary value of each health endpoint based on data on the healthcare costs of the health endpoint and research into the willingness to pay to avoid the health endpoint. Results are presented in 2017$."
+                      >
+                      </clr-icon>
+                      <clr-tooltip-content
+                        clrPosition="top-left"
+                        clrSize="lg"
+                        *clrIfOpen
+                      >
+                        <span
+                          >COBRA calculates the monetary value of each health
+                          endpoint based on data on the healthcare costs of the
+                          health endpoint and research into the willingness to
+                          pay to avoid the health endpoint. Results are
+                          presented in 2023 dollars.</span
+                        >
+                      </clr-tooltip-content>
+                    </clr-tooltip>
+                  </span>
+                  <br />(dollars, annual)
                 </th>
               </tr>
               <tr class="border-y-2px">
-                <th class="text-center" scope="col" id="change_in_incidence_low" headers="change_in_incidence">Low</th>
-                <th class="text-center" scope="col" id="change_in_incidence_high" headers="change_in_incidence">High
+                <th
+                  class="text-center"
+                  scope="col"
+                  id="change_in_incidence_low"
+                  headers="change_in_incidence"
+                >
+                  Low
                 </th>
-                <th class="text-center" scope="col" id="monetary_value_low" headers="monetary_value">Low</th>
-                <th class="text-center" scope="col" id="monetary_value_high" headers="monetary_value">High</th>
+                <th
+                  class="text-center"
+                  scope="col"
+                  id="change_in_incidence_high"
+                  headers="change_in_incidence"
+                >
+                  High
+                </th>
+                <th
+                  class="text-center"
+                  scope="col"
+                  id="monetary_value_low"
+                  headers="monetary_value"
+                >
+                  Low
+                </th>
+                <th
+                  class="text-center"
+                  scope="col"
+                  id="monetary_value_high"
+                  headers="monetary_value"
+                >
+                  High
+                </th>
               </tr>
-              <tr>
-                <th scope="row" headers="health_endpoint" id="mortality">Mortality <span
-                    class="text-bold"><sup>*</sup></span></th>
-                <td headers="change_in_incidence change_in_incidence_low mortality">{{Mortality_low}}</td>
-                <td headers="change_in_incidence change_in_incidence_high mortality">{{Mortality_high}}</td>
-                <td headers="monetary_value monetary_value_low mortality">{{MortalityValue_low}}</td>
-                <td headers="monetary_value monetary_value_high mortality">{{MortalityValue_high}}</td>
-              </tr>
-              <tr>
-                <th scope="row" headers="health_endpoint" id="nonfatal_heart_attacks">Nonfatal Heart Attacks <span
-                    class="text-bold"><sup>*</sup></span></th>
-                <td headers="change_in_incidence change_in_incidence_low nonfatal_heart_attacks">
-                  {{NonfatalHeartAttacks_low}}</td>
-                <td headers="change_in_incidence change_in_incidence_high nonfatal_heart_attacks">
-                  {{NonfatalHeartAttacks_high}}</td>
-                <td headers="monetary_value monetary_value_low nonfatal_heart_attacks">{{NonfatalHeartAttacksValue_low}}
+              <tr [class.detail-header]="showBreakdown.mortality">
+                <th scope="row" headers="health_endpoint" id="mortality" >
+                  <button type="button" class="icon-button" aria-label="expand details" title="expand details" (click)="expand('mortality')">
+      
+                
+                     <!-- chevron down-->
+                     <svg class="chevron" *ngIf="!showBreakdown.mortality" xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 512 512"><path d="M233.4 406.6c12.5 12.5 32.8 12.5 45.3 0l192-192c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L256 338.7 86.6 169.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l192 192z"/></svg>
+                     <!-- chevron up-->
+                     <svg class="chevron" *ngIf="showBreakdown.mortality" xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 512 512"><path d="M233.4 105.4c12.5-12.5 32.8-12.5 45.3 0l192 192c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L256 173.3 86.6 342.6c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3l192-192z"/></svg>
+                     
+                     Mortality <span class="text-bold"><sup>*</sup></span>
+      
+                   </button> 
+                </th>
+               
+                <td
+                headers="pollutant mortality"
+                class="alpha"
+              > PM<sub>2.5</sub> | O<sub>3</sub>
+              </td>
+                <td
+                  headers="change_in_incidence change_in_incidence_low mortality"
+                >
+                  {{ twoSigFigs(Mortality_low, false) }}
                 </td>
-                <td headers="monetary_value monetary_value_high nonfatal_heart_attacks">
-                  {{NonfatalHeartAttacksValue_high}}</td>
+                <td
+                  headers="change_in_incidence change_in_incidence_high mortality"
+                >
+                  {{ twoSigFigs(Mortality_high, false) }}
+                </td>
+                <td headers="monetary_value monetary_value_low mortality">
+                  {{ twoSigFigs(MortalityValue_low, true) }}
+                </td>
+                <td headers="monetary_value monetary_value_high mortality">
+                  {{ twoSigFigs(MortalityValue_high, true) }}
+                </td>
+              </tr>
+              <tr *ngIf="showBreakdown.mortality" class="detail-row">
+                <th scope="row" headers="health_endpoint" id="pm_mortality">
+                  &nbsp; Mortality, All Cause
+                </th>
+                <td
+                headers="pollutant mortality"
+                class="alpha"
+              > PM<sub>2.5</sub>
+              </td>
+                <td
+                  headers="change_in_incidence change_in_incidence_low pm_mortality"
+                >
+                  {{ twoSigFigs(PM_Mortality_low, false) }}
+                </td>
+                <td
+                  headers="change_in_incidence change_in_incidence_high pm_mortality"
+                >
+                  {{ twoSigFigs(PM_Mortality_high, false) }}
+                </td>
+                <td headers="monetary_value monetary_value_low pm_mortality">
+                  {{ twoSigFigs(PM_MortalityValue_low, true) }}
+                </td>
+                <td headers="monetary_value monetary_value_high pm_mortality">
+                  {{ twoSigFigs(PM_MortalityValue_high, true) }}
+                </td>
+              </tr>
+              <tr *ngIf="showBreakdown.mortality" class="detail-row">
+                <th scope="row" headers="health_endpoint" id="o3_short-term_mortality">
+                  &nbsp; Mortality, O<sub>3</sub> Short-term Exposure
+                </th>
+                <td
+                headers="pollutant mortality"
+                class="alpha"
+              > O<sub>3</sub>
+              </td>
+                <td
+                  headers="change_in_incidence change_in_incidence_low o3_short-term_mortality"
+                >
+                  {{ twoSigFigs(O3_Mortality_short, false) }}
+                </td>
+                <td
+                  headers="change_in_incidence change_in_incidence_high o3_short-term_mortality"
+                >
+                  {{ twoSigFigs(O3_Mortality_short, false) }}
+                </td>
+                <td headers="monetary_value monetary_value_low o3_short-term_mortality">
+                  {{ twoSigFigs(O3_MortalityValue_short, true) }}
+                </td>
+                <td headers="monetary_value monetary_value_high o3_short-term_mortality">
+                  {{ twoSigFigs(O3_MortalityValue_short, true) }}
+                </td>
+      
+              </tr>
+              <tr *ngIf="showBreakdown.mortality" class="detail-row">
+                <th scope="row" headers="health_endpoint" id="o3_long-term_mortality">
+                  &nbsp; Mortality, O<sub>3</sub> Long-term Exposure
+                </th>
+                <td
+                headers="pollutant mortality"
+                class="alpha"
+              > O<sub>3</sub>
+              </td>
+                <td
+                  headers="change_in_incidence change_in_incidence_low o3_long-term_mortality"
+                >
+                  {{ twoSigFigs(O3_Mortality_long, false) }}
+                </td>
+                <td
+                  headers="change_in_incidence change_in_incidence_high o3_long-term_mortality"
+                >
+                  {{ twoSigFigs(O3_Mortality_long, false) }}
+                </td>
+                <td headers="monetary_value monetary_value_low o3_long-term_mortality">
+                  {{ twoSigFigs(O3_MortalityValue_long, true) }}
+                </td>
+                <td headers="monetary_value monetary_value_high o3_long-term_mortality">
+                  {{ twoSigFigs(O3_MortalityValue_long, true) }}
+                </td>
+      
               </tr>
               <tr>
-                <th scope="row">Infant Mortality</th>
-                <td>{{InfantMortality}}</td>
-                <td>{{InfantMortality}}</td>
-                <td>{{InfantMortalityValue}}</td>
-                <td>{{InfantMortalityValue}}</td>
+                <th
+                  scope="row"
+                  headers="health_endpoint"
+                  id="nonfatal_heart_attacks"
+                >
+                  Nonfatal Heart Attacks
+                </th>
+                <td
+                headers="pollutant nonfatal_heart_attacks"
+                class="alpha"
+              > PM<sub>2.5</sub>
+              </td>
+                <td
+                  headers="change_in_incidence change_in_incidence_low nonfatal_heart_attacks"
+                >
+                  {{ twoSigFigs(NonfatalHeartAttacks, false) }}
+                </td>
+                <td
+                  headers="change_in_incidence change_in_incidence_high nonfatal_heart_attacks"
+                >
+                  {{ twoSigFigs(NonfatalHeartAttacks, false) }}
+                </td>
+                <td
+                  headers="monetary_value monetary_value_low nonfatal_heart_attacks"
+                >
+                  {{ twoSigFigs(NonfatalHeartAttacksValue, true) }}
+                </td>
+                <td
+                  headers="monetary_value monetary_value_high nonfatal_heart_attacks"
+                >
+                  {{ twoSigFigs(NonfatalHeartAttacksValue, true) }}
+                </td>
               </tr>
               <tr>
-                <th scope="row"> Hospital Admits, All Respiratory</th>
-                <td>{{HospitalAdmitsAllRespiratory}}</td>
-                <td>{{HospitalAdmitsAllRespiratory}}</td>
-                <td>{{HospitalAdmitsAllRespiratoryValue}}</td>
-                <td>{{HospitalAdmitsAllRespiratoryValue}}</td>
+                <th scope="row"  id="infant_mortality" headers="health_endpoint">Infant Mortality</th>
+                <td
+                headers="pollutant infant_mortality"
+                class="alpha"
+              > PM<sub>2.5</sub>
+              </td>
+                <td  headers="change_in_incidence change_in_incidence_low infant_mortality" >{{ twoSigFigs(InfantMortality, false) }}</td>
+                <td  headers="change_in_incidence change_in_incidence_high infant_mortality">{{ twoSigFigs(InfantMortality, false) }}</td>
+                <td  headers="monetary_value monetary_value_low infant_mortality">{{ twoSigFigs(InfantMortalityValue, true) }}</td>
+                <td  headers="monetary_value monetary_value_high infant_mortality">{{ twoSigFigs(InfantMortalityValue, true) }}</td>
+              </tr>
+              <tr [class.detail-header]="showBreakdown.all_resp">
+                <th scope="row" id="ha_all_resp" headers="health_endpoint" >
+      
+                  <button type="button" class="icon-button" aria-label="expand details" title="expand details" (click)="expand('all_resp')">
+      
+                
+                    <!-- chevron down-->
+                    <svg class="chevron" *ngIf="!showBreakdown.all_resp" xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 512 512"><path d="M233.4 406.6c12.5 12.5 32.8 12.5 45.3 0l192-192c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L256 338.7 86.6 169.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l192 192z"/></svg>
+                    <!-- chevron up-->
+                    <svg class="chevron" *ngIf="showBreakdown.all_resp" xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 512 512"><path d="M233.4 105.4c12.5-12.5 32.8-12.5 45.3 0l192 192c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L256 173.3 86.6 342.6c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3l192-192z"/></svg>
+                    
+                   Hospital Admits, All Respiratory
+      
+                  </button> 
+                </th>
+                <td
+                headers="pollutant ha_all_resp"
+                class="alpha"
+              > PM<sub>2.5</sub> |  O<sub>3</sub>
+              </td>
+                <td headers="change_in_incidence change_in_incidence_low ha_all_resp">{{ twoSigFigs(HospitalAdmitsAllRespiratory, false) }}</td>
+                <td headers="change_in_incidence change_in_incidence_high ha_all_resp">{{ twoSigFigs(HospitalAdmitsAllRespiratory, false) }}</td>
+                <td headers="monetary_value monetary_value_low ha_all_resp">{{ twoSigFigs(HospitalAdmitsAllRespiratoryValue, true) }}</td>
+                <td headers="monetary_value monetary_value_high ha_all_resp">{{ twoSigFigs(HospitalAdmitsAllRespiratoryValue, true) }}</td>
+              </tr>
+                <!--------------------------- expanded rows section --------------------------------------->
+                <tr *ngIf="showBreakdown.all_resp" class="detail-row">
+                  <th scope="row" headers="health_endpoint" id="pm_hospital_resp_admits">
+                    &nbsp; Hospital Admits from PM<sub>2.5</sub>
+                  </th>
+                  <td
+                  headers="pollutant pm_hospital_resp_admits"
+                  class="alpha"
+                > PM<sub>2.5</sub>
+                </td>
+                  <td
+                    headers="change_in_incidence change_in_incidence_low pm_hospital_resp_admits"
+                  >
+                  {{ twoSigFigs(PMHospitalAdmitsAllRespiratory, false) }}
+                  </td>
+                  <td
+                    headers="change_in_incidence change_in_incidence_high pm_hospital_resp_admits"
+                  >
+                  {{ twoSigFigs(PMHospitalAdmitsAllRespiratory, false) }}
+                  </td>
+                  <td headers="monetary_value monetary_value_low pm_hospital_resp_admits">
+                    {{ twoSigFigs(PMHospitalAdmitsAllRespiratoryValue, true) }}
+                  </td>
+                  <td headers="monetary_value monetary_value_high pm_hospital_resp_admits">
+                    {{ twoSigFigs(PMHospitalAdmitsAllRespiratoryValue, true) }}
+                  </td>
+                </tr>
+                <tr *ngIf="showBreakdown.all_resp" class="detail-row">
+                  <th scope="row" headers="health_endpoint" id="o3_hospital_resp_admits">
+                    &nbsp; Hospital Admits from O<sub>3</sub>
+                  </th>
+                  <td
+                  headers="pollutant o3_hospital_resp_admits"
+                  class="alpha"
+                > O<sub>3</sub>
+                </td>
+                  <td
+                    headers="change_in_incidence change_in_incidence_low o3_hospital_resp_admits"
+                  >
+                  {{ twoSigFigs(O3HospitalAdmitsAllRespiratory, false) }}
+                  </td>
+                  <td
+                    headers="change_in_incidence change_in_incidence_high o3_hospital_resp_admits"
+                  >
+                  {{ twoSigFigs(O3HospitalAdmitsAllRespiratory, false) }}
+                  </td>
+                  <td headers="monetary_value monetary_value_low o3_hospital_resp_admits">
+                    {{ twoSigFigs(O3HospitalAdmitsAllRespiratoryValue, true) }}
+                  </td>
+                  <td headers="monetary_value monetary_value_high o3_hospital_resp_admits">
+                    {{ twoSigFigs(O3HospitalAdmitsAllRespiratoryValue, true) }}
+                  </td>
+                </tr>
+                        <!--------------------------- end expanded rows section --------------------------------------->
+              <tr [class.detail-header]="showBreakdown.er_resp">
+                <th scope="row" id="er_resp" headers="health_endpoint" >
+      
+                  <button type="button" class="icon-button" aria-label="expand details" title="expand details" (click)="expand('er_resp')">
+      
+                
+                    <!-- chevron down-->
+                    <svg class="chevron" *ngIf="!showBreakdown.er_resp" xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 512 512"><path d="M233.4 406.6c12.5 12.5 32.8 12.5 45.3 0l192-192c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L256 338.7 86.6 169.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l192 192z"/></svg>
+                    <!-- chevron up-->
+                    <svg class="chevron" *ngIf="showBreakdown.er_resp" xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 512 512"><path d="M233.4 105.4c12.5-12.5 32.8-12.5 45.3 0l192 192c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L256 173.3 86.6 342.6c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3l192-192z"/></svg>
+                    
+                   Emergency Room Visits, Respiratory
+      
+                  </button> 
+                </th>
+                <td
+                headers="pollutant er_resp"
+                class="alpha"
+              > PM<sub>2.5</sub> |  O<sub>3</sub>
+              </td>
+                <td headers="change_in_incidence change_in_incidence_low er_resp">{{ twoSigFigs(ERVisitsAllRespiratory, false) }}</td>
+                <td headers="change_in_incidence change_in_incidence_high er_resp">{{ twoSigFigs(ERVisitsAllRespiratory, false) }}</td>
+                <td headers="monetary_value monetary_value_low er_resp">{{ twoSigFigs(ERVisitsAllRespiratoryValue, true) }}</td>
+                <td  headers="monetary_value monetary_value_high er_resp">{{ twoSigFigs(ERVisitsAllRespiratoryValue, true) }}</td>
+              </tr>
+              <!--------------------------- expanded rows section --------------------------------------->
+              <tr *ngIf="showBreakdown.er_resp" class="detail-row">
+                <th scope="row" headers="health_endpoint" id="pm_er_resp">
+                  &nbsp; Respiratory Visits from PM<sub>2.5</sub>
+                </th>
+                <td
+                headers="pollutant pm_er_resp"
+                class="alpha"
+              > PM<sub>2.5</sub>
+              </td>
+                <td
+                  headers="change_in_incidence change_in_incidence_low pm_er_resp"
+                >
+                {{ twoSigFigs(PMERVisitsAllRespiratory, false) }}
+                </td>
+                <td
+                  headers="change_in_incidence change_in_incidence_high pm_er_resp"
+                >
+                {{ twoSigFigs(PMERVisitsAllRespiratory, false) }}
+                </td>
+                <td headers="monetary_value monetary_value_low pm_er_resp">
+                  {{ twoSigFigs(PMERVisitsAllRespiratoryValue, true) }}
+                </td>
+                <td headers="monetary_value monetary_value_high pm_er_resp">
+                  {{ twoSigFigs(PMERVisitsAllRespiratoryValue, true) }}
+                </td>
+              </tr>
+              <tr *ngIf="showBreakdown.er_resp" class="detail-row">
+                <th scope="row" headers="health_endpoint" id="o3_er_resp">
+                  &nbsp; Respiratory Visits from O<sub>3</sub>
+                </th>
+                <td
+                headers="pollutant o3_er_resp"
+                class="alpha"
+              > O<sub>3</sub>
+              </td>
+                <td
+                  headers="change_in_incidence change_in_incidence_low o3_er_resp"
+                >
+                {{ twoSigFigs(O3ERVisitsAllRespiratory, false) }}
+                </td>
+                <td
+                  headers="change_in_incidence change_in_incidence_high o3_er_resp"
+                >
+                {{ twoSigFigs(O3ERVisitsAllRespiratory, false) }}
+                </td>
+                <td headers="monetary_value monetary_value_low o3_er_resp">
+                  {{ twoSigFigs(O3ERVisitsAllRespiratoryValue, true) }}
+                </td>
+                <td headers="monetary_value monetary_value_high o3_er_resp">
+                  {{ twoSigFigs(O3ERVisitsAllRespiratoryValue, true) }}
+                </td>
+              </tr>
+                      <!--------------------------- end expanded rows section --------------------------------------->
+              <tr [class.detail-header]="showBreakdown.asthma_onset">
+                <th scope="row" id="asthma_onset" headers="health_endpoint" >
+      
+                  <button type="button" class="icon-button" aria-label="expand details" title="expand details" (click)="expand('asthma_onset')">
+      
+                
+                    <!-- chevron down-->
+                    <svg class="chevron" *ngIf="!showBreakdown.asthma_onset" xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 512 512"><path d="M233.4 406.6c12.5 12.5 32.8 12.5 45.3 0l192-192c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L256 338.7 86.6 169.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l192 192z"/></svg>
+                    <!-- chevron up-->
+                    <svg class="chevron" *ngIf="showBreakdown.asthma_onset" xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 512 512"><path d="M233.4 105.4c12.5-12.5 32.8-12.5 45.3 0l192 192c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L256 173.3 86.6 342.6c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3l192-192z"/></svg>
+                    
+                   Asthma Onset
+      
+                  </button> 
+                </th>
+                <td
+                headers="pollutant asthma_onset"
+                class="alpha"
+              > PM<sub>2.5</sub> |  O<sub>3</sub>
+              </td>
+                <td headers="change_in_incidence change_in_incidence_low asthma_onset">{{ twoSigFigs(IncidenceAsthma, false) }}</td>
+                <td  headers="change_in_incidence change_in_incidence_high asthma_onset">{{ twoSigFigs(IncidenceAsthma, false) }}</td>
+                <td headers="monetary_value monetary_value_low asthma_onset">{{ twoSigFigs(IncidenceAsthmaValue, true) }}</td>
+                <td headers="monetary_value monetary_value_high asthma_onset">{{ twoSigFigs(IncidenceAsthmaValue, true) }}</td>
+              </tr>
+              <tr *ngIf="showBreakdown.asthma_onset" class="detail-row">
+                <th scope="row" headers="health_endpoint" id="pm_asthma_onset">
+                  &nbsp; Asthma Onset from PM<sub>2.5</sub>
+                </th>
+                <td
+                headers="pollutant pm_asthma_onset"
+                class="alpha"
+              > PM<sub>2.5</sub>
+              </td>
+                <td
+                  headers="change_in_incidence change_in_incidence_low pm_asthma_onset"
+                >
+                {{ twoSigFigs(PMIncidenceAsthma, false) }}
+                </td>
+                <td
+                  headers="change_in_incidence change_in_incidence_high pm_asthma_onset"
+                >
+                {{ twoSigFigs(PMIncidenceAsthma, false) }}
+                </td>
+                <td headers="monetary_value monetary_value_low pm_asthma_onset">
+                  {{ twoSigFigs(PMIncidenceAsthmaValue, true) }}
+                </td>
+                <td headers="monetary_value monetary_value_high pm_asthma_onset">
+                  {{ twoSigFigs(PMIncidenceAsthmaValue, true) }}
+                </td>
+      
+              </tr>
+              <tr *ngIf="showBreakdown.asthma_onset" class="detail-row">
+                <th scope="row" headers="health_endpoint" id="o3_asthma_onset">
+                  &nbsp; Asthma Onset from O<sub>3</sub>
+                </th>
+                <td
+                headers="pollutant o3_asthma_onset"
+                class="alpha"
+              > O<sub>3</sub>
+              </td>
+                <td
+                  headers="change_in_incidence change_in_incidence_low o3_asthma_onset"
+                >
+                {{ twoSigFigs(O3IncidenceAsthma, false) }}
+                </td>
+                <td
+                  headers="change_in_incidence change_in_incidence_high o3_asthma_onset"
+                >
+                {{ twoSigFigs(O3IncidenceAsthma, false) }}
+                </td>
+                <td headers="monetary_value monetary_value_low o3_asthma_onset">
+                  {{ twoSigFigs(O3IncidenceAsthmaValue, true) }}
+                </td>
+                <td headers="monetary_value monetary_value_high o3_asthma_onset">
+                  {{ twoSigFigs(O3IncidenceAsthmaValue, true) }}
+                </td>
+      
+              </tr>
+      
+              <tr [class.detail-header]="showBreakdown.asthma_symptoms">
+                <th scope="row" id="asthma_symptoms" headers="health_endpoint">
+      
+                  <button type="button" class="icon-button" aria-label="expand details" title="expand details" (click)="expand('asthma_symptoms')">
+      
+                
+                    <!-- chevron down-->
+                    <svg class="chevron" *ngIf="!showBreakdown.asthma_symptoms" xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 512 512"><path d="M233.4 406.6c12.5 12.5 32.8 12.5 45.3 0l192-192c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L256 338.7 86.6 169.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l192 192z"/></svg>
+                    <!-- chevron up-->
+                    <svg class="chevron" *ngIf="showBreakdown.asthma_symptoms" xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 512 512"><path d="M233.4 105.4c12.5-12.5 32.8-12.5 45.3 0l192 192c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L256 173.3 86.6 342.6c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3l192-192z"/></svg>
+                    
+                   Asthma Symptoms
+      
+                  </button> 
+                </th>
+                <td
+                headers="pollutant asthma_symptoms"
+                class="alpha"
+              > PM<sub>2.5</sub> |  O<sub>3</sub>
+              </td>
+                <td headers="change_in_incidence change_in_incidence_low asthma_symptoms">{{ twoSigFigs(AsthmaSymptoms, false) }}</td>
+                <td headers="change_in_incidence change_in_incidence_high asthma_symptoms">{{ twoSigFigs(AsthmaSymptoms, false) }}</td>
+                <td headers="monetary_value monetary_value_low asthma_symptoms">{{ twoSigFigs(AsthmaSymptomsValue, true) }}</td>
+                <td headers="monetary_value monetary_value_high asthma_symptoms">{{ twoSigFigs(AsthmaSymptomsValue, true) }}</td>
+              </tr>
+              <tr *ngIf="showBreakdown.asthma_symptoms" class="detail-row">
+                <th scope="row" headers="health_endpoint" id="asthma_symptoms_albuterol_use">
+                  &nbsp; Albuterol Use
+                </th>
+                <td
+                headers="pollutant asthma_symptoms_albuterol_use"
+                class="alpha"
+              > PM<sub>2.5</sub>
+              </td>
+                <td
+                  headers="change_in_incidence change_in_incidence_low asthma_symptoms_albuterol_use"
+                >
+                {{ twoSigFigs(AlbuterolUse, false) }}
+                </td>
+                <td
+                  headers="change_in_incidence change_in_incidence_high asthma_symptoms_albuterol_use"
+                >
+                {{ twoSigFigs(AlbuterolUse, false) }}
+                </td>
+                <td headers="monetary_value monetary_value_low asthma_symptoms_albuterol_use">
+                  {{ twoSigFigs(AlbuterolUseValue, true) }}
+                </td>
+                <td headers="monetary_value monetary_value_high asthma_symptoms_albuterol_use">
+                  {{ twoSigFigs(AlbuterolUseValue, true) }}
+                </td>
+              </tr>
+              <tr *ngIf="showBreakdown.asthma_symptoms" class="detail-row">
+                <th scope="row" headers="health_endpoint" id="asthma_symptoms_chest_tightness">
+                  &nbsp; Chest Tightness
+                </th>
+                <td
+                headers="pollutant asthma_symptoms_chest_tightness"
+                class="alpha"
+              > O<sub>3</sub>
+              </td>
+                <td
+                  headers="change_in_incidence change_in_incidence_low asthma_symptoms_chest_tightness"
+                >
+                {{ twoSigFigs(ChestTightness, false) }}
+                </td>
+                <td
+                  headers="change_in_incidence change_in_incidence_high asthma_symptoms_chest_tightness"
+                >
+                {{ twoSigFigs(ChestTightness, false) }}
+                </td>
+                <td headers="monetary_value monetary_value_low asthma_symptoms_chest_tightness">
+                  {{ twoSigFigs(ChestTightnessValue, true) }}
+                </td>
+                <td headers="monetary_value monetary_value_high asthma_symptoms_chest_tightness">
+                  {{ twoSigFigs(ChestTightnessValue, true) }}
+                </td>
+              </tr>
+              <tr *ngIf="showBreakdown.asthma_symptoms" class="detail-row">
+                <th scope="row" headers="health_endpoint" id="asthma_symptoms_cough">
+                  &nbsp; Cough
+                </th>
+                <td
+                headers="pollutant asthma_symptoms_cough"
+                class="alpha"
+              > O<sub>3</sub>
+              </td>
+                <td
+                  headers="change_in_incidence change_in_incidence_low asthma_symptoms_cough"
+                >
+                {{ twoSigFigs(Cough, false) }}
+                </td>
+                <td
+                  headers="change_in_incidence change_in_incidence_high asthma_symptoms_cough"
+                >
+                {{ twoSigFigs(Cough, false) }}
+                </td>
+                <td headers="monetary_value monetary_value_low asthma_symptoms_cough">
+                  {{ twoSigFigs(CoughValue, true) }}
+                </td>
+                <td headers="monetary_value monetary_value_high asthma_symptoms_cough">
+                  {{ twoSigFigs(CoughValue, true) }}
+                </td>
+              </tr>
+              <tr *ngIf="showBreakdown.asthma_symptoms" class="detail-row">
+                <th scope="row" headers="health_endpoint" id="asthma_symptoms_shortness_of_breath">
+                  &nbsp; Shortness of Breath
+                </th>
+                <td
+                headers="pollutant asthma_symptoms_shortness_of_breath"
+                class="alpha"
+              > O<sub>3</sub>
+              </td>
+                <td
+                  headers="change_in_incidence change_in_incidence_low asthma_symptoms_shortness_of_breath"
+                >
+                {{ twoSigFigs(ShortnessOfBreath, false) }}
+                </td>
+                <td
+                  headers="change_in_incidence change_in_incidence_high asthma_symptoms_shortness_of_breath"
+                >
+                {{ twoSigFigs(ShortnessOfBreath, false) }}
+                </td>
+                <td headers="monetary_value monetary_value_low asthma_symptoms_shortness_of_breath">
+                  {{ twoSigFigs(ShortnessOfBreathValue, true) }}
+                </td>
+                <td headers="monetary_value monetary_value_high asthma_symptoms_shortness_of_breath">
+                  {{ twoSigFigs(ShortnessOfBreathValue, true) }}
+                </td>
+              </tr>
+              <tr *ngIf="showBreakdown.asthma_symptoms" class="detail-row">
+                <th scope="row" headers="health_endpoint" id="asthma_symptoms_wheeze">
+                  &nbsp; Wheeze
+                </th>
+                <td
+                headers="pollutant asthma_symptoms_wheeze"
+                class="alpha"
+              > O<sub>3</sub>
+              </td>
+                <td
+                  headers="change_in_incidence change_in_incidence_low asthma_symptoms_wheeze"
+                >
+                {{ twoSigFigs(Wheeze, false) }}
+                </td>
+                <td
+                  headers="change_in_incidence change_in_incidence_high asthma_symptoms_wheeze"
+                >
+                {{ twoSigFigs(Wheeze, false) }}
+                </td>
+                <td headers="monetary_value monetary_value_low asthma_symptoms_wheeze">
+                  {{ twoSigFigs(WheezeValue, true) }}
+                </td>
+                <td headers="monetary_value monetary_value_high asthma_symptoms_wheeze">
+                  {{ twoSigFigs(WheezeValue, true) }}
+                </td>
+              </tr>
+      
+      
+              <tr>
+                <th scope="row" id="er_asthma" headers="health_endpoint">Emergency Room Visits, Asthma</th>
+                <td
+                headers="pollutant er_asthma"
+                class="alpha"
+              >  O<sub>3</sub>
+              </td>
+                <td headers="change_in_incidence change_in_incidence_low er_asthma">{{ twoSigFigs(EmergencyRoomVisitsAsthma, false) }}</td>
+                <td headers="change_in_incidence change_in_incidence_high er_asthma">{{ twoSigFigs(EmergencyRoomVisitsAsthma, false) }}</td>
+                <td headers="monetary_value monetary_value_low er_asthma">{{ twoSigFigs(EmergencyRoomVisitsAsthmaValue, true) }}</td>
+                <td headers="monetary_value monetary_value_high er_asthma">{{ twoSigFigs(EmergencyRoomVisitsAsthmaValue, true) }}</td>
               </tr>
               <tr>
-                <th scope="row">Hospital Admits, Cardiovascular <span class="text-bold"><sup>**</sup></span></th>
-                <td>{{HospitalAdmitsCardiovascularexceptheartattacks}}</td>
-                <td>{{HospitalAdmitsCardiovascularexceptheartattacks}}</td>
-                <td>{{HospitalAdmitsCardiovascularexceptheartattacksValue}}</td>
-                <td>{{HospitalAdmitsCardiovascularexceptheartattacksValue}}</td>
+                <th scope="row" id="lung_cancer" headers="health_endpoint">Lung Cancer Incidence</th>
+                <td
+                headers="pollutant lung_cancer"
+                class="alpha"
+              > PM<sub>2.5</sub>
+              </td>
+                <td headers="change_in_incidence change_in_incidence_low lung_cancer">{{ twoSigFigs(IncidenceLungCancer, false) }}</td>
+                <td headers="change_in_incidence change_in_incidence_high lung_cancer">{{ twoSigFigs(IncidenceLungCancer, false) }}</td>
+                <td headers="monetary_value monetary_value_low lung_cancer">{{ twoSigFigs(IncidenceLungCancerValue, true) }}</td>
+                <td headers="monetary_value monetary_value_high lung_cancer">{{ twoSigFigs(IncidenceLungCancerValue, true) }}</td>
               </tr>
               <tr>
-                <th scope="row">Acute Bronchitis</th>
-                <td>{{AcuteBronchitis}}</td>
-                <td>{{AcuteBronchitis}}</td>
-                <td>{{AcuteBronchitisValue}}</td>
-                <td>{{AcuteBronchitisValue}}</td>
+                <th scope="row" id="vascular_disease" headers="health_endpoint">
+                  Hospital Admits, Cardio-Cerebro/Peripheral Vascular Disease
+                </th>
+                <td
+                headers="pollutant vascular_disease"
+                class="alpha"
+              > PM<sub>2.5</sub>
+              </td>
+                <td headers="change_in_incidence change_in_incidence_low vascular_disease">{{ twoSigFigs(HA_HCCPV_Disease, false) }}</td>
+                <td headers="change_in_incidence change_in_incidence_high vascular_disease">{{ twoSigFigs(HA_HCCPV_Disease, false) }}</td>
+                <td headers="monetary_value monetary_value_low vascular_disease">{{ twoSigFigs(HA_HCCPV_DiseaseValue, true) }}</td>
+                <td headers="monetary_value monetary_value_high vascular_disease">{{ twoSigFigs(HA_HCCPV_DiseaseValue, true) }}</td>
               </tr>
               <tr>
-                <th scope="row">Upper Respiratory Symptoms</th>
-                <td>{{UpperRespiratorySymptoms}}</td>
-                <td>{{UpperRespiratorySymptoms}}</td>
-                <td>{{UpperRespiratorySymptomsValue}}</td>
-                <td>{{UpperRespiratorySymptomsValue}}</td>
+                <th scope="row" id="alzheimers" headers="health_endpoint">Hospital Admits, Alzheimers Disease</th>
+                <td
+                headers="pollutant alzheimers"
+                class="alpha"
+              > PM<sub>2.5</sub>
+              </td>
+                <td headers="change_in_incidence change_in_incidence_low alzheimers">{{ twoSigFigs(HospitalAdmitsAlzheimersDisease, false) }}</td>
+                <td headers="change_in_incidence change_in_incidence_high alzheimers">{{ twoSigFigs(HospitalAdmitsAlzheimersDisease, false) }}</td>
+                <td headers="monetary_value monetary_value_low alzheimers">{{ twoSigFigs(HospitalAdmitsAlzheimersDiseaseValue, true) }}</td>
+                <td headers="monetary_value monetary_value_high alzheimers">{{ twoSigFigs(HospitalAdmitsAlzheimersDiseaseValue, true) }}</td>
               </tr>
               <tr>
-                <th scope="row">Lower Respiratory Symptoms</th>
-                <td>{{LowerRespiratorySymptoms}}</td>
-                <td>{{LowerRespiratorySymptoms}}</td>
-                <td>{{LowerRespiratorySymptomsValue}}</td>
-                <td>{{LowerRespiratorySymptomsValue}}</td>
+                <th scope="row" id="parkinsons" headers="health_endpoint">Hospital Admits, Parkinsons Disease</th>
+                <td
+                headers="pollutant parkinsons"
+                class="alpha"
+              > PM<sub>2.5</sub>
+              </td>
+                <td headers="change_in_incidence change_in_incidence_low parkinsons">{{ twoSigFigs(HospitalAdmitsParkinsonsDisease, false) }}</td>
+                <td headers="change_in_incidence change_in_incidence_high parkinsons">{{ twoSigFigs(HospitalAdmitsParkinsonsDisease, false) }}</td>
+                <td headers="monetary_value monetary_value_low parkinsons">{{ twoSigFigs(HospitalAdmitsParkinsonsDiseaseValue, true) }}</td>
+                <td headers="monetary_value monetary_value_high parkinsons">{{ twoSigFigs(HospitalAdmitsParkinsonsDiseaseValue, true) }}</td>
               </tr>
               <tr>
-                <th scope="row">Emergency Room Visits, Asthma</th>
-                <td>{{EmergencyRoomVisitsAsthma}}</td>
-                <td>{{EmergencyRoomVisitsAsthma}}</td>
-                <td>{{EmergencyRoomVisitsAsthmaValue}}</td>
-                <td>{{EmergencyRoomVisitsAsthmaValue}}</td>
+                <th scope="row" id="stroke" headers="health_endpoint">Stroke Incidence</th>
+                <td
+                headers="pollutant stroke"
+                class="alpha"
+              > PM<sub>2.5</sub>
+              </td>
+                <td headers="change_in_incidence change_in_incidence_low stroke">{{ twoSigFigs(IncidenceStroke, false) }}</td>
+                <td headers="change_in_incidence change_in_incidence_high stroke">{{ twoSigFigs(IncidenceStroke, false) }}</td>
+                <td headers="monetary_value monetary_value_low stroke">{{ twoSigFigs(IncidenceStrokeValue, true) }}</td>
+                <td headers="monetary_value monetary_value_high stroke">{{ twoSigFigs(IncidenceStrokeValue, true) }}</td>
+              </tr>
+              <tr [class.detail-header]="showBreakdown.hay_fever">
+                <th scope="row" id="hay_fever_rhinitis" headers="health_endpoint" >
+      
+                  <button type="button" class="icon-button" aria-label="expand details" title="expand details" (click)="expand('hay_fever')">
+      
+                
+                    <!-- chevron down-->
+                    <svg class="chevron" *ngIf="!showBreakdown.hay_fever" xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 512 512"><path d="M233.4 406.6c12.5 12.5 32.8 12.5 45.3 0l192-192c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L256 338.7 86.6 169.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l192 192z"/></svg>
+                    <!-- chevron up-->
+                    <svg class="chevron" *ngIf="showBreakdown.hay_fever" xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 512 512"><path d="M233.4 105.4c12.5-12.5 32.8-12.5 45.3 0l192 192c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L256 173.3 86.6 342.6c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3l192-192z"/></svg>
+                    
+                   Hay Fever/Rhinitis Incidence
+      
+                  </button> 
+                </th>
+                <td
+                headers="pollutant hay_fever_rhinitis"
+                class="alpha"
+              > PM<sub>2.5</sub> |  O<sub>3</sub>
+              </td>
+                <td headers="change_in_incidence change_in_incidence_low hay_fever_rhinitis">{{ twoSigFigs(IncidenceHayFeverRhinitis, false) }}</td>
+                <td headers="change_in_incidence change_in_incidence_high hay_fever_rhinitis">{{ twoSigFigs(IncidenceHayFeverRhinitis, false) }}</td>
+                <td headers="monetary_value monetary_value_low hay_fever_rhinitis">{{ twoSigFigs(IncidenceHayFeverRhinitisValue, true) }}</td>
+                <td headers="monetary_value monetary_value_high hay_fever_rhinitis">{{ twoSigFigs(IncidenceHayFeverRhinitisValue, true) }}</td>
+              </tr>
+              <tr *ngIf="showBreakdown.hay_fever" class="detail-row">
+                <th scope="row" headers="health_endpoint" id="pm_hay_fever_rhinitis">
+                  &nbsp; Hay Fever/Rhinitis Incidence from PM<sub>2.5</sub>
+                </th>
+                <td
+                headers="pollutant pm_hay_fever_rhinitis"
+                class="alpha"
+              > PM<sub>2.5</sub>
+              </td>
+                <td
+                  headers="change_in_incidence change_in_incidence_low pm_hay_fever_rhinitis"
+                >
+                {{ twoSigFigs(PMIncidenceHayFeverRhinitis, false) }}
+                </td>
+                <td
+                  headers="change_in_incidence change_in_incidence_high pm_hay_fever_rhinitis"
+                >
+                {{ twoSigFigs(PMIncidenceHayFeverRhinitis, false) }}
+                </td>
+                <td headers="monetary_value monetary_value_low pm_hay_fever_rhinitis">
+                  {{ twoSigFigs(PMIncidenceHayFeverRhinitisValue, true) }}
+                </td>
+                <td headers="monetary_value monetary_value_high pm_hay_fever_rhinitis">
+                  {{ twoSigFigs(PMIncidenceHayFeverRhinitisValue, true) }}
+                </td>
+              </tr>
+              <tr *ngIf="showBreakdown.hay_fever" class="detail-row">
+                <th scope="row" headers="health_endpoint" id="o3_hay_fever_rhinitis">
+                  &nbsp; Hay Fever/Rhinitis Incidence from O<sub>3</sub>
+                </th>
+                <td
+                headers="pollutant o3_hay_fever_rhinitis"
+                class="alpha"
+              > O<sub>3</sub>
+              </td>
+                <td
+                  headers="change_in_incidence change_in_incidence_low o3_hay_fever_rhinitis"
+                >
+                {{ twoSigFigs(O3IncidenceHayFeverRhinitis, false) }}
+                </td>
+                <td
+                  headers="change_in_incidence change_in_incidence_high o3_hay_fever_rhinitis"
+                >
+                {{ twoSigFigs(O3IncidenceHayFeverRhinitis, false) }}
+                </td>
+                <td headers="monetary_value monetary_value_low o3_hay_fever_rhinitis">
+                  {{ twoSigFigs(O3IncidenceHayFeverRhinitisValue, true) }}
+                </td>
+                <td headers="monetary_value monetary_value_high o3_hay_fever_rhinitis">
+                  {{ twoSigFigs(O3IncidenceHayFeverRhinitisValue, true) }}
+                </td>
               </tr>
               <tr>
-                <th scope="row">Asthma Exacerbation</th>
-                <td>{{AsthmaExacerbation}}</td>
-                <td>{{AsthmaExacerbation}}</td>
-                <td>{{AsthmaExacerbationValue}}</td>
-                <td>{{AsthmaExacerbationValue}}</td>
+                <th scope="row" id="cardiac_arrest_out_of_hosp" headers="health_endpoint">Cardiac Arrest, Out of Hospital</th>
+                <td
+                headers="pollutant cardiac_arrest_out_of_hosp"
+                class="alpha"
+              > PM<sub>2.5</sub>
+              </td>
+                <td headers="change_in_incidence change_in_incidence_low cardiac_arrest_out_of_hosp">{{ twoSigFigs(IncidenceOutOfHospitalCardiacArrest, false) }}</td>
+                <td headers="change_in_incidence change_in_incidence_high cardiac_arrest_out_of_hosp">{{ twoSigFigs(IncidenceOutOfHospitalCardiacArrest, false) }}</td>
+                <td headers="monetary_value monetary_value_low cardiac_arrest_out_of_hosp">{{ twoSigFigs(IncidenceOutOfHospitalCardiacArrestValue, true) }}</td>
+                <td headers="monetary_value monetary_value_high cardiac_arrest_out_of_hosp">{{ twoSigFigs(IncidenceOutOfHospitalCardiacArrestValue, true) }}</td>
               </tr>
               <tr>
-                <th scope="row">Minor Restricted Activity Days</th>
-                <td>{{MinorRestrictedActivityDays}}</td>
-                <td>{{MinorRestrictedActivityDays}}</td>
-                <td>{{MinorRestrictedActivityDaysValue}}</td>
-                <td>{{MinorRestrictedActivityDaysValue}}</td>
+                <th scope="row" id="er_all_cardiac" headers="health_endpoint">Emergency Room Visits, All Cardiac</th>
+                <td
+                headers="pollutant er_all_cardiac"
+                class="alpha"
+              > PM<sub>2.5</sub>
+              </td>
+                <td headers="change_in_incidence change_in_incidence_low er_all_cardiac">{{ twoSigFigs(ERVisitsAllCardiacOutcomes, false) }}</td>
+                <td headers="change_in_incidence change_in_incidence_high er_all_cardiac">{{ twoSigFigs(ERVisitsAllCardiacOutcomes, false) }}</td>
+                <td headers="monetary_value monetary_value_low er_all_cardiac">{{ twoSigFigs(ERVisitsAllCardiacOutcomesValue, true) }}</td>
+                <td headers="monetary_value monetary_value_high er_all_cardiac">{{ twoSigFigs(ERVisitsAllCardiacOutcomesValue, true) }}</td>
               </tr>
               <tr>
-                <th scope="row">Work Loss Days</th>
-                <td>{{WorkLossDays}}</td>
-                <td>{{WorkLossDays}}</td>
-                <td>{{WorkLossDaysValue}}</td>
-                <td>{{WorkLossDaysValue}}</td>
+                <th scope="row" id="minor_restricted_activity" headers="health_endpoint">Minor Restricted Activity Days</th>
+                <td
+                headers="pollutant minor_restricted_activity"
+                class="alpha"
+              > PM<sub>2.5</sub>
+              </td>
+                <td headers="change_in_incidence change_in_incidence_low minor_restricted_activity">{{ twoSigFigs(MinorRestrictedActivityDays, false) }}</td>
+                <td headers="change_in_incidence change_in_incidence_high minor_restricted_activity">{{ twoSigFigs(MinorRestrictedActivityDays, false) }}</td>
+                <td headers="monetary_value monetary_value_low minor_restricted_activity">{{ twoSigFigs(MinorRestrictedActivityDaysValue, true) }}</td>
+                <td headers="monetary_value monetary_value_high minor_restricted_activity">{{ twoSigFigs(MinorRestrictedActivityDaysValue, true) }}</td>
               </tr>
-              <tr class="border-y-2px">
-                <th scope="row" class="cell-lg text-emphasis padding-left-05"><img
-                    src="../../assets/images/heartbeat-icon.svg" alt="heartbeat health icon" /> Total Health Effects
+              <tr>
+                <th scope="row" id="school_loss_days" headers="health_endpoint">School Loss Days</th>
+                <td
+                headers="pollutant school_loss_days"
+                class="alpha"
+              > O<sub>3</sub>
+              </td>
+                <td headers="change_in_incidence change_in_incidence_low school_loss_days">{{ twoSigFigs(SchoolLossDays, false) }}</td>
+                <td headers="change_in_incidence change_in_incidence_high school_loss_days">{{ twoSigFigs(SchoolLossDays, false) }}</td>
+                <td headers="monetary_value monetary_value_low school_loss_days">{{ twoSigFigs(SchoolLossDaysValue, true) }}</td>
+                <td headers="monetary_value monetary_value_high school_loss_days">{{ twoSigFigs(SchoolLossDaysValue, true) }}</td>
+              </tr>
+              <tr>
+                <th scope="row" id="work_loss_days" headers="health_endpoint">Work Loss Days</th>
+                <td
+                headers="pollutant work_loss_days"
+                class="alpha"
+              > PM<sub>2.5</sub>
+              </td>
+                <td headers="change_in_incidence change_in_incidence_low work_loss_days">{{ twoSigFigs(WorkLossDays, false) }}</td>
+                <td headers="change_in_incidence change_in_incidence_high work_loss_days">{{ twoSigFigs(WorkLossDays, false) }}</td>
+                <td headers="monetary_value monetary_value_low work_loss_days">{{ twoSigFigs(WorkLossDaysValue, true) }}</td>
+                <td headers="monetary_value monetary_value_high work_loss_days">{{ twoSigFigs(WorkLossDaysValue, true) }}</td>
+              </tr>
+              <tr class="border-top-2px">
+                <th scope="row" class="cell-lg text-emphasis padding-left-05">
+                  Total Health Effects from PM<sub>2.5</sub>
                 </th>
                 <td class="cell-lg text-emphasis"></td>
                 <td class="cell-lg text-emphasis"></td>
-                <td class="cell-lg text-emphasis">{{TotalHealthBenefitsValue_low}}</td>
-                <td class="cell-lg text-emphasis">{{TotalHealthBenefitsValue_high}}</td>
+                <td class="cell-lg text-emphasis"></td>
+                <td class="cell-lg text-emphasis">
+                  {{ twoSigFigs(TotalPM_low, true)}}
+                </td>
+                <td class="cell-lg text-emphasis">
+                  {{ twoSigFigs(TotalPM_high, true) }}
+                </td>
+              </tr>
+              <tr>
+                <th scope="row" class="cell-lg text-emphasis padding-left-05">
+                  Total Health Effects from O<sub>3</sub>
+                </th>
+                <td class="cell-lg text-emphasis"></td>
+                <td class="cell-lg text-emphasis"></td>
+                <td class="cell-lg text-emphasis"></td>
+                <td class="cell-lg text-emphasis">
+                  {{ twoSigFigs(TotalO3, true)}}
+                </td>
+                <td class="cell-lg text-emphasis">
+                  {{ twoSigFigs(TotalO3, true) }}
+                </td>
+              </tr>
+              <tr class="border-bottom-2px">
+                <th scope="row" class="cell-lg text-emphasis padding-left-05">
+                  <img
+                    src="../../assets/images/heartbeat-icon.svg"
+                    alt="heartbeat health icon"
+                  />
+                  Total Health Effects
+                </th>
+                <td class="cell-lg text-emphasis"></td>
+                <td class="cell-lg text-emphasis"></td>
+                <td class="cell-lg text-emphasis"></td>
+                <td class="cell-lg text-emphasis">
+                  {{ twoSigFigs(TotalHealthBenefitsValue_low, true)}}
+                </td>
+                <td class="cell-lg text-emphasis">
+                  {{ twoSigFigs(TotalHealthBenefitsValue_high, true) }}
+                </td>
               </tr>
             </tbody>
           </table>
         </div>
         <div class="text-footnote">
-          <p id="note1"><span class="text-bold"><sup>*&nbsp;</sup></span> The Low and High values represent differences
-            in the methods used to estimate some of the health impacts in COBRA. For example, high and low results for
-            avoided premature mortality are based on two different epidemiological studies of the impacts of
-            PM<sub>2.5</sub> on mortality in the United States.</p>
-          <p id="note2"><span class="text-bold"><sup>**</sup></span> Except heart attacks.</p>
+          <p id="note1">&nbsp;&nbsp;<u>Note:</u> Dollar amounts shown are based on 2023 currency values. Additionally, all values have been rounded to 2 significant figures. Please <a href="#export-results">export the results</a> in order to see values prior to rounding.</p>
+          <p id="note2">
+            <span class="text-bold"><sup>*&nbsp;</sup></span> The Low and High
+            values represent differences in the methods used to estimate some of
+            the health impacts in COBRA. For example, high and low results for
+            avoided premature mortality are based on two different
+            epidemiological studies of the impacts of PM<sub>2.5</sub> on
+            mortality in the United States.
+          </p>
+         
+          <!--<p id="note2">
+            <span class="text-bold"><sup>**</sup></span> Except heart attacks.
+          </p>-->
         </div>
       </div>
 
       <h2>B. Map of Health Effects and Air Quality Results</h2>
-      <p>Below is a map showing health effects and air quality data based on your scenario.</p>
+      <p>
+        Below is a map showing health effects and air quality data based on your
+        scenario.
+      </p>
 
       <div class="subpanel">
-        <p class="text-bold font-sans-sm padding-bottom-2">Use the filter below to change the map's data layer. Click on a county on the map to
-          explore the data.</p>
+        <p class="text-bold font-sans-sm padding-bottom-2">
+          Use the filter below to change the map's data layer. Click on a county
+          on the map to explore the data.
+        </p>
 
-        <label class="usa-label" for="maplayer">Select the map's data layer:</label>
-        <select class="usa-select" id="maplayer" name="maplayer" (change)="styleMap(selectedMapLayer.value)"
-          #selectedMapLayer>
-          <option *ngFor="let layer of mapLayerDisplayName; let i = index;" value="{{layer.value}}" [selected]="i==3">
-            {{layer.name}}</option>
+        <label class="usa-label" for="maplayer"
+          >Select the map's data layer:</label
+        >
+        <select
+          class="usa-select"
+          id="maplayer"
+          name="maplayer"
+          (change)="styleMap(selectedMapLayer.value)"
+          #selectedMapLayer
+        >
+          <option
+            *ngFor="let layer of mapLayerDisplayName; let i = index"
+            value="{{ layer.value }}"
+            [selected]="i == 6"
+          >
+            {{ layer.name }}
+          </option>
         </select>
 
         <h2 id="mapTitle">Displaying: Base PM 2.5</h2>
-        <div class="clearfix">
-        </div>
+        <div class="clearfix"></div>
         <div id="map" class="map"></div>
       </div>
     </div>
   </div>
+  
 </div>

@@ -103,7 +103,7 @@
   <form class="subpanel usa-form" id="modify-emissions" #modifyemissions="ngForm"
     (ngSubmit)="addComponentToScenario(modifyemissions)">
     <h3>C. Modify Emissions <span class="usa-tag text-normal">Required</span></h3>
-    <p>Enter emissions changes for <span class="text-bold">at least one</span> of the five pollutants <span
+    <p>Enter emissions changes for <span class="text-bold">at least one</span> of the four pollutants <span
         class="has-tooltip">below.
         <clr-tooltip>
           <clr-icon clrTooltipTrigger shape="info-circle" class="is-solid is-info" size="22"
@@ -119,34 +119,60 @@
 
       <fieldset class="usa-fieldset pollutant" *ngFor="let pollutant of pollutants">
         <legend class="usa-label padding-top-105 margin-top-0">
-          <span [innerHTML]="pollutant.name_sub"></span>
-          <span *ngIf="showBaselines && (pollutant.baseline_rounded_up != null)">
+          <span [innerHTML]="pollutant.name_sub" [ngStyle]="{'color': pollutant.name === 'NH3' ? 'rgba(27, 27, 27, 0.3)' : 'black'}"></span>
+          <span *ngIf="pollutant.name === 'NH3'" class="has-tooltip"
+          >
+          <clr-tooltip>
+            <clr-icon
+              clrTooltipTrigger
+              shape="info-circle"
+              class="is-solid is-info"
+              size="22"
+              aria-label="In the results table, positive numbers indicate annual reductions in the number of cases and the associated costs avoided. Negative numbers signify increases in the number of cases and associated costs accrued."
+            >
+            </clr-icon>
+            <clr-tooltip-content
+              clrPosition="top-right"
+              clrSize="lg"
+              *clrIfOpen
+            >
+              <span
+                >Note that previous versions of COBRA also included ammonia (NH<sub>3</sub>) as an input. The updated air quality model included in COBRA v5.0 does not require NH<sub>3</sub> as an input to estimate changes in PM<sub>2.5</sub> concentrations at this time. See the User's Manual for more details.</span
+              >
+            </clr-tooltip-content>
+          </clr-tooltip>
+        </span>
+          <span *ngIf="showBaselines && (pollutant.baseline_rounded_up != null)" [ngStyle]="{'color': pollutant.name === 'NH3' ? 'rgba(27, 27, 27, 0.3)' : 'black'}">
             (Baseline = {{pollutant.baseline_rounded_up.toLocaleString('en-US', {maximumFractionDigits: 2}) }} tons)
           </span>
         </legend>
         <div class="switch-field">
           <input type="radio" attr.id="{{pollutant.ri_switch_reduce_id}}" [(ngModel)]="pollutant.ri_switch_model"
             attr.title="reduce {{pollutant.name}} by" name="{{pollutant.ri_switch_name}}" value="reduce"
-            (change)="validateEmissionsPanelInput(pollutant.index)" checked />
+            (change)="validateEmissionsPanelInput(pollutant.index)" checked  [attr.disabled]="pollutant.name === 'NH3' ? 'disabled' : null"/>
           <label for="{{pollutant.ri_switch_reduce_id}}">reduce by</label>
           <input type="radio" attr.id="{{pollutant.ri_switch_increase_id}}" [(ngModel)]="pollutant.ri_switch_model"
             attr.title="increase {{pollutant.name}} by" name="{{pollutant.ri_switch_name}}" value="increase"
-            (change)="validateEmissionsPanelInput(pollutant.index)" />
+            (change)="validateEmissionsPanelInput(pollutant.index)" [attr.disabled]="pollutant.name === 'NH3' ? 'disabled' : null"/>
           <label for="{{pollutant.ri_switch_increase_id}}">increase by</label>
         </div>
-        <input attr.aria-label="{{pollutant.name}} input" attr.aria-describedby="{{pollutant.name}}"
-          placeholder="enter #" class="usa-input usa-input--inline display-inline-block" name="{{pollutant.input_name}}"
-          [(ngModel)]="pollutant.input_model" type="text" min="0" step="0.01" pattern="^[0-9]+(\.[0-9]{1,10})?$"
-          (input)="validateEmissionsPanelInput(pollutant.index)" (input)="activateDeactivateAddToScenarioButton()">
-        <div class="usa-radio display-inline-block margin-top-1">
-          <input class="usa-radio__input" type="radio" attr.id="{{pollutant.pt_switch_tons_id}}"
-            [(ngModel)]="pollutant.pt_switch_model" name="{{pollutant.pt_switch_name}}" value="tons"
-            (change)="validateEmissionsPanelInput(pollutant.index)" checked />
-          <label class="usa-radio__label units" for="{{pollutant.pt_switch_tons_id}}">tons</label>
-          <input class="usa-radio__input" type="radio" attr.id="{{pollutant.pt_switch_percent_id}}"
-            [(ngModel)]="pollutant.pt_switch_model" name="{{pollutant.pt_switch_name}}" value="percent"
-            (change)="validateEmissionsPanelInput(pollutant.index)" />
-          <label class="usa-radio__label units" for="{{pollutant.pt_switch_percent_id}}">percent</label>
+        <div>
+          <input attr.aria-label="{{pollutant.name}} input" attr.aria-describedby="{{pollutant.name}}"
+            placeholder="enter #" class="usa-input usa-input--inline display-inline-block" name="{{pollutant.input_name}}"
+            [(ngModel)]="pollutant.input_model" type="text" min="0" step="0.01" pattern="^[0-9]+(\.[0-9]{1,10})?$"
+            (input)="validateEmissionsPanelInput(pollutant.index)" (input)="activateDeactivateAddToScenarioButton()" [attr.disabled]="pollutant.name === 'NH3' ? 'disabled' : null">
+          <div class="usa-radio display-inline-block margin-left-105" >
+            <input class="usa-radio__input" type="radio" attr.id="{{pollutant.pt_switch_tons_id}}"
+              [(ngModel)]="pollutant.name === 'NH3' ? null : pollutant.pt_switch_model" name="{{pollutant.pt_switch_name}}" value="tons"
+              (change)="validateEmissionsPanelInput(pollutant.index)" checked [attr.disabled]="pollutant.name === 'NH3' ? 'disabled' : null"/>
+            <label class="usa-radio__label units radio-btn__label text-middle" for="{{pollutant.pt_switch_tons_id}}">tons</label>
+          </div>
+          <div class="usa-radio display-inline-block margin-top-1 margin-left-105">
+            <input class="usa-radio__input" type="radio" attr.id="{{pollutant.pt_switch_percent_id}}"
+              [(ngModel)]="pollutant.pt_switch_model" name="{{pollutant.pt_switch_name}}" value="percent"
+              (change)="validateEmissionsPanelInput(pollutant.index)" [attr.disabled]="pollutant.name === 'NH3' ? 'disabled' : null"/>
+            <label class="usa-radio__label units radio-btn__label text-middle" for="{{pollutant.pt_switch_percent_id}}">percent</label>
+          </div>
         </div>
         <span attr.id="{{pollutant.name}}" class="usa-error-message"
           *ngIf="showErrorNotNumber[pollutant.index]">{{error_notnumber}}</span>

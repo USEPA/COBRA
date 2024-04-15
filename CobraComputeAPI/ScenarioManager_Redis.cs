@@ -3,8 +3,9 @@ using CobraCompute;
 using Minio;
 using Minio.DataModel;
 using Minio.Exceptions;
+using Newtonsoft.Json;
 using ProtoBuf.Data;
-using ServiceStack.Redis;
+using StackExchange.Redis;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -21,7 +22,8 @@ namespace CobraComputeAPI
 
         private MemoryStream GlobalEmissionsInventory;
 
-        private IRedisClient redis;
+        private ConnectionMultiplexer redis;
+        private IDatabase db;
 
         private MinioClient minioClient;
         private S3Config s3Config;
@@ -32,18 +34,12 @@ namespace CobraComputeAPI
             GlobalEmissionsInventory = new MemoryStream();
             DataSerializer.Serialize(GlobalEmissionsInventory, Inventory);
 
-            RedisManagerPool redisManager;
 
-            if (redisOptions.URI != null && redisOptions.URI != "")
-            {
-                redisManager = new RedisManagerPool(redisOptions.URI);
-            }
-            else
-            {
-                redisManager = new RedisManagerPool(redisOptions.Host + ":6379?" + redisOptions.DB + "=2"); //arbitrary db2 for scenarios
-            }
+            string configString = redisOptions.URI;
+            var options = ConfigurationOptions.Parse(configString);
 
-            redis = redisManager.GetClient();
+            ConnectionMultiplexer redis = ConnectionMultiplexer.Connect(options);
+            db = redis.GetDatabase();
 
             this.minioClient = _minioClient;
             this.s3Config = _s3Config;
@@ -85,7 +81,7 @@ namespace CobraComputeAPI
                 String objectname = sessionid + "." + type;
                 buffer.Position = 0;
 
-                await minioClient.PutObjectAsync(s3Config.bucket, objectname,buffer,buffer.Length);
+                await minioClient.PutObjectAsync(s3Config.bucket, objectname, buffer, buffer.Length);
 
             }
             catch (MinioException e)
@@ -126,17 +122,30 @@ namespace CobraComputeAPI
 
         public UserScenario retrieve(Guid token)
         {
-            UserScenario scenario = null;
-            var redisScenario = redis.As<UserScenario>();
-            if (redisScenario.ContainsKey(token.ToString()))
+            UserScenario scenario = new UserScenario();
+            UserScenarioCore scenario_inredis = null;
+
+            string json = db.StringGet(token.ToString());
+
+
+            if (json != null && json != "")
             {
-                scenario = redisScenario.GetValue(token.ToString());
+                //transfer to main object
+                scenario_inredis = JsonConvert.DeserializeObject<UserScenarioCore>(json);
+                scenario.Id = scenario_inredis.Id;
+                scenario.createdOn = scenario_inredis.createdOn;
+                scenario.isDirty = scenario_inredis.isDirty;
+                scenario.isEmissionsDataDirty = scenario_inredis.isEmissionsDataDirty;
+                scenario.Year = scenario_inredis.Year;
+                scenario.queueSubmission = scenario_inredis.queueSubmission;
+
                 // Deserialize DataTable
-                MemoryStream buffer_emissions = getBufferFromS3("emissions",token.ToString());
+                MemoryStream buffer_emissions = getBufferFromS3("emissions", token.ToString());
                 scenario.EmissionsData = DataSerializer.DeserializeDataTable(buffer_emissions);
                 buffer_emissions = null;
                 // Deserialize Impacts
-                if ( probeS3Object("impacts",token.ToString()).Result ) { 
+                if (probeS3Object("impacts", token.ToString()).Result)
+                {
                     var ceras = new CerasSerializer();
                     MemoryStream buffer_c = getBufferFromS3("impacts", token.ToString());
                     scenario.Impacts = ceras.Deserialize<List<Cobra_ResultDetail>>(buffer_c.ToArray());
@@ -159,8 +168,10 @@ namespace CobraComputeAPI
             MemoryStream bufferEmissions = new MemoryStream();
             MemoryStream bufferImpacts = null;
 
-            var redisScenario = redis.As<UserScenario>();
-            if (redisScenario.ContainsKey(value.Id.ToString()))
+            UserScenarioCore scenario_inredis = null;
+
+            string json = db.StringGet(value.Id.ToString());
+            if (json != null && json != "")
             {
                 // Serialize DataTable to a buffer
                 if (value.EmissionsData != null)
@@ -177,7 +188,17 @@ namespace CobraComputeAPI
                     ceras = null;
                 }
                 //save, possibly conditional
-                redisScenario.SetValue(value.Id.ToString(), value, redisCachingDuration);
+                scenario_inredis = new UserScenarioCore();
+                scenario_inredis.createdOn = value.createdOn;
+                scenario_inredis.isDirty = value.isDirty;
+                scenario_inredis.isEmissionsDataDirty = value.isEmissionsDataDirty;
+                scenario_inredis.Year = value.Year;
+                scenario_inredis.Id = value.Id;
+                scenario_inredis.queueSubmission = value.queueSubmission;
+
+                json = JsonConvert.SerializeObject(scenario_inredis);
+                db.StringSet(scenario_inredis.Id.ToString(), json);
+
                 putBufferToS3("emissions", value.Id.ToString(), bufferEmissions);
                 if (bufferImpacts != null)
                 {
@@ -197,44 +218,41 @@ namespace CobraComputeAPI
         {
             Guid token;
 
-            lock (redis)
+            bool go_on = false;
+            int attemp = 0;
+            //repeat until works
+            do
             {
-                bool go_on = false;
-                int attemp = 0;
-                //repeat until works
-                do
+                attemp++;
+                token = Guid.NewGuid();
+                try
                 {
-                    attemp++;
-                    token = Guid.NewGuid();
-                    try
-                    {
-                        go_on = !redis.ContainsKey(token.ToString());
+                    go_on = !db.KeyExists(token.ToString());
 
-                    }
-                    catch (Exception)
+                }
+                catch (Exception)
+                {
+                    if (attemp >= 3)
                     {
-                        if (attemp >= 3)
-                        {
-                            throw new System.ArgumentException("REDIS fails key check.");
-                        }
-                        System.Threading.Thread.Sleep(50);
+                        throw new System.ArgumentException("REDIS fails key check.");
                     }
-                } while (!go_on);
-            }
+                    System.Threading.Thread.Sleep(50);
+                }
+            } while (!go_on);
 
-            UserScenario scenario = new UserScenario()
+            UserScenarioCore scenario = new UserScenarioCore()
             {
                 Id = token,
                 Year = 2025,
                 createdOn = DateTime.Now,
-                isEmissionsDataDirty = false
+                isEmissionsDataDirty = false,
             };
-
-            var redisScenario = redis.As<UserScenario>();
-
             scenario.isDirty = true;
 
-            redisScenario.SetValue(token.ToString(), scenario, redisCachingDuration);
+            string json = JsonConvert.SerializeObject(scenario);
+            db.StringSet(scenario.Id.ToString(), json);
+
+
             putBufferToS3("emissions", token.ToString(), this.GlobalEmissionsInventory);
 
             scenario = null;
@@ -246,19 +264,18 @@ namespace CobraComputeAPI
         {
             this.deleteUserScenario(token);
 
-            UserScenario scenario = new UserScenario()
+            UserScenarioCore scenario = new UserScenarioCore()
             {
                 Id = token,
                 Year = 2025,
                 createdOn = DateTime.Now,
                 isEmissionsDataDirty = false
             };
-
-            var redisScenario = redis.As<UserScenario>();
-
             scenario.isDirty = true;
 
-            redisScenario.SetValue(token.ToString(), scenario, redisCachingDuration);
+            string json = JsonConvert.SerializeObject(scenario);
+            db.StringSet(scenario.Id.ToString(), json);
+
             putBufferToS3("emissions", scenario.Id.ToString(), this.GlobalEmissionsInventory);
 
             return token;
@@ -268,13 +285,18 @@ namespace CobraComputeAPI
         public Guid renewUserScenario(Guid token)
         {
             Guid result = token;
+            UserScenarioCore scenario_inredis;
 
-            var redisScenario = redis.As<UserScenario>();
-            if (redisScenario.ContainsKey(token.ToString()))
+            string json = db.StringGet(token.ToString());
+
+
+            if (json != null && json != "")
             {
-                UserScenario scenario = redisScenario.GetValue(token.ToString());
-                scenario.createdOn = DateTime.Now;
-                redisScenario.SetValue(result.ToString(), scenario, redisCachingDuration);
+                //transfer to main object
+                scenario_inredis = JsonConvert.DeserializeObject<UserScenarioCore>(json);
+                scenario_inredis.createdOn = DateTime.Now;
+                json = JsonConvert.SerializeObject(scenario_inredis);
+                db.StringSet(scenario_inredis.Id.ToString(), json);
             }
             else
             {
@@ -285,8 +307,8 @@ namespace CobraComputeAPI
 
         public void deleteUserScenario(Guid token)
         {
-            redis.Remove(token.ToString());
-            
+            db.KeyDelete(token.ToString());
+
             if (probeS3Object("emissions", token.ToString()).Result)
             {
                 deleteS3Object("emissions", token.ToString());
@@ -316,11 +338,12 @@ namespace CobraComputeAPI
                             () => Console.WriteLine("OnComplete: {0}"));
 
                     observable.Wait();
-                    
-                    foreach (var item in bucketKeys)
+
+                    try
                     {
-                        try
+                        foreach (var item in bucketKeys)
                         {
+
                             string ext = Path.GetExtension(item);
                             if (ext != null)
                             {
@@ -328,36 +351,45 @@ namespace CobraComputeAPI
                                 {
                                     //try to get redis scenario
                                     String token = Path.GetFileNameWithoutExtension(item);
-                                    var redisScenario = redis.As<UserScenario>();
                                     //not found easy - remove file;
-                                    if (!redisScenario.ContainsKey(token))
+
+                                    if (!db.KeyExists(token))
                                     {
-                                        if (probeS3Object(ext.Remove(0,1), token).Result)
+                                        if (probeS3Object(ext.Remove(0, 1), token).Result)
                                         {
                                             deleteS3Object(ext.Remove(0, 1), token);
                                         }
-                                    } else {
+                                    }
+                                    else
+                                    {
                                         //check if expired but still in cache
-                                        UserScenario scenario = redisScenario.GetValue(token);
-                                        TimeSpan duration = DateTime.Now - scenario.createdOn;
-                                        if (duration.TotalHours > 24)
+                                        string json = db.StringGet(token);
+                                        if (json != null && json != "")
                                         {
-                                            //old, issue with redis cache, delete
-                                            try
+                                            //transfer to main object
+                                            UserScenarioCore scenario = JsonConvert.DeserializeObject<UserScenarioCore>(json);
+                                            TimeSpan duration = DateTime.Now - scenario.createdOn;
+                                            if (duration.TotalHours > 24)
                                             {
-                                                deleteUserScenario(new Guid(token));
-                                            } catch (Exception exe)
-                                            {
+                                                //old, issue with redis cache, delete
+                                                try
+                                                {
+                                                    deleteUserScenario(new Guid(token));
+                                                }
+                                                catch (Exception exe)
+                                                {
 
+                                                }
                                             }
                                         }
                                     }
                                 }
                             }
                         }
-                        catch (Exception ex)
-                        {
-                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        //just ignoring the exception, bucketkeys can become inconsistent with redis state due timing, follow up iteration will take care of this
                     }
                 }
             }
@@ -367,7 +399,7 @@ namespace CobraComputeAPI
 
         }
 
-        
+
 
     }
 }

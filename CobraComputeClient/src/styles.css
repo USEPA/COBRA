@@ -1,0 +1,186 @@
+/* You can add global styles to this file, and also import other style files */
+
+body {
+	width: 1000px;
+    margin: 0 auto !important;
+    font-family: 'Roboto', Arial, sans-serif;
+}
+
+.margTop {
+    margin-top: 0.8rem;
+}
+
+h5 {
+	font-size: 1.2em;
+    margin: 0;
+    color: #4a1d6b;
+}
+
+p {
+    margin-top: 0.8rem;
+}
+
+button {
+	background-color: #662f8d;
+    color: #FFFFFF;
+    border: none;
+    font-weight: 500;
+    padding: 8px 15px;
+    cursor: pointer;
+}
+
+.btn {
+    font-size: 0.8rem;
+    font-weight: 500;
+}
+
+.btn-outline-primary {
+    color: #FFFFFF;
+    border: 2px solid #8559A6;
+    background-color: #8559A6;
+    background-image: none;
+}
+
+.btn-outline-primary:hover, .btn-outline-primary:not(:disabled):not(.disabled).active, .btn-outline-primary:not(:disabled):not(.disabled):active, .show>.btn-outline-primary.dropdown-toggle {
+    color: #FFFFFF;
+    background-color: #662F8D;
+    border: 2px solid #662F8D;
+    background-image: none;
+}
+
+.btn-secondary {
+    color: #fff;
+    background-color: #aaaaaa;
+    border-color: #aaaaaa;
+}
+
+.k-button {
+    margin-right: 10px;
+    font-size: 13px;
+}
+
+label {
+    margin-bottom: initial;
+}
+
+.content {
+    margin: auto !important;
+}
+
+.main-section[_ngcontent-c0] img {
+    margin-bottom: 20px;
+}
+
+.main-section[_ngcontent-c1] {
+    margin: initial !important;
+}
+
+.main-section[_ngcontent-c0] {
+    margin: 0 !important;
+}
+
+.k-panelbar>.k-item>.k-link.k-state-selected {
+	color: #FFFFFF;
+    background-color: #18b580;
+}
+
+.k-panelbar>.k-item.k-state-active>.k-link, .k-panelbar>.k-item.k-state-expanded>.k-link {
+    color: #FFFFFF;
+    background-color: #18b580;
+    font-weight: 600;
+}
+
+.k-panelbar>.k-item.k-state-active>.k-link, .k-panelbar>.k-item.k-state-expanded>.k-link .k-icon {
+    color: #FFFFFF;
+}
+
+.k-panelbar>.k-item>.k-link.k-state-selected:hover, .k-panelbar>.k-item>.k-link.k-state-selected.k-state-hover {
+    background-color: #028251;
+}
+
+.k-panelbar>.k-item>.k-link:hover, .k-panelbar>.k-item>.k-link.k-state-hover {
+    color: #FFFFFF;
+    background-color: #028251;
+}
+
+.k-panelbar>.k-item>.k-link:hover .k-icon {
+    color: #FFFFFF;
+}
+
+.k-panelbar>.k-item>.k-link {
+    color: #662F8D;
+    background-color: #EEEEEE;
+    font-weight: 600;
+    font-size: 14px;
+    text-transform: uppercase;
+}
+
+.k-widget ::selection, .k-block ::selection, .k-panel ::selection {
+    background-color: #662F8D;
+}
+
+.k-content {
+	padding: 1px;
+	margin: 0.7em;
+}
+
+.k-widget {
+	font-size: 0.825em;
+}
+
+.k-panelbar {
+	border: none;
+	background-color: transparent;
+}
+
+.k-panelbar>.k-item+.k-item {
+    margin: 5px 0;
+    border: none;
+}
+
+.k-checkbox:checked+.k-checkbox-label::before {
+    border-color: #401b5b;
+    background-color: #662f8d;
+}
+
+.k-checkbox:indeterminate+.k-checkbox-label::after {
+    background-color: #662f8d;
+}
+
+.k-pager-numbers .k-state-selected {
+    color: #FFFFFF !important;
+    background-color: #662f8d;
+}
+
+.k-pager-numbers .k-link {
+    color: #662f8d;
+}
+
+.k-pager-numbers .k-link:hover, .k-pager-numbers .k-link.k-state-hover {
+    color: #18b580;
+}
+
+.k-treeview .k-in {
+    font-size: 14px;
+}
+
+#other-options {
+    margin-left: -30px;
+}
+
+#tier-section {
+    padding: 1em;
+}
+
+#modify-emissions .row {
+    margin-bottom: 12px;
+}
+
+td {
+    padding: 5px 15px;
+    border: 1px solid #ddd;
+}
+
+.resultsTable td:nth-child(2), .resultsTable td:nth-child(3) {
+    text-align: center;
+}

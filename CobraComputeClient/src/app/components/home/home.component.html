@@ -1,0 +1,48 @@
+<div class="grid-container usa-prose">
+  <clr-modal [(clrModalOpen)]="showAppErrorModal" [clrModalClosable]="true" [clrModalStaticBackdrop]="false">
+    <div class="modal-body">
+      <p>The program encountered an error. Please refresh the page and try again.</p>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="usa-button usa-button--secondary" (click)="showAppErrorModal=false">Ok</button>
+    </div>
+  </clr-modal>
+  <div class="clr-row margin-y-5">
+    <div class="clr-col-12 clr-col-md-2 clr-offset-1">
+      <img class="img-headline" src="../assets/images/COBRA_logo_160x180.jpg" alt="COBRA logo" />
+    </div>
+    <div class="headline clr-col-12 clr-col-md-8">
+      <p class="text-headline">
+        CO-Benefits Risk Assessment (COBRA) is a screening tool that enables state, local, and tribal government staff and others interested in the effects of air pollution to estimate the air quality and health benefits of different emissions scenarios.
+      </p>
+      <p class="text-italic margin-top-2">You are using the web-based version of COBRA. For the COBRA desktop application, visit the
+        <a href="https://www.epa.gov/cobra/download-cobra">COBRA download page</a>.</p>
+    </div>
+  </div>
+  <div class="clr-row">
+    <div class="clr-col-12 clr-col-lg-4 margin-bottom-205">
+      <app-emissionspanel #emissionscomponent
+        (emissionspanelToReviewpanelDataSourceEmitter)="reviewcomponent.updateDataSource($event)"
+        (emissionspanelToReviewpanelEmitter)="reviewcomponent.addNewComponent($event)"
+        (emissionspanelToResultspanelEmitter)="resultscomponent.receiveStateClrStructure($event)">
+      </app-emissionspanel>
+    </div>
+    <div class="clr-col-12 clr-col-lg-8">
+      <app-reviewpanel #reviewcomponent
+        (reviewpanelToResultspanelPendingScreenEmitter)="resultscomponent.showPendingScreen($event)"
+        (reviewpanelToResultspanelHeartbeatEmitter)="resultscomponent.showHeartbeatAnimation($event)"
+        (reviewpanelToResultspanelGetResultsEmitter)="resultscomponent.receiveDiscountRateAndGetResults($event)"
+        (reviewpanelToEmissionspanelRemovedComponentEmitter)="emissionscomponent.removeComponentFromReviewPanelComponentsArray($event)"
+        (reviewpanelToResultspanelRemovedAllComponentsEmitter)="resultscomponent.updateResultsPanelAfterAllComponentsRemoved($event)"
+        (reviewpanelToEmissionspanelClearPanelEmitter)="emissionscomponent.clearEmissionsPanel($event)">
+      </app-reviewpanel>
+      <div class="margin-y-205">
+        <app-resultspanel #resultscomponent
+          (resultspanelToEmissionspanelBuildNewScenarioEmitter)="emissionscomponent.resetEmissionsPanel($event)"
+          (resultspanelToReviewpanelBuildNewScenarioEmitter)="reviewcomponent.resetReviewPanel($event)"
+          (resultspanelToReviewpanelRetrievedResultsEmitter)="reviewcomponent.showEditHelpThree($event)">
+        </app-resultspanel>
+      </div>
+    </div>
+  </div>
+</div>

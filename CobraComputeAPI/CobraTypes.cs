@@ -7,9 +7,6 @@ namespace CobraCompute
 {
     public class RedisConfig
     {
-        public string Host { get; set; }
-        public int DB { get; set; }
-        public int Port { get; set; }
         public string URI { get; set; }
     }
 
@@ -43,7 +40,7 @@ namespace CobraCompute
         public int? TIER1 { get; set; }
         public int? TIER2 { get; set; }
         public int? TIER3 { get; set; }
-        public double? NO2 { get; set; }
+        public double? NOx { get; set; }
         public double? SO2 { get; set; }
         public double? NH3 { get; set; }
         public double SOA { get; set; }
@@ -61,7 +58,7 @@ namespace CobraCompute
         public int TIER1 { get; set; }
         public int TIER2 { get; set; }
         public int TIER3 { get; set; }
-        public double NO2 { get; set; }
+        public double NOx { get; set; }
         public double SO2 { get; set; }
         public double NH3 { get; set; }
         public double SOA { get; set; }
@@ -75,19 +72,29 @@ namespace CobraCompute
         public int typeindx { get; set; }
         public int sourceindx { get; set; }
         public int destindx { get; set; }
-        public double? tx_dp { get; set; }
-        public double? tx_no2 { get; set; }
-        public double? tx_so2 { get; set; }
-        public double? tx_nh3 { get; set; }
+        public double? c_PM25 { get; set; }
+        public double? c_NO3 { get; set; }
+        public double? c_SO4 { get; set; }
+        //public double? tx_nh3 { get; set; }
+
+        public double? c_O3V { get; set; }
+        public double? c_O3N { get; set; }
+
     }
 
-    public class UserScenario
+    public class UserScenarioCore
     {
         public DateTime createdOn { get; set; }
         public bool isDirty { get; set; }
         public bool isEmissionsDataDirty { get; set; }
         public int Year { get; set; }
         public Guid Id { get; set; }
+        public queueSubmission queueSubmission { get; set; }
+    }
+
+
+    public class UserScenario : UserScenarioCore
+    {
         public DataTable EmissionsData;
         public List<Cobra_ResultDetail> Impacts;
 
@@ -103,13 +110,13 @@ namespace CobraCompute
     {
         public long ID { get; set; }
         public Nullable<long> destindx { get; set; }
-        public Nullable<double> BASE_NO2 { get; set; }
+        public Nullable<double> BASE_NOx { get; set; }
         public Nullable<double> BASE_SO2 { get; set; }
         public Nullable<double> BASE_NH3 { get; set; }
         public Nullable<double> BASE_SOA { get; set; }
         public Nullable<double> BASE_PM25 { get; set; }
         public Nullable<double> BASE_VOC { get; set; }
-        public Nullable<double> CTRL_NO2 { get; set; }
+        public Nullable<double> CTRL_NOx { get; set; }
         public Nullable<double> CTRL_SO2 { get; set; }
         public Nullable<double> CTRL_NH3 { get; set; }
         public Nullable<double> CTRL_SOA { get; set; }
@@ -119,6 +126,9 @@ namespace CobraCompute
         public Nullable<double> BASE_FINAL_PM { get; set; }
         public Nullable<double> CTRL_FINAL_PM { get; set; }
         public Nullable<double> DELTA_FINAL_PM { get; set; }
+        public Nullable<double> BASE_FINAL_O3 { get; set; }
+        public Nullable<double> CTRL_FINAL_O3 { get; set; }
+        public Nullable<double> DELTA_FINAL_O3 { get; set; }
     }
     public partial class Cobra_Valuation
     {
@@ -144,8 +154,8 @@ namespace CobraCompute
         public Nullable<long> Cases { get; set; }
         public string HealthEffect { get; set; }
         public string ValuationMethod { get; set; }
-        public Nullable<double> valat3pct { get; set; }
-        public Nullable<double> valat7pct { get; set; }
+        public Nullable<double> Value { get; set; }
+        public string ApplyDiscount { get; set; }
         public string IncidenceEndpoint { get; set; }
     }
     public partial class Cobra_POP
@@ -616,40 +626,107 @@ namespace CobraCompute
         public Nullable<double> BASE_FINAL_PM { get; set; }
         public Nullable<double> CTRL_FINAL_PM { get; set; }
         public Nullable<double> DELTA_FINAL_PM { get; set; }
-        public Nullable<double> Acute_Bronchitis { get; set; }
-        public Nullable<double> Acute_Myocardial_Infarction_Nonfatal__high_ { get; set; }
-        public Nullable<double> Acute_Myocardial_Infarction_Nonfatal__low_ { get; set; }
-        public Nullable<double> Asthma_Exacerbation_Cough { get; set; }
-        public Nullable<double> Asthma_Exacerbation_Shortness_of_Breath { get; set; }
-        public Nullable<double> Asthma_Exacerbation_Wheeze { get; set; }
-        public Nullable<double> Emergency_Room_Visits_Asthma { get; set; }
-        public Nullable<double> HA_All_Cardiovascular__less_Myocardial_Infarctions_ { get; set; }
-        public Nullable<double> HA_All_Respiratory { get; set; }
-        public Nullable<double> HA_Asthma { get; set; }
-        public Nullable<double> HA_Chronic_Lung_Disease { get; set; }
-        public Nullable<double> Lower_Respiratory_Symptoms { get; set; }
-        public Nullable<double> Minor_Restricted_Activity_Days { get; set; }
-        public Nullable<double> Mortality_All_Cause__low_ { get; set; }
-        public Nullable<double> Mortality_All_Cause__high_ { get; set; }
-        public Nullable<double> Infant_Mortality { get; set; }
-        public Nullable<double> Upper_Respiratory_Symptoms { get; set; }
-        public Nullable<double> Work_Loss_Days { get; set; }
+        public Nullable<double> BASE_FINAL_O3 { get; set; }
+        public Nullable<double> CTRL_FINAL_O3 { get; set; }
+        public Nullable<double> DELTA_FINAL_O3 { get; set; }
+
+
+
+        public Nullable<double> PM_HA_All_Respiratory { get; set; }
+
+        public Nullable<double> PM_Acute_Myocardial_Infarction_Nonfatal { get; set; }
+
+        public Nullable<double> PM_Minor_Restricted_Activity_Days { get; set; }
+
+        public Nullable<double> PM_Mortality_All_Cause__low_ { get; set; }
+        public Nullable<double> PM_Mortality_All_Cause__high_ { get; set; }
+
+        public Nullable<double> PM_Infant_Mortality { get; set; }
+
+        public Nullable<double> PM_Work_Loss_Days { get; set; }
+
+        public Nullable<double> PM_Incidence_Lung_Cancer { get; set; }
+
+        public Nullable<double> PM_Incidence_Hay_Fever_Rhinitis { get; set; }
+        public Nullable<double> PM_Incidence_Asthma { get; set; }
+
+        public Nullable<double> PM_HA_Cardio_Cerebro_and_Peripheral_Vascular_Disease { get; set; }
+        public Nullable<double> PM_HA_Alzheimers_Disease { get; set; }
+        public Nullable<double> PM_HA_Parkinsons_Disease { get; set; }
+        public Nullable<double> PM_Incidence_Stroke { get; set; }
+
+        public Nullable<double> PM_Incidence_Out_of_Hospital_Cardiac_Arrest { get; set; }
+
+        public Nullable<double> PM_Asthma_Symptoms_Albuterol_use { get; set; }
+
+        public Nullable<double> PM_HA_Respiratory2 { get; set; }
+
+
+        public Nullable<double> PM_ER_visits_respiratory { get; set; }
+        public Nullable<double> PM_ER_visits_All_Cardiac_Outcomes { get; set; }
+        public Nullable<double> O3_ER_visits_respiratory { get; set; }
+        public Nullable<double> O3_HA_All_Respiratory { get; set; }
+        public Nullable<double> O3_Incidence_Hay_Fever_Rhinitis { get; set; }
+        public Nullable<double> O3_Incidence_Asthma { get; set; }
+        public Nullable<double> O3_Asthma_Symptoms_Chest_Tightness { get; set; }
+        public Nullable<double> O3_Asthma_Symptoms_Cough { get; set; }
+        public Nullable<double> O3_Asthma_Symptoms_Shortness_of_Breath { get; set; }
+        public Nullable<double> O3_Asthma_Symptoms_Wheeze { get; set; }
+
+        public Nullable<double> O3_ER_Visits_Asthma { get; set; }
+        public Nullable<double> O3_School_Loss_Days { get; set; }
+        public Nullable<double> O3_Mortality_Longterm_exposure { get; set; }
+        public Nullable<double> O3_Mortality_Shortterm_exposure { get; set; }
+
+
+        public Nullable<double> C__PM_Acute_Myocardial_Infarction_Nonfatal { get; set; }
+        public Nullable<double> C__PM_Resp_Hosp_Adm { get; set; }
+        public Nullable<double> C__PM_Minor_Restricted_Activity_Days { get; set; }
+        public Nullable<double> C__PM_Mortality_All_Cause__low_ { get; set; }
+        public Nullable<double> C__PM_Mortality_All_Cause__high_ { get; set; }
+
+
+        public Nullable<double> C__PM_Infant_Mortality { get; set; }
+        public Nullable<double> C__PM_Work_Loss_Days { get; set; }
+        public Nullable<double> C__PM_Incidence_Lung_Cancer { get; set; }
+        public Nullable<double> C__PM_Incidence_Hay_Fever_Rhinitis { get; set; }
+
+        public Nullable<double> C__PM_Incidence_Asthma { get; set; }
+        public Nullable<double> C__PM_HA_Cardio_Cerebro_and_Peripheral_Vascular_Disease { get; set; }
+        public Nullable<double> C__PM_HA_Alzheimers_Disease { get; set; }
+        public Nullable<double> C__PM_HA_Parkinsons_Disease { get; set; }
+        public Nullable<double> C__PM_Incidence_Stroke { get; set; }
+        public Nullable<double> C__PM_Incidence_Out_of_Hospital_Cardiac_Arrest { get; set; }
+        public Nullable<double> C__PM_Asthma_Symptoms_Albuterol_use { get; set; }
+        public Nullable<double> C__PM_HA_Respiratory2 { get; set; }
+        public Nullable<double> C__PM_ER_visits_respiratory { get; set; }
+
+        public Nullable<double> C__PM_ER_visits_All_Cardiac_Outcomes { get; set; }
+        public Nullable<double> C__O3_ER_visits_respiratory { get; set; }
+
+
+        public Nullable<double> C__O3_HA_All_Respiratory { get; set; }
+        public Nullable<double> C__O3_Incidence_Hay_Fever_Rhinitis { get; set; }
+        public Nullable<double> C__O3_Incidence_Asthma { get; set; }
+        public Nullable<double> C__O3_Asthma_Symptoms_Chest_Tightness { get; set; }
+        public Nullable<double> C__O3_Asthma_Symptoms_Cough { get; set; }
+
+        public Nullable<double> C__O3_Asthma_Symptoms_Shortness_of_Breath { get; set; }
+        public Nullable<double> C__O3_Asthma_Symptoms_Wheeze { get; set; }
+
+
+        public Nullable<double> C__O3_ER_Visits_Asthma { get; set; }
+        public Nullable<double> C__O3_School_Loss_Days { get; set; }
+        public Nullable<double> C__O3_Mortality_Longterm_exposure { get; set; }
+        public Nullable<double> C__O3_Mortality_Shortterm_exposure { get; set; }
+
+        /* from old cobra */
         public Nullable<double> C__Total_Health_Benefits_Low_Value { get; set; }
         public Nullable<double> C__Total_Health_Benefits_High_Value { get; set; }
-        public Nullable<double> C__Acute_Bronchitis { get; set; }
-        public Nullable<double> C__Acute_Myocardial_Infarction_Nonfatal__high_ { get; set; }
-        public Nullable<double> C__Acute_Myocardial_Infarction_Nonfatal__low_ { get; set; }
-        public Nullable<double> C__Asthma_Exacerbation { get; set; }
-        public Nullable<double> C__Emergency_Room_Visits_Asthma { get; set; }
-        public Nullable<double> C__CVD_Hosp_Adm { get; set; }
-        public Nullable<double> C__Resp_Hosp_Adm { get; set; }
-        public Nullable<double> C__Lower_Respiratory_Symptoms { get; set; }
-        public Nullable<double> C__Minor_Restricted_Activity_Days { get; set; }
-        public Nullable<double> C__Mortality_All_Cause__low_ { get; set; }
-        public Nullable<double> C__Mortality_All_Cause__high_ { get; set; }
-        public Nullable<double> C__Infant_Mortality { get; set; }
-        public Nullable<double> C__Upper_Respiratory_Symptoms { get; set; }
-        public Nullable<double> C__Work_Loss_Days { get; set; }
+
+        public Nullable<double> C__Total_PM_Low_Value { get; set; }
+        public Nullable<double> C__Total_PM_High_Value { get; set; }
+        public Nullable<double> C__Total_O3_Value { get; set; }
         public string FIPS { get; set; }
         public string STATE { get; set; }
         public string COUNTY { get; set; }
@@ -658,39 +735,149 @@ namespace CobraCompute
     {
         public double TotalHealthBenefitsValue_low { get; set; }
         public double TotalHealthBenefitsValue_high { get; set; }
-        public double Acute_Bronchitis { get; set; }
-        public double Acute_Myocardial_Infarction_Nonfatal__high_ { get; set; }
-        public double Acute_Myocardial_Infarction_Nonfatal__low_ { get; set; }
-        public double Asthma_Exacerbation_Cough { get; set; }
-        public double Asthma_Exacerbation_Shortness_of_Breath { get; set; }
-        public double Asthma_Exacerbation_Wheeze { get; set; }
-        public double Emergency_Room_Visits_Asthma { get; set; }
-        public double HA_All_Cardiovascular__less_Myocardial_Infarctions_ { get; set; }
-        public double HA_All_Respiratory { get; set; }
-        public double HA_Asthma { get; set; }
-        public double HA_Chronic_Lung_Disease { get; set; }
-        public double Lower_Respiratory_Symptoms { get; set; }
-        public double Minor_Restricted_Activity_Days { get; set; }
-        public double Mortality_All_Cause__low_ { get; set; }
-        public double Mortality_All_Cause__high_ { get; set; }
-        public double Infant_Mortality { get; set; }
-        public double Upper_Respiratory_Symptoms { get; set; }
-        public double Work_Loss_Days { get; set; }
-        public double C__Acute_Bronchitis { get; set; }
-        public double C__Acute_Myocardial_Infarction_Nonfatal__high_ { get; set; }
-        public double C__Acute_Myocardial_Infarction_Nonfatal__low_ { get; set; }
-        public double C__Asthma_Exacerbation { get; set; }
-        public double C__Emergency_Room_Visits_Asthma { get; set; }
-        public double C__CVD_Hosp_Adm { get; set; }
-        public double C__Resp_Hosp_Adm { get; set; }
-        public double C__Lower_Respiratory_Symptoms { get; set; }
-        public double C__Minor_Restricted_Activity_Days { get; set; }
+        public double TotalPMValue_low { get; set; }
+        public double TotalPMValue_high { get; set; }
+        public double TotalO3Value { get; set; }
+
+        public double TotalPM_low { get; set; }
+        public double TotalPM_high { get; set; }
+        public double TotalO3 { get; set; }
+
+        public double Mortality_All_Cause__low_ { get; set; } //PM low + O3 short and longterm exposure
         public double C__Mortality_All_Cause__low_ { get; set; }
+
+        public double Mortality_All_Cause__high_ { get; set; } //PM high + O3 short and longterm exposure
         public double C__Mortality_All_Cause__high_ { get; set; }
+
+
+        /****** MORTALITY BREAKDOWN ****/
+        public double PM_Mortality_All_Cause__high_ { get; set; } //PM high + O3 short and longterm exposure
+        public double C__PM_Mortality_All_Cause__high_ { get; set; }
+        public double PM_Mortality_All_Cause__low_ { get; set; } //PM high + O3 short and longterm exposure
+        public double C__PM_Mortality_All_Cause__low_ { get; set; }
+
+        public double O3_Mortality_Longterm_exposure { get; set; }
+        public double O3_Mortality_Shortterm_exposure { get; set; }
+        public double C__O3_Mortality_Longterm_exposure { get; set; }
+        public double C__O3_Mortality_Shortterm_exposure { get; set; }
+        /****** END MORTALITY BREAKDOWN ****/
+
+
+
+        //summary of grouped together health effects (if possible)
+        public double Acute_Myocardial_Infarction_Nonfatal { get; set; } //PM Only
+        public double C__Acute_Myocardial_Infarction_Nonfatal { get; set; }
+
+        public double ER_Visits_Asthma { get; set; } //O3 Only
+        public double C__ER_Visits_Asthma { get; set; }
+
+        public double HA_All_Respiratory { get; set; } //PM +O3 + currently plan to group with PM_HA Respiratory2 in this summary
+        public double C__HA_All_Respiratory { get; set; } //$ for ha all respiratory
+
+        /****************************** HA ALL RESP BREAKDOWN *********************/
+        public double PM_HA_All_Respiratory { get; set; }
+        public double C__PM_HA_All_Respiratory { get; set; }
+        public double O3_HA_All_Respiratory { get; set; }
+        public double C__O3_HA_All_Respiratory { get; set; }
+        /****************************** End HA ALL RESP BREAKDOWN *********************/
+
+        public double Minor_Restricted_Activity_Days { get; set; } //PM Only
+        public double C__Minor_Restricted_Activity_Days { get; set; }
+
+
+
+
+        public double Infant_Mortality { get; set; } //PM Only
         public double C__Infant_Mortality { get; set; }
-        public double C__Upper_Respiratory_Symptoms { get; set; }
+        public double Incidence_Lung_Cancer { get; set; } //PM Only
+        public double C__Incidence_Lung_Cancer { get; set; } //PM Only
+
+        public double HA_Cardio_Cerebro_and_Peripheral_Vascular_Disease { get; set; } //PM Only
+        public double C__HA_Cardio_Cerebro_and_Peripheral_Vascular_Disease { get; set; }
+
+
+        public double HA_Alzheimers_Disease { get; set; } //PM Only
+        public double C__HA_Alzheimers_Disease { get; set; } //PM Only
+
+
+        public double HA_Parkinsons_Disease { get; set; } //PM Only
+        public double C__HA_Parkinsons_Disease { get; set; } //PM Only
+
+        public double Incidence_Stroke { get; set; } //PM Only
+        public double C__Incidence_Stroke { get; set; } //PM Only
+
+        public double Incidence_Out_of_Hospital_Cardiac_Arrest { get; set; } //PM Only
+        public double C__Incidence_Out_of_Hospital_Cardiac_Arrest { get; set; } //PM Only
+
+        public double Incidence_Asthma { get; set; } //PM + O3
+        public double C__Incidence_Asthma { get; set; }
+        /************************* asthma breakdown ****************************************/
+        public double PM_Incidence_Asthma { get; set; } 
+        public double C__PM_Incidence_Asthma { get; set; }
+        public double O3_Incidence_Asthma { get; set; } 
+        public double C__O3_Incidence_Asthma { get; set; }
+        /***************** asthma breakdown ******************/
+
+        public double Asthma_Symptoms { get; set; } //PM Asthma Sympotms Albuterol + O3 Asthma Symptoms cough + shortness of breath + chest tightness + wheeze
+        public double C__Asthma_Symptoms { get; set; }
+        /*************** asthma symptoms breakdown ************/
+        public double PM_Asthma_Symptoms_Albuterol_use { get; set; }
+        public double O3_Asthma_Symptoms_Chest_Tightness { get; set; }
+        public double O3_Asthma_Symptoms_Cough { get; set; }
+
+        public double O3_Asthma_Symptoms_Shortness_of_Breath { get; set; }
+        public double O3_Asthma_Symptoms_Wheeze { get; set; }
+
+
+        public double C__O3_Asthma_Symptoms_Chest_Tightness { get; set; }
+        public double C__O3_Asthma_Symptoms_Cough { get; set; }
+
+        public double C__O3_Asthma_Symptoms_Shortness_of_Breath { get; set; }
+        public double C__O3_Asthma_Symptoms_Wheeze { get; set; }
+        public double C__PM_Asthma_Symptoms_Albuterol_use { get; set; }
+        /* end asthma symptoms breakdown */
+
+
+        public double Incidence_Hay_Fever_Rhinitis { get; set; } //PM + O3
+        public double C__Incidence_Hay_Fever_Rhinitis { get; set; }
+
+        /************* Hay fever breakdown ******/
+        public double PM_Incidence_Hay_Fever_Rhinitis { get; set; }
+        public double C__PM_Incidence_Hay_Fever_Rhinitis { get; set; }
+        public double O3_Incidence_Hay_Fever_Rhinitis { get; set; }
+        public double C__O3_Incidence_Hay_Fever_Rhinitis { get; set; }
+        /************* End Hay fever breakdown ******/
+
+        public double ER_visits_All_Cardiac_Outcomes { get; set; } //PM Only
+        public double C__ER_visits_All_Cardiac_Outcomes { get; set; } //PM Only
+
+    
+
+        public double ER_visits_respiratory { get; set; } //PM + O3
+        public double C__ER_visits_respiratory { get; set; } //PM + O3
+
+        /************* ER RESP BREAKDOWN ******/
+        public double PM_ER_visits_respiratory { get; set; }
+        public double C__PM_ER_visits_respiratory { get; set; }
+        public double O3_ER_visits_respiratory { get; set; }
+        public double C__O3_ER_visits_respiratory { get; set; }
+        /************* END ER RESP BREAKDOWN ******/
+
+        public double School_Loss_Days { get; set; } //PM Only
+        public double C__School_Loss_Days { get; set; } //O3 Only
+
+
+        public double Work_Loss_Days { get; set; } //PM Only
         public double C__Work_Loss_Days { get; set; }
+
     }
+
+
+
+
+
+
+
     public partial class Cobra_Dict_State
     {
         public long ID { get; set; }
@@ -743,16 +930,18 @@ namespace CobraCompute
 
     public class Emissions
     {
-        public double NO2 { get; set; }
+        public double NOx { get; set; }
         public double SO2 { get; set; }
         public double NH3 { get; set; }
         public double SOA { get; set; }
         public double PM25 { get; set; }
         public double VOC { get; set; }
+        public double O3N { get; set; }
     }
 
     public class EmissionsDataUpdateRequest
     {
+        public string operationalMode { get; set; }
         public EmissionsDataRetrievalRequest spec { get; set; }
         public Emissions payload { get; set; }
     }
@@ -770,9 +959,12 @@ namespace CobraCompute
         public double delta_pm;
         public double base_pm;
         public double control_pm;
+        public double delta_o3;
+        public double base_o3;
+        public double control_o3;
         public Cobra_POP population;
         public Cobra_Incidence[] incidence;
-        public bool valat3;
+        public double discountRate;
     }
 
     public partial class CustomImpactComputeRequest : ImpactComputeRequest
@@ -808,8 +1000,8 @@ namespace CobraCompute
         public Nullable<double> A { get; set; }
         public Nullable<double> B { get; set; }
         public Nullable<double> C { get; set; }
-        public Nullable<double> valat3pct { get; set; }
-        public Nullable<double> valat7pct { get; set; }
+        public Nullable<double> Value { get; set; }
+        public string ApplyDiscount { get; set; }
         public string IncidenceEndpoint { get; set; }
     }
     public class ResetRequest
@@ -817,5 +1009,51 @@ namespace CobraCompute
         public Guid token { get; set; }
     }
 
+    public class UpdatePacket
+    {
+        public double PM25 { get; set; }
+        public double SO2 { get; set; }
+        public double NOx { get; set; }
+        public double NH3 { get; set; }
+        public double VOC { get; set; }
+        public string[] fipscodes { get; set; }
+        public string[] tierselection { get; set; }
+    }
+
+
+    public class QueueElement
+    {
+        public string[] stateCountyBadgesList { get; set; }
+        public string tier1Text { get; set; }
+        public string tier2Text { get; set; }
+        public string tier3Text { get; set; }
+        public string PM25ri { get; set; }
+        public string SO2ri { get; set; }
+        public string NOXri { get; set; }
+        public string NH3ri { get; set; }
+        public string VOCri { get; set; }
+        public string cPM25 { get; set; }
+        public string cSO2 { get; set; }
+        public string cNOX { get; set; }
+        public string cNH3 { get; set; }
+        public string cVOC { get; set; }
+        public string PM25pt { get; set; }
+        public string SO2pt { get; set; }
+        public string NOXpt { get; set; }
+        public string NH3pt { get; set; }
+        public string VOCpt { get; set; }
+        public string[] statetree_items_selected { get; set; }
+        public string[] tiertree_items_selected { get; set; }
+        public UpdatePacket updatePacket { get; set; }
+    }
+
+    public class queueSubmission
+    {
+        public Guid token { get; set; }
+
+        public string Description { get; set; }
+        public QueueElement[] queueElements { get; set; }
+
+    }
 
 }

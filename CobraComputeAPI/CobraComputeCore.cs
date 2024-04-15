@@ -1,18 +1,23 @@
 ﻿using CobraComputeAPI;
 using CsvHelper;
+//using DocumentFormat.OpenXml.Drawing.Charts;
 using FastMember;
 using ICSharpCode.SharpZipLib.Zip;
 using MathNet.Numerics.Data.Text;
+using MathNet.Numerics.Distributions;
 using MathNet.Numerics.LinearAlgebra;
 using Minio;
 using Minio.Exceptions;
 using NCalc;
+using NPOI.SS.Formula.Functions;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Security.Policy;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -20,18 +25,21 @@ namespace CobraCompute
 {
     public class CobraComputeCore
     {
-        
+
         public bool initilized = false;
 
         private string datapath = "";
 
         private Matrix<double>[] SR_dp = new Matrix<double>[4];
-        private Matrix<double>[] SR_no2 = new Matrix<double>[4];
-        private Matrix<double>[] SR_so2 = new Matrix<double>[4];
-        private Matrix<double>[] SR_nh3 = new Matrix<double>[4];
+        private Matrix<double>[] SR_NOx = new Matrix<double>[4];
+        private Matrix<double>[] SR_SO4 = new Matrix<double>[4];
+        //private Matrix<double>[] SR_nh3 = new Matrix<double>[4];
 
-        public DataTable EmissionsInventory;
-        public DataTable SummarizedEmissionsInventory;
+        private Matrix<double>[] SR_O3N = new Matrix<double>[4];
+        private Matrix<double>[] SR_O3V = new Matrix<double>[4];
+
+        public System.Data.DataTable EmissionsInventory;
+        public System.Data.DataTable SummarizedEmissionsInventory;
 
         public ScenarioManager_Redis Scenarios;
         private UserScenario currentscenario;
@@ -49,6 +57,7 @@ namespace CobraCompute
 
         private Vector<double>[] aqbase;
         private Vector<double> pm_base;
+        private Vector<double> o3_base;
 
         public StringBuilder statuslog = new StringBuilder();
 
@@ -69,14 +78,17 @@ namespace CobraCompute
 
 
             statuslog.Append("initializing minio");
-            
+
             try
             {
                 if (s3Config.ssl)
                 {
+                    Console.WriteLine("Creating Minio Client WITH SSL");
                     minioClient = new MinioClient(s3Config.endpoint, s3Config.accessKey, s3Config.secretKey, s3Config.region).WithSSL();
-                } else
+                }
+                else
                 {
+                    Console.WriteLine("Creating Minio Client WITHOUT SSL");
                     minioClient = new MinioClient(s3Config.endpoint, s3Config.accessKey, s3Config.secretKey, s3Config.region);
                 }
             }
@@ -96,7 +108,7 @@ namespace CobraCompute
             EmissionsInventory.Columns.Add("TIER1", typeof(int));
             EmissionsInventory.Columns.Add("TIER2", typeof(int));
             EmissionsInventory.Columns.Add("TIER3", typeof(int));
-            EmissionsInventory.Columns.Add("NO2", typeof(double));
+            EmissionsInventory.Columns.Add("NOx", typeof(double));
             EmissionsInventory.Columns.Add("SO2", typeof(double));
             EmissionsInventory.Columns.Add("NH3", typeof(double));
             EmissionsInventory.Columns.Add("SOA", typeof(double));
@@ -183,7 +195,7 @@ namespace CobraCompute
 
         public string version()
         {
-            return "V1.2";
+            return "V1.3";
         }
 
         public static void ToCSV(DataTable dtDataTable, string strFilePath)
@@ -228,8 +240,9 @@ namespace CobraCompute
 
         public bool initialize(string path = "data/")
         {
+            Console.WriteLine("beginning initialize");
             statuslog.Append("beginning initialization " + path);
-            
+
             if (this.initilized) { return true; };
 
             bool result = true;
@@ -238,6 +251,7 @@ namespace CobraCompute
             //proceed setting up
             try
             {
+                Console.WriteLine("entering load data");
                 statuslog.Append("entering load data");
 
                 int recno = 1;
@@ -255,8 +269,12 @@ namespace CobraCompute
                 LoadS3Value().Wait();
 
                 //load dictionar(ies)
+                Console.WriteLine("loading state and tier dictionaries");
+                statuslog.Append("loading state and tier dictionaries");
                 LoadS3Dictionary_State().Wait();
                 LoadS3Dictionary_Tier().Wait();
+                Console.WriteLine("done waits for state and tier");
+                statuslog.Append("done waits for state and tier");
 
                 //load adjustment factors
                 LoadS3Adjustments().Wait();
@@ -277,10 +295,14 @@ namespace CobraCompute
 
                 //load matrix data
                 //LoadS3SRfrommtx().Wait();
+                Console.WriteLine("loading SR MATRIX");
+                statuslog.Append("loading SR MATRIX");
+
                 InitBlankSR();
                 LoadS3SR().Wait();
                 //LoadSR(path);
 
+                Console.WriteLine("garbage collection");
                 statuslog.Append("garbage collection");
 
                 GC.Collect();
@@ -288,17 +310,21 @@ namespace CobraCompute
                 GC.Collect();
 
                 // compute baseline AQ components
+
                 aqbase = Vectorize(SummarizedEmissionsInventory);
-
-
-                pm_base = computePM(aqbase[4], aqbase[0], aqbase[3], aqbase[2], aqbase[1]);
+                //aqbase looks like:   [PM, NOx, SOA, SO2, VOC, O3N ];
+                pm_base = computePM(aqbase[0], aqbase[1], aqbase[2], aqbase[3]);
+                o3_base = computeO3(aqbase[4], aqbase[5]);
 
                 statuslog.Append("instantiating manager");
                 Scenarios = new ScenarioManager_Redis(this.EmissionsInventory, this.redisOptions, this.minioClient, this.s3Config);
             }
             catch (Exception e)
             {
-                statuslog.Append("error initializing");
+                Console.WriteLine("Error initializing!");
+                Console.WriteLine(e);
+                statuslog.Append("Error initializing!");
+                statuslog.Append(e);
                 result = false;
             }
             if (!result)
@@ -307,6 +333,7 @@ namespace CobraCompute
                 EmissionsInventory.Clear();
             }
             this.initilized = result;
+            Console.WriteLine("init done " + result.ToString());
             statuslog.Append("init done " + result.ToString());
             return result;
         }
@@ -316,9 +343,11 @@ namespace CobraCompute
             for (int i = 1; i < 5; i++)
             {
                 SR_dp[i - 1] = Matrix<double>.Build.Dense(3108, 3108);
-                SR_no2[i - 1] = Matrix<double>.Build.Dense(3108, 3108);
-                SR_so2[i - 1] = Matrix<double>.Build.Dense(3108, 3108);
-                SR_nh3[i - 1] = Matrix<double>.Build.Dense(3108, 3108);
+                SR_NOx[i - 1] = Matrix<double>.Build.Dense(3108, 3108);
+                SR_SO4[i - 1] = Matrix<double>.Build.Dense(3108, 3108);
+                SR_O3N[i - 1] = Matrix<double>.Build.Dense(3108, 3108);
+                SR_O3V[i - 1] = Matrix<double>.Build.Dense(3108, 3108);
+                //SR_nh3[i - 1] = Matrix<double>.Build.Dense(3108, 3108);
             }
         }
 
@@ -327,9 +356,11 @@ namespace CobraCompute
             for (int i = 1; i < 5; i++)
             {
                 MatrixMarketWriter.WriteMatrix(path + "matrix_dp_" + i.ToString() + ".mtx", SR_dp[i - 1], Compression.GZip);
-                MatrixMarketWriter.WriteMatrix(path + "matrix_no2_" + i.ToString() + ".mtx", SR_no2[i - 1], Compression.GZip);
-                MatrixMarketWriter.WriteMatrix(path + "matrix_so2_" + i.ToString() + ".mtx", SR_so2[i - 1], Compression.GZip);
-                MatrixMarketWriter.WriteMatrix(path + "matrix_nh3_" + i.ToString() + ".mtx", SR_nh3[i - 1], Compression.GZip);
+                MatrixMarketWriter.WriteMatrix(path + "matrix_NOx_" + i.ToString() + ".mtx", SR_NOx[i - 1], Compression.GZip);
+                MatrixMarketWriter.WriteMatrix(path + "matrix_O3N_" + i.ToString() + ".mtx", SR_O3N[i - 1], Compression.GZip);
+                MatrixMarketWriter.WriteMatrix(path + "matrix_O3V_" + i.ToString() + ".mtx", SR_O3V[i - 1], Compression.GZip);
+                MatrixMarketWriter.WriteMatrix(path + "matrix_so2_" + i.ToString() + ".mtx", SR_SO4[i - 1], Compression.GZip);
+                //MatrixMarketWriter.WriteMatrix(path + "matrix_nh3_" + i.ToString() + ".mtx", SR_nh3[i - 1], Compression.GZip);
             }
         }
 
@@ -338,9 +369,11 @@ namespace CobraCompute
             for (int i = 1; i < 5; i++)
             {
                 MatrixMarketWriter.WriteMatrix(path + "matrix_dp_" + i.ToString() + ".mtx_nocomp", SR_dp[i - 1]);
-                MatrixMarketWriter.WriteMatrix(path + "matrix_no2_" + i.ToString() + ".mtx_nocomp", SR_no2[i - 1]);
-                MatrixMarketWriter.WriteMatrix(path + "matrix_so2_" + i.ToString() + ".mtx_nocomp", SR_so2[i - 1]);
-                MatrixMarketWriter.WriteMatrix(path + "matrix_nh3_" + i.ToString() + ".mtx_nocomp", SR_nh3[i - 1]);
+                MatrixMarketWriter.WriteMatrix(path + "matrix_NOx_" + i.ToString() + ".mtx_nocomp", SR_NOx[i - 1]);
+                MatrixMarketWriter.WriteMatrix(path + "matrix_so2_" + i.ToString() + ".mtx_nocomp", SR_SO4[i - 1]);
+                //MatrixMarketWriter.WriteMatrix(path + "matrix_nh3_" + i.ToString() + ".mtx_nocomp", SR_nh3[i - 1]);
+                MatrixMarketWriter.WriteMatrix(path + "matrix_O3N" + i.ToString() + ".mtx_nocomp", SR_O3N[i - 1]);
+                MatrixMarketWriter.WriteMatrix(path + "matrix_O3V" + i.ToString() + ".mtx_nocomp", SR_O3V[i - 1]);
             }
         }
 
@@ -349,9 +382,12 @@ namespace CobraCompute
             for (int i = 1; i < 5; i++)
             {
                 SR_dp[i - 1] = MatrixMarketReader.ReadMatrix<double>(path + "matrix_dp_" + i.ToString() + ".mtx", Compression.GZip);
-                SR_no2[i - 1] = MatrixMarketReader.ReadMatrix<double>(path + "matrix_no2_" + i.ToString() + ".mtx", Compression.GZip);
-                SR_so2[i - 1] = MatrixMarketReader.ReadMatrix<double>(path + "matrix_so2_" + i.ToString() + ".mtx", Compression.GZip);
-                SR_nh3[i - 1] = MatrixMarketReader.ReadMatrix<double>(path + "matrix_nh3_" + i.ToString() + ".mtx", Compression.GZip);
+                SR_NOx[i - 1] = MatrixMarketReader.ReadMatrix<double>(path + "matrix_NOx_" + i.ToString() + ".mtx", Compression.GZip);
+                SR_SO4[i - 1] = MatrixMarketReader.ReadMatrix<double>(path + "matrix_so2_" + i.ToString() + ".mtx", Compression.GZip);
+                //SR_nh3[i - 1] = MatrixMarketReader.ReadMatrix<double>(path + "matrix_nh3_" + i.ToString() + ".mtx", Compression.GZip);
+
+                SR_O3N[i - 1] = MatrixMarketReader.ReadMatrix<double>(path + "matrix_O3N_" + i.ToString() + ".mtx", Compression.GZip);
+                SR_O3V[i - 1] = MatrixMarketReader.ReadMatrix<double>(path + "matrix_O3V_" + i.ToString() + ".mtx", Compression.GZip);
                 GC.Collect();
                 GC.WaitForPendingFinalizers();
                 GC.Collect();
@@ -369,29 +405,37 @@ namespace CobraCompute
                 for (int i = 1; i < 5; i++)
                 {
                     await minioClient.StatObjectAsync(this.s3Config.bucket, "matrix_dp_" + i.ToString() + ".mtx_nocomp");
-                    await minioClient.StatObjectAsync(this.s3Config.bucket, "matrix_no2_" + i.ToString() + ".mtx_nocomp");
+                    await minioClient.StatObjectAsync(this.s3Config.bucket, "matrix_NOx_" + i.ToString() + ".mtx_nocomp");
                     await minioClient.StatObjectAsync(this.s3Config.bucket, "matrix_so2_" + i.ToString() + ".mtx_nocomp");
-                    await minioClient.StatObjectAsync(this.s3Config.bucket, "matrix_nh3_" + i.ToString() + ".mtx_nocomp");
+                    //await minioClient.StatObjectAsync(this.s3Config.bucket, "matrix_nh3_" + i.ToString() + ".mtx_nocomp");
+                    await minioClient.StatObjectAsync(this.s3Config.bucket, "matrix_O3N_" + i.ToString() + ".mtx_nocomp");
+                    await minioClient.StatObjectAsync(this.s3Config.bucket, "matrix_O3V_" + i.ToString() + ".mtx_nocomp");
 
                     await minioClient.GetObjectAsync(this.s3Config.bucket, "matrix_dp_" + i.ToString() + ".mtx_nocomp",
                                                      (stream) =>
                                                      {
                                                          SR_dp[i - 1] = MatrixMarketReader.ReadMatrix<double>(stream);
                                                      });
-                    await minioClient.GetObjectAsync(this.s3Config.bucket, "matrix_no2_" + i.ToString() + ".mtx_nocomp",
+                    await minioClient.GetObjectAsync(this.s3Config.bucket, "matrix_NOx_" + i.ToString() + ".mtx_nocomp",
                                                      (stream) =>
                                                      {
-                                                         SR_no2[i - 1] = MatrixMarketReader.ReadMatrix<double>(stream);
+                                                         SR_NOx[i - 1] = MatrixMarketReader.ReadMatrix<double>(stream);
                                                      });
                     await minioClient.GetObjectAsync(this.s3Config.bucket, "matrix_so2_" + i.ToString() + ".mtx_nocomp",
                                                      (stream) =>
                                                      {
-                                                         SR_so2[i - 1] = MatrixMarketReader.ReadMatrix<double>(stream);
+                                                         SR_SO4[i - 1] = MatrixMarketReader.ReadMatrix<double>(stream);
                                                      });
-                    await minioClient.GetObjectAsync(this.s3Config.bucket, "matrix_nh3_" + i.ToString() + ".mtx_nocomp",
+
+                    await minioClient.GetObjectAsync(this.s3Config.bucket, "matrix_O3N_" + i.ToString() + ".mtx_nocomp",
                                                      (stream) =>
                                                      {
-                                                         SR_nh3[i - 1] = MatrixMarketReader.ReadMatrix<double>(stream);
+                                                         SR_O3N[i - 1] = MatrixMarketReader.ReadMatrix<double>(stream);
+                                                     });
+                    await minioClient.GetObjectAsync(this.s3Config.bucket, "matrix_O3V_" + i.ToString() + ".mtx_nocomp",
+                                                     (stream) =>
+                                                     {
+                                                         SR_O3V[i - 1] = MatrixMarketReader.ReadMatrix<double>(stream);
                                                      });
                     GC.Collect();
                     GC.WaitForPendingFinalizers();
@@ -425,10 +469,12 @@ namespace CobraCompute
                             if (sr_record.typeindx <= 4 && sr_record.destindx <= 3108 && sr_record.sourceindx <= 3108)
                             {
                                 var index2use = sr_record.typeindx - 1;
-                                SR_dp[index2use][sr_record.destindx - 1, sr_record.sourceindx - 1] = sr_record.tx_dp.GetValueOrDefault(0);
-                                SR_no2[index2use][sr_record.destindx - 1, sr_record.sourceindx - 1] = sr_record.tx_no2.GetValueOrDefault(0);
-                                SR_so2[index2use][sr_record.destindx - 1, sr_record.sourceindx - 1] = sr_record.tx_so2.GetValueOrDefault(0);
-                                SR_nh3[index2use][sr_record.destindx - 1, sr_record.sourceindx - 1] = sr_record.tx_nh3.GetValueOrDefault(0);
+                                SR_dp[index2use][sr_record.destindx - 1, sr_record.sourceindx - 1] = sr_record.c_PM25.GetValueOrDefault(0);
+                                SR_NOx[index2use][sr_record.destindx - 1, sr_record.sourceindx - 1] = sr_record.c_NO3.GetValueOrDefault(0);
+                                SR_SO4[index2use][sr_record.destindx - 1, sr_record.sourceindx - 1] = sr_record.c_SO4.GetValueOrDefault(0);
+                                SR_O3N[index2use][sr_record.destindx - 1, sr_record.sourceindx - 1] = sr_record.c_O3N.GetValueOrDefault(0);
+                                SR_O3V[index2use][sr_record.destindx - 1, sr_record.sourceindx - 1] = sr_record.c_O3V.GetValueOrDefault(0);
+                                //SR_nh3[index2use][sr_record.destindx - 1, sr_record.sourceindx - 1] = sr_record.tx_nh3.GetValueOrDefault(0);
                             }
                         }
                     }
@@ -449,9 +495,9 @@ namespace CobraCompute
                 // If the object is not found, statObject() throws an exception,
                 // else it means that the object exists.
                 // Execution is successful.
-                await minioClient.StatObjectAsync(this.s3Config.bucket, "sr_matrix_" + modelConfig.srdatayear + ".csv");
+                await minioClient.StatObjectAsync(this.s3Config.bucket, "sr_matrix.csv");
 
-                await minioClient.GetObjectAsync(this.s3Config.bucket, "sr_matrix_" + modelConfig.srdatayear + ".csv",
+                await minioClient.GetObjectAsync(this.s3Config.bucket, "sr_matrix.csv",
                                                  (stream) =>
                                                  {
                                                      using (TextReader textReader = new StreamReader(stream))
@@ -460,10 +506,13 @@ namespace CobraCompute
                                                          foreach (srrecord sr_record in csv.GetRecords<srrecord>())
                                                          {
                                                              var index2use = sr_record.typeindx - 1;
-                                                             SR_dp[index2use][sr_record.destindx - 1, sr_record.sourceindx - 1] = sr_record.tx_dp.GetValueOrDefault(0);
-                                                             SR_no2[index2use][sr_record.destindx - 1, sr_record.sourceindx - 1] = sr_record.tx_no2.GetValueOrDefault(0);
-                                                             SR_so2[index2use][sr_record.destindx - 1, sr_record.sourceindx - 1] = sr_record.tx_so2.GetValueOrDefault(0);
-                                                             SR_nh3[index2use][sr_record.destindx - 1, sr_record.sourceindx - 1] = sr_record.tx_nh3.GetValueOrDefault(0);
+                                                             SR_dp[index2use][sr_record.destindx - 1, sr_record.sourceindx - 1] = sr_record.c_PM25.GetValueOrDefault(0);
+                                                             SR_NOx[index2use][sr_record.destindx - 1, sr_record.sourceindx - 1] = sr_record.c_NO3.GetValueOrDefault(0);
+                                                             SR_SO4[index2use][sr_record.destindx - 1, sr_record.sourceindx - 1] = sr_record.c_SO4.GetValueOrDefault(0);
+                                                             SR_O3N[index2use][sr_record.destindx - 1, sr_record.sourceindx - 1] = sr_record.c_O3N.GetValueOrDefault(0);
+                                                             SR_O3V[index2use][sr_record.destindx - 1, sr_record.sourceindx - 1] = sr_record.c_O3V.GetValueOrDefault(0);
+
+                                                             //SR_nh3[index2use][sr_record.destindx - 1, sr_record.sourceindx - 1] = sr_record.tx_nh3.GetValueOrDefault(0);
                                                          }
                                                      }
 
@@ -500,10 +549,14 @@ namespace CobraCompute
                                                              foreach (srrecord sr_record in csv.GetRecords<srrecord>())
                                                              {
                                                                  var index2use = sr_record.typeindx - 1;
-                                                                 SR_dp[index2use][sr_record.destindx - 1, sr_record.sourceindx - 1] = sr_record.tx_dp.GetValueOrDefault(0);
-                                                                 SR_no2[index2use][sr_record.destindx - 1, sr_record.sourceindx - 1] = sr_record.tx_no2.GetValueOrDefault(0);
-                                                                 SR_so2[index2use][sr_record.destindx - 1, sr_record.sourceindx - 1] = sr_record.tx_so2.GetValueOrDefault(0);
-                                                                 SR_nh3[index2use][sr_record.destindx - 1, sr_record.sourceindx - 1] = sr_record.tx_nh3.GetValueOrDefault(0);
+                                                                 SR_dp[index2use][sr_record.destindx - 1, sr_record.sourceindx - 1] = sr_record.c_PM25.GetValueOrDefault(0);
+                                                                 SR_NOx[index2use][sr_record.destindx - 1, sr_record.sourceindx - 1] = sr_record.c_NO3.GetValueOrDefault(0);
+                                                                 SR_SO4[index2use][sr_record.destindx - 1, sr_record.sourceindx - 1] = sr_record.c_SO4.GetValueOrDefault(0);
+                                                                 SR_O3N[index2use][sr_record.destindx - 1, sr_record.sourceindx - 1] = sr_record.c_O3N.GetValueOrDefault(0);
+                                                                 SR_O3V[index2use][sr_record.destindx - 1, sr_record.sourceindx - 1] = sr_record.c_O3V.GetValueOrDefault(0);
+
+
+                                                                 //SR_nh3[index2use][sr_record.destindx - 1, sr_record.sourceindx - 1] = sr_record.tx_nh3.GetValueOrDefault(0);
                                                              }
                                                          }
                                                      }
@@ -526,7 +579,7 @@ namespace CobraCompute
                                  sourceindx = grp.Key.sourceindx,
                                  stid = grp.Key.stid,
                                  cyid = grp.Key.cyid,
-                                 NO2 = grp.Sum(r => r.Field<double?>("NO2")),
+                                 NOx = grp.Sum(r => r.Field<double?>("NOx")),
                                  SO2 = grp.Sum(r => r.Field<double?>("SO2")),
                                  NH3 = grp.Sum(r => r.Field<double?>("NH3")),
                                  SOA = grp.Sum(r => r.Field<double?>("SOA")),
@@ -539,8 +592,9 @@ namespace CobraCompute
             recno = 1;
             foreach (var rowentry in summarized)
             {
-                if (rowentry.NO2.GetValueOrDefault(0)>0 || rowentry.SO2.GetValueOrDefault(0)> 0 || rowentry.NH3.GetValueOrDefault(0)>0 || rowentry.SOA.GetValueOrDefault(0)>0 || rowentry.PM25.GetValueOrDefault(0)>0 || rowentry.VOC.GetValueOrDefault(0)>0 ) {
-                    SummarizedEmissionsInventory.Rows.Add(new object[] { recno, rowentry.typeindx, rowentry.sourceindx, rowentry.stid, rowentry.cyid, 0, 0, 0, rowentry.NO2.GetValueOrDefault(0), rowentry.SO2.GetValueOrDefault(0), rowentry.NH3.GetValueOrDefault(0), rowentry.SOA.GetValueOrDefault(0), rowentry.PM25.GetValueOrDefault(0), rowentry.VOC.GetValueOrDefault(0) });
+                if (rowentry.NOx.GetValueOrDefault(0) > 0 || rowentry.SO2.GetValueOrDefault(0) > 0 || rowentry.NH3.GetValueOrDefault(0) > 0 || rowentry.SOA.GetValueOrDefault(0) > 0 || rowentry.PM25.GetValueOrDefault(0) > 0 || rowentry.VOC.GetValueOrDefault(0) > 0)
+                {
+                    SummarizedEmissionsInventory.Rows.Add(new object[] { recno, rowentry.typeindx, rowentry.sourceindx, rowentry.stid, rowentry.cyid, 0, 0, 0, rowentry.NOx.GetValueOrDefault(0), rowentry.SO2.GetValueOrDefault(0), rowentry.NH3.GetValueOrDefault(0), rowentry.SOA.GetValueOrDefault(0), rowentry.PM25.GetValueOrDefault(0), rowentry.VOC.GetValueOrDefault(0) });
                     recno++;
                 }
             }
@@ -559,7 +613,7 @@ namespace CobraCompute
                                  sourceindx = grp.Key.sourceindx,
                                  stid = grp.Key.stid,
                                  cyid = grp.Key.cyid,
-                                 NO2 = grp.Sum(r => r.Field<double?>("NO2")),
+                                 NOx = grp.Sum(r => r.Field<double?>("NOx")),
                                  SO2 = grp.Sum(r => r.Field<double?>("SO2")),
                                  NH3 = grp.Sum(r => r.Field<double?>("NH3")),
                                  SOA = grp.Sum(r => r.Field<double?>("SOA")),
@@ -572,7 +626,7 @@ namespace CobraCompute
             recno = 1;
             foreach (var rowentry in summarized)
             {
-                result.Rows.Add(new object[] { recno, rowentry.typeindx, rowentry.sourceindx, rowentry.stid, rowentry.cyid, 0, 0, 0, rowentry.NO2.GetValueOrDefault(0), rowentry.SO2.GetValueOrDefault(0), rowentry.NH3.GetValueOrDefault(0), rowentry.SOA.GetValueOrDefault(0), rowentry.PM25.GetValueOrDefault(0), rowentry.VOC.GetValueOrDefault(0) });
+                result.Rows.Add(new object[] { recno, rowentry.typeindx, rowentry.sourceindx, rowentry.stid, rowentry.cyid, 0, 0, 0, rowentry.NOx.GetValueOrDefault(0), rowentry.SO2.GetValueOrDefault(0), rowentry.NH3.GetValueOrDefault(0), rowentry.SOA.GetValueOrDefault(0), rowentry.PM25.GetValueOrDefault(0), rowentry.VOC.GetValueOrDefault(0) });
                 recno++;
             }
 
@@ -592,11 +646,11 @@ namespace CobraCompute
                 CsvReader csv = new CsvReader(fileReader, System.Globalization.CultureInfo.CurrentCulture);
                 foreach (EmissionsRecord record in csv.GetRecords<EmissionsRecord>())
                 {
-                        if (record.NO2 > 0.0 || record.NH3 > 0.0 || record.SOA > 0.0 || record.SO2 > 0.0 || record.PM25 > 0.0 || record.VOC > 0.0)
-                        {
-                            EmissionsInventory.Rows.Add(new object[] { recno, record.typeindx, record.sourceindx, record.stid, record.cyid, record.TIER1, record.TIER2, record.TIER3, record.NO2.GetValueOrDefault(0), record.SO2.GetValueOrDefault(0), record.NH3.GetValueOrDefault(0), ComputeSOAfromVOC(record.TIER1 + "|" + record.TIER2 + "|" + record.TIER3, record.VOC.GetValueOrDefault(0)), record.PM25.GetValueOrDefault(0), record.VOC.GetValueOrDefault(0) });
-                            recno++;
-                        }
+                    if (record.NOx > 0.0 || record.NH3 > 0.0 || record.SOA > 0.0 || record.SO2 > 0.0 || record.PM25 > 0.0 || record.VOC > 0.0)
+                    {
+                        EmissionsInventory.Rows.Add(new object[] { recno, record.typeindx, record.sourceindx, record.stid, record.cyid, record.TIER1, record.TIER2, record.TIER3, record.NOx.GetValueOrDefault(0), record.SO2.GetValueOrDefault(0), record.NH3.GetValueOrDefault(0), ComputeSOAfromVOC(record.TIER1 + "|" + record.TIER2 + "|" + record.TIER3, record.VOC.GetValueOrDefault(0)), record.PM25.GetValueOrDefault(0), record.VOC.GetValueOrDefault(0) });
+                        recno++;
+                    }
                 }
             }
 
@@ -625,14 +679,14 @@ namespace CobraCompute
                                                          CsvReader csv = new CsvReader(textReader, System.Globalization.CultureInfo.CurrentCulture);
                                                          foreach (EmissionsRecord record in csv.GetRecords<EmissionsRecord>())
                                                          {
-                                                                 if (record.NO2 > 0.0 || record.NH3 > 0.0 || record.SOA > 0.0 || record.SO2 > 0.0 || record.PM25 > 0.0 || record.VOC > 0.0)
+                                                             if (record.NOx > 0.0 || record.NH3 > 0.0 || record.SOA > 0.0 || record.SO2 > 0.0 || record.PM25 > 0.0 || record.VOC > 0.0)
+                                                             {
+                                                                 if (record.sourceindx <= 3108)
                                                                  {
-                                                                     if (record.sourceindx <= 3108)
-                                                                     {
-                                                                         EmissionsInventory.Rows.Add(new object[] { recno, record.typeindx, record.sourceindx, record.stid, record.cyid, record.TIER1, record.TIER2, record.TIER3, record.NO2.GetValueOrDefault(0), record.SO2.GetValueOrDefault(0), record.NH3.GetValueOrDefault(0), ComputeSOAfromVOC(record.TIER1 + "|" + record.TIER2 + "|" + record.TIER3, record.VOC.GetValueOrDefault(0)), record.PM25.GetValueOrDefault(0), record.VOC.GetValueOrDefault(0) });
-                                                                         recno++;
-                                                                     }
+                                                                     EmissionsInventory.Rows.Add(new object[] { recno, record.typeindx, record.sourceindx, record.stid, record.cyid, record.TIER1, record.TIER2, record.TIER3, record.NOx.GetValueOrDefault(0), record.SO2.GetValueOrDefault(0), record.NH3.GetValueOrDefault(0), ComputeSOAfromVOC(record.TIER1 + "|" + record.TIER2 + "|" + record.TIER3, record.VOC.GetValueOrDefault(0)), record.PM25.GetValueOrDefault(0), record.VOC.GetValueOrDefault(0) });
+                                                                     recno++;
                                                                  }
+                                                             }
                                                          }
                                                      }
 
@@ -762,6 +816,7 @@ namespace CobraCompute
                                                      using (TextReader textReader = new StreamReader(stream))
                                                      {
                                                          CsvReader csv = new CsvReader(textReader, System.Globalization.CultureInfo.CurrentCulture);
+                                                         
                                                          foreach (Cobra_Dict_State record in csv.GetRecords<Cobra_Dict_State>())
                                                          {
                                                              dict_state.Add(record);
@@ -779,7 +834,7 @@ namespace CobraCompute
         private int LoadDictionary_Tier(string path)
         {
             int recno = 1;
-            
+
             // Creates a TextInfo based on the "en-US" culture.
             TextInfo myTI = new CultureInfo("en-US", false).TextInfo;
 
@@ -865,7 +920,7 @@ namespace CobraCompute
                                                          CsvReader csv = new CsvReader(textReader, System.Globalization.CultureInfo.CurrentCulture);
                                                          foreach (Cobra_Valuation record in csv.GetRecords<Cobra_Valuation>())
                                                          {
-                                                                 Valuationfunctions.Add(record);
+                                                             Valuationfunctions.Add(record);
                                                          }
                                                      }
                                                  });
@@ -934,8 +989,8 @@ namespace CobraCompute
                 CsvReader csv = new CsvReader(fileReader, System.Globalization.CultureInfo.CurrentCulture);
                 foreach (Cobra_Incidence record in csv.GetRecords<Cobra_Incidence>())
                 {
-                        Incidence.Add(record);
-                        recno++;
+                    Incidence.Add(record);
+                    recno++;
                 }
             }
 
@@ -978,8 +1033,8 @@ namespace CobraCompute
                 CsvReader csv = new CsvReader(fileReader, System.Globalization.CultureInfo.CurrentCulture);
                 foreach (Cobra_POP record in csv.GetRecords<Cobra_POP>())
                 {
-                        Populations.Add(record);
-                        recno++;
+                    Populations.Add(record);
+                    recno++;
                 }
             }
 
@@ -995,7 +1050,7 @@ namespace CobraCompute
                 await minioClient.GetObjectAsync(this.s3Config.bucket, "pop_inventory_" + modelConfig.populationdatayear + ".csv",
                                                  (stream) =>
                                                  {
-                                                 using (TextReader textReader = new StreamReader(stream)) 
+                                                     using (TextReader textReader = new StreamReader(stream))
                                                      {
                                                          CsvReader csv = new CsvReader(textReader, System.Globalization.CultureInfo.CurrentCulture);
                                                          foreach (Cobra_POP record in csv.GetRecords<Cobra_POP>())
@@ -1091,7 +1146,7 @@ namespace CobraCompute
                 rec.TIER1 = (dr.ItemArray[5] == System.DBNull.Value) ? 0 : (int)dr.ItemArray[5];
                 rec.TIER2 = (dr.ItemArray[6] == System.DBNull.Value) ? 0 : (int)dr.ItemArray[6];
                 rec.TIER3 = (dr.ItemArray[7] == System.DBNull.Value) ? 0 : (int)dr.ItemArray[7];
-                rec.NO2 = (dr.ItemArray[8] == System.DBNull.Value) ? 0 : (double)dr.ItemArray[8];
+                rec.NOx = (dr.ItemArray[8] == System.DBNull.Value) ? 0 : (double)dr.ItemArray[8];
                 rec.SO2 = (dr.ItemArray[9] == System.DBNull.Value) ? 0 : (double)dr.ItemArray[9];
                 rec.NH3 = (dr.ItemArray[10] == System.DBNull.Value) ? 0 : (double)dr.ItemArray[10];
                 rec.SOA = (dr.ItemArray[11] == System.DBNull.Value) ? 0 : (double)dr.ItemArray[11];
@@ -1120,7 +1175,7 @@ namespace CobraCompute
                 rec.TIER1 = (dr.ItemArray[5] == System.DBNull.Value) ? 0 : (int)dr.ItemArray[5];
                 rec.TIER2 = (dr.ItemArray[6] == System.DBNull.Value) ? 0 : (int)dr.ItemArray[6];
                 rec.TIER3 = (dr.ItemArray[7] == System.DBNull.Value) ? 0 : (int)dr.ItemArray[7];
-                rec.NO2 = (dr.ItemArray[8] == System.DBNull.Value) ? 0 : (double)dr.ItemArray[8];
+                rec.NOx = (dr.ItemArray[8] == System.DBNull.Value) ? 0 : (double)dr.ItemArray[8];
                 rec.SO2 = (dr.ItemArray[9] == System.DBNull.Value) ? 0 : (double)dr.ItemArray[9];
                 rec.NH3 = (dr.ItemArray[10] == System.DBNull.Value) ? 0 : (double)dr.ItemArray[10];
                 rec.SOA = (dr.ItemArray[11] == System.DBNull.Value) ? 0 : (double)dr.ItemArray[11];
@@ -1142,7 +1197,7 @@ namespace CobraCompute
                 DataRow foundRow = emissionsData.Rows.Find(emission.ID);
                 if (foundRow != null)
                 {
-                    foundRow[8] = emission.NO2;
+                    foundRow[8] = emission.NOx;
                     foundRow[9] = emission.SO2;
                     foundRow[10] = emission.NH3;
                     foundRow[11] = emission.SOA;
@@ -1151,13 +1206,13 @@ namespace CobraCompute
                 }
                 else
                 {
-                    emissionsData.Rows.Add(new object[] { emission.ID, emission.typeindx, emission.sourceindx, emission.stid, emission.cyid, emission.TIER1, emission.TIER2, emission.TIER3, emission.NO2.GetValueOrDefault(0), emission.SO2.GetValueOrDefault(0), emission.NH3.GetValueOrDefault(0), emission.SOA, emission.PM25.GetValueOrDefault(0), emission.VOC.GetValueOrDefault(0) });
+                    emissionsData.Rows.Add(new object[] { emission.ID, emission.typeindx, emission.sourceindx, emission.stid, emission.cyid, emission.TIER1, emission.TIER2, emission.TIER3, emission.NOx.GetValueOrDefault(0), emission.SO2.GetValueOrDefault(0), emission.NH3.GetValueOrDefault(0), emission.SOA, emission.PM25.GetValueOrDefault(0), emission.VOC.GetValueOrDefault(0) });
                 }
                 //re-get
                 DataRow foundRow2 = emissionsData.Rows.Find(emission.ID);
                 if (foundRow2 != null)
                 {
-                    foundRow2[8] = emission.NO2;
+                    foundRow2[8] = emission.NOx;
                     foundRow2[9] = emission.SO2;
                     foundRow2[10] = emission.NH3;
                     foundRow2[11] = emission.SOA;
@@ -1186,7 +1241,7 @@ namespace CobraCompute
                 rec.TIER1 = (dr.ItemArray[5] == System.DBNull.Value) ? 0 : (int)dr.ItemArray[5];
                 rec.TIER2 = (dr.ItemArray[6] == System.DBNull.Value) ? 0 : (int)dr.ItemArray[6];
                 rec.TIER3 = (dr.ItemArray[7] == System.DBNull.Value) ? 0 : (int)dr.ItemArray[7];
-                rec.NO2 = (dr.ItemArray[8] == System.DBNull.Value) ? 0 : (double)dr.ItemArray[8];
+                rec.NOx = (dr.ItemArray[8] == System.DBNull.Value) ? 0 : (double)dr.ItemArray[8];
                 rec.SO2 = (dr.ItemArray[9] == System.DBNull.Value) ? 0 : (double)dr.ItemArray[9];
                 rec.NH3 = (dr.ItemArray[10] == System.DBNull.Value) ? 0 : (double)dr.ItemArray[10];
                 rec.SOA = (dr.ItemArray[11] == System.DBNull.Value) ? 0 : (double)dr.ItemArray[11];
@@ -1223,7 +1278,7 @@ namespace CobraCompute
                                      tier1 = grp.Key.tier1,
                                      tier2 = grp.Key.tier2,
                                      tier3 = grp.Key.tier3,
-                                     NO2 = grp.Sum(r => r.Field<double?>("NO2")),
+                                     NOx = grp.Sum(r => r.Field<double?>("NOx")),
                                      SO2 = grp.Sum(r => r.Field<double?>("SO2")),
                                      NH3 = grp.Sum(r => r.Field<double?>("NH3")),
                                      SOA = grp.Sum(r => r.Field<double?>("SOA")),
@@ -1233,7 +1288,7 @@ namespace CobraCompute
                 int recno = 1;
                 foreach (var rowentry in summarized)
                 {
-                    summarizedemissionsData.Rows.Add(new object[] { recno, rowentry.typeindx, rowentry.sourceindx, rowentry.stid, rowentry.cyid, rowentry.tier1, rowentry.tier2, rowentry.tier3, rowentry.NO2.GetValueOrDefault(0), rowentry.SO2.GetValueOrDefault(0), rowentry.NH3.GetValueOrDefault(0), rowentry.SOA.GetValueOrDefault(0), rowentry.PM25.GetValueOrDefault(0), rowentry.VOC.GetValueOrDefault(0) });
+                    summarizedemissionsData.Rows.Add(new object[] { recno, rowentry.typeindx, rowentry.sourceindx, rowentry.stid, rowentry.cyid, rowentry.tier1, rowentry.tier2, rowentry.tier3, rowentry.NOx.GetValueOrDefault(0), rowentry.SO2.GetValueOrDefault(0), rowentry.NH3.GetValueOrDefault(0), rowentry.SOA.GetValueOrDefault(0), rowentry.PM25.GetValueOrDefault(0), rowentry.VOC.GetValueOrDefault(0) });
                     recno++;
                 }
 
@@ -1252,7 +1307,7 @@ namespace CobraCompute
                                       tier1 = grp.Key.tier1,
                                       tier2 = grp.Key.tier2,
                                       tier3 = grp.Key.tier3,
-                                      NO2 = grp.Sum(r => r.Field<double?>("NO2")),
+                                      NOx = grp.Sum(r => r.Field<double?>("NOx")),
                                       SO2 = grp.Sum(r => r.Field<double?>("SO2")),
                                       NH3 = grp.Sum(r => r.Field<double?>("NH3")),
                                       SOA = grp.Sum(r => r.Field<double?>("SOA")),
@@ -1261,7 +1316,7 @@ namespace CobraCompute
                                   };
                 foreach (var rowentry in summarized2)
                 {
-                    summarizedemissionsData.Rows.Add(new object[] { recno, rowentry.typeindx, 0, rowentry.stid, rowentry.cyid, rowentry.tier1, rowentry.tier2, rowentry.tier3, rowentry.NO2.GetValueOrDefault(0), rowentry.SO2.GetValueOrDefault(0), rowentry.NH3.GetValueOrDefault(0), rowentry.SOA.GetValueOrDefault(0), rowentry.PM25.GetValueOrDefault(0), rowentry.VOC.GetValueOrDefault(0) });
+                    summarizedemissionsData.Rows.Add(new object[] { recno, rowentry.typeindx, 0, rowentry.stid, rowentry.cyid, rowentry.tier1, rowentry.tier2, rowentry.tier3, rowentry.NOx.GetValueOrDefault(0), rowentry.SO2.GetValueOrDefault(0), rowentry.NH3.GetValueOrDefault(0), rowentry.SOA.GetValueOrDefault(0), rowentry.PM25.GetValueOrDefault(0), rowentry.VOC.GetValueOrDefault(0) });
                     recno++;
                 }
             };
@@ -1290,7 +1345,7 @@ namespace CobraCompute
                                  sourceindx = grp.Key.sourceindx,
                                  stid = grp.Key.stid,
                                  cyid = grp.Key.cyid,
-                                 NO2 = grp.Sum(r => r.Field<double?>("NO2")),
+                                 NOx = grp.Sum(r => r.Field<double?>("NOx")),
                                  SO2 = grp.Sum(r => r.Field<double?>("SO2")),
                                  NH3 = grp.Sum(r => r.Field<double?>("NH3")),
                                  SOA = grp.Sum(r => r.Field<double?>("SOA")),
@@ -1301,7 +1356,7 @@ namespace CobraCompute
             int recno = 1;
             foreach (var rowentry in summarized)
             {
-                summarizedemissionsData.Rows.Add(new object[] { recno, rowentry.typeindx, rowentry.sourceindx, rowentry.stid, 0, 0, 0, 0, rowentry.NO2.GetValueOrDefault(0), rowentry.SO2.GetValueOrDefault(0), rowentry.NH3.GetValueOrDefault(0), rowentry.SOA.GetValueOrDefault(0), rowentry.PM25.GetValueOrDefault(0), rowentry.VOC.GetValueOrDefault(0) });
+                summarizedemissionsData.Rows.Add(new object[] { recno, rowentry.typeindx, rowentry.sourceindx, rowentry.stid, 0, 0, 0, 0, rowentry.NOx.GetValueOrDefault(0), rowentry.SO2.GetValueOrDefault(0), rowentry.NH3.GetValueOrDefault(0), rowentry.SOA.GetValueOrDefault(0), rowentry.PM25.GetValueOrDefault(0), rowentry.VOC.GetValueOrDefault(0) });
                 recno++;
             }
 
@@ -1346,7 +1401,7 @@ namespace CobraCompute
                                  sourceindx = grp.Key.sourceindx,
                                  stid = grp.Key.stid,
                                  cyid = grp.Key.cyid,
-                                 NO2 = grp.Sum(r => r.Field<double?>("NO2")),
+                                 NOx = grp.Sum(r => r.Field<double?>("NOx")),
                                  SO2 = grp.Sum(r => r.Field<double?>("SO2")),
                                  NH3 = grp.Sum(r => r.Field<double?>("NH3")),
                                  SOA = grp.Sum(r => r.Field<double?>("SOA")),
@@ -1357,7 +1412,7 @@ namespace CobraCompute
             int recno = 1;
             foreach (var rowentry in summarized)
             {
-                summarizedemissionsData.Rows.Add(new object[] { recno, rowentry.typeindx, rowentry.sourceindx, rowentry.stid, rowentry.cyid, 0, 0, 0, rowentry.NO2.GetValueOrDefault(0), rowentry.SO2.GetValueOrDefault(0), rowentry.NH3.GetValueOrDefault(0), rowentry.SOA.GetValueOrDefault(0), rowentry.PM25.GetValueOrDefault(0), rowentry.VOC.GetValueOrDefault(0) });
+                summarizedemissionsData.Rows.Add(new object[] { recno, rowentry.typeindx, rowentry.sourceindx, rowentry.stid, rowentry.cyid, 0, 0, 0, rowentry.NOx.GetValueOrDefault(0), rowentry.SO2.GetValueOrDefault(0), rowentry.NH3.GetValueOrDefault(0), rowentry.SOA.GetValueOrDefault(0), rowentry.PM25.GetValueOrDefault(0), rowentry.VOC.GetValueOrDefault(0) });
                 recno++;
             }
 
@@ -1372,6 +1427,12 @@ namespace CobraCompute
 
         public bool UpdateEmissionsWithCriteria(DataTable table2summarize, EmissionsDataUpdateRequest requestparams)
         {
+            bool allowNegative = false;
+            if (requestparams.operationalMode != null && requestparams.operationalMode.ToUpper() == "AVERT")
+            {
+                allowNegative = true;
+            }
+
             //built selection criteria
             string str_criteria = buildStringCriteria(requestparams.spec);
 
@@ -1387,7 +1448,7 @@ namespace CobraCompute
             {
                 //get current values
                 double current_pm25 = current.control.Rows[0].Field<double?>("PM25").GetValueOrDefault(0);
-                double current_no2 = current.control.Rows[0].Field<double?>("NO2").GetValueOrDefault(0);
+                double current_NOx = current.control.Rows[0].Field<double?>("NOx").GetValueOrDefault(0);
                 double current_so2 = current.control.Rows[0].Field<double?>("SO2").GetValueOrDefault(0);
                 double current_nh3 = current.control.Rows[0].Field<double?>("NH3").GetValueOrDefault(0);
                 double current_voc = current.control.Rows[0].Field<double?>("VOC").GetValueOrDefault(0);
@@ -1395,7 +1456,7 @@ namespace CobraCompute
 
                 //determine ratios
                 double ratio_pm25 = current_pm25 == 0 ? 0 : requestparams.payload.PM25 / current_pm25;
-                double ratio_no2 = current_no2 == 0 ? 0 : requestparams.payload.NO2 / current_no2;
+                double ratio_NOx = current_NOx == 0 ? 0 : requestparams.payload.NOx / current_NOx;
                 double ratio_so2 = current_so2 == 0 ? 0 : requestparams.payload.SO2 / current_so2;
                 double ratio_nh3 = current_nh3 == 0 ? 0 : requestparams.payload.NH3 / current_nh3;
                 double ratio_voc = current_voc == 0 ? 0 : requestparams.payload.VOC / current_voc;
@@ -1405,18 +1466,31 @@ namespace CobraCompute
                 {
                     //get current value
                     double thisrow_pm25 = record.Field<double?>("PM25").GetValueOrDefault(0);
-                    double thisrow_no2 = record.Field<double?>("NO2").GetValueOrDefault(0);
+                    double thisrow_NOx = record.Field<double?>("NOx").GetValueOrDefault(0);
                     double thisrow_so2 = record.Field<double?>("SO2").GetValueOrDefault(0);
                     double thisrow_nh3 = record.Field<double?>("NH3").GetValueOrDefault(0);
                     double thisrow_voc = record.Field<double?>("VOC").GetValueOrDefault(0);
                     double thisrow_soa = record.Field<double?>("SOA").GetValueOrDefault(0);
                     //and set, use ration if sum<>0 otherwise spread the increase over all
-                    record["PM25"] = current_pm25 != 0 ? Math.Max(thisrow_pm25 * ratio_pm25, 0D) : Math.Max(requestparams.payload.PM25 / rowcount, 0D);
-                    record["NO2"] = current_no2 != 0 ? Math.Max(thisrow_no2 * ratio_no2, 0D) : Math.Max(requestparams.payload.NO2 / rowcount, 0D);
-                    record["SO2"] = current_so2 != 0 ? Math.Max(thisrow_so2 * ratio_so2, 0D) : Math.Max(requestparams.payload.SO2 / rowcount, 0D);
-                    record["NH3"] = current_nh3 != 0 ? Math.Max(thisrow_nh3 * ratio_nh3, 0D) : Math.Max(requestparams.payload.NH3 / rowcount, 0D);
-                    record["VOC"] = current_voc != 0 ? Math.Max(thisrow_voc * ratio_voc, 0D) : Math.Max(requestparams.payload.VOC / rowcount, 0D);
-                    record["SOA"] = current_soa != 0 ? Math.Max(thisrow_soa * ratio_soa, 0D) : Math.Max(requestparams.payload.SOA / rowcount, 0D);
+                    if (!allowNegative)
+                    {
+                        record["PM25"] = current_pm25 != 0 ? Math.Max(thisrow_pm25 * ratio_pm25, 0D) : Math.Max(requestparams.payload.PM25 / rowcount, 0D);
+                        record["NOx"] = current_NOx != 0 ? Math.Max(thisrow_NOx * ratio_NOx, 0D) : Math.Max(requestparams.payload.NOx / rowcount, 0D);
+                        record["SO2"] = current_so2 != 0 ? Math.Max(thisrow_so2 * ratio_so2, 0D) : Math.Max(requestparams.payload.SO2 / rowcount, 0D);
+                        record["NH3"] = current_nh3 != 0 ? Math.Max(thisrow_nh3 * ratio_nh3, 0D) : Math.Max(requestparams.payload.NH3 / rowcount, 0D);
+                        record["VOC"] = current_voc != 0 ? Math.Max(thisrow_voc * ratio_voc, 0D) : Math.Max(requestparams.payload.VOC / rowcount, 0D);
+                        record["SOA"] = current_soa != 0 ? Math.Max(thisrow_soa * ratio_soa, 0D) : Math.Max(requestparams.payload.SOA / rowcount, 0D);
+                    }
+                    else
+                    {
+                        record["PM25"] = current_pm25 != 0 ? thisrow_pm25 * ratio_pm25 : requestparams.payload.PM25 / rowcount;
+                        record["NOx"] = current_NOx != 0 ? thisrow_NOx * ratio_NOx : requestparams.payload.NOx / rowcount;
+                        record["SO2"] = current_so2 != 0 ? thisrow_so2 * ratio_so2 : requestparams.payload.SO2 / rowcount;
+                        record["NH3"] = current_nh3 != 0 ? thisrow_nh3 * ratio_nh3 : requestparams.payload.NH3 / rowcount;
+                        record["VOC"] = current_voc != 0 ? thisrow_voc * ratio_voc : requestparams.payload.VOC / rowcount;
+                        record["SOA"] = current_soa != 0 ? thisrow_soa * ratio_soa : requestparams.payload.SOA / rowcount;
+                    }
+
                 }
             }
             else
@@ -1442,7 +1516,9 @@ namespace CobraCompute
                         foreach (int stackheight in stack_typeindex)
                         {
                             maxID++; //next id as primary key
-                            table2summarize.Rows.Add(new object[] { maxID,
+                            if (!allowNegative)
+                            {
+                                table2summarize.Rows.Add(new object[] { maxID,
                                 stackheight,
                                 fips["SOURCEINDX"],
                                 fips["STFIPS"],
@@ -1450,12 +1526,30 @@ namespace CobraCompute
                                 tier["TIER1"],
                                 tier["TIER2"],
                                 tier["TIER3"],
-                                Math.Max(requestparams.payload.NO2 / numberofrowstoadd, 0D),   //watch order
+                                Math.Max(requestparams.payload.NOx / numberofrowstoadd, 0D),   //watch order
                                 Math.Max(requestparams.payload.SO2 / numberofrowstoadd, 0D),
                                 Math.Max(requestparams.payload.NH3 / numberofrowstoadd, 0D),
                                 Math.Max(requestparams.payload.SOA / numberofrowstoadd, 0D),
                                 Math.Max(requestparams.payload.PM25 / numberofrowstoadd, 0D),
                                 Math.Max(requestparams.payload.VOC / numberofrowstoadd, 0D) });
+                            }
+                            else
+                            {
+                                table2summarize.Rows.Add(new object[] { maxID,
+                                stackheight,
+                                fips["SOURCEINDX"],
+                                fips["STFIPS"],
+                                fips["CNTYFIPS"],
+                                tier["TIER1"],
+                                tier["TIER2"],
+                                tier["TIER3"],
+                                requestparams.payload.NOx / numberofrowstoadd,   //watch order
+                                requestparams.payload.SO2 / numberofrowstoadd,
+                                requestparams.payload.NH3 / numberofrowstoadd,
+                                requestparams.payload.SOA / numberofrowstoadd,
+                                requestparams.payload.PM25 / numberofrowstoadd,
+                                requestparams.payload.VOC / numberofrowstoadd });
+                            }
 
                         }
                     }
@@ -1536,25 +1630,28 @@ namespace CobraCompute
         private Vector<double>[] Vectorize(DataTable emissions)
         {
             Vector<double>[] Vctr_pm_partial = new Vector<double>[4];
-            Vector<double>[] Vctr_no2_partial = new Vector<double>[4];
+            Vector<double>[] Vctr_NOx_partial = new Vector<double>[4];
             Vector<double>[] Vctr_so2_partial = new Vector<double>[4];
-            Vector<double>[] Vctr_nh3_partial = new Vector<double>[4];
+            //Vector<double>[] Vctr_nh3_partial = new Vector<double>[4];
             Vector<double>[] Vctr_voc_partial = new Vector<double>[4];
             Vector<double>[] Vctr_soa_partial = new Vector<double>[4];
+            Vector<double>[] Vctr_O3N_partial = new Vector<double>[4];
 
+            //populated from summarizedEmissions
             Vector<double>[] Vctr_pm = new Vector<double>[4];
-            Vector<double>[] Vctr_no2 = new Vector<double>[4];
+            Vector<double>[] Vctr_NOx = new Vector<double>[4];
             Vector<double>[] Vctr_so2 = new Vector<double>[4];
-            Vector<double>[] Vctr_nh3 = new Vector<double>[4];
+            //Vector<double>[] Vctr_nh3 = new Vector<double>[4];
             Vector<double>[] Vctr_voc = new Vector<double>[4];
             Vector<double>[] Vctr_soa = new Vector<double>[4];
 
             for (int i = 1; i < 5; i++)
             {
+                //populated from summarizedEmissions
                 Vctr_pm[i - 1] = Vector<double>.Build.Dense(3108, 0);
-                Vctr_no2[i - 1] = Vector<double>.Build.Dense(3108, 0);
+                Vctr_NOx[i - 1] = Vector<double>.Build.Dense(3108, 0);
                 Vctr_so2[i - 1] = Vector<double>.Build.Dense(3108, 0);
-                Vctr_nh3[i - 1] = Vector<double>.Build.Dense(3108, 0);
+                //Vctr_nh3[i - 1] = Vector<double>.Build.Dense(3108, 0);
                 Vctr_voc[i - 1] = Vector<double>.Build.Dense(3108, 0);
                 Vctr_soa[i - 1] = Vector<double>.Build.Dense(3108, 0);
             }
@@ -1566,36 +1663,40 @@ namespace CobraCompute
                 try
                 {
                     Vctr_pm[typeindex2use][sourceindex2use] = row.Field<double?>("PM25").GetValueOrDefault(0);
-                    Vctr_no2[typeindex2use][sourceindex2use] = row.Field<double?>("NO2").GetValueOrDefault(0);
+                    Vctr_NOx[typeindex2use][sourceindex2use] = row.Field<double?>("NOx").GetValueOrDefault(0);
                     Vctr_so2[typeindex2use][sourceindex2use] = row.Field<double?>("SO2").GetValueOrDefault(0);
-                    Vctr_nh3[typeindex2use][sourceindex2use] = row.Field<double?>("NH3").GetValueOrDefault(0);
+                    //Vctr_nh3[typeindex2use][sourceindex2use] = row.Field<double?>("NH3").GetValueOrDefault(0);
                     Vctr_voc[typeindex2use][sourceindex2use] = row.Field<double?>("VOC").GetValueOrDefault(0);
                     Vctr_soa[typeindex2use][sourceindex2use] = row.Field<double?>("SOA").GetValueOrDefault(0);
-                } catch (Exception e) {
+                }
+                catch (Exception e)
+                {
                     statuslog.Append("encountered unkown source or type index");
                 }
             }
 
             for (int i = 1; i < 5; i++)
-            {   
-                Vctr_pm_partial[i - 1] = SR_dp[i - 1].Multiply(Vctr_pm[i - 1]) * 28778;
-                Vctr_no2_partial[i - 1] = SR_no2[i - 1].Multiply(Vctr_no2[i - 1]) * 28778 * (62.0049 / 46.0055);
-                Vctr_so2_partial[i - 1] = SR_so2[i - 1].Multiply(Vctr_so2[i - 1]) * 28778 * (96.0626 / 64.0638);
-                Vctr_nh3_partial[i - 1] = SR_nh3[i - 1].Multiply(Vctr_nh3[i - 1]) * 28778 * (18.03846 / 17.03052);
-                Vctr_voc_partial[i - 1] = SR_dp[i - 1].Multiply(Vctr_voc[i - 1]) * 0;   //voc short range
+            {
+                Vctr_pm_partial[i - 1] = SR_dp[i - 1].Multiply(Vctr_pm[i - 1]);
+                Vctr_NOx_partial[i - 1] = SR_NOx[i - 1].Multiply(Vctr_NOx[i - 1]);
+                Vctr_so2_partial[i - 1] = SR_SO4[i - 1].Multiply(Vctr_so2[i - 1]);
+                //Vctr_nh3_partial[i - 1] = SR_nh3[i - 1].Multiply(Vctr_nh3[i - 1]) * 28778 * (18.03846 / 17.03052);
+                Vctr_voc_partial[i - 1] = SR_O3V[i - 1].Multiply(Vctr_voc[i - 1]);   //voc short range
                 Vctr_soa_partial[i - 1] = SR_dp[i - 1].Multiply(Vctr_soa[i - 1]) * 28778; //transfers like pm
+                Vctr_O3N_partial[i - 1] = SR_O3N[i - 1].Multiply(Vctr_NOx[i - 1]);   //voc short range
+
             }
 
             Vctr_pm_partial[0] = Vctr_pm_partial[0] + Vctr_pm_partial[1] + Vctr_pm_partial[2] + Vctr_pm_partial[3];
-            Vctr_no2_partial[0] = Vctr_no2_partial[0] + Vctr_no2_partial[1] + Vctr_no2_partial[2] + Vctr_no2_partial[3];
+            Vctr_NOx_partial[0] = Vctr_NOx_partial[0] + Vctr_NOx_partial[1] + Vctr_NOx_partial[2] + Vctr_NOx_partial[3];
             Vctr_so2_partial[0] = Vctr_so2_partial[0] + Vctr_so2_partial[1] + Vctr_so2_partial[2] + Vctr_so2_partial[3];
-            Vctr_nh3_partial[0] = Vctr_nh3_partial[0] + Vctr_nh3_partial[1] + Vctr_nh3_partial[2] + Vctr_nh3_partial[3];
+            //Vctr_nh3_partial[0] = Vctr_nh3_partial[0] + Vctr_nh3_partial[1] + Vctr_nh3_partial[2] + Vctr_nh3_partial[3];
             Vctr_voc_partial[0] = Vctr_voc_partial[0] + Vctr_voc_partial[1] + Vctr_voc_partial[2] + Vctr_voc_partial[3];
             Vctr_soa_partial[0] = Vctr_soa_partial[0] + Vctr_soa_partial[1] + Vctr_soa_partial[2] + Vctr_soa_partial[3];
+            Vctr_O3N_partial[0] = Vctr_O3N_partial[0] + Vctr_O3N_partial[1] + Vctr_O3N_partial[2] + Vctr_O3N_partial[3];
 
-            //reshuffle oder to work with computepm
-            // old order : destindx,NO2,SO2,NH3,SOA,PM25,VOC
-            return new Vector<double>[6] { Vctr_no2_partial[0], Vctr_so2_partial[0], Vctr_nh3_partial[0], Vctr_soa_partial[0], Vctr_pm_partial[0], Vctr_voc_partial[0] };
+
+            return new Vector<double>[6] { Vctr_pm_partial[0], Vctr_NOx_partial[0], Vctr_soa_partial[0], Vctr_so2_partial[0], /*Vctr_nh3_partial[0],*/ Vctr_voc_partial[0], Vctr_O3N_partial[0] };
         }
 
         public List<Cobra_ResultDetail> GetResults(double discountrate)
@@ -1605,22 +1706,41 @@ namespace CobraCompute
         }
 
 
-        public Vector<double> computePM(Vector<double> value_PM25, Vector<double> value_NO3, Vector<double> value_SOA, Vector<double> value_NH4, Vector<double> value_SO4)
+        public Vector<double> computeO3(Vector<double> value_VOC, Vector<double> value_O3N)
+        {
+            Vector<double> result_O3 = Vector<double>.Build.Dense(3108, 0);
+
+            for (int i = 0; i < 3108; i++)
+            {
+                result_O3[i] = computeO3(value_VOC[i], value_O3N[i]);
+            }
+
+            return result_O3;
+        }
+
+        public double computeO3(double value_VOC, double value_O3N)
+        {
+            return value_VOC + value_O3N;
+        }
+
+
+        public Vector<double> computePM(Vector<double> value_PM25, Vector<double> value_NO3, Vector<double> value_SOA, /*Vector<double> value_NH4,*/ Vector<double> value_SO4)
         {
             Vector<double> result_pm = Vector<double>.Build.Dense(3108, 0);
 
             for (int i = 0; i < 3108; i++)
             {
-                result_pm[i] = computePM(value_PM25[i], value_NO3[i], value_SOA[i], value_NH4[i], value_SO4[i], Adjustment[i]);
+                result_pm[i] = computePM(value_PM25[i], value_NO3[i], value_SOA[i], /*value_NH4[i],*/ value_SO4[i], Adjustment[i]);
             }
 
             return result_pm;
         }
 
-        public double computePM(double value_PM25, double value_NO3, double value_SOA, double value_NH4, double value_SO4, double adjustment = 1.0)
+        public double computePM(double value_PM25, double value_NO3, double value_SOA, /*double value_NH4,*/ double value_SO4, double adjustment = 1.0)
         {
             double result_pm = 0;
-            double NO3 = 62.0049;
+            //no longer need chemistry now that it is baked in with the SR Matrix
+            /*double NO3 = 62.0049;
             double cSO4 = 96.0626;
             double NH4 = 18.03846;
             double NH4NO3 = 80.04336;
@@ -1646,7 +1766,8 @@ namespace CobraCompute
             double Amm_Nitrate = Moles_Amm_Nitrate * NH4NO3;
             double Direct_PM25 = value_PM25;
             double SOA = value_SOA;
-            result_pm = adjustment * (Amm_Sulfate + Amm_Bisulfate + SO4 + Amm_Nitrate + Direct_PM25 + SOA);
+            result_pm = adjustment * (Amm_Sulfate + Amm_Bisulfate + SO4 + Amm_Nitrate + Direct_PM25 + SOA);*/
+            result_pm = value_PM25 + value_NO3 + value_SO4;
 
             return result_pm;
         }
@@ -1660,10 +1781,13 @@ namespace CobraCompute
 
             var aqcontrol = Vectorize(controlemissions);
 
-            // old order : destindx,NO2,SO2,NH3,SOA,PM25,VOC
-            //                      0    1  2   3    4   5
-            Vector<double> pm_control = computePM(aqcontrol[4], aqcontrol[0], aqcontrol[3], aqcontrol[2], aqcontrol[1]);
+            //           0   1    2    3    4    5    
+            //aqcontrol looks like:   [PM, NOx, SOA, SO2, VOC, O3N ];
+            Vector<double> pm_control = computePM(aqcontrol[0], aqcontrol[1], aqcontrol[2], aqcontrol[3]);
+            Vector<double> o3_control = computeO3(aqcontrol[4], aqcontrol[5]);
             var pm_delta = this.pm_base - pm_control;
+            var o3_delta = this.o3_base - o3_control;
+
 
             List<Cobra_Destination> Destinations = new List<Cobra_Destination>();
 
@@ -1672,13 +1796,13 @@ namespace CobraCompute
             {
                 Cobra_Destination dest = new Cobra_Destination();
                 dest.destindx = i + 1;
-                dest.BASE_NO2 = 0;
+                dest.BASE_NOx = 0;
                 dest.BASE_SO2 = 0;
                 dest.BASE_NH3 = 0;
                 dest.BASE_SOA = 0;
                 dest.BASE_PM25 = 0; //direct
                 dest.BASE_VOC = 0;
-                dest.CTRL_NO2 = 0;
+                dest.CTRL_NOx = 0;
                 dest.CTRL_SO2 = 0;
                 dest.CTRL_NH3 = 0;
                 dest.CTRL_SOA = 0;
@@ -1688,26 +1812,37 @@ namespace CobraCompute
                 dest.BASE_FINAL_PM = pm_base[i];
                 dest.CTRL_FINAL_PM = pm_control[i];
                 dest.DELTA_FINAL_PM = pm_delta[i];
+                dest.BASE_FINAL_O3 = o3_base[i];
+                dest.CTRL_FINAL_O3 = o3_control[i];
+                dest.DELTA_FINAL_O3 = o3_delta[i];
                 Destinations.Add(dest);
             }
 
             //compute part 2
+            Stopwatch stopwatch = new Stopwatch();
+            // Start timing
+            stopwatch.Start();
+            Console.WriteLine("******* STARTING COMPUTE IMPACTS");
             currentscenario.Impacts = ComputeImpacts(Destinations, discountrate);
+            stopwatch.Stop();
+            Console.WriteLine("Time taken to COMPUTE IMPACTS: {0}", stopwatch.Elapsed);
 
             currentscenario.isDirty = false;
 
             return true;
         }
 
-        private double crfunc(string rawfunction, string compfunction, double Incidence, double Beta, double DELTAQ, double POP, double A, double B, double C)
+        private double crfunc(string rawfunction, string compfunction, double Incidence, double Beta, double DELTAQ, double DELTAO, double POP, double A, double B, double C)
         {
             switch (compfunction)
             {
                 case "(1-(1/((1-INCIDENCE)*EXP(BETA*DELTAQ)+INCIDENCE)))*INCIDENCE*POP":
                     return (1 - (1 / ((1 - Incidence) * Math.Exp(Beta * DELTAQ) + Incidence))) * Incidence * POP;
-                case "(1-(1/((1-INCIDENCE)*EXP(BETA*DELTAQ)+INCIDENCE)))*INCIDENCE*A*POP":
+                case "(1-(1/((1-INCIDENCE)*EXP(BETA*DELTAQ)+INCIDENCE)))*INCIDENCE*A*POP": //this one from CR function is probablyt incorrect
                     return (1 - (1 / ((1 - Incidence) * Math.Exp(Beta * DELTAQ) + Incidence))) * Incidence * A * POP;
-                case "(1-(1/((1-INCIDENCE*A)*EXP(BETA*DELTAQ)+INCIDENCE*A)))*INCIDENCE*A*POP":
+                case "(1-(1/((1-INCIDENCE)*EXP(BETA*DELTAQ)+INCIDENCE)))*INCIDENCE*POP*A": //this one from CR function is probablyt incorrect
+                    return (1 - (1 / ((1 - Incidence) * Math.Exp(Beta * DELTAQ) + Incidence))) * Incidence * A * POP;
+                case "(1-(1/((1-INCIDENCE*A)*EXP(BETA*DELTAQ)+INCIDENCE*A)))*INCIDENCE*A*POP": //this one from CR function is probablyt incorrect
                     return (1 - (1 / ((1 - Incidence * A) * Math.Exp(Beta * DELTAQ) + Incidence * A))) * Incidence * A * POP;
                 case "(1-(1/EXP(BETA*DELTAQ)))*INCIDENCE*A*POP":
                     return (1 - (1 / Math.Exp(Beta * DELTAQ))) * Incidence * POP * A;
@@ -1731,6 +1866,27 @@ namespace CobraCompute
                     return (1 - (1 / ((1 - A) * Math.Exp(Beta * DELTAQ) + A))) * A * POP;
                 case "(1-(1/EXP(BETA*DELTAQ)))*A*POP":
                     return (1 - (1 / Math.Exp(Beta * DELTAQ))) * A * POP;
+                case "(1-(1/EXP(BETA*DELTAQ)))*A*POP*INCIDENCE":
+                    return (1 - (1 / Math.Exp(Beta * DELTAQ))) * A * Incidence * POP;
+                case "(1-(1/EXP(BETA*DELTAQ)))*INCIDENCE*POP*(1-A)":
+                    return (1 - (1 / Math.Exp(Beta * DELTAQ))) * Incidence * POP * (1 - A);
+                case "(1-(1/((1-INCIDENCE)*EXP(BETA*DeltaQ)+INCIDENCE)))*INCIDENCE*POP":
+                    return (1 - (1 / ((1 - Incidence) * Math.Exp(Beta * DELTAQ) + Incidence))) * Incidence * POP;
+                case "(1-(1/((1-INCIDENCE)*EXP(BETA*A*DeltaQ)+INCIDENCE)))*INCIDENCE*POP":
+                    return (1 - (1 / ((1 - Incidence) * Math.Exp(Beta * A * DELTAQ) + Incidence))) * Incidence * POP;
+                //DELTAO PARSING
+                case "(1-(1/EXP(BETA*DELTAO)))*INCIDENCE*POP":
+                    return (1 - (1 / Math.Exp(Beta * DELTAO))) * Incidence * POP;
+                case "(1-(1/((1-A)*EXP(BETA*DELTAO)+A)))*A*POP*INCIDENCE":
+                    return (1 - (1 / ((1 - A) * Math.Exp(Beta * DELTAO) + A))) * A * POP * Incidence;
+                case "(1-(1/((1-INCIDENCE)*EXP(BETA*A*DeltaO)+INCIDENCE)))*INCIDENCE*POP":
+                    return (1 - (1 / ((1 - Incidence) * Math.Exp(Beta * A * DELTAO) + Incidence))) * Incidence * POP;
+                case "(1-(1/EXP(BETA*DELTAO)))*INCIDENCE*A*POP*(1-A)":
+                    return (1 - (1 / Math.Exp(Beta * DELTAO))) * Incidence * POP * (1 - A);
+                case "(1-(1/((1-INCIDENCE)*EXP(BETA*DeltaO)+INCIDENCE)))*INCIDENCE*POP":
+                    return (1 - (1 / ((1 - Incidence) * Math.Exp(Beta * DELTAO) + Incidence))) * Incidence * POP;
+                case "(1-(1/EXP(BETA*DELTAO)))*INCIDENCE*POP*A*B":
+                    return (1 - (1 / Math.Exp(Beta * DELTAO))) * Incidence * POP * A * B;
                 default:
                     Expression e = new Expression(rawfunction);
                     e.Parameters["A"] = A;
@@ -1738,10 +1894,14 @@ namespace CobraCompute
                     e.Parameters["C"] = C;
                     e.Parameters["Beta"] = Beta;
                     e.Parameters["DELTAQ"] = DELTAQ;
+                    e.Parameters["DELTAO"] = DELTAO;
                     e.Parameters["Incidence"] = Incidence;
                     e.Parameters["POP"] = POP;
                     return (double)e.Evaluate();
             }
+
+
+
         }
 
         private double perannumvalue(int year, double weight, double factor)
@@ -1777,6 +1937,9 @@ namespace CobraCompute
 
         public List<Cobra_ResultDetail> ComputeImpacts(List<Cobra_Destination> Destinations, double valat)
         {
+            statuslog.Clear();
+            statuslog.AppendLine("crfunc.FunctionID.ToString(),age.ToString(),POP.ToString(),Incidence.ToString(),rawresult.ToString(),result.ToString()");
+
             Dictionary<string, Result> results_cr = new Dictionary<string, Result>();
             Dictionary<string, Result> results_valuation = new Dictionary<string, Result>();
 
@@ -1815,6 +1978,9 @@ namespace CobraCompute
                 if (crfunc.Seasonal_Metric.ToUpper() == "DAILY")
                 {
                     metric_adjustment = 365;
+                } else if (crfunc.Seasonal_Metric.ToUpper() == "OZONE")
+                {
+                    metric_adjustment = 152;
                 }
 
                 foreach (var destination in Destinations)
@@ -1826,6 +1992,7 @@ namespace CobraCompute
                     double C = crfunc.C.GetValueOrDefault(0);
                     double Beta = crfunc.Beta.GetValueOrDefault(0);
                     double DELTAQ = destination.DELTA_FINAL_PM.GetValueOrDefault(0);
+                    double DELTAO = destination.DELTA_FINAL_O3.GetValueOrDefault(0);
                     double Incidence = 0;
 
                     //year dependent but with the twist that pop and incidence are containing all year data
@@ -1849,7 +2016,18 @@ namespace CobraCompute
                             Incidence = value.incidenceat(age);
                         }
 
-                        double result = this.crfunc(function, cleanfunction, Incidence, Beta, DELTAQ, POP, A, B, C) * poolingweight * metric_adjustment;
+                        //Stopwatch stopwatch = new Stopwatch();
+                        // Start timing
+                        //stopwatch.Start();
+                        double rawresult = this.crfunc(function, cleanfunction, Incidence, Beta, DELTAQ, DELTAO, POP, A, B, C);
+                        //stopwatch.Stop();
+                        //Console.WriteLine("Time taken for crFUNC evaluation: {0}", stopwatch.Elapsed);
+                        double result = rawresult * poolingweight * metric_adjustment;
+                        if ((destination.destindx == 1797) && (crfunc.FunctionID == 12 || crfunc.FunctionID == 13 || crfunc.FunctionID == 31))
+                        {
+                            statuslog.AppendLine(crfunc.FunctionID.ToString() + "," + age.ToString() + "," + POP.ToString() + "," + Incidence.ToString() + "," + rawresult.ToString() + "," + result.ToString());
+                        }
+
 
                         // check if there is an entry already to make pooling work
                         if (results_cr.TryGetValue(destination.destindx + "|" + crfunc.Endpoint, out result_cr))
@@ -1888,6 +2066,10 @@ namespace CobraCompute
                 {
                     metric_adjustment = 365;
                 }
+                else if (valuefunc.Seasonal_Metric.ToUpper() == "OZONE")
+                {
+                    metric_adjustment = 152;
+                }
 
                 foreach (var destination in Destinations)
                 {
@@ -1898,6 +2080,7 @@ namespace CobraCompute
                     double C = valuefunc.C.GetValueOrDefault(0);
                     double Beta = valuefunc.Beta.GetValueOrDefault(0);
                     double DELTAQ = destination.DELTA_FINAL_PM.GetValueOrDefault(0);
+                    double DELTAO = destination.DELTA_FINAL_O3.GetValueOrDefault(0);
                     double Incidence = 0;
 
                     //year dependent but with the twist that pop and incidence are containing all year data
@@ -1922,35 +2105,27 @@ namespace CobraCompute
                             Incidence = value.incidenceat(age);
                         }
 
-                        double numCases = this.crfunc(function, cleanfunction, Incidence, Beta, DELTAQ, POP, A, B, C) * poolingweight * metric_adjustment;
+                        double numCases = this.crfunc(function, cleanfunction, Incidence, Beta, DELTAQ, DELTAO, POP, A, B, C) * poolingweight * metric_adjustment;
                         double valueCases = 0;
 
-                        if (valat==3) //the default, just go with original
+                        if (valat == 0 || valuefunc.ApplyDiscount == "NO") //the default, just go with original
                         {
-                            valueCases = numCases * valuefunc.valat3pct.GetValueOrDefault(0) * 1.1225;
+                            valueCases = numCases * valuefunc.Value.GetValueOrDefault(0) * 1.1225;
                         }
                         else
-                        {
-                            //compare if vatat 3 equal valat 7 then just take it
-                            if ( valuefunc.valat7pct.GetValueOrDefault(0)== valuefunc.valat3pct.GetValueOrDefault(0))
-                            {
-                                valueCases = numCases * valuefunc.valat3pct.GetValueOrDefault(0) * 1.1225;
-                            } else
-                            {
-                                //more complicated case, back out 3 pct and apply new
-                                double val3 = adjustmentfactorfromdiscountrate(0.03);
-                                double valtarget = adjustmentfactorfromdiscountrate(valat/100);
+                        { //apply custom discount rate
+                          //we are assuming that valuefunc.Value is the UNDISCOUNTED rate so now we are going to apply the discount rate
+                            double valtarget = adjustmentfactorfromdiscountrate(valat / 100);
 
-                                valueCases = numCases * valuefunc.valat3pct.GetValueOrDefault(0) / val3 * valtarget * 1.1225;
+                            valueCases = numCases * valuefunc.Value.GetValueOrDefault(0) * valtarget * 1.1225;
 
-                            }
-
+                            //result = result * valuefunc.ApplyDiscount.GetValueOrDefault(0) * 1.1225;
                         }
 
                         // check if there is an entry already to make pooling work
                         if (results_valuation.TryGetValue(destination.destindx + "|" + valuefunc.Endpoint, out result_valuation))
                         {
-                            result_valuation.Value = result_valuation.Value + valueCases;
+                            result_valuation.Value += valueCases;
                         }
                         else
                         {
@@ -1977,91 +2152,190 @@ namespace CobraCompute
                 result_record.BASE_FINAL_PM = destination.BASE_FINAL_PM;
                 result_record.CTRL_FINAL_PM = destination.CTRL_FINAL_PM;
                 result_record.DELTA_FINAL_PM = destination.DELTA_FINAL_PM;
+                result_record.BASE_FINAL_O3 = destination.BASE_FINAL_O3;
+                result_record.CTRL_FINAL_O3 = destination.CTRL_FINAL_O3;
+                result_record.DELTA_FINAL_O3 = destination.DELTA_FINAL_O3;
                 var loc = dict_state.Where(d => d.SOURCEINDX == result_record.destindx).First();
                 result_record.FIPS = loc.FIPS;
                 result_record.STATE = loc.STNAME;
                 result_record.COUNTY = loc.CYNAME;
 
-                result_record.Acute_Bronchitis = results_cr[destination.destindx + "|" + "Acute Bronchitis"].Value;
-                result_record.Acute_Myocardial_Infarction_Nonfatal__high_ = results_cr[destination.destindx + "|" + "Acute Myocardial Infarction, Nonfatal (high)"].Value;
-                result_record.Acute_Myocardial_Infarction_Nonfatal__low_ = results_cr[destination.destindx + "|" + "Acute Myocardial Infarction, Nonfatal (low)"].Value;
-                result_record.Asthma_Exacerbation_Cough = results_cr[destination.destindx + "|" + "Asthma Exacerbation, Cough"].Value;
-                result_record.Asthma_Exacerbation_Shortness_of_Breath = results_cr[destination.destindx + "|" + "Asthma Exacerbation, Shortness of Breath"].Value;
-                result_record.Asthma_Exacerbation_Wheeze = results_cr[destination.destindx + "|" + "Asthma Exacerbation, Wheeze"].Value;
-                result_record.Emergency_Room_Visits_Asthma = results_cr[destination.destindx + "|" + "Emergency Room Visits, Asthma"].Value;
-                result_record.HA_All_Cardiovascular__less_Myocardial_Infarctions_ = results_cr[destination.destindx + "|" + "HA, All Cardiovascular (less Myocardial Infarctions)"].Value;
-                result_record.HA_All_Respiratory = results_cr[destination.destindx + "|" + "HA, All Respiratory"].Value;
-                result_record.HA_Asthma = results_cr[destination.destindx + "|" + "HA, Asthma"].Value;
-                result_record.HA_Chronic_Lung_Disease = results_cr[destination.destindx + "|" + "HA, Chronic Lung Disease"].Value;
-                result_record.Lower_Respiratory_Symptoms = results_cr[destination.destindx + "|" + "Lower Respiratory Symptoms"].Value;
-                result_record.Minor_Restricted_Activity_Days = results_cr[destination.destindx + "|" + "Minor Restricted Activity Days"].Value;
-                result_record.Mortality_All_Cause__low_ = results_cr[destination.destindx + "|" + "Mortality, All Cause (low)"].Value;
-                result_record.Mortality_All_Cause__high_ = results_cr[destination.destindx + "|" + "Mortality, All Cause (high)"].Value;
-                result_record.Infant_Mortality = results_cr[destination.destindx + "|" + "Infant Mortality"].Value;
-                result_record.Upper_Respiratory_Symptoms = results_cr[destination.destindx + "|" + "Upper Respiratory Symptoms"].Value;
-                result_record.Work_Loss_Days = results_cr[destination.destindx + "|" + "Work Loss Days"].Value;
 
-                result_record.C__Acute_Bronchitis = results_valuation[destination.destindx + "|" + "Acute Bronchitis"].Value;
-                result_record.C__Acute_Myocardial_Infarction_Nonfatal__high_ = results_valuation[destination.destindx + "|" + "Acute Myocardial Infarction, Nonfatal (high)"].Value;
-                result_record.C__Acute_Myocardial_Infarction_Nonfatal__low_ = results_valuation[destination.destindx + "|" + "Acute Myocardial Infarction, Nonfatal (low)"].Value;
-                result_record.C__Asthma_Exacerbation = results_valuation[destination.destindx + "|" + "Asthma Exacerbation"].Value;
-                result_record.C__Emergency_Room_Visits_Asthma = results_valuation[destination.destindx + "|" + "Emergency Room Visits, Asthma"].Value;
-                result_record.C__CVD_Hosp_Adm = results_valuation[destination.destindx + "|" + "CVD Hosp. Adm."].Value;
-                result_record.C__Resp_Hosp_Adm = results_valuation[destination.destindx + "|" + "Resp. Hosp. Adm."].Value;
-                result_record.C__Lower_Respiratory_Symptoms = results_valuation[destination.destindx + "|" + "Lower Respiratory Symptoms"].Value;
-                result_record.C__Minor_Restricted_Activity_Days = results_valuation[destination.destindx + "|" + "Minor Restricted Activity Days"].Value;
-                result_record.C__Mortality_All_Cause__low_ = results_valuation[destination.destindx + "|" + "Mortality, All Cause (low)"].Value;
-                result_record.C__Mortality_All_Cause__high_ = results_valuation[destination.destindx + "|" + "Mortality, All Cause (high)"].Value;
-                result_record.C__Infant_Mortality = results_valuation[destination.destindx + "|" + "Infant Mortality"].Value;
-                result_record.C__Upper_Respiratory_Symptoms = results_valuation[destination.destindx + "|" + "Upper Respiratory Symptoms"].Value;
-                result_record.C__Work_Loss_Days = results_valuation[destination.destindx + "|" + "Work Loss Days"].Value;
+                result_record.PM_Acute_Myocardial_Infarction_Nonfatal = results_cr[destination.destindx + "|" + "PM Acute Myocardial Infarction, Nonfatal"].Value;
+
+
+                result_record.PM_HA_All_Respiratory = results_cr[destination.destindx + "|" + "PM HA, All Respiratory"].Value;
+                result_record.PM_Minor_Restricted_Activity_Days = results_cr[destination.destindx + "|" + "PM Minor Restricted Activity Days"].Value;
+                result_record.PM_Mortality_All_Cause__low_ = results_cr[destination.destindx + "|" + "PM Mortality, All Cause (low)"].Value;
+                result_record.PM_Mortality_All_Cause__high_ = results_cr[destination.destindx + "|" + "PM Mortality, All Cause (high)"].Value;
+                result_record.PM_Infant_Mortality = results_cr[destination.destindx + "|" + "PM Infant Mortality"].Value;
+                result_record.PM_Work_Loss_Days = results_cr[destination.destindx + "|" + "PM Work Loss Days"].Value;
+                result_record.PM_Incidence_Lung_Cancer = results_cr[destination.destindx + "|" + "PM Incidence, Lung Cancer"].Value;
+
+                result_record.PM_Incidence_Hay_Fever_Rhinitis = results_cr[destination.destindx + "|" + "PM Incidence, Hay Fever/Rhinitis"].Value;
+                result_record.PM_Incidence_Asthma = results_cr[destination.destindx + "|" + "PM Incidence, Asthma"].Value;
+                result_record.PM_HA_Cardio_Cerebro_and_Peripheral_Vascular_Disease = results_cr[destination.destindx + "|" + "PM HA, Cardio-, Cerebro- and Peripheral Vascular Disease"].Value;
+                result_record.PM_HA_Alzheimers_Disease = results_cr[destination.destindx + "|" + "PM HA, Alzheimers Disease"].Value;
+                result_record.PM_HA_Parkinsons_Disease = results_cr[destination.destindx + "|" + "PM HA, Parkinsons Disease"].Value;
+                result_record.PM_Incidence_Stroke = results_cr[destination.destindx + "|" + "PM Incidence, Stroke"].Value;
+                result_record.PM_Incidence_Out_of_Hospital_Cardiac_Arrest = results_cr[destination.destindx + "|" + "PM Incidence, Out of Hospital Cardiac Arrest"].Value;
+                result_record.PM_Asthma_Symptoms_Albuterol_use = results_cr[destination.destindx + "|" + "PM Asthma Symptoms, Albuterol use"].Value;
+                result_record.PM_HA_Respiratory2 = results_cr[destination.destindx + "|" + "PM HA, Respiratory-2"].Value;
+                result_record.PM_ER_visits_respiratory = results_cr[destination.destindx + "|" + "PM ER visits, respiratory"].Value;
+                result_record.PM_ER_visits_All_Cardiac_Outcomes = results_cr[destination.destindx + "|" + "PM ER visits, All Cardiac Outcomes"].Value;
+
+                result_record.O3_ER_visits_respiratory = results_cr[destination.destindx + "|" + "O3 ER visits, respiratory"].Value;
+                result_record.O3_HA_All_Respiratory = results_cr[destination.destindx + "|" + "O3 HA, All Respiratory"].Value;
+                result_record.O3_Incidence_Hay_Fever_Rhinitis = results_cr[destination.destindx + "|" + "O3 Incidence, Hay Fever/Rhinitis"].Value;
+                result_record.O3_Incidence_Asthma = results_cr[destination.destindx + "|" + "O3 Incidence, Asthma"].Value;
+                result_record.O3_Asthma_Symptoms_Chest_Tightness = results_cr[destination.destindx + "|" + "O3 Asthma Symptoms, Chest Tightness"].Value;
+                result_record.O3_Asthma_Symptoms_Cough = results_cr[destination.destindx + "|" + "O3 Asthma Symptoms, Cough"].Value;
+                result_record.O3_Asthma_Symptoms_Shortness_of_Breath = results_cr[destination.destindx + "|" + "O3 Asthma Symptoms, Shortness of Breath"].Value;
+                result_record.O3_Asthma_Symptoms_Wheeze = results_cr[destination.destindx + "|" + "O3 Asthma Symptoms, Wheeze"].Value;
+                result_record.O3_ER_Visits_Asthma = results_cr[destination.destindx + "|" + "O3 Emergency Room Visits, Asthma"].Value;
+                result_record.O3_School_Loss_Days = results_cr[destination.destindx + "|" + "O3 School Loss Days, All Cause"].Value;
+                result_record.O3_Mortality_Longterm_exposure = results_cr[destination.destindx + "|" + "O3 Mortality, Long-term exposure"].Value;
+                result_record.O3_Mortality_Shortterm_exposure = results_cr[destination.destindx + "|" + "O3 Mortality, Short-term exposure"].Value;
+
+
+                result_record.C__PM_Acute_Myocardial_Infarction_Nonfatal = results_valuation[destination.destindx + "|" + "PM Acute Myocardial Infarction, Nonfatal"].Value;
+
+                result_record.C__PM_Resp_Hosp_Adm = results_valuation[destination.destindx + "|" + "PM HA, All Respiratory"].Value;
+                result_record.C__PM_Minor_Restricted_Activity_Days = results_valuation[destination.destindx + "|" + "PM Minor Restricted Activity Days"].Value;
+                result_record.C__PM_Mortality_All_Cause__low_ = results_valuation[destination.destindx + "|" + "PM Mortality, All Cause (low)"].Value;
+                result_record.C__PM_Mortality_All_Cause__high_ = results_valuation[destination.destindx + "|" + "PM Mortality, All Cause (high)"].Value;
+                result_record.C__PM_Infant_Mortality = results_valuation[destination.destindx + "|" + "PM Infant Mortality"].Value;
+
+                result_record.C__PM_Work_Loss_Days = results_valuation[destination.destindx + "|" + "PM Work Loss Days"].Value;
+                result_record.C__PM_Incidence_Lung_Cancer = results_valuation[destination.destindx + "|" + "PM Incidence, Lung Cancer"].Value;
+
+                result_record.C__PM_Incidence_Hay_Fever_Rhinitis = results_valuation[destination.destindx + "|" + "PM Incidence, Hay Fever/Rhinitis"].Value;
+                result_record.C__PM_Incidence_Asthma = results_valuation[destination.destindx + "|" + "PM Incidence, Asthma"].Value;
+                result_record.C__PM_HA_Cardio_Cerebro_and_Peripheral_Vascular_Disease = results_valuation[destination.destindx + "|" + "PM HA, Cardio-, Cerebro- and Peripheral Vascular Disease"].Value;
+                result_record.C__PM_HA_Alzheimers_Disease = results_valuation[destination.destindx + "|" + "PM HA, Alzheimers Disease"].Value;
+                result_record.C__PM_HA_Parkinsons_Disease = results_valuation[destination.destindx + "|" + "PM HA, Parkinsons Disease"].Value;
+                result_record.C__PM_Incidence_Stroke = results_valuation[destination.destindx + "|" + "PM Incidence, Stroke"].Value;
+                result_record.C__PM_Incidence_Out_of_Hospital_Cardiac_Arrest = results_valuation[destination.destindx + "|" + "PM Incidence, Out of Hospital Cardiac Arrest"].Value;
+                result_record.C__PM_Asthma_Symptoms_Albuterol_use = results_valuation[destination.destindx + "|" + "PM Asthma Symptoms, Albuterol use"].Value;
+                result_record.C__PM_HA_Respiratory2 = results_valuation[destination.destindx + "|" + "PM HA, Respiratory-2"].Value;
+                result_record.C__PM_ER_visits_respiratory = results_valuation[destination.destindx + "|" + "PM ER visits, respiratory"].Value;
+                result_record.C__PM_ER_visits_All_Cardiac_Outcomes = results_valuation[destination.destindx + "|" + "PM ER visits, All Cardiac Outcomes"].Value;
+
+                result_record.C__O3_ER_visits_respiratory = results_valuation[destination.destindx + "|" + "O3 ER visits, respiratory"].Value;
+                result_record.C__O3_HA_All_Respiratory = results_valuation[destination.destindx + "|" + "O3 HA, All Respiratory"].Value;
+                result_record.C__O3_Incidence_Hay_Fever_Rhinitis = results_valuation[destination.destindx + "|" + "O3 Incidence, Hay Fever/Rhinitis"].Value;
+                result_record.C__O3_Incidence_Asthma = results_valuation[destination.destindx + "|" + "O3 Incidence, Asthma"].Value;
+                result_record.C__O3_Asthma_Symptoms_Chest_Tightness = results_valuation[destination.destindx + "|" + "O3 Asthma Symptoms, Chest Tightness"].Value;
+                result_record.C__O3_Asthma_Symptoms_Cough = results_valuation[destination.destindx + "|" + "O3 Asthma Symptoms, Cough"].Value;
+                result_record.C__O3_Asthma_Symptoms_Shortness_of_Breath = results_valuation[destination.destindx + "|" + "O3 Asthma Symptoms, Shortness of Breath"].Value;
+                result_record.C__O3_Asthma_Symptoms_Wheeze = results_valuation[destination.destindx + "|" + "O3 Asthma Symptoms, Wheeze"].Value;
+                result_record.C__O3_ER_Visits_Asthma = results_valuation[destination.destindx + "|" + "O3 Emergency Room Visits, Asthma"].Value;
+                result_record.C__O3_School_Loss_Days = results_valuation[destination.destindx + "|" + "O3 School Loss Days, All Cause"].Value;
+                result_record.C__O3_Mortality_Longterm_exposure = results_valuation[destination.destindx + "|" + "O3 Mortality, Long-term exposure"].Value;
+                result_record.C__O3_Mortality_Shortterm_exposure = results_valuation[destination.destindx + "|" + "O3 Mortality, Short-term exposure"].Value;
 
                 //now do total health effect dollars
                 double lowvals = 0;
 
-                lowvals += result_record.C__Acute_Bronchitis.GetValueOrDefault(0);
+                //add all health effects to low vals that do not have high/low differences
+                lowvals += result_record.C__PM_Acute_Myocardial_Infarction_Nonfatal.GetValueOrDefault(0);
+                lowvals += result_record.C__PM_Resp_Hosp_Adm.GetValueOrDefault(0);
+                lowvals += result_record.C__PM_Minor_Restricted_Activity_Days.GetValueOrDefault(0);
+                lowvals += result_record.C__PM_Infant_Mortality.GetValueOrDefault(0);
+                lowvals += result_record.C__PM_Work_Loss_Days.GetValueOrDefault(0);
+                lowvals += result_record.C__PM_Incidence_Lung_Cancer.GetValueOrDefault(0);
+                lowvals += result_record.C__PM_Incidence_Hay_Fever_Rhinitis.GetValueOrDefault(0);
+                lowvals += result_record.C__PM_Incidence_Asthma.GetValueOrDefault(0);
+                lowvals += result_record.C__PM_HA_Cardio_Cerebro_and_Peripheral_Vascular_Disease.GetValueOrDefault(0);
+                lowvals += result_record.C__PM_HA_Alzheimers_Disease.GetValueOrDefault(0);
+                lowvals += result_record.C__PM_HA_Parkinsons_Disease.GetValueOrDefault(0);
+                lowvals += result_record.C__PM_Incidence_Stroke.GetValueOrDefault(0);
+                lowvals += result_record.C__PM_Incidence_Out_of_Hospital_Cardiac_Arrest.GetValueOrDefault(0);
+                lowvals += result_record.C__PM_Asthma_Symptoms_Albuterol_use.GetValueOrDefault(0);
+                lowvals += result_record.C__PM_HA_Respiratory2.GetValueOrDefault(0);
+                lowvals += result_record.C__PM_ER_visits_respiratory.GetValueOrDefault(0);
+                lowvals += result_record.C__PM_ER_visits_All_Cardiac_Outcomes.GetValueOrDefault(0);
 
-                lowvals += result_record.C__Asthma_Exacerbation.GetValueOrDefault(0);
-                lowvals += result_record.C__Emergency_Room_Visits_Asthma.GetValueOrDefault(0);
-                lowvals += result_record.C__CVD_Hosp_Adm.GetValueOrDefault(0);
-                lowvals += result_record.C__Resp_Hosp_Adm.GetValueOrDefault(0);
-                lowvals += result_record.C__Lower_Respiratory_Symptoms.GetValueOrDefault(0);
-                lowvals += result_record.C__Minor_Restricted_Activity_Days.GetValueOrDefault(0);
+                //get all PM
+                result_record.C__Total_PM_Low_Value = lowvals;
+                result_record.C__Total_PM_High_Value = lowvals;
+                //separately add low or high mortality to appropriate total var
+                result_record.C__Total_PM_High_Value += result_record.C__PM_Mortality_All_Cause__high_.GetValueOrDefault(0);
+                result_record.C__Total_PM_Low_Value += result_record.C__PM_Mortality_All_Cause__low_.GetValueOrDefault(0);
 
-                lowvals += result_record.C__Infant_Mortality.GetValueOrDefault(0);
-                lowvals += result_record.C__Upper_Respiratory_Symptoms.GetValueOrDefault(0);
-                lowvals += result_record.C__Work_Loss_Days.GetValueOrDefault(0);
+
+
+                lowvals += result_record.C__O3_ER_visits_respiratory.GetValueOrDefault(0);
+                lowvals += result_record.C__O3_HA_All_Respiratory.GetValueOrDefault(0);
+                lowvals += result_record.C__O3_Incidence_Hay_Fever_Rhinitis.GetValueOrDefault(0);
+                lowvals += result_record.C__O3_Incidence_Asthma.GetValueOrDefault(0);
+                lowvals += result_record.C__O3_Asthma_Symptoms_Chest_Tightness.GetValueOrDefault(0);
+
+                lowvals += result_record.C__O3_Asthma_Symptoms_Cough.GetValueOrDefault(0);
+                lowvals += result_record.C__O3_Asthma_Symptoms_Shortness_of_Breath.GetValueOrDefault(0);
+                lowvals += result_record.C__O3_Asthma_Symptoms_Wheeze.GetValueOrDefault(0);
+                lowvals += result_record.C__O3_ER_Visits_Asthma.GetValueOrDefault(0);
+                lowvals += result_record.C__O3_School_Loss_Days.GetValueOrDefault(0);
+                lowvals += result_record.C__O3_Mortality_Longterm_exposure.GetValueOrDefault(0);
+                lowvals += result_record.C__O3_Mortality_Shortterm_exposure.GetValueOrDefault(0);
+
+
+                //get all O3
+                result_record.C__Total_O3_Value = result_record.C__O3_Asthma_Symptoms_Cough.GetValueOrDefault(0)
+                + result_record.C__O3_Asthma_Symptoms_Shortness_of_Breath.GetValueOrDefault(0)
+                + result_record.C__O3_Asthma_Symptoms_Wheeze.GetValueOrDefault(0)
+                + result_record.C__O3_ER_Visits_Asthma.GetValueOrDefault(0)
+                + result_record.C__O3_School_Loss_Days.GetValueOrDefault(0)
+                + result_record.C__O3_Mortality_Longterm_exposure.GetValueOrDefault(0)
+                + result_record.C__O3_Mortality_Shortterm_exposure.GetValueOrDefault(0);
 
                 result_record.C__Total_Health_Benefits_Low_Value = lowvals;
 
                 //add low to high this works
                 result_record.C__Total_Health_Benefits_High_Value = lowvals;
 
-                //and here they diverge
-                result_record.C__Total_Health_Benefits_High_Value += result_record.C__Acute_Myocardial_Infarction_Nonfatal__high_.GetValueOrDefault(0) + result_record.C__Mortality_All_Cause__high_.GetValueOrDefault(0);
-
-                result_record.C__Total_Health_Benefits_Low_Value += result_record.C__Acute_Myocardial_Infarction_Nonfatal__low_.GetValueOrDefault(0) + result_record.C__Mortality_All_Cause__low_.GetValueOrDefault(0);
+                //add the endpoints with different high/low vals (in this case only PM_mortality)
+                result_record.C__Total_Health_Benefits_High_Value += result_record.C__PM_Mortality_All_Cause__high_.GetValueOrDefault(0);
+                result_record.C__Total_Health_Benefits_Low_Value += result_record.C__PM_Mortality_All_Cause__low_.GetValueOrDefault(0);
 
                 results.Add(result_record);
             }
             return results;
         }
 
-        public List<Cobra_ResultDetail> ComputeGenericImpacts(double delta_pm, double base_pm, double control_pm, Cobra_POP population, Cobra_Incidence[] incidence, bool valat3)
+        public List<Cobra_ResultDetail> ComputeGenericImpacts(double delta_pm, double base_pm, double control_pm, double delta_o3, double base_o3, double control_o3, Cobra_POP population, Cobra_Incidence[] incidence, double discountRate)
         {
+            List<Cobra_Destination> Destinations = new List<Cobra_Destination>();
+            Cobra_Destination dest = new Cobra_Destination();
+            dest.destindx = 1797;
+            Destinations.Add(dest);
+
             Dictionary<string, Result> results_cr = new Dictionary<string, Result>();
             Dictionary<string, Result> results_valuation = new Dictionary<string, Result>();
 
 
-            List<string> Endpoints_cr = CRfunctions.Select(c => c.Endpoint).Distinct().ToList();
-            List<string> Endpoints_val = Valuationfunctions.Select(c => c.Endpoint).Distinct().ToList();
-
-            Dictionary<string, Cobra_Incidence> dict_incidence = new Dictionary<string, Cobra_Incidence>();
-            foreach (var item in incidence)
+            Dictionary<long?, Cobra_POP> dict_pop = new Dictionary<long?, Cobra_POP>(this.Populations.Count());
+            foreach (var item in Populations)
             {
-                dict_incidence.Add(item.Endpoint, item);
+                dict_pop.Add(item.DestinationID, item);
             }
 
+            Dictionary<string, Cobra_Incidence> dict_incidence = new Dictionary<string, Cobra_Incidence>();
+            foreach (var item in Incidence)
+            {
+                dict_incidence.Add(item.DestinationID.ToString() + "|" + item.Endpoint, item);
+            }
+
+            /*
+                    Dictionary<long?, Cobra_POP> dict_pop = new Dictionary<long?, Cobra_POP>(this.Populations.Count());
+                    dict_pop.Add(1797, population);
+
+                    Dictionary<string, Cobra_Incidence> dict_incidence = new Dictionary<string, Cobra_Incidence>();
+                    foreach (var item in incidence)
+                    {
+                        dict_incidence.Add("1797" + "|" + item.Endpoint, item);
+                    }
+            */
 
             Cobra_Incidence value;
             Result result_cr;
@@ -2082,7 +2356,12 @@ namespace CobraCompute
                 {
                     metric_adjustment = 365;
                 }
+                else if (crfunc.Seasonal_Metric.ToUpper() == "OZONE")
+                {
+                    metric_adjustment = 152;
+                }
 
+                foreach (var destination in Destinations)
                 {
                     //fixed params
                     Expression e = new Expression(function);
@@ -2091,11 +2370,12 @@ namespace CobraCompute
                     double C = crfunc.C.GetValueOrDefault(0);
                     double Beta = crfunc.Beta.GetValueOrDefault(0);
                     double DELTAQ = delta_pm;
+                    double DELTAO = delta_o3;
                     double Incidence = 0;
 
                     //year dependent but with the twist that pop and incidence are containing all year data
-                    Cobra_POP poprow = population;
-                    if (dict_incidence.TryGetValue(crfunc.IncidenceEndpoint, out value))
+                    Cobra_POP poprow = dict_pop[destination.destindx];
+                    if (dict_incidence.TryGetValue(destination.destindx + "|" + crfunc.IncidenceEndpoint, out value))
                     {
                         incidencerow = value;
                     }
@@ -2114,16 +2394,26 @@ namespace CobraCompute
                             Incidence = value.incidenceat(age);
                         }
 
-                        double result = this.crfunc(function, cleanfunction, Incidence, Beta, DELTAQ, POP, A, B, C) * poolingweight * metric_adjustment;
+                        double result = this.crfunc(function, cleanfunction, Incidence, Beta, DELTAQ, DELTAO, POP, A, B, C) * poolingweight * metric_adjustment;
 
                         // check if there is an entry already to make pooling work
-                        if (results_cr.TryGetValue(crfunc.Endpoint, out result_cr))
+                        if (results_cr.TryGetValue("99999" + "|" + crfunc.Endpoint, out result_cr))
                         {
                             result_cr.Value = result_cr.Value + result;
                         }
                         else
                         {
-                            results_cr.Add(crfunc.Endpoint, new Result { Destinationindex = 0, Endpoint = crfunc.Endpoint, Value = result });
+                            results_cr.Add("99999" + "|" + crfunc.Endpoint, new Result { Destinationindex = destination.destindx.GetValueOrDefault(0), Endpoint = crfunc.Endpoint, Value = result });
+                        }
+
+                        // add to national total
+                        if (results_cr.TryGetValue("nation|" + crfunc.Endpoint, out result_cr))
+                        {
+                            result_cr.Value = result_cr.Value + result;
+                        }
+                        else
+                        {
+                            results_cr.Add("nation|" + crfunc.Endpoint, new Result { Destinationindex = destination.destindx.GetValueOrDefault(0), Endpoint = crfunc.Endpoint, Value = result });
                         }
                     }
                 }
@@ -2143,7 +2433,12 @@ namespace CobraCompute
                 {
                     metric_adjustment = 365;
                 }
+                else if (valuefunc.Seasonal_Metric.ToUpper() == "OZONE")
+                {
+                    metric_adjustment = 152;
+                }
 
+                foreach (var destination in Destinations)
                 {
                     //fixed params
                     Expression e = new Expression(function);
@@ -2151,12 +2446,13 @@ namespace CobraCompute
                     double B = valuefunc.B.GetValueOrDefault(0);
                     double C = valuefunc.C.GetValueOrDefault(0);
                     double Beta = valuefunc.Beta.GetValueOrDefault(0);
-                    double DELTAQ = delta_pm;
+                    double DELTAQ = destination.DELTA_FINAL_PM.GetValueOrDefault(0);
+                    double DELTAO = destination.DELTA_FINAL_O3.GetValueOrDefault(0);
                     double Incidence = 0;
 
                     //year dependent but with the twist that pop and incidence are containing all year data
-                    Cobra_POP poprow = population;
-                    if (dict_incidence.TryGetValue(valuefunc.IncidenceEndpoint, out value))
+                    Cobra_POP poprow = dict_pop[99999];
+                    if (dict_incidence.TryGetValue("99999" + "|" + valuefunc.IncidenceEndpoint, out value))
                     {
                         incidencerow = value;
                     }
@@ -2176,118 +2472,195 @@ namespace CobraCompute
                             Incidence = value.incidenceat(age);
                         }
 
-                        double result = this.crfunc(function, cleanfunction, Incidence, Beta, DELTAQ, POP, A, B, C) * poolingweight * metric_adjustment;
+                        double numCases = this.crfunc(function, cleanfunction, Incidence, Beta, DELTAQ, DELTAO, POP, A, B, C) * poolingweight * metric_adjustment;
+                        double valueCases = 0;
 
-                        if (valat3)
-                        {
-                            result = result * valuefunc.valat3pct.GetValueOrDefault(0) * 1.1225;
-                        }
-                        else
-                        {
-                            result = result * valuefunc.valat7pct.GetValueOrDefault(0) * 1.1225;
-                        }
+                        valueCases = numCases * valuefunc.Value.GetValueOrDefault(0) * 1.1225;
+
 
                         // check if there is an entry already to make pooling work
-                        if (results_valuation.TryGetValue(valuefunc.Endpoint, out result_valuation))
+                        if (results_valuation.TryGetValue("99999" + "|" + valuefunc.Endpoint, out result_valuation))
                         {
-                            result_valuation.Value = result_valuation.Value + result;
+                            result_valuation.Value += valueCases;
                         }
                         else
                         {
-                            results_valuation.Add(valuefunc.Endpoint, new Result { Destinationindex = 0, Endpoint = valuefunc.Endpoint, Value = result });
+                            results_valuation.Add("99999" + "|" + valuefunc.Endpoint, new Result { Destinationindex = destination.destindx.GetValueOrDefault(0), Endpoint = valuefunc.Endpoint, Value = valueCases });
                         }
                         // add to national totals as well
                         if (results_valuation.TryGetValue("nation|" + valuefunc.Endpoint, out result_valuation))
                         {
-                            result_valuation.Value = result_valuation.Value + result;
+                            result_valuation.Value = result_valuation.Value + valueCases;
                         }
                         else
                         {
-                            results_valuation.Add("nation|" + valuefunc.Endpoint, new Result { Destinationindex = 0, Endpoint = valuefunc.Endpoint, Value = result });
+                            results_valuation.Add("nation|" + valuefunc.Endpoint, new Result { Destinationindex = destination.destindx.GetValueOrDefault(0), Endpoint = valuefunc.Endpoint, Value = valueCases });
                         }
                     }
                 }
             }
 
             List<Cobra_ResultDetail> results = new List<Cobra_ResultDetail>();
+            foreach (var destination in Destinations)
             {
                 Cobra_ResultDetail result_record = new Cobra_ResultDetail();
-                result_record.destindx = 0;
-                result_record.BASE_FINAL_PM = base_pm;
-                result_record.CTRL_FINAL_PM = control_pm;
+                result_record.destindx = destination.destindx;
+                result_record.BASE_FINAL_PM = 0;
+                result_record.CTRL_FINAL_PM = 0;
                 result_record.DELTA_FINAL_PM = delta_pm;
+                result_record.BASE_FINAL_O3 = 0;
+                result_record.CTRL_FINAL_O3 = 0;
+                result_record.DELTA_FINAL_O3 = delta_o3;
+                var loc = dict_state.Where(d => d.SOURCEINDX == result_record.destindx).FirstOrDefault();
+                result_record.FIPS = loc.FIPS;
+                result_record.STATE = loc.STNAME;
+                result_record.COUNTY = loc.CYNAME;
 
-                result_record.FIPS = "00000";
-                result_record.STATE = "NA";
-                result_record.COUNTY = "NA";
+                result_record.PM_Acute_Myocardial_Infarction_Nonfatal = results_cr[destination.destindx + "|" + "PM Acute Myocardial Infarction, Nonfatal"].Value;
 
-                result_record.Acute_Bronchitis = results_cr["Acute Bronchitis"].Value;
-                result_record.Acute_Myocardial_Infarction_Nonfatal__high_ = results_cr["Acute Myocardial Infarction, Nonfatal (high)"].Value;
-                result_record.Acute_Myocardial_Infarction_Nonfatal__low_ = results_cr["Acute Myocardial Infarction, Nonfatal (low)"].Value;
-                result_record.Asthma_Exacerbation_Cough = results_cr["Asthma Exacerbation, Cough"].Value;
-                result_record.Asthma_Exacerbation_Shortness_of_Breath = results_cr["Asthma Exacerbation, Shortness of Breath"].Value;
-                result_record.Asthma_Exacerbation_Wheeze = results_cr["Asthma Exacerbation, Wheeze"].Value;
-                result_record.Emergency_Room_Visits_Asthma = results_cr["Emergency Room Visits, Asthma"].Value;
-                result_record.HA_All_Cardiovascular__less_Myocardial_Infarctions_ = results_cr["HA, All Cardiovascular (less Myocardial Infarctions)"].Value;
-                result_record.HA_All_Respiratory = results_cr["HA, All Respiratory"].Value;
-                result_record.HA_Asthma = results_cr["HA, Asthma"].Value;
-                result_record.HA_Chronic_Lung_Disease = results_cr["HA, Chronic Lung Disease"].Value;
-                result_record.Lower_Respiratory_Symptoms = results_cr["Lower Respiratory Symptoms"].Value;
-                result_record.Minor_Restricted_Activity_Days = results_cr["Minor Restricted Activity Days"].Value;
-                result_record.Mortality_All_Cause__low_ = results_cr["Mortality, All Cause (low)"].Value;
-                result_record.Mortality_All_Cause__high_ = results_cr["Mortality, All Cause (high)"].Value;
-                result_record.Infant_Mortality = results_cr["Infant Mortality"].Value;
-                result_record.Upper_Respiratory_Symptoms = results_cr["Upper Respiratory Symptoms"].Value;
-                result_record.Work_Loss_Days = results_cr["Work Loss Days"].Value;
 
-                result_record.C__Acute_Bronchitis = results_valuation["Acute Bronchitis"].Value;
-                result_record.C__Acute_Myocardial_Infarction_Nonfatal__high_ = results_valuation["Acute Myocardial Infarction, Nonfatal (high)"].Value;
-                result_record.C__Acute_Myocardial_Infarction_Nonfatal__low_ = results_valuation["Acute Myocardial Infarction, Nonfatal (low)"].Value;
-                result_record.C__Asthma_Exacerbation = results_valuation["Asthma Exacerbation"].Value;
-                result_record.C__Emergency_Room_Visits_Asthma = results_valuation["Emergency Room Visits, Asthma"].Value;
-                result_record.C__CVD_Hosp_Adm = results_valuation["CVD Hosp. Adm."].Value;
-                result_record.C__Resp_Hosp_Adm = results_valuation["Resp. Hosp. Adm."].Value;
-                result_record.C__Lower_Respiratory_Symptoms = results_valuation["Lower Respiratory Symptoms"].Value;
-                result_record.C__Minor_Restricted_Activity_Days = results_valuation["Minor Restricted Activity Days"].Value;
-                result_record.C__Mortality_All_Cause__low_ = results_valuation["Mortality, All Cause (low)"].Value;
-                result_record.C__Mortality_All_Cause__high_ = results_valuation["Mortality, All Cause (high)"].Value;
-                result_record.C__Infant_Mortality = results_valuation["Infant Mortality"].Value;
-                result_record.C__Upper_Respiratory_Symptoms = results_valuation["Upper Respiratory Symptoms"].Value;
-                result_record.C__Work_Loss_Days = results_valuation["Work Loss Days"].Value;
+                result_record.PM_HA_All_Respiratory = results_cr[destination.destindx + "|" + "PM HA, All Respiratory"].Value;
+                result_record.PM_Minor_Restricted_Activity_Days = results_cr[destination.destindx + "|" + "PM Minor Restricted Activity Days"].Value;
+                result_record.PM_Mortality_All_Cause__low_ = results_cr[destination.destindx + "|" + "PM Mortality, All Cause (low)"].Value;
+                result_record.PM_Mortality_All_Cause__high_ = results_cr[destination.destindx + "|" + "PM Mortality, All Cause (high)"].Value;
+                result_record.PM_Infant_Mortality = results_cr[destination.destindx + "|" + "PM Infant Mortality"].Value;
+                result_record.PM_Work_Loss_Days = results_cr[destination.destindx + "|" + "PM Work Loss Days"].Value;
+                result_record.PM_Incidence_Lung_Cancer = results_cr[destination.destindx + "|" + "PM Incidence, Lung Cancer"].Value;
+
+                result_record.PM_Incidence_Hay_Fever_Rhinitis = results_cr[destination.destindx + "|" + "PM Incidence, Hay Fever/Rhinitis"].Value;
+                result_record.PM_Incidence_Asthma = results_cr[destination.destindx + "|" + "PM Incidence, Asthma"].Value;
+                result_record.PM_HA_Cardio_Cerebro_and_Peripheral_Vascular_Disease = results_cr[destination.destindx + "|" + "PM HA, Cardio-, Cerebro- and Peripheral Vascular Disease"].Value;
+                result_record.PM_HA_Alzheimers_Disease = results_cr[destination.destindx + "|" + "PM HA, Alzheimers Disease"].Value;
+                result_record.PM_HA_Parkinsons_Disease = results_cr[destination.destindx + "|" + "PM HA, Parkinsons Disease"].Value;
+                result_record.PM_Incidence_Stroke = results_cr[destination.destindx + "|" + "PM Incidence, Stroke"].Value;
+                result_record.PM_Incidence_Out_of_Hospital_Cardiac_Arrest = results_cr[destination.destindx + "|" + "PM Incidence, Out of Hospital Cardiac Arrest"].Value;
+                result_record.PM_Asthma_Symptoms_Albuterol_use = results_cr[destination.destindx + "|" + "PM Asthma Symptoms, Albuterol use"].Value;
+                result_record.PM_HA_Respiratory2 = results_cr[destination.destindx + "|" + "PM HA, Respiratory-2"].Value;
+                result_record.PM_ER_visits_respiratory = results_cr[destination.destindx + "|" + "PM ER visits, respiratory"].Value;
+                result_record.PM_ER_visits_All_Cardiac_Outcomes = results_cr[destination.destindx + "|" + "PM ER visits, All Cardiac Outcomes"].Value;
+
+                result_record.O3_ER_visits_respiratory = results_cr[destination.destindx + "|" + "O3 ER visits, respiratory"].Value;
+                result_record.O3_HA_All_Respiratory = results_cr[destination.destindx + "|" + "O3 HA, All Respiratory"].Value;
+                result_record.O3_Incidence_Hay_Fever_Rhinitis = results_cr[destination.destindx + "|" + "O3 Incidence, Hay Fever/Rhinitis"].Value;
+                result_record.O3_Incidence_Asthma = results_cr[destination.destindx + "|" + "O3 Incidence, Asthma"].Value;
+                result_record.O3_Asthma_Symptoms_Chest_Tightness = results_cr[destination.destindx + "|" + "O3 Asthma Symptoms, Chest Tightness"].Value;
+                result_record.O3_Asthma_Symptoms_Cough = results_cr[destination.destindx + "|" + "O3 Asthma Symptoms, Cough"].Value;
+                result_record.O3_Asthma_Symptoms_Shortness_of_Breath = results_cr[destination.destindx + "|" + "O3 Asthma Symptoms, Shortness of Breath"].Value;
+                result_record.O3_Asthma_Symptoms_Wheeze = results_cr[destination.destindx + "|" + "O3 Asthma Symptoms, Wheeze"].Value;
+                result_record.O3_ER_Visits_Asthma = results_cr[destination.destindx + "|" + "O3 Emergency Room Visits, Asthma"].Value;
+                result_record.O3_School_Loss_Days = results_cr[destination.destindx + "|" + "O3 School Loss Days, All Cause"].Value;
+                result_record.O3_Mortality_Longterm_exposure = results_cr[destination.destindx + "|" + "O3 Mortality, Long-term exposure"].Value;
+                result_record.O3_Mortality_Shortterm_exposure = results_cr[destination.destindx + "|" + "O3 Mortality, Short-term exposure"].Value;
+
+
+                result_record.C__PM_Acute_Myocardial_Infarction_Nonfatal = results_valuation[destination.destindx + "|" + "PM Acute Myocardial Infarction, Nonfatal"].Value;
+
+
+                result_record.C__PM_Resp_Hosp_Adm = results_valuation[destination.destindx + "|" + "PM HA, All Respiratory"].Value;
+                result_record.C__PM_Minor_Restricted_Activity_Days = results_valuation[destination.destindx + "|" + "PM Minor Restricted Activity Days"].Value;
+                result_record.C__PM_Mortality_All_Cause__low_ = results_valuation[destination.destindx + "|" + "PM Mortality, All Cause (low)"].Value;
+                result_record.C__PM_Mortality_All_Cause__high_ = results_valuation[destination.destindx + "|" + "PM Mortality, All Cause (high)"].Value;
+                result_record.C__PM_Infant_Mortality = results_valuation[destination.destindx + "|" + "PM Infant Mortality"].Value;
+
+                result_record.C__PM_Work_Loss_Days = results_valuation[destination.destindx + "|" + "PM Work Loss Days"].Value;
+                result_record.C__PM_Incidence_Lung_Cancer = results_valuation[destination.destindx + "|" + "PM Incidence, Lung Cancer"].Value;
+
+                result_record.C__PM_Incidence_Hay_Fever_Rhinitis = results_valuation[destination.destindx + "|" + "PM Incidence, Hay Fever/Rhinitis"].Value;
+                result_record.C__PM_Incidence_Asthma = results_valuation[destination.destindx + "|" + "PM Incidence, Asthma"].Value;
+                result_record.C__PM_HA_Cardio_Cerebro_and_Peripheral_Vascular_Disease = results_valuation[destination.destindx + "|" + "PM HA, Cardio-, Cerebro- and Peripheral Vascular Disease"].Value;
+                result_record.C__PM_HA_Alzheimers_Disease = results_valuation[destination.destindx + "|" + "PM HA, Alzheimers Disease"].Value;
+                result_record.C__PM_HA_Parkinsons_Disease = results_valuation[destination.destindx + "|" + "PM HA, Parkinsons Disease"].Value;
+                result_record.C__PM_Incidence_Stroke = results_valuation[destination.destindx + "|" + "PM Incidence, Stroke"].Value;
+                result_record.C__PM_Incidence_Out_of_Hospital_Cardiac_Arrest = results_valuation[destination.destindx + "|" + "PM Incidence, Out of Hospital Cardiac Arrest"].Value;
+                result_record.C__PM_Asthma_Symptoms_Albuterol_use = results_valuation[destination.destindx + "|" + "PM Asthma Symptoms, Albuterol use"].Value;
+                result_record.C__PM_HA_Respiratory2 = results_valuation[destination.destindx + "|" + "PM HA, Respiratory-2"].Value;
+                result_record.C__PM_ER_visits_respiratory = results_valuation[destination.destindx + "|" + "PM ER visits, respiratory"].Value;
+                result_record.C__PM_ER_visits_All_Cardiac_Outcomes = results_valuation[destination.destindx + "|" + "PM ER visits, All Cardiac Outcomes"].Value;
+
+                result_record.C__O3_ER_visits_respiratory = results_valuation[destination.destindx + "|" + "O3 ER visits, respiratory"].Value;
+                result_record.C__O3_HA_All_Respiratory = results_valuation[destination.destindx + "|" + "O3 HA, All Respiratory"].Value;
+                result_record.C__O3_Incidence_Hay_Fever_Rhinitis = results_valuation[destination.destindx + "|" + "O3 Incidence, Hay Fever/Rhinitis"].Value;
+                result_record.C__O3_Incidence_Asthma = results_valuation[destination.destindx + "|" + "O3 Incidence, Asthma"].Value;
+                result_record.C__O3_Asthma_Symptoms_Chest_Tightness = results_valuation[destination.destindx + "|" + "O3 Asthma Symptoms, Chest Tightness"].Value;
+                result_record.C__O3_Asthma_Symptoms_Cough = results_valuation[destination.destindx + "|" + "O3 Asthma Symptoms, Cough"].Value;
+                result_record.C__O3_Asthma_Symptoms_Shortness_of_Breath = results_valuation[destination.destindx + "|" + "O3 Asthma Symptoms, Shortness of Breath"].Value;
+                result_record.C__O3_Asthma_Symptoms_Wheeze = results_valuation[destination.destindx + "|" + "O3 Asthma Symptoms, Wheeze"].Value;
+                result_record.C__O3_ER_Visits_Asthma = results_valuation[destination.destindx + "|" + "O3 Emergency Room Visits, Asthma"].Value;
+                result_record.C__O3_School_Loss_Days = results_valuation[destination.destindx + "|" + "O3 School Loss Days, All Cause"].Value;
+                result_record.C__O3_Mortality_Longterm_exposure = results_valuation[destination.destindx + "|" + "O3 Mortality, Long-term exposure"].Value;
+                result_record.C__O3_Mortality_Shortterm_exposure = results_valuation[destination.destindx + "|" + "O3 Mortality, Short-term exposure"].Value;
 
                 //now do total health effect dollars
                 double lowvals = 0;
 
-                lowvals += result_record.C__Acute_Bronchitis.GetValueOrDefault(0);
+                //add all health effects to low vals that do not have high/low differences
+                lowvals += result_record.C__PM_Acute_Myocardial_Infarction_Nonfatal.GetValueOrDefault(0);
+                lowvals += result_record.C__PM_Resp_Hosp_Adm.GetValueOrDefault(0);
+                lowvals += result_record.C__PM_Minor_Restricted_Activity_Days.GetValueOrDefault(0);
+                lowvals += result_record.C__PM_Infant_Mortality.GetValueOrDefault(0);
+                lowvals += result_record.C__PM_Work_Loss_Days.GetValueOrDefault(0);
+                lowvals += result_record.C__PM_Incidence_Lung_Cancer.GetValueOrDefault(0);
+                lowvals += result_record.C__PM_Incidence_Hay_Fever_Rhinitis.GetValueOrDefault(0);
+                lowvals += result_record.C__PM_Incidence_Asthma.GetValueOrDefault(0);
+                lowvals += result_record.C__PM_HA_Cardio_Cerebro_and_Peripheral_Vascular_Disease.GetValueOrDefault(0);
+                lowvals += result_record.C__PM_HA_Alzheimers_Disease.GetValueOrDefault(0);
+                lowvals += result_record.C__PM_HA_Parkinsons_Disease.GetValueOrDefault(0);
+                lowvals += result_record.C__PM_Incidence_Stroke.GetValueOrDefault(0);
+                lowvals += result_record.C__PM_Incidence_Out_of_Hospital_Cardiac_Arrest.GetValueOrDefault(0);
+                lowvals += result_record.C__PM_Asthma_Symptoms_Albuterol_use.GetValueOrDefault(0);
+                lowvals += result_record.C__PM_HA_Respiratory2.GetValueOrDefault(0);
+                lowvals += result_record.C__PM_ER_visits_respiratory.GetValueOrDefault(0);
+                lowvals += result_record.C__PM_ER_visits_All_Cardiac_Outcomes.GetValueOrDefault(0);
 
-                lowvals += result_record.C__Asthma_Exacerbation.GetValueOrDefault(0);
-                lowvals += result_record.C__Emergency_Room_Visits_Asthma.GetValueOrDefault(0);
-                lowvals += result_record.C__CVD_Hosp_Adm.GetValueOrDefault(0);
-                lowvals += result_record.C__Resp_Hosp_Adm.GetValueOrDefault(0);
-                lowvals += result_record.C__Lower_Respiratory_Symptoms.GetValueOrDefault(0);
-                lowvals += result_record.C__Minor_Restricted_Activity_Days.GetValueOrDefault(0);
+                //totalPM 
+                result_record.C__Total_PM_Low_Value = (lowvals + result_record.C__PM_Mortality_All_Cause__high_.GetValueOrDefault(0));
+                result_record.C__Total_PM_High_Value = (lowvals + result_record.C__PM_Mortality_All_Cause__low_.GetValueOrDefault(0));
 
-                lowvals += result_record.C__Infant_Mortality.GetValueOrDefault(0);
-                lowvals += result_record.C__Upper_Respiratory_Symptoms.GetValueOrDefault(0);
-                lowvals += result_record.C__Work_Loss_Days.GetValueOrDefault(0);
+                lowvals += result_record.C__O3_ER_visits_respiratory.GetValueOrDefault(0);
+                lowvals += result_record.C__O3_HA_All_Respiratory.GetValueOrDefault(0);
+                lowvals += result_record.C__O3_Incidence_Hay_Fever_Rhinitis.GetValueOrDefault(0);
+                lowvals += result_record.C__O3_Incidence_Asthma.GetValueOrDefault(0);
+                lowvals += result_record.C__O3_Asthma_Symptoms_Chest_Tightness.GetValueOrDefault(0);
+                lowvals += result_record.C__O3_Asthma_Symptoms_Cough.GetValueOrDefault(0);
+                lowvals += result_record.C__O3_Asthma_Symptoms_Shortness_of_Breath.GetValueOrDefault(0);
+                lowvals += result_record.C__O3_Asthma_Symptoms_Wheeze.GetValueOrDefault(0);
+                lowvals += result_record.C__O3_ER_Visits_Asthma.GetValueOrDefault(0);
+                lowvals += result_record.C__O3_School_Loss_Days.GetValueOrDefault(0);
+                lowvals += result_record.C__O3_Mortality_Longterm_exposure.GetValueOrDefault(0);
+                lowvals += result_record.C__O3_Mortality_Shortterm_exposure.GetValueOrDefault(0);
+
+                result_record.C__Total_O3_Value = (result_record.C__O3_Asthma_Symptoms_Cough.GetValueOrDefault(0)
+                    + result_record.C__O3_Asthma_Symptoms_Shortness_of_Breath.GetValueOrDefault(0)
+                    + result_record.C__O3_Asthma_Symptoms_Wheeze.GetValueOrDefault(0)
+                    + result_record.C__O3_ER_Visits_Asthma.GetValueOrDefault(0)
+                + result_record.C__O3_School_Loss_Days.GetValueOrDefault(0)
+                + result_record.C__O3_Mortality_Longterm_exposure.GetValueOrDefault(0)
+                + result_record.C__O3_Mortality_Shortterm_exposure.GetValueOrDefault(0)
+                + result_record.C__O3_ER_visits_respiratory.GetValueOrDefault(0)
+                 + result_record.C__O3_HA_All_Respiratory.GetValueOrDefault(0)
+                 + result_record.C__O3_Incidence_Hay_Fever_Rhinitis.GetValueOrDefault(0)
+                 + result_record.C__O3_Incidence_Asthma.GetValueOrDefault(0)
+                + result_record.C__O3_Asthma_Symptoms_Chest_Tightness.GetValueOrDefault(0));
+
 
                 result_record.C__Total_Health_Benefits_Low_Value = lowvals;
 
                 //add low to high this works
                 result_record.C__Total_Health_Benefits_High_Value = lowvals;
 
-                //and here they diverge
-                result_record.C__Total_Health_Benefits_High_Value += result_record.C__Acute_Myocardial_Infarction_Nonfatal__high_.GetValueOrDefault(0) + result_record.C__Mortality_All_Cause__high_.GetValueOrDefault(0);
-
-                result_record.C__Total_Health_Benefits_Low_Value += result_record.C__Acute_Myocardial_Infarction_Nonfatal__low_.GetValueOrDefault(0) + result_record.C__Mortality_All_Cause__low_.GetValueOrDefault(0);
+                //add the endpoints with different high/low vals (in this case only PM_mortality)
+                result_record.C__Total_Health_Benefits_High_Value += result_record.C__PM_Mortality_All_Cause__high_.GetValueOrDefault(0);
+                result_record.C__Total_Health_Benefits_Low_Value += result_record.C__PM_Mortality_All_Cause__low_.GetValueOrDefault(0);
 
                 results.Add(result_record);
+
+
+
             }
             return results;
         }
 
-
-        public List<Cobra_ResultDetail> CustomComputeGenericImpacts(double delta_pm, double base_pm, double control_pm, Cobra_POP population, Cobra_Incidence[] incidence, bool valat3, Cobra_CR_Core[] CustomCRFunctions, Cobra_Valuation_Core[] CustomValuationFunctions)
+        public List<Cobra_ResultDetail> CustomComputeGenericImpacts(double delta_pm, double base_pm, double control_pm, double delta_o3, double base_o3, double control_o3, Cobra_POP population, Cobra_Incidence[] incidence, Cobra_CR_Core[] CustomCRFunctions, Cobra_Valuation_Core[] CustomValuationFunctions, double discountRate)
         {
             Dictionary<string, Result> results_cr = new Dictionary<string, Result>();
             Dictionary<string, Result> results_valuation = new Dictionary<string, Result>();
@@ -2322,6 +2695,10 @@ namespace CobraCompute
                 {
                     metric_adjustment = 365;
                 }
+                else if (crfunc.Seasonal_Metric.ToUpper() == "OZONE")
+                {
+                    metric_adjustment = 152;
+                }
 
                 {
                     //fixed params
@@ -2331,6 +2708,7 @@ namespace CobraCompute
                     double C = crfunc.C.GetValueOrDefault(0);
                     double Beta = crfunc.Beta.GetValueOrDefault(0);
                     double DELTAQ = delta_pm;
+                    double DELTAO = delta_o3;
                     double Incidence = 0;
 
                     //year dependent but with the twist that pop and incidence are containing all year data
@@ -2354,7 +2732,7 @@ namespace CobraCompute
                             Incidence = value.incidenceat(age);
                         }
 
-                        double result = this.crfunc(function, cleanfunction, Incidence, Beta, DELTAQ, POP, A, B, C) * poolingweight * metric_adjustment;
+                        double result = this.crfunc(function, cleanfunction, Incidence, Beta, DELTAQ, DELTAO, POP, A, B, C) * poolingweight * metric_adjustment;
 
                         // check if there is an entry already to make pooling work
                         if (results_cr.TryGetValue(crfunc.Endpoint, out result_cr))
@@ -2383,6 +2761,10 @@ namespace CobraCompute
                 {
                     metric_adjustment = 365;
                 }
+                else if (valuefunc.Seasonal_Metric.ToUpper() == "OZONE")
+                {
+                    metric_adjustment = 152;
+                }
 
                 {
                     //fixed params
@@ -2392,6 +2774,7 @@ namespace CobraCompute
                     double C = valuefunc.C.GetValueOrDefault(0);
                     double Beta = valuefunc.Beta.GetValueOrDefault(0);
                     double DELTAQ = delta_pm;
+                    double DELTAO = delta_o3;
                     double Incidence = 0;
 
                     //year dependent but with the twist that pop and incidence are containing all year data
@@ -2416,15 +2799,17 @@ namespace CobraCompute
                             Incidence = value.incidenceat(age);
                         }
 
-                        double result = this.crfunc(function, cleanfunction, Incidence, Beta, DELTAQ, POP, A, B, C) * poolingweight * metric_adjustment;
+                        double result = this.crfunc(function, cleanfunction, Incidence, Beta, DELTAQ, DELTAO, POP, A, B, C) * poolingweight * metric_adjustment;
 
-                        if (valat3)
+                        if (discountRate == 0 || valuefunc.ApplyDiscount == "NO")
                         {
-                            result = result * valuefunc.valat3pct.GetValueOrDefault(0) * 1.1225;
+                            result = result * valuefunc.Value.GetValueOrDefault(0) * 1.1225;
                         }
                         else
                         {
-                            result = result * valuefunc.valat7pct.GetValueOrDefault(0) * 1.1225;
+                            double valtarget = adjustmentfactorfromdiscountrate(discountRate / 100);
+
+                           result = result * valuefunc.Value.GetValueOrDefault(0) * valtarget * 1.1225;
                         }
 
                         // check if there is an entry already to make pooling work
@@ -2461,71 +2846,155 @@ namespace CobraCompute
                 result_record.STATE = "NA";
                 result_record.COUNTY = "NA";
 
-                result_record.Acute_Bronchitis = results_cr.GetValueOrDefault("Acute Bronchitis", new Result { Value = 0 }).Value;
-                result_record.Acute_Myocardial_Infarction_Nonfatal__high_ = results_cr.GetValueOrDefault("Acute Myocardial Infarction, Nonfatal (high)", new Result { Value = 0 }).Value;
-                result_record.Acute_Myocardial_Infarction_Nonfatal__low_ = results_cr.GetValueOrDefault("Acute Myocardial Infarction, Nonfatal (low)", new Result { Value = 0 }).Value;
-                result_record.Asthma_Exacerbation_Cough = results_cr.GetValueOrDefault("Asthma Exacerbation, Cough", new Result { Value = 0 }).Value;
-                result_record.Asthma_Exacerbation_Shortness_of_Breath = results_cr.GetValueOrDefault("Asthma Exacerbation, Shortness of Breath", new Result { Value = 0 }).Value;
-                result_record.Asthma_Exacerbation_Wheeze = results_cr.GetValueOrDefault("Asthma Exacerbation, Wheeze", new Result { Value = 0 }).Value;
-                result_record.Emergency_Room_Visits_Asthma = results_cr.GetValueOrDefault("Emergency Room Visits, Asthma", new Result { Value = 0 }).Value;
-                result_record.HA_All_Cardiovascular__less_Myocardial_Infarctions_ = results_cr.GetValueOrDefault("HA, All Cardiovascular (less Myocardial Infarctions)", new Result { Value = 0 }).Value;
-                result_record.HA_All_Respiratory = results_cr.GetValueOrDefault("HA, All Respiratory", new Result { Value = 0 }).Value;
-                result_record.HA_Asthma = results_cr.GetValueOrDefault("HA, Asthma", new Result { Value = 0 }).Value;
-                result_record.HA_Chronic_Lung_Disease = results_cr.GetValueOrDefault("HA, Chronic Lung Disease", new Result { Value = 0 }).Value;
-                result_record.Lower_Respiratory_Symptoms = results_cr.GetValueOrDefault("Lower Respiratory Symptoms", new Result { Value = 0 }).Value;
-                result_record.Minor_Restricted_Activity_Days = results_cr.GetValueOrDefault("Minor Restricted Activity Days", new Result { Value = 0 }).Value;
-                result_record.Mortality_All_Cause__low_ = results_cr.GetValueOrDefault("Mortality, All Cause (low)", new Result { Value = 0 }).Value;
-                result_record.Mortality_All_Cause__high_ = results_cr.GetValueOrDefault("Mortality, All Cause (high)", new Result { Value = 0 }).Value;
-                result_record.Infant_Mortality = results_cr.GetValueOrDefault("Infant Mortality", new Result { Value = 0 }).Value;
-                result_record.Upper_Respiratory_Symptoms = results_cr.GetValueOrDefault("Upper Respiratory Symptoms", new Result { Value = 0 }).Value;
-                result_record.Work_Loss_Days = results_cr.GetValueOrDefault("Work Loss Days", new Result { Value = 0 }).Value;
+                result_record.PM_Acute_Myocardial_Infarction_Nonfatal = results_cr.GetValueOrDefault("PM Acute Myocardial Infarction, NonfatalAcute Bronchitis", new Result { Value = 0 }).Value;
+                result_record.PM_HA_All_Respiratory = results_cr.GetValueOrDefault("PM HA, All Respiratory", new Result { Value = 0 }).Value;
+                result_record.PM_Minor_Restricted_Activity_Days = results_cr.GetValueOrDefault("PM Minor Restricted Activity Days", new Result { Value = 0 }).Value;
+                result_record.PM_Mortality_All_Cause__low_ = results_cr.GetValueOrDefault("PM Mortality, All Cause(low)", new Result { Value = 0 }).Value;
+                result_record.PM_Mortality_All_Cause__high_ = results_cr.GetValueOrDefault("PM Mortality, All Cause(high)", new Result { Value = 0 }).Value;
+                result_record.PM_Infant_Mortality = results_cr.GetValueOrDefault("PM Infant Mortality", new Result { Value = 0 }).Value;
+                result_record.PM_Work_Loss_Days = results_cr.GetValueOrDefault("PM Work Loss Days", new Result { Value = 0 }).Value;
+                result_record.PM_Incidence_Lung_Cancer = results_cr.GetValueOrDefault("PM Incidence, Lung Cancer", new Result { Value = 0 }).Value;
+                result_record.PM_Incidence_Hay_Fever_Rhinitis = results_cr.GetValueOrDefault("PM Incidence, Hay Fever/Rhinitis", new Result { Value = 0 }).Value;
+                result_record.PM_Incidence_Asthma = results_cr.GetValueOrDefault("PM Incidence, Asthma", new Result { Value = 0 }).Value;
+                result_record.PM_HA_Cardio_Cerebro_and_Peripheral_Vascular_Disease = results_cr.GetValueOrDefault("PM HA, Cardio-, Cerebro- and Peripheral Vascular Disease", new Result { Value = 0 }).Value;
+                result_record.PM_HA_Alzheimers_Disease = results_cr.GetValueOrDefault("PM HA, Alzheimers Disease", new Result { Value = 0 }).Value;
+                result_record.PM_HA_Parkinsons_Disease = results_cr.GetValueOrDefault("PM HA, Parkinsons Disease", new Result { Value = 0 }).Value;
+                result_record.PM_Incidence_Stroke = results_cr.GetValueOrDefault("PM Incidence, Stroke", new Result { Value = 0 }).Value;
+                result_record.PM_Incidence_Out_of_Hospital_Cardiac_Arrest = results_cr.GetValueOrDefault("PM Incidence, Out of Hospital Cardiac Arrest", new Result { Value = 0 }).Value;
+                result_record.PM_Asthma_Symptoms_Albuterol_use = results_cr.GetValueOrDefault("PM Asthma Symptoms, Albuterol use", new Result { Value = 0 }).Value;
+                result_record.PM_HA_Respiratory2 = results_cr.GetValueOrDefault("PM HA, Respiratory-2", new Result { Value = 0 }).Value;
+                result_record.PM_ER_visits_respiratory = results_cr.GetValueOrDefault("PM ER visits, respiratory", new Result { Value = 0 }).Value;
+                result_record.PM_ER_visits_All_Cardiac_Outcomes = results_cr.GetValueOrDefault("PM ER visits, All Cardiac Outcomes", new Result { Value = 0 }).Value;
+                result_record.O3_ER_visits_respiratory = results_cr.GetValueOrDefault("O3 ER visits, respiratory", new Result { Value = 0 }).Value;
+                result_record.O3_HA_All_Respiratory = results_cr.GetValueOrDefault("O3 HA, All Respiratory", new Result { Value = 0 }).Value;
+                result_record.O3_Incidence_Hay_Fever_Rhinitis = results_cr.GetValueOrDefault("O3 Incidence, Hay Fever/Rhinitis", new Result { Value = 0 }).Value;
+                result_record.O3_Incidence_Asthma = results_cr.GetValueOrDefault("O3 Incidence, Asthma", new Result { Value = 0 }).Value;
+                result_record.O3_Asthma_Symptoms_Chest_Tightness = results_cr.GetValueOrDefault("O3 Asthma Symptoms, Chest Tightness", new Result { Value = 0 }).Value;
+                result_record.O3_Asthma_Symptoms_Cough = results_cr.GetValueOrDefault("O3 Asthma Symptoms, Cough", new Result { Value = 0 }).Value;
+                result_record.O3_Asthma_Symptoms_Shortness_of_Breath = results_cr.GetValueOrDefault("O3 Asthma Symptoms, Shortness of Breath", new Result { Value = 0 }).Value;
+                result_record.O3_Asthma_Symptoms_Wheeze = results_cr.GetValueOrDefault("O3 Asthma Symptoms, Wheeze", new Result { Value = 0 }).Value;
+                result_record.O3_ER_Visits_Asthma = results_cr.GetValueOrDefault("O3 Emergency Room Visits, Asthma", new Result { Value = 0 }).Value;
+                result_record.O3_School_Loss_Days = results_cr.GetValueOrDefault("O3 School Loss Days, All Cause", new Result { Value = 0 }).Value;
+                result_record.O3_Mortality_Longterm_exposure = results_cr.GetValueOrDefault("O3 Mortality, Long-term exposure", new Result { Value = 0 }).Value;
+                result_record.O3_Mortality_Shortterm_exposure = results_cr.GetValueOrDefault("O3 Mortality, Short-term exposure", new Result { Value = 0 }).Value;
+                result_record.C__PM_Acute_Myocardial_Infarction_Nonfatal = results_valuation.GetValueOrDefault("PM Acute Myocardial Infarction, Nonfatal", new Result { Value = 0 }).Value;
+                result_record.C__PM_Resp_Hosp_Adm = results_valuation.GetValueOrDefault("PM HA, All Respiratory", new Result { Value = 0 }).Value;
+                result_record.C__PM_Minor_Restricted_Activity_Days = results_valuation.GetValueOrDefault("PM Minor Restricted Activity Days", new Result { Value = 0 }).Value;
+                result_record.C__PM_Mortality_All_Cause__low_ = results_valuation.GetValueOrDefault("PM Mortality, All Cause (low)", new Result { Value = 0 }).Value;
+                result_record.C__PM_Mortality_All_Cause__high_ = results_valuation.GetValueOrDefault("PM Mortality, All Cause (high)", new Result { Value = 0 }).Value;
+                result_record.C__PM_Infant_Mortality = results_valuation.GetValueOrDefault("PM Infant Mortality", new Result { Value = 0 }).Value;
+                result_record.C__PM_Work_Loss_Days = results_valuation.GetValueOrDefault("PM Work Loss Days", new Result { Value = 0 }).Value;
+                result_record.C__PM_Incidence_Lung_Cancer = results_valuation.GetValueOrDefault("PM Incidence, Lung Cancer", new Result { Value = 0 }).Value;
+                result_record.C__PM_Incidence_Hay_Fever_Rhinitis = results_valuation.GetValueOrDefault("PM Incidence, Hay Fever/Rhinitis", new Result { Value = 0 }).Value;
+                result_record.C__PM_Incidence_Asthma = results_valuation.GetValueOrDefault("PM Incidence, Asthma", new Result { Value = 0 }).Value;
+                result_record.C__PM_HA_Cardio_Cerebro_and_Peripheral_Vascular_Disease = results_valuation.GetValueOrDefault("PM HA, Cardio-, Cerebro- and Peripheral Vascular Disease", new Result { Value = 0 }).Value;
+                result_record.C__PM_HA_Alzheimers_Disease = results_valuation.GetValueOrDefault("PM HA, Alzheimers Disease", new Result { Value = 0 }).Value;
+                result_record.C__PM_HA_Parkinsons_Disease = results_valuation.GetValueOrDefault("PM HA, Parkinsons Disease", new Result { Value = 0 }).Value;
+                result_record.C__PM_Incidence_Stroke = results_valuation.GetValueOrDefault("PM Incidence, Stroke", new Result { Value = 0 }).Value;
+                result_record.C__PM_Incidence_Out_of_Hospital_Cardiac_Arrest = results_valuation.GetValueOrDefault("PM Incidence, Out of Hospital Cardiac Arrest", new Result { Value = 0 }).Value;
+                result_record.C__PM_Asthma_Symptoms_Albuterol_use = results_valuation.GetValueOrDefault("PM Asthma Symptoms, Albuterol use", new Result { Value = 0 }).Value;
+                result_record.C__PM_HA_Respiratory2 = results_valuation.GetValueOrDefault("PM HA, Respiratory-2", new Result { Value = 0 }).Value;
+                result_record.C__PM_ER_visits_respiratory = results_valuation.GetValueOrDefault("PM ER visits, respiratory", new Result { Value = 0 }).Value;
+                result_record.C__PM_ER_visits_All_Cardiac_Outcomes = results_valuation.GetValueOrDefault("PM ER visits, All Cardiac Outcomes", new Result { Value = 0 }).Value;
+                result_record.C__O3_ER_visits_respiratory = results_valuation.GetValueOrDefault("O3 ER visits, respiratory", new Result { Value = 0 }).Value;
+                result_record.C__O3_HA_All_Respiratory = results_valuation.GetValueOrDefault("O3 HA, All Respiratory", new Result { Value = 0 }).Value;
+                result_record.C__O3_Incidence_Hay_Fever_Rhinitis = results_valuation.GetValueOrDefault("O3 Incidence, Hay Fever/Rhinitis", new Result { Value = 0 }).Value;
+                result_record.C__O3_Incidence_Asthma = results_valuation.GetValueOrDefault("O3 Incidence, Asthma", new Result { Value = 0 }).Value;
+                result_record.C__O3_Asthma_Symptoms_Chest_Tightness = results_valuation.GetValueOrDefault("O3 Asthma Symptoms, Chest Tightness", new Result { Value = 0 }).Value;
+                result_record.C__O3_Asthma_Symptoms_Cough = results_valuation.GetValueOrDefault("O3 Asthma Symptoms, Cough", new Result { Value = 0 }).Value;
+                result_record.C__O3_Asthma_Symptoms_Shortness_of_Breath = results_valuation.GetValueOrDefault("O3 Asthma Symptoms, Shortness of Breath", new Result { Value = 0 }).Value;
+                result_record.C__O3_Asthma_Symptoms_Wheeze = results_valuation.GetValueOrDefault("O3 Asthma Symptoms, Wheeze", new Result { Value = 0 }).Value;
+                result_record.C__O3_ER_Visits_Asthma = results_valuation.GetValueOrDefault("O3 Emergency Room Visits, Asthma", new Result { Value = 0 }).Value;
+                result_record.C__O3_School_Loss_Days = results_valuation.GetValueOrDefault("O3 School Loss Days, All Cause", new Result { Value = 0 }).Value;
+                result_record.C__O3_Mortality_Longterm_exposure = results_valuation.GetValueOrDefault("O3 Mortality, Long-term exposure", new Result { Value = 0 }).Value;
+                result_record.C__O3_Mortality_Shortterm_exposure = results_valuation.GetValueOrDefault("O3 Mortality, Short-term exposure", new Result { Value = 0 }).Value;
 
-                result_record.C__Acute_Bronchitis = results_valuation.GetValueOrDefault("Acute Bronchitis", new Result { Value = 0 }).Value;
-                result_record.C__Acute_Myocardial_Infarction_Nonfatal__high_ = results_valuation.GetValueOrDefault("Acute Myocardial Infarction, Nonfatal (high)", new Result { Value = 0 }).Value;
-                result_record.C__Acute_Myocardial_Infarction_Nonfatal__low_ = results_valuation.GetValueOrDefault("Acute Myocardial Infarction, Nonfatal (low)", new Result { Value = 0 }).Value;
-                result_record.C__Asthma_Exacerbation = results_valuation.GetValueOrDefault("Asthma Exacerbation", new Result { Value = 0 }).Value;
-                result_record.C__Emergency_Room_Visits_Asthma = results_valuation.GetValueOrDefault("Emergency Room Visits, Asthma", new Result { Value = 0 }).Value;
-                result_record.C__CVD_Hosp_Adm = results_valuation.GetValueOrDefault("CVD Hosp. Adm.", new Result { Value = 0 }).Value;
-                result_record.C__Resp_Hosp_Adm = results_valuation.GetValueOrDefault("Resp. Hosp. Adm.", new Result { Value = 0 }).Value;
-                result_record.C__Lower_Respiratory_Symptoms = results_valuation.GetValueOrDefault("Lower Respiratory Symptoms", new Result { Value = 0 }).Value;
-                result_record.C__Minor_Restricted_Activity_Days = results_valuation.GetValueOrDefault("Minor Restricted Activity Days", new Result { Value = 0 }).Value;
-                result_record.C__Mortality_All_Cause__low_ = results_valuation.GetValueOrDefault("Mortality, All Cause (low)", new Result { Value = 0 }).Value;
-                result_record.C__Mortality_All_Cause__high_ = results_valuation.GetValueOrDefault("Mortality, All Cause (high)", new Result { Value = 0 }).Value;
-                result_record.C__Infant_Mortality = results_valuation.GetValueOrDefault("Infant Mortality", new Result { Value = 0 }).Value;
-                result_record.C__Upper_Respiratory_Symptoms = results_valuation.GetValueOrDefault("Upper Respiratory Symptoms", new Result { Value = 0 }).Value;
-                result_record.C__Work_Loss_Days = results_valuation.GetValueOrDefault("Work Loss Days", new Result { Value = 0 }).Value;
 
                 //now do total health effect dollars
                 double lowvals = 0;
 
-                lowvals += result_record.C__Acute_Bronchitis.GetValueOrDefault(0);
+                //add all health effects to low vals that do not have high/low differences
+                lowvals += result_record.C__PM_Acute_Myocardial_Infarction_Nonfatal.GetValueOrDefault(0);
+                lowvals += result_record.C__PM_Resp_Hosp_Adm.GetValueOrDefault(0);
+                lowvals += result_record.C__PM_Minor_Restricted_Activity_Days.GetValueOrDefault(0);
+                lowvals += result_record.C__PM_Infant_Mortality.GetValueOrDefault(0);
+                lowvals += result_record.C__PM_Work_Loss_Days.GetValueOrDefault(0);
+                lowvals += result_record.C__PM_Incidence_Lung_Cancer.GetValueOrDefault(0);
+                lowvals += result_record.C__PM_Incidence_Hay_Fever_Rhinitis.GetValueOrDefault(0);
+                lowvals += result_record.C__PM_Incidence_Asthma.GetValueOrDefault(0);
+                lowvals += result_record.C__PM_HA_Cardio_Cerebro_and_Peripheral_Vascular_Disease.GetValueOrDefault(0);
+                lowvals += result_record.C__PM_HA_Alzheimers_Disease.GetValueOrDefault(0);
+                lowvals += result_record.C__PM_HA_Parkinsons_Disease.GetValueOrDefault(0);
+                lowvals += result_record.C__PM_Incidence_Stroke.GetValueOrDefault(0);
+                lowvals += result_record.C__PM_Incidence_Out_of_Hospital_Cardiac_Arrest.GetValueOrDefault(0);
+                lowvals += result_record.C__PM_Asthma_Symptoms_Albuterol_use.GetValueOrDefault(0);
+                lowvals += result_record.C__PM_HA_Respiratory2.GetValueOrDefault(0);
+                lowvals += result_record.C__PM_ER_visits_respiratory.GetValueOrDefault(0);
+                lowvals += result_record.C__PM_ER_visits_All_Cardiac_Outcomes.GetValueOrDefault(0);
+                lowvals += result_record.C__O3_ER_visits_respiratory.GetValueOrDefault(0);
+                lowvals += result_record.C__O3_HA_All_Respiratory.GetValueOrDefault(0);
+                lowvals += result_record.C__O3_Incidence_Hay_Fever_Rhinitis.GetValueOrDefault(0);
+                lowvals += result_record.C__O3_Incidence_Asthma.GetValueOrDefault(0);
+                lowvals += result_record.C__O3_Asthma_Symptoms_Chest_Tightness.GetValueOrDefault(0);
 
-                lowvals += result_record.C__Asthma_Exacerbation.GetValueOrDefault(0);
-                lowvals += result_record.C__Emergency_Room_Visits_Asthma.GetValueOrDefault(0);
-                lowvals += result_record.C__CVD_Hosp_Adm.GetValueOrDefault(0);
-                lowvals += result_record.C__Resp_Hosp_Adm.GetValueOrDefault(0);
-                lowvals += result_record.C__Lower_Respiratory_Symptoms.GetValueOrDefault(0);
-                lowvals += result_record.C__Minor_Restricted_Activity_Days.GetValueOrDefault(0);
+                //get all PM
+                result_record.C__Total_PM_Low_Value = lowvals;
+                result_record.C__Total_PM_High_Value = lowvals;
+                //separately add low or high mortality to appropriate total var
+                result_record.C__Total_PM_High_Value += result_record.C__PM_Mortality_All_Cause__high_.GetValueOrDefault(0);
+                result_record.C__Total_PM_Low_Value += result_record.C__PM_Mortality_All_Cause__low_.GetValueOrDefault(0);
 
-                lowvals += result_record.C__Infant_Mortality.GetValueOrDefault(0);
-                lowvals += result_record.C__Upper_Respiratory_Symptoms.GetValueOrDefault(0);
-                lowvals += result_record.C__Work_Loss_Days.GetValueOrDefault(0);
+
+
+                lowvals += result_record.C__O3_ER_visits_respiratory.GetValueOrDefault(0);
+                lowvals += result_record.C__O3_HA_All_Respiratory.GetValueOrDefault(0);
+                lowvals += result_record.C__O3_Incidence_Hay_Fever_Rhinitis.GetValueOrDefault(0);
+                lowvals += result_record.C__O3_Incidence_Asthma.GetValueOrDefault(0);
+                lowvals += result_record.C__O3_Asthma_Symptoms_Chest_Tightness.GetValueOrDefault(0);
+
+                lowvals += result_record.C__O3_Asthma_Symptoms_Cough.GetValueOrDefault(0);
+                lowvals += result_record.C__O3_Asthma_Symptoms_Shortness_of_Breath.GetValueOrDefault(0);
+                lowvals += result_record.C__O3_Asthma_Symptoms_Wheeze.GetValueOrDefault(0);
+                lowvals += result_record.C__O3_ER_Visits_Asthma.GetValueOrDefault(0);
+                lowvals += result_record.C__O3_School_Loss_Days.GetValueOrDefault(0);
+                lowvals += result_record.C__O3_Mortality_Longterm_exposure.GetValueOrDefault(0);
+                lowvals += result_record.C__O3_Mortality_Shortterm_exposure.GetValueOrDefault(0);
+
+
+                //get all O3
+                result_record.C__Total_O3_Value = result_record.C__O3_Asthma_Symptoms_Cough.GetValueOrDefault(0)
+                + result_record.C__O3_Asthma_Symptoms_Shortness_of_Breath.GetValueOrDefault(0)
+                + result_record.C__O3_Asthma_Symptoms_Wheeze.GetValueOrDefault(0)
+                + result_record.C__O3_ER_Visits_Asthma.GetValueOrDefault(0)
+                + result_record.C__O3_School_Loss_Days.GetValueOrDefault(0)
+                + result_record.C__O3_Mortality_Longterm_exposure.GetValueOrDefault(0)
+                + result_record.C__O3_Mortality_Shortterm_exposure.GetValueOrDefault(0);
+
 
                 result_record.C__Total_Health_Benefits_Low_Value = lowvals;
 
                 //add low to high this works
                 result_record.C__Total_Health_Benefits_High_Value = lowvals;
 
-                //and here they diverge
-                result_record.C__Total_Health_Benefits_High_Value += result_record.C__Acute_Myocardial_Infarction_Nonfatal__high_.GetValueOrDefault(0) + result_record.C__Mortality_All_Cause__high_.GetValueOrDefault(0);
-
-                result_record.C__Total_Health_Benefits_Low_Value += result_record.C__Acute_Myocardial_Infarction_Nonfatal__low_.GetValueOrDefault(0) + result_record.C__Mortality_All_Cause__low_.GetValueOrDefault(0);
+                //add the endpoints with different high/low vals (in this case only PM_mortality)
+                result_record.C__Total_Health_Benefits_High_Value += result_record.C__PM_Mortality_All_Cause__high_.GetValueOrDefault(0);
+                result_record.C__Total_Health_Benefits_Low_Value += result_record.C__PM_Mortality_All_Cause__low_.GetValueOrDefault(0);
 
                 results.Add(result_record);
+
             }
             return results;
         }
 
+        public queueSubmission GetChangeQueueSubmission()
+        {
+            return currentscenario.queueSubmission;
+        }
+
+        public void SetChangeQueueSubmission(queueSubmission submission)
+        {
+            currentscenario.queueSubmission = submission;
+        }
 
     }
 

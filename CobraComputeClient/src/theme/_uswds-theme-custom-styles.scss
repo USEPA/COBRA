@@ -169,6 +169,8 @@ clr-modal .modal-header--accessible .modal-title {
    &:active { 
       box-shadow: inset 0 0 0 2px $cobra-teal-green; 
    }
+
+   
 }
 
 .usa-button--secondary {
@@ -207,6 +209,7 @@ clr-modal .modal-header--accessible .modal-title {
    }
 }
 
+
 /* --- tables --- */
 .usa-table--borderless {
    width:100%;
@@ -232,6 +235,11 @@ clr-modal .modal-header--accessible .modal-title {
    background-color: transparent !important;
 }
 
+td.alpha {
+   text-align: left;
+   padding: 0 20px;
+}
+
 .usa-table--numeric th[scope=row] {
    background-color: transparent !important;
 }
@@ -250,8 +258,10 @@ clr-modal .modal-header--accessible .modal-title {
    background-color: white;
    background-image: url(../assets/images/info-icon.svg), linear-gradient(transparent, transparent);
    &::before {
-      background-color: white;
+      background: transparent;
    }
+
+   border-left: none;
    
    .usa-alert__body {
       padding-left: 2.75rem;
@@ -261,6 +271,7 @@ clr-modal .modal-header--accessible .modal-title {
 .usa-alert--slim {
    background-position: 0.75rem center;
    background-size: 2.75rem;
+   background-repeat: no-repeat;
 }
 
 /* --- tags --- */
@@ -559,12 +570,18 @@ clr-modal .modal-header--accessible .modal-title {
    margin:0;
 }
 
+.grid-container {
+   width: 100% !important;
+   max-width: 1630px !important;
+}
+
 /* --- MEDIA QUERIES --- */
 
 @media (max-width: 575px) {
    .grid-container {
       padding-left: 0;
       padding-right: 0;
+      
    }
    .panel {
       padding: 1.25rem;

@@ -19,14 +19,15 @@ namespace CobraComputeAPI.Controllers
 
 
         [HttpPost]
-        public JsonResult Post([FromBody]  Emissions[] reqs)
+        public JsonResult Post([FromBody] Emissions[] reqs)
         {
-            List<double> final_pm = new List<double>(); 
+            List<double> final_pm = new List<double>();
             lock (computeCore)
             {
                 foreach (var req in reqs)
                 {
-                    final_pm.Add(computeCore.computePM(req.PM25, req.NO2, req.SOA, req.NH3, req.SO2, 1));
+                    //took out req.nh3
+                    final_pm.Add(computeCore.computePM(req.PM25, req.NOx, req.SOA, req.SO2, 1));
                 }
             }
             return new JsonResult(final_pm.ToArray(), new JsonSerializerSettings() { Formatting = Formatting.Indented });
