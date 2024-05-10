@@ -104,12 +104,12 @@ export class ReviewpanelComponent implements OnInit {
         {
           name: 'NOx',
           name_sub: 'NO<sub>x</sub>',
-          reduce_increase: data['NOxri'],
-          value: data['cNOx'],
+          reduce_increase: data['NOXri'],
+          value: data['cNOX'],
           value_formatted: new Intl.NumberFormat('en-US', {
             maximumFractionDigits: 2,
-          }).format(data['cNOx']),
-          percent_tons: data['NOxpt'],
+          }).format(data['cNOX']),
+          percent_tons: data['NOXpt'],
         },
         {
           name: 'NH3',

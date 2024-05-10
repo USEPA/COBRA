@@ -104,13 +104,13 @@ export class EmissionspanelComponent implements OnInit {
       name: 'NOx',
       name_sub: 'NO<sub>x</sub>',
       baseline_rounded_up: null,
-      ri_switch_name: 'NOxri',
+      ri_switch_name: 'NOXri',
       ri_switch_model: 'reduce',
       ri_switch_reduce_id: 'NOxr',
       ri_switch_increase_id: 'NOxi',
       input_name: 'changeNOx',
       input_model: null,
-      pt_switch_name: 'NOxpt',
+      pt_switch_name: 'NOXpt',
       pt_switch_model: 'tons',
       pt_switch_tons_id: 'NOxt',
       pt_switch_percent_id: 'NOxp',
@@ -238,13 +238,13 @@ export class EmissionspanelComponent implements OnInit {
       for (var i = 0; i < chem_list.length; i++) {
         value = parseFloat(modifyemissionsform.value['change' + chem_list[i]]);
         if (value === undefined || value == null || isNaN(value)) value = 0;
-        conversion = modifyemissionsform.value[chem_list[i] + 'pt'];
-        adjustment = modifyemissionsform.value[chem_list[i] + 'ri'];
+        conversion = modifyemissionsform.value[chem_list[i].toUpperCase() + 'pt'];
+        adjustment = modifyemissionsform.value[chem_list[i].toUpperCase() + 'ri'];
         if (conversion == 'percent') {
           if (chem_list[i] == 'PM25')
             value = (this.pm25_baseline * value) / 100;
           if (chem_list[i] == 'SO2') value = (this.so2_baseline * value) / 100;
-          if (chem_list[i] == 'NOx') value = (this.nox_baseline * value) / 100;
+          if (chem_list[i].toUpperCase() === 'NOX') value = (this.nox_baseline * value) / 100;
           if (chem_list[i] == 'NH3') value = (this.nh3_baseline * value) / 100;
           if (chem_list[i] == 'VOC') value = (this.voc_baseline * value) / 100;
         }
@@ -253,7 +253,7 @@ export class EmissionspanelComponent implements OnInit {
             this.pm25_control = this.pm25_baseline - value;
           if (chem_list[i] == 'SO2')
             this.so2_control = this.so2_baseline - value;
-          if (chem_list[i] == 'NOx')
+          if (chem_list[i].toUpperCase() === 'NOX')
             this.nox_control = this.nox_baseline - value;
           if (chem_list[i] == 'NH3')
             this.nh3_control = this.nh3_baseline - value;
@@ -264,7 +264,7 @@ export class EmissionspanelComponent implements OnInit {
             this.pm25_control = this.pm25_baseline + value;
           if (chem_list[i] == 'SO2')
             this.so2_control = this.so2_baseline + value;
-          if (chem_list[i] == 'NOx')
+          if (chem_list[i].toUpperCase() === 'NOX')
             this.nox_control = this.nox_baseline + value;
           if (chem_list[i] == 'NH3')
             this.nh3_control = this.nh3_baseline + value;
@@ -300,7 +300,7 @@ export class EmissionspanelComponent implements OnInit {
         this.pollutants[0].ri_switch_model;
       this.component_data_for_reviewpanel['SO2ri'] =
         this.pollutants[1].ri_switch_model;
-      this.component_data_for_reviewpanel['NOxri'] =
+      this.component_data_for_reviewpanel['NOXri'] =
         this.pollutants[2].ri_switch_model;
       this.component_data_for_reviewpanel['NH3ri'] =
         this.pollutants[4].ri_switch_model;
@@ -310,7 +310,7 @@ export class EmissionspanelComponent implements OnInit {
         this.pollutants[0].input_model;
       this.component_data_for_reviewpanel['cSO2'] =
         this.pollutants[1].input_model;
-      this.component_data_for_reviewpanel['cNOx'] =
+      this.component_data_for_reviewpanel['cNOX'] =
         this.pollutants[2].input_model;
       this.component_data_for_reviewpanel['cNH3'] =
         this.pollutants[4].input_model;
@@ -320,7 +320,7 @@ export class EmissionspanelComponent implements OnInit {
         this.pollutants[0].pt_switch_model;
       this.component_data_for_reviewpanel['SO2pt'] =
         this.pollutants[1].pt_switch_model;
-      this.component_data_for_reviewpanel['NOxpt'] =
+      this.component_data_for_reviewpanel['NOXpt'] =
         this.pollutants[2].pt_switch_model;
       this.component_data_for_reviewpanel['NH3pt'] =
         this.pollutants[4].pt_switch_model;
@@ -1149,7 +1149,7 @@ export class EmissionspanelComponent implements OnInit {
       var presentPollutants = [];
       if (newComponentData['cPM25']) presentPollutants.push('PM25');
       if (newComponentData['cSO2']) presentPollutants.push('SO2');
-      if (newComponentData['cNOx']) presentPollutants.push('NOx');
+      if (newComponentData['cNOX']) presentPollutants.push('NOx');
       if (newComponentData['cNH3']) presentPollutants.push('NH3');
       if (newComponentData['cVOC']) presentPollutants.push('VOC');
     }
@@ -1184,7 +1184,7 @@ export class EmissionspanelComponent implements OnInit {
       var presentPollutants = [];
       if (queueElement['cPM25']) presentPollutants.push('PM25');
       if (queueElement['cSO2']) presentPollutants.push('SO2');
-      if (queueElement['cNOx']) presentPollutants.push('NOx');
+      if (queueElement['cNOX']) presentPollutants.push('NOx');
       if (queueElement['cNH3']) presentPollutants.push('NH3');
       if (queueElement['cVOC']) presentPollutants.push('VOC');
     }

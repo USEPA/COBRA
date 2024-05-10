@@ -1326,43 +1326,29 @@ export class ResultspanelComponent implements OnInit, AfterViewInit {
     num = parseFloat(`${num}`);
     if (num === 0) return '0';
 
-    //getting 2 sig figs
-    const magnitude = Math.floor(Math.log10(Math.abs(num)));
-    let divisor = Math.pow(10, magnitude - 1);
-    const adjustedNum = num + 5e-15 * num;
-    let final = Math.round(adjustedNum / divisor) * divisor;
+    // Adjust number to two significant digits
+    let final = Number(num.toPrecision(2));
 
-    if (Math.floor(Math.log10(Math.abs(final))) < magnitude) {
-      divisor /= 10;
-      final = Math.round(adjustedNum / divisor) * divisor;
+    // Handle small numbers prone to floating-point imprecision
+    if (Math.abs(final) < 1 && Math.abs(final) > 0) {
+        let strFinal = final.toString();
+        // regex to capture any zeros and the first two significant digits after decimal
+        const regexMatch = strFinal.match(/^0?\.(0*[1-9][0-9]?)/);
+        if (regexMatch) {
+            final = parseFloat('0.' + regexMatch[1]);
+        }
     }
 
-    // Handle javascript floating-point impresicion using string manipulation (without this it will return float numbers with more than 2 sig figs for floats under 0 in some cases)
-    if (final < 1 && final > 0) {
-      let strFinal = final.toString();
-
-      // regex to capture any zeros between the dot and the first non-zero digit.
-      const regexMatch = strFinal.match(/^0?\.0*([1-9]{1}[0-9]{1})/);
-
-      if (regexMatch) {
-        const leadingZeros = strFinal.slice(0, strFinal.indexOf(regexMatch[1]));
-        strFinal = leadingZeros + regexMatch[1]; // Construct string keeping zeros and the two non-zero decimals
-        final = parseFloat(strFinal);
-      }
-    }
-
+    // Formatting final output
     if (currency) {
-      return new Intl.NumberFormat('en-US', {
-        style: 'currency',
-        currency: 'USD',
-        maximumFractionDigits: 2,
-        minimumFractionDigits: 0,
-      }).format(final);
+        return new Intl.NumberFormat('en-US', {
+            style: 'currency',
+            currency: 'USD',
+            maximumFractionDigits: 2,
+            minimumFractionDigits: 0,
+        }).format(final);
     } else {
-      if (final < 1) {
         return final.toString();
-      }
-      return final.toLocaleString();
     }
   }
 

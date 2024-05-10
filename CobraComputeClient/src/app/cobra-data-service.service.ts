@@ -21,19 +21,15 @@ export class CobraDataService {
     this.stateCountyDataSource.next(data);
   }
 
-  //public serverendpoint = 'https://cobraapi.app.cloud.gov/api/';
-  //public serverendpoint = 'https://cobradevapi.app.cloud.gov/api/';
-  public serverendpoint = 'https://cobradevapi.app.cloud.gov/api/';
-  //public serverendpoint = 'http://localhost/CobraComputeAPI/api/';
-  //public serverendpoint = 'https://cobraprotoapi.app.cloud.gov/api/';
+  public serverendpoint = 'https://cobraapi.app.cloud.gov/api/';
+
 
   private tokenUrl = this.serverendpoint + 'token'; // URL to web api
   private resultUrl = this.serverendpoint + 'Result'; // URL to web api
   private datadictUrl = this.serverendpoint + 'datadictionary'; // URL to web api
   public emissionsUrl = this.serverendpoint + 'SummarizedControlEmissions'; // URL to web api
   private emissionsupdateUrl = this.serverendpoint + 'EmissionsUpdate'; // URL to web api
-  private emissionsbatchupdateUrl =
-    this.serverendpoint + 'EmissionsBatchUpdate'; // URL to web api
+  private emissionsbatchupdateUrl = this.serverendpoint + 'EmissionsBatchUpdate'; // URL to web api
   private sumemissionsUrl = this.serverendpoint + 'SummarizedEmissions';
   private resultExportUrl = this.serverendpoint + 'ExcelExport';
   private SummaryExportUrl = this.serverendpoint + 'SummaryExcel';

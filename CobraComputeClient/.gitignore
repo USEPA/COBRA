@@ -48,3 +48,6 @@ Thumbs.db
 *.rest
 .vscode/
 dist/CobraApp/
+avert samples/AVERT COBRA (Region – Tennessee).csv
+avert samples/jsonfomrat
+dist.zip
