@@ -959,12 +959,9 @@ namespace CobraCompute
         public double delta_pm;
         public double base_pm;
         public double control_pm;
-        public double delta_o3;
-        public double base_o3;
-        public double control_o3;
         public Cobra_POP population;
         public Cobra_Incidence[] incidence;
-        public double discountRate;
+        public bool valat3;
     }
 
     public partial class CustomImpactComputeRequest : ImpactComputeRequest
@@ -1000,8 +997,8 @@ namespace CobraCompute
         public Nullable<double> A { get; set; }
         public Nullable<double> B { get; set; }
         public Nullable<double> C { get; set; }
-        public Nullable<double> Value { get; set; }
-        public string ApplyDiscount { get; set; }
+        public Nullable<double> valat3pct { get; set; }
+        public Nullable<double> valat7pct { get; set; }
         public string IncidenceEndpoint { get; set; }
     }
     public class ResetRequest

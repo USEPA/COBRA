@@ -2660,7 +2660,7 @@ namespace CobraCompute
             return results;
         }
 
-        public List<Cobra_ResultDetail> CustomComputeGenericImpacts(double delta_pm, double base_pm, double control_pm, double delta_o3, double base_o3, double control_o3, Cobra_POP population, Cobra_Incidence[] incidence, Cobra_CR_Core[] CustomCRFunctions, Cobra_Valuation_Core[] CustomValuationFunctions, double discountRate)
+        public List<Cobra_ResultDetail> CustomComputeGenericImpacts(double delta_pm, double base_pm, double control_pm, Cobra_POP population, Cobra_Incidence[] incidence, bool valat3, Cobra_CR_Core[] CustomCRFunctions, Cobra_Valuation_Core[] CustomValuationFunctions)
         {
             Dictionary<string, Result> results_cr = new Dictionary<string, Result>();
             Dictionary<string, Result> results_valuation = new Dictionary<string, Result>();
@@ -2708,7 +2708,6 @@ namespace CobraCompute
                     double C = crfunc.C.GetValueOrDefault(0);
                     double Beta = crfunc.Beta.GetValueOrDefault(0);
                     double DELTAQ = delta_pm;
-                    double DELTAO = delta_o3;
                     double Incidence = 0;
 
                     //year dependent but with the twist that pop and incidence are containing all year data
@@ -2732,7 +2731,7 @@ namespace CobraCompute
                             Incidence = value.incidenceat(age);
                         }
 
-                        double result = this.crfunc(function, cleanfunction, Incidence, Beta, DELTAQ, DELTAO, POP, A, B, C) * poolingweight * metric_adjustment;
+                        double result = this.crfunc(function, cleanfunction, Incidence, Beta, DELTAQ, DELTAQ, POP, A, B, C) * poolingweight * metric_adjustment;
 
                         // check if there is an entry already to make pooling work
                         if (results_cr.TryGetValue(crfunc.Endpoint, out result_cr))
@@ -2774,7 +2773,6 @@ namespace CobraCompute
                     double C = valuefunc.C.GetValueOrDefault(0);
                     double Beta = valuefunc.Beta.GetValueOrDefault(0);
                     double DELTAQ = delta_pm;
-                    double DELTAO = delta_o3;
                     double Incidence = 0;
 
                     //year dependent but with the twist that pop and incidence are containing all year data
@@ -2799,17 +2797,15 @@ namespace CobraCompute
                             Incidence = value.incidenceat(age);
                         }
 
-                        double result = this.crfunc(function, cleanfunction, Incidence, Beta, DELTAQ, DELTAO, POP, A, B, C) * poolingweight * metric_adjustment;
+                        double result = this.crfunc(function, cleanfunction, Incidence, Beta, DELTAQ, 0, POP, A, B, C) * poolingweight * metric_adjustment;
 
-                        if (discountRate == 0 || valuefunc.ApplyDiscount == "NO")
+                        if (valat3)
                         {
-                            result = result * valuefunc.Value.GetValueOrDefault(0) * 1.1225;
+                            result = result * valuefunc.valat3pct.GetValueOrDefault(0) * 1.1225;
                         }
                         else
                         {
-                            double valtarget = adjustmentfactorfromdiscountrate(discountRate / 100);
-
-                           result = result * valuefunc.Value.GetValueOrDefault(0) * valtarget * 1.1225;
+                            result = result * valuefunc.valat7pct.GetValueOrDefault(0) * 1.1225;
                         }
 
                         // check if there is an entry already to make pooling work

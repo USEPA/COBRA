@@ -22,7 +22,7 @@ namespace CobraComputeAPI.Controllers
         {
             List<Cobra_ResultDetail> result;
             lock (computeCore)
-                result = computeCore.CustomComputeGenericImpacts(req.delta_pm, req.base_pm, req.control_pm, req.delta_o3, req.base_o3, req.control_o3, req.population, req.incidence,  req.CustomCRFunctions, req.CustomValuationFunctions, req.discountRate);
+                result = computeCore.CustomComputeGenericImpacts(req.delta_pm, req.base_pm, req.control_pm, req.population, req.incidence, req.valat3, req.CustomCRFunctions, req.CustomValuationFunctions);
             return new JsonResult(result, new JsonSerializerSettings() { Formatting = Formatting.Indented });
         }
 

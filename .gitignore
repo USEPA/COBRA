@@ -1,1 +1,5 @@
 
+*.v2
+/.vs
+/CobraComputeAPI/bin
+/CobraComputeAPI/obj
