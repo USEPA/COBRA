@@ -816,7 +816,7 @@ namespace CobraCompute
                                                      using (TextReader textReader = new StreamReader(stream))
                                                      {
                                                          CsvReader csv = new CsvReader(textReader, System.Globalization.CultureInfo.CurrentCulture);
-                                                         
+
                                                          foreach (Cobra_Dict_State record in csv.GetRecords<Cobra_Dict_State>())
                                                          {
                                                              dict_state.Add(record);
@@ -1978,7 +1978,8 @@ namespace CobraCompute
                 if (crfunc.Seasonal_Metric.ToUpper() == "DAILY")
                 {
                     metric_adjustment = 365;
-                } else if (crfunc.Seasonal_Metric.ToUpper() == "OZONE")
+                }
+                else if (crfunc.Seasonal_Metric.ToUpper() == "OZONE")
                 {
                     metric_adjustment = 152;
                 }
@@ -2660,7 +2661,7 @@ namespace CobraCompute
             return results;
         }
 
-        public List<Cobra_ResultDetail> CustomComputeGenericImpacts(double delta_pm, double base_pm, double control_pm, Cobra_POP population, Cobra_Incidence[] incidence, bool valat3, Cobra_CR_Core[] CustomCRFunctions, Cobra_Valuation_Core[] CustomValuationFunctions)
+        public List<Custom_ResultDetail> CustomComputeGenericImpacts(double delta_pm, double base_pm, double control_pm, Cobra_POP population, Cobra_Incidence[] incidence, bool valat3, Cobra_CR_Core[] CustomCRFunctions, Cobra_Valuation_Core[] CustomValuationFunctions)
         {
             Dictionary<string, Result> results_cr = new Dictionary<string, Result>();
             Dictionary<string, Result> results_valuation = new Dictionary<string, Result>();
@@ -2731,7 +2732,7 @@ namespace CobraCompute
                             Incidence = value.incidenceat(age);
                         }
 
-                        double result = this.crfunc(function, cleanfunction, Incidence, Beta, DELTAQ, DELTAQ, POP, A, B, C) * poolingweight * metric_adjustment;
+                        double result = this.crfunc(function, cleanfunction, Incidence, Beta, DELTAQ, 0, POP, A, B, C) * poolingweight * metric_adjustment;
 
                         // check if there is an entry already to make pooling work
                         if (results_cr.TryGetValue(crfunc.Endpoint, out result_cr))
@@ -2773,6 +2774,7 @@ namespace CobraCompute
                     double C = valuefunc.C.GetValueOrDefault(0);
                     double Beta = valuefunc.Beta.GetValueOrDefault(0);
                     double DELTAQ = delta_pm;
+
                     double Incidence = 0;
 
                     //year dependent but with the twist that pop and incidence are containing all year data
@@ -2830,9 +2832,9 @@ namespace CobraCompute
                 }
             }
 
-            List<Cobra_ResultDetail> results = new List<Cobra_ResultDetail>();
+            List<Custom_ResultDetail> results = new List<Custom_ResultDetail>();
             {
-                Cobra_ResultDetail result_record = new Cobra_ResultDetail();
+                Custom_ResultDetail result_record = new Custom_ResultDetail();
                 result_record.destindx = 0;
                 result_record.BASE_FINAL_PM = base_pm;
                 result_record.CTRL_FINAL_PM = control_pm;
@@ -2842,139 +2844,45 @@ namespace CobraCompute
                 result_record.STATE = "NA";
                 result_record.COUNTY = "NA";
 
-                result_record.PM_Acute_Myocardial_Infarction_Nonfatal = results_cr.GetValueOrDefault("PM Acute Myocardial Infarction, NonfatalAcute Bronchitis", new Result { Value = 0 }).Value;
-                result_record.PM_HA_All_Respiratory = results_cr.GetValueOrDefault("PM HA, All Respiratory", new Result { Value = 0 }).Value;
-                result_record.PM_Minor_Restricted_Activity_Days = results_cr.GetValueOrDefault("PM Minor Restricted Activity Days", new Result { Value = 0 }).Value;
-                result_record.PM_Mortality_All_Cause__low_ = results_cr.GetValueOrDefault("PM Mortality, All Cause(low)", new Result { Value = 0 }).Value;
-                result_record.PM_Mortality_All_Cause__high_ = results_cr.GetValueOrDefault("PM Mortality, All Cause(high)", new Result { Value = 0 }).Value;
-                result_record.PM_Infant_Mortality = results_cr.GetValueOrDefault("PM Infant Mortality", new Result { Value = 0 }).Value;
-                result_record.PM_Work_Loss_Days = results_cr.GetValueOrDefault("PM Work Loss Days", new Result { Value = 0 }).Value;
-                result_record.PM_Incidence_Lung_Cancer = results_cr.GetValueOrDefault("PM Incidence, Lung Cancer", new Result { Value = 0 }).Value;
-                result_record.PM_Incidence_Hay_Fever_Rhinitis = results_cr.GetValueOrDefault("PM Incidence, Hay Fever/Rhinitis", new Result { Value = 0 }).Value;
-                result_record.PM_Incidence_Asthma = results_cr.GetValueOrDefault("PM Incidence, Asthma", new Result { Value = 0 }).Value;
-                result_record.PM_HA_Cardio_Cerebro_and_Peripheral_Vascular_Disease = results_cr.GetValueOrDefault("PM HA, Cardio-, Cerebro- and Peripheral Vascular Disease", new Result { Value = 0 }).Value;
-                result_record.PM_HA_Alzheimers_Disease = results_cr.GetValueOrDefault("PM HA, Alzheimers Disease", new Result { Value = 0 }).Value;
-                result_record.PM_HA_Parkinsons_Disease = results_cr.GetValueOrDefault("PM HA, Parkinsons Disease", new Result { Value = 0 }).Value;
-                result_record.PM_Incidence_Stroke = results_cr.GetValueOrDefault("PM Incidence, Stroke", new Result { Value = 0 }).Value;
-                result_record.PM_Incidence_Out_of_Hospital_Cardiac_Arrest = results_cr.GetValueOrDefault("PM Incidence, Out of Hospital Cardiac Arrest", new Result { Value = 0 }).Value;
-                result_record.PM_Asthma_Symptoms_Albuterol_use = results_cr.GetValueOrDefault("PM Asthma Symptoms, Albuterol use", new Result { Value = 0 }).Value;
-                result_record.PM_HA_Respiratory2 = results_cr.GetValueOrDefault("PM HA, Respiratory-2", new Result { Value = 0 }).Value;
-                result_record.PM_ER_visits_respiratory = results_cr.GetValueOrDefault("PM ER visits, respiratory", new Result { Value = 0 }).Value;
-                result_record.PM_ER_visits_All_Cardiac_Outcomes = results_cr.GetValueOrDefault("PM ER visits, All Cardiac Outcomes", new Result { Value = 0 }).Value;
-                result_record.O3_ER_visits_respiratory = results_cr.GetValueOrDefault("O3 ER visits, respiratory", new Result { Value = 0 }).Value;
-                result_record.O3_HA_All_Respiratory = results_cr.GetValueOrDefault("O3 HA, All Respiratory", new Result { Value = 0 }).Value;
-                result_record.O3_Incidence_Hay_Fever_Rhinitis = results_cr.GetValueOrDefault("O3 Incidence, Hay Fever/Rhinitis", new Result { Value = 0 }).Value;
-                result_record.O3_Incidence_Asthma = results_cr.GetValueOrDefault("O3 Incidence, Asthma", new Result { Value = 0 }).Value;
-                result_record.O3_Asthma_Symptoms_Chest_Tightness = results_cr.GetValueOrDefault("O3 Asthma Symptoms, Chest Tightness", new Result { Value = 0 }).Value;
-                result_record.O3_Asthma_Symptoms_Cough = results_cr.GetValueOrDefault("O3 Asthma Symptoms, Cough", new Result { Value = 0 }).Value;
-                result_record.O3_Asthma_Symptoms_Shortness_of_Breath = results_cr.GetValueOrDefault("O3 Asthma Symptoms, Shortness of Breath", new Result { Value = 0 }).Value;
-                result_record.O3_Asthma_Symptoms_Wheeze = results_cr.GetValueOrDefault("O3 Asthma Symptoms, Wheeze", new Result { Value = 0 }).Value;
-                result_record.O3_ER_Visits_Asthma = results_cr.GetValueOrDefault("O3 Emergency Room Visits, Asthma", new Result { Value = 0 }).Value;
-                result_record.O3_School_Loss_Days = results_cr.GetValueOrDefault("O3 School Loss Days, All Cause", new Result { Value = 0 }).Value;
-                result_record.O3_Mortality_Longterm_exposure = results_cr.GetValueOrDefault("O3 Mortality, Long-term exposure", new Result { Value = 0 }).Value;
-                result_record.O3_Mortality_Shortterm_exposure = results_cr.GetValueOrDefault("O3 Mortality, Short-term exposure", new Result { Value = 0 }).Value;
-                result_record.C__PM_Acute_Myocardial_Infarction_Nonfatal = results_valuation.GetValueOrDefault("PM Acute Myocardial Infarction, Nonfatal", new Result { Value = 0 }).Value;
-                result_record.C__PM_Resp_Hosp_Adm = results_valuation.GetValueOrDefault("PM HA, All Respiratory", new Result { Value = 0 }).Value;
-                result_record.C__PM_Minor_Restricted_Activity_Days = results_valuation.GetValueOrDefault("PM Minor Restricted Activity Days", new Result { Value = 0 }).Value;
-                result_record.C__PM_Mortality_All_Cause__low_ = results_valuation.GetValueOrDefault("PM Mortality, All Cause (low)", new Result { Value = 0 }).Value;
-                result_record.C__PM_Mortality_All_Cause__high_ = results_valuation.GetValueOrDefault("PM Mortality, All Cause (high)", new Result { Value = 0 }).Value;
-                result_record.C__PM_Infant_Mortality = results_valuation.GetValueOrDefault("PM Infant Mortality", new Result { Value = 0 }).Value;
-                result_record.C__PM_Work_Loss_Days = results_valuation.GetValueOrDefault("PM Work Loss Days", new Result { Value = 0 }).Value;
-                result_record.C__PM_Incidence_Lung_Cancer = results_valuation.GetValueOrDefault("PM Incidence, Lung Cancer", new Result { Value = 0 }).Value;
-                result_record.C__PM_Incidence_Hay_Fever_Rhinitis = results_valuation.GetValueOrDefault("PM Incidence, Hay Fever/Rhinitis", new Result { Value = 0 }).Value;
-                result_record.C__PM_Incidence_Asthma = results_valuation.GetValueOrDefault("PM Incidence, Asthma", new Result { Value = 0 }).Value;
-                result_record.C__PM_HA_Cardio_Cerebro_and_Peripheral_Vascular_Disease = results_valuation.GetValueOrDefault("PM HA, Cardio-, Cerebro- and Peripheral Vascular Disease", new Result { Value = 0 }).Value;
-                result_record.C__PM_HA_Alzheimers_Disease = results_valuation.GetValueOrDefault("PM HA, Alzheimers Disease", new Result { Value = 0 }).Value;
-                result_record.C__PM_HA_Parkinsons_Disease = results_valuation.GetValueOrDefault("PM HA, Parkinsons Disease", new Result { Value = 0 }).Value;
-                result_record.C__PM_Incidence_Stroke = results_valuation.GetValueOrDefault("PM Incidence, Stroke", new Result { Value = 0 }).Value;
-                result_record.C__PM_Incidence_Out_of_Hospital_Cardiac_Arrest = results_valuation.GetValueOrDefault("PM Incidence, Out of Hospital Cardiac Arrest", new Result { Value = 0 }).Value;
-                result_record.C__PM_Asthma_Symptoms_Albuterol_use = results_valuation.GetValueOrDefault("PM Asthma Symptoms, Albuterol use", new Result { Value = 0 }).Value;
-                result_record.C__PM_HA_Respiratory2 = results_valuation.GetValueOrDefault("PM HA, Respiratory-2", new Result { Value = 0 }).Value;
-                result_record.C__PM_ER_visits_respiratory = results_valuation.GetValueOrDefault("PM ER visits, respiratory", new Result { Value = 0 }).Value;
-                result_record.C__PM_ER_visits_All_Cardiac_Outcomes = results_valuation.GetValueOrDefault("PM ER visits, All Cardiac Outcomes", new Result { Value = 0 }).Value;
-                result_record.C__O3_ER_visits_respiratory = results_valuation.GetValueOrDefault("O3 ER visits, respiratory", new Result { Value = 0 }).Value;
-                result_record.C__O3_HA_All_Respiratory = results_valuation.GetValueOrDefault("O3 HA, All Respiratory", new Result { Value = 0 }).Value;
-                result_record.C__O3_Incidence_Hay_Fever_Rhinitis = results_valuation.GetValueOrDefault("O3 Incidence, Hay Fever/Rhinitis", new Result { Value = 0 }).Value;
-                result_record.C__O3_Incidence_Asthma = results_valuation.GetValueOrDefault("O3 Incidence, Asthma", new Result { Value = 0 }).Value;
-                result_record.C__O3_Asthma_Symptoms_Chest_Tightness = results_valuation.GetValueOrDefault("O3 Asthma Symptoms, Chest Tightness", new Result { Value = 0 }).Value;
-                result_record.C__O3_Asthma_Symptoms_Cough = results_valuation.GetValueOrDefault("O3 Asthma Symptoms, Cough", new Result { Value = 0 }).Value;
-                result_record.C__O3_Asthma_Symptoms_Shortness_of_Breath = results_valuation.GetValueOrDefault("O3 Asthma Symptoms, Shortness of Breath", new Result { Value = 0 }).Value;
-                result_record.C__O3_Asthma_Symptoms_Wheeze = results_valuation.GetValueOrDefault("O3 Asthma Symptoms, Wheeze", new Result { Value = 0 }).Value;
-                result_record.C__O3_ER_Visits_Asthma = results_valuation.GetValueOrDefault("O3 Emergency Room Visits, Asthma", new Result { Value = 0 }).Value;
-                result_record.C__O3_School_Loss_Days = results_valuation.GetValueOrDefault("O3 School Loss Days, All Cause", new Result { Value = 0 }).Value;
-                result_record.C__O3_Mortality_Longterm_exposure = results_valuation.GetValueOrDefault("O3 Mortality, Long-term exposure", new Result { Value = 0 }).Value;
-                result_record.C__O3_Mortality_Shortterm_exposure = results_valuation.GetValueOrDefault("O3 Mortality, Short-term exposure", new Result { Value = 0 }).Value;
+                //first get the impact result for each custom endpoint
+                foreach (var key in results_cr.Keys)
+                {
+
+                    result_record.SetDynamicProperty(key, results_cr.GetValueOrDefault(key, new Result { Value = 0 }).Value, false);
+                }
 
 
-                //now do total health effect dollars
-                double lowvals = 0;
+                //now get the valuation result for each custom endpoint
+                foreach (var key in results_valuation.Keys)
+                {
+                    if (!key.ToLower().Contains("|"))
+                    {
+                        //last param in setDynamicProperty() set to true to signal that we are adding a valuation
+                        result_record.SetDynamicProperty(key, results_valuation.GetValueOrDefault(key, new Result { Value = 0 }).Value, true);
+                    }
+                    }
 
-                //add all health effects to low vals that do not have high/low differences
-                lowvals += result_record.C__PM_Acute_Myocardial_Infarction_Nonfatal.GetValueOrDefault(0);
-                lowvals += result_record.C__PM_Resp_Hosp_Adm.GetValueOrDefault(0);
-                lowvals += result_record.C__PM_Minor_Restricted_Activity_Days.GetValueOrDefault(0);
-                lowvals += result_record.C__PM_Infant_Mortality.GetValueOrDefault(0);
-                lowvals += result_record.C__PM_Work_Loss_Days.GetValueOrDefault(0);
-                lowvals += result_record.C__PM_Incidence_Lung_Cancer.GetValueOrDefault(0);
-                lowvals += result_record.C__PM_Incidence_Hay_Fever_Rhinitis.GetValueOrDefault(0);
-                lowvals += result_record.C__PM_Incidence_Asthma.GetValueOrDefault(0);
-                lowvals += result_record.C__PM_HA_Cardio_Cerebro_and_Peripheral_Vascular_Disease.GetValueOrDefault(0);
-                lowvals += result_record.C__PM_HA_Alzheimers_Disease.GetValueOrDefault(0);
-                lowvals += result_record.C__PM_HA_Parkinsons_Disease.GetValueOrDefault(0);
-                lowvals += result_record.C__PM_Incidence_Stroke.GetValueOrDefault(0);
-                lowvals += result_record.C__PM_Incidence_Out_of_Hospital_Cardiac_Arrest.GetValueOrDefault(0);
-                lowvals += result_record.C__PM_Asthma_Symptoms_Albuterol_use.GetValueOrDefault(0);
-                lowvals += result_record.C__PM_HA_Respiratory2.GetValueOrDefault(0);
-                lowvals += result_record.C__PM_ER_visits_respiratory.GetValueOrDefault(0);
-                lowvals += result_record.C__PM_ER_visits_All_Cardiac_Outcomes.GetValueOrDefault(0);
-                lowvals += result_record.C__O3_ER_visits_respiratory.GetValueOrDefault(0);
-                lowvals += result_record.C__O3_HA_All_Respiratory.GetValueOrDefault(0);
-                lowvals += result_record.C__O3_Incidence_Hay_Fever_Rhinitis.GetValueOrDefault(0);
-                lowvals += result_record.C__O3_Incidence_Asthma.GetValueOrDefault(0);
-                lowvals += result_record.C__O3_Asthma_Symptoms_Chest_Tightness.GetValueOrDefault(0);
+                    //now do total health effect dollars
 
-                //get all PM
-                result_record.C__Total_PM_Low_Value = lowvals;
-                result_record.C__Total_PM_High_Value = lowvals;
-                //separately add low or high mortality to appropriate total var
-                result_record.C__Total_PM_High_Value += result_record.C__PM_Mortality_All_Cause__high_.GetValueOrDefault(0);
-                result_record.C__Total_PM_Low_Value += result_record.C__PM_Mortality_All_Cause__low_.GetValueOrDefault(0);
+                    double lowvals = 0;
+                // Calculate lowvals
+                lowvals = result_record.GetDynamicPropertyKeys()
+            .Where(key => key.StartsWith("C__") && !key.ToLower().Contains("high"))
+            .Sum(key => result_record.GetDynamicProperty(key));
 
 
+                // Calculate highvals
+                double highvals = 0;
+                highvals = result_record.GetDynamicPropertyKeys()
+            .Where(key => key.StartsWith("C__") && !key.ToLower().Contains("low"))
+            .Sum(key => result_record.GetDynamicProperty(key));
 
-                lowvals += result_record.C__O3_ER_visits_respiratory.GetValueOrDefault(0);
-                lowvals += result_record.C__O3_HA_All_Respiratory.GetValueOrDefault(0);
-                lowvals += result_record.C__O3_Incidence_Hay_Fever_Rhinitis.GetValueOrDefault(0);
-                lowvals += result_record.C__O3_Incidence_Asthma.GetValueOrDefault(0);
-                lowvals += result_record.C__O3_Asthma_Symptoms_Chest_Tightness.GetValueOrDefault(0);
-
-                lowvals += result_record.C__O3_Asthma_Symptoms_Cough.GetValueOrDefault(0);
-                lowvals += result_record.C__O3_Asthma_Symptoms_Shortness_of_Breath.GetValueOrDefault(0);
-                lowvals += result_record.C__O3_Asthma_Symptoms_Wheeze.GetValueOrDefault(0);
-                lowvals += result_record.C__O3_ER_Visits_Asthma.GetValueOrDefault(0);
-                lowvals += result_record.C__O3_School_Loss_Days.GetValueOrDefault(0);
-                lowvals += result_record.C__O3_Mortality_Longterm_exposure.GetValueOrDefault(0);
-                lowvals += result_record.C__O3_Mortality_Shortterm_exposure.GetValueOrDefault(0);
-
-
-                //get all O3
-                result_record.C__Total_O3_Value = result_record.C__O3_Asthma_Symptoms_Cough.GetValueOrDefault(0)
-                + result_record.C__O3_Asthma_Symptoms_Shortness_of_Breath.GetValueOrDefault(0)
-                + result_record.C__O3_Asthma_Symptoms_Wheeze.GetValueOrDefault(0)
-                + result_record.C__O3_ER_Visits_Asthma.GetValueOrDefault(0)
-                + result_record.C__O3_School_Loss_Days.GetValueOrDefault(0)
-                + result_record.C__O3_Mortality_Longterm_exposure.GetValueOrDefault(0)
-                + result_record.C__O3_Mortality_Shortterm_exposure.GetValueOrDefault(0);
 
 
                 result_record.C__Total_Health_Benefits_Low_Value = lowvals;
 
                 //add low to high this works
-                result_record.C__Total_Health_Benefits_High_Value = lowvals;
-
-                //add the endpoints with different high/low vals (in this case only PM_mortality)
-                result_record.C__Total_Health_Benefits_High_Value += result_record.C__PM_Mortality_All_Cause__high_.GetValueOrDefault(0);
-                result_record.C__Total_Health_Benefits_Low_Value += result_record.C__PM_Mortality_All_Cause__low_.GetValueOrDefault(0);
+                result_record.C__Total_Health_Benefits_High_Value = highvals;
 
                 results.Add(result_record);
 

@@ -1,7 +1,10 @@
 ﻿using MathNet.Numerics.LinearAlgebra;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace CobraCompute
 {
@@ -619,11 +622,121 @@ namespace CobraCompute
         public List<Cobra_ResultDetail> Impacts;
         public Cobra_ResultSummary Summary;
     }
-    public partial class Cobra_ResultDetail
+
+    public partial class Custom_ResultDetail
     {
         public long ID { get; set; }
         public Nullable<long> destindx { get; set; }
         public Nullable<double> BASE_FINAL_PM { get; set; }
+        public Nullable<double> CTRL_FINAL_PM { get; set; }
+        public Nullable<double> DELTA_FINAL_PM { get; set; }
+        public string FIPS { get; set; }
+        public string STATE { get; set; }
+        public string COUNTY { get; set; }
+        /*public Nullable<double> BASE_FINAL_O3 { get; set; }
+        public Nullable<double> CTRL_FINAL_O3 { get; set; }
+        public Nullable<double> DELTA_FINAL_O3 { get; set; }*/
+
+
+        /*public Nullable<double> C__Total_PM_Low_Value { get; set; }
+
+        public Nullable<double> C__Total_PM_High_Value { get; set; }
+
+        public Nullable<double> C__Total_O3_Low_Value { get; set; }
+
+        public Nullable<double> C__Total_O3_High_Value { get; set; }*/
+        public Nullable<double> C__Total_Health_Benefits_Low_Value { get; set; }
+        public Nullable<double> C__Total_Health_Benefits_High_Value { get; set; }
+
+
+
+        // Dictionary to store dynamic properties based of endpoint names provided
+        private Dictionary<string, double> dynamicProperties = new Dictionary<string, double>();
+        public void SetDynamicProperty(string key, double value, bool valuation)
+        {
+            //convert to expected format
+            // Replace spaces with underscores
+            string transformedKey = key.Replace(" ", "_");
+            // Replace parentheses with underscores
+            transformedKey = transformedKey.Replace("(", "_").Replace(")", "_");
+            // Remove commas
+            transformedKey = transformedKey.Replace(",", "");
+            //remove periods
+            transformedKey = transformedKey.Replace(".", "");
+
+
+            //add C__ prefix for valuations
+            if (valuation)
+            {
+                transformedKey = "C__" + transformedKey;
+            }
+
+
+            dynamicProperties[transformedKey] = value;
+        }
+
+        public double GetDynamicProperty(string key)
+        {
+            return dynamicProperties.TryGetValue(key, out double value) ? value : 0;
+        }
+
+        public IEnumerable<string> GetDynamicPropertyKeys()
+        {
+            return dynamicProperties.Keys;
+        }
+
+      
+    }
+
+    public class Custom_ResultDetailConverter : JsonConverter<Custom_ResultDetail>
+    {
+        public override void WriteJson(JsonWriter writer, Custom_ResultDetail value, JsonSerializer serializer)
+        {
+            writer.WriteStartObject();
+
+            // Write regular properties
+            writer.WritePropertyName(nameof(Custom_ResultDetail.ID));
+            writer.WriteValue(value.ID);
+            writer.WritePropertyName(nameof(Custom_ResultDetail.destindx));
+            writer.WriteValue(value.destindx);
+            writer.WritePropertyName(nameof(Custom_ResultDetail.BASE_FINAL_PM));
+            writer.WriteValue(value.BASE_FINAL_PM);
+            writer.WritePropertyName(nameof(Custom_ResultDetail.CTRL_FINAL_PM));
+            writer.WriteValue(value.CTRL_FINAL_PM);
+            writer.WritePropertyName(nameof(Custom_ResultDetail.DELTA_FINAL_PM));
+            writer.WriteValue(value.DELTA_FINAL_PM);
+            writer.WritePropertyName(nameof(Custom_ResultDetail.FIPS));
+            writer.WriteValue(value.FIPS);
+            writer.WritePropertyName(nameof(Custom_ResultDetail.STATE));
+            writer.WriteValue(value.STATE);
+            writer.WritePropertyName(nameof(Custom_ResultDetail.COUNTY));
+            writer.WriteValue(value.COUNTY);
+            writer.WritePropertyName(nameof(Custom_ResultDetail.C__Total_Health_Benefits_Low_Value));
+            writer.WriteValue(value.C__Total_Health_Benefits_Low_Value);
+            writer.WritePropertyName(nameof(Custom_ResultDetail.C__Total_Health_Benefits_High_Value));
+            writer.WriteValue(value.C__Total_Health_Benefits_High_Value);
+
+            // Write dynamic properties
+            foreach (var kvp in value.GetDynamicPropertyKeys())
+            {
+                writer.WritePropertyName(kvp);
+                writer.WriteValue(value.GetDynamicProperty(kvp));
+            }
+
+            writer.WriteEndObject();
+        }
+
+        public override Custom_ResultDetail ReadJson(JsonReader reader, Type objectType, Custom_ResultDetail existingValue, bool hasExistingValue, JsonSerializer serializer)
+        {
+            throw new NotImplementedException();
+        }
+    }
+    public partial class Cobra_ResultDetail
+    {
+        public long ID { get; set; }
+        public Nullable<long> destindx { get; set; }
+
+    public Nullable<double> BASE_FINAL_PM { get; set; }
         public Nullable<double> CTRL_FINAL_PM { get; set; }
         public Nullable<double> DELTA_FINAL_PM { get; set; }
         public Nullable<double> BASE_FINAL_O3 { get; set; }
@@ -812,9 +925,9 @@ namespace CobraCompute
         public double Incidence_Asthma { get; set; } //PM + O3
         public double C__Incidence_Asthma { get; set; }
         /************************* asthma breakdown ****************************************/
-        public double PM_Incidence_Asthma { get; set; } 
+        public double PM_Incidence_Asthma { get; set; }
         public double C__PM_Incidence_Asthma { get; set; }
-        public double O3_Incidence_Asthma { get; set; } 
+        public double O3_Incidence_Asthma { get; set; }
         public double C__O3_Incidence_Asthma { get; set; }
         /***************** asthma breakdown ******************/
 
@@ -851,7 +964,7 @@ namespace CobraCompute
         public double ER_visits_All_Cardiac_Outcomes { get; set; } //PM Only
         public double C__ER_visits_All_Cardiac_Outcomes { get; set; } //PM Only
 
-    
+
 
         public double ER_visits_respiratory { get; set; } //PM + O3
         public double C__ER_visits_respiratory { get; set; } //PM + O3
@@ -977,6 +1090,7 @@ namespace CobraCompute
         public string Seasonal_Metric { get; set; }
         public Nullable<long> Start_Age { get; set; }
         public Nullable<long> End_Age { get; set; }
+        // cr function
         public string Function { get; set; }
         public Nullable<double> Beta { get; set; }
         public Nullable<double> A { get; set; }

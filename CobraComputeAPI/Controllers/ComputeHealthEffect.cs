@@ -20,12 +20,12 @@ namespace CobraComputeAPI.Controllers
         [HttpPost]
         public JsonResult Post([FromBody] CustomImpactComputeRequest req)
         {
-            List<Cobra_ResultDetail> result;
+            List<Custom_ResultDetail> result;
             lock (computeCore)
             {
                 result = computeCore.CustomComputeGenericImpacts(req.delta_pm, req.base_pm, req.control_pm, req.population, req.incidence, req.valat3, req.CustomCRFunctions, req.CustomValuationFunctions);
             }
-            return new JsonResult(result, new JsonSerializerSettings() { Formatting = Formatting.Indented });
+            return new JsonResult(result, new JsonSerializerSettings() { Formatting = Formatting.Indented, Converters = new List<JsonConverter> { new Custom_ResultDetailConverter() } });
         }
 
     }
