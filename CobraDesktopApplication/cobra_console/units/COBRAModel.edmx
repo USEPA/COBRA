@@ -1,0 +1,1923 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="cobraModel.Store" Provider="System.Data.SQLite.EF6" ProviderManifestToken="data source=&quot;C:\Users\developer\Projects\COBRA\data\working database\cobra.db&quot;" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="SYS_CR">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="integer" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="FunctionID" Type="integer" />
+          <Property Name="Endpoint" Type="nvarchar" MaxLength="2147483647" />
+          <Property Name="PoolingWeight" Type="real" />
+          <Property Name="Seasonal_Metric" Type="nvarchar" MaxLength="2147483647" />
+          <Property Name="Study_Author" Type="nvarchar" MaxLength="2147483647" />
+          <Property Name="Study_Year" Type="integer" />
+          <Property Name="Start_Age" Type="integer" />
+          <Property Name="End_Age" Type="integer" />
+          <Property Name="Function" Type="nvarchar" MaxLength="2147483647" />
+          <Property Name="Beta" Type="real" />
+          <Property Name="Adjusted" Type="nvarchar" MaxLength="2147483647" />
+          <Property Name="Parameter_1_Beta" Type="real" />
+          <Property Name="A" Type="real" />
+          <Property Name="Name_A" Type="nvarchar" MaxLength="2147483647" />
+          <Property Name="B" Type="real" />
+          <Property Name="Name_B" Type="nvarchar" MaxLength="2147483647" />
+          <Property Name="C" Type="real" />
+          <Property Name="Name_C" Type="nvarchar" MaxLength="2147483647" />
+          <Property Name="Cases" Type="integer" />
+          <Property Name="IncidenceEndpoint" Type="nvarchar" MaxLength="2147483647" />
+        </EntityType>
+        <EntityType Name="SYS_Destination">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="integer" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="destindx" Type="integer" />
+          <Property Name="BASE_NOx" Type="real" />
+          <Property Name="BASE_SO2" Type="real" />
+          <Property Name="BASE_NH3" Type="real" />
+          <Property Name="BASE_SOA" Type="real" />
+          <Property Name="BASE_PM25" Type="real" />
+          <Property Name="BASE_VOC" Type="real" />
+		  <Property Name="BASE_O3N" Type="real" />
+          <Property Name="CTRL_NOx" Type="real" />
+          <Property Name="CTRL_SO2" Type="real" />
+          <Property Name="CTRL_NH3" Type="real" />
+          <Property Name="CTRL_SOA" Type="real" />
+          <Property Name="CTRL_PM25" Type="real" />
+          <Property Name="CTRL_VOC" Type="real" />
+		  <Property Name="CTRL_O3N" Type="real" />
+          <Property Name="F" Type="real" />
+          <Property Name="BASE_FINAL_PM" Type="real" />
+          <Property Name="CTRL_FINAL_PM" Type="real" />
+          <Property Name="DELTA_FINAL_PM" Type="real" />
+		  <Property Name="BASE_FINAL_O3" Type="real" />
+	      <Property Name="CTRL_FINAL_O3" Type="real" />
+	      <Property Name="DELTA_FINAL_O3" Type="real" />
+        </EntityType>
+        <EntityType Name="SYS_Dict">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="integer" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="SOURCEINDX" Type="integer" />
+          <Property Name="FIPS" Type="nvarchar" MaxLength="2147483647" />
+          <Property Name="STFIPS" Type="nvarchar" MaxLength="2147483647" />
+          <Property Name="CNTYFIPS" Type="nvarchar" MaxLength="2147483647" />
+          <Property Name="STNAME" Type="nvarchar" MaxLength="2147483647" />
+          <Property Name="CYNAME" Type="nvarchar" MaxLength="2147483647" />
+        </EntityType>
+        <EntityType Name="SYS_Emissions">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="integer" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="typeindx" Type="integer" />
+          <Property Name="sourceindx" Type="integer" />
+          <Property Name="stid" Type="integer" />
+          <Property Name="cyid" Type="integer" />
+          <Property Name="TIER1" Type="integer" />
+          <Property Name="TIER2" Type="integer" />
+          <Property Name="TIER3" Type="integer" />
+          <Property Name="BASE_NOx" Type="real" />
+          <Property Name="BASE_SO2" Type="real" />
+          <Property Name="BASE_NH3" Type="real" />
+          <Property Name="BASE_PM25" Type="real" />
+          <Property Name="BASE_VOC" Type="real" />
+          <Property Name="CTRL_NOx" Type="real" />
+          <Property Name="CTRL_SO2" Type="real" />
+          <Property Name="CTRL_NH3" Type="real" />
+          <Property Name="CTRL_PM25" Type="real" />
+          <Property Name="CTRL_VOC" Type="real" />
+          <Property Name="TIER1NAME" Type="nvarchar" MaxLength="2147483647" />
+          <Property Name="TIER2NAME" Type="nvarchar" MaxLength="2147483647" />
+          <Property Name="TIER3NAME" Type="nvarchar" MaxLength="2147483647" />
+          <Property Name="FIPS" Type="nvarchar" MaxLength="2147483647" />
+          <Property Name="STATE" Type="nvarchar" MaxLength="2147483647" />
+          <Property Name="COUNTY" Type="nvarchar" MaxLength="2147483647" />
+          <Property Name="TYPE" Type="nvarchar" MaxLength="2147483647" />
+        </EntityType>
+        <EntityType Name="SYS_Emissions_Base">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="integer" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="typeindx" Type="integer" />
+          <Property Name="sourceindx" Type="integer" />
+          <Property Name="stid" Type="integer" />
+          <Property Name="cyid" Type="integer" />
+          <Property Name="TIER1" Type="integer" />
+          <Property Name="TIER2" Type="integer" />
+          <Property Name="TIER3" Type="integer" />
+          <Property Name="NOx" Type="real" />
+          <Property Name="SO2" Type="real" />
+          <Property Name="NH3" Type="real" />
+          <Property Name="SOA" Type="real" />
+          <Property Name="PM25" Type="real" />
+          <Property Name="VOC" Type="real" />
+        </EntityType>
+        <EntityType Name="SYS_Emissions_Base_Summarized">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="integer" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="typeindx" Type="integer" />
+          <Property Name="sourceindx" Type="integer" />
+          <Property Name="NOx" Type="real" />
+          <Property Name="SO2" Type="real" />
+          <Property Name="NH3" Type="real" />
+          <Property Name="SOA" Type="real" />
+          <Property Name="PM25" Type="real" />
+          <Property Name="VOC" Type="real" />
+        </EntityType>
+        <EntityType Name="SYS_Emissions_Control">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="integer" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="typeindx" Type="integer" />
+          <Property Name="sourceindx" Type="integer" />
+          <Property Name="stid" Type="integer" />
+          <Property Name="cyid" Type="integer" />
+          <Property Name="TIER1" Type="integer" />
+          <Property Name="TIER2" Type="integer" />
+          <Property Name="TIER3" Type="integer" />
+          <Property Name="NOx" Type="real" />
+          <Property Name="SO2" Type="real" />
+          <Property Name="NH3" Type="real" />
+          <Property Name="SOA" Type="real" />
+          <Property Name="PM25" Type="real" />
+          <Property Name="VOC" Type="real" />
+        </EntityType>
+        <EntityType Name="SYS_Emissions_Control_Summarized">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="integer" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="typeindx" Type="integer" />
+          <Property Name="sourceindx" Type="integer" />
+          <Property Name="NOx" Type="real" />
+          <Property Name="SO2" Type="real" />
+          <Property Name="NH3" Type="real" />
+          <Property Name="SOA" Type="real" />
+          <Property Name="PM25" Type="real" />
+          <Property Name="VOC" Type="real" />
+        </EntityType>
+        <EntityType Name="SYS_Emissions_Staging">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="integer" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="typeindx" Type="integer" />
+          <Property Name="sourceindx" Type="integer" />
+          <Property Name="stid" Type="integer" />
+          <Property Name="cyid" Type="integer" />
+          <Property Name="TIER1" Type="integer" />
+          <Property Name="TIER2" Type="integer" />
+          <Property Name="TIER3" Type="integer" />
+          <Property Name="NOx" Type="real" />
+          <Property Name="SO2" Type="real" />
+          <Property Name="NH3" Type="real" />
+          <Property Name="PM25" Type="real" />
+          <Property Name="VOC" Type="real" />
+        </EntityType>
+        <EntityType Name="SYS_Incidence">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="integer" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Year" Type="integer" />
+          <Property Name="DestinationID" Type="integer" />
+          <Property Name="FIPS" Type="integer" />
+          <Property Name="Endpoint" Type="nvarchar" MaxLength="2147483647" />
+          <Property Name="Age0" Type="real" />
+          <Property Name="Age1" Type="real" />
+          <Property Name="Age2" Type="real" />
+          <Property Name="Age3" Type="real" />
+          <Property Name="Age4" Type="real" />
+          <Property Name="Age5" Type="real" />
+          <Property Name="Age6" Type="real" />
+          <Property Name="Age7" Type="real" />
+          <Property Name="Age8" Type="real" />
+          <Property Name="Age9" Type="real" />
+          <Property Name="Age10" Type="real" />
+          <Property Name="Age11" Type="real" />
+          <Property Name="Age12" Type="real" />
+          <Property Name="Age13" Type="real" />
+          <Property Name="Age14" Type="real" />
+          <Property Name="Age15" Type="real" />
+          <Property Name="Age16" Type="real" />
+          <Property Name="Age17" Type="real" />
+          <Property Name="Age18" Type="real" />
+          <Property Name="Age19" Type="real" />
+          <Property Name="Age20" Type="real" />
+          <Property Name="Age21" Type="real" />
+          <Property Name="Age22" Type="real" />
+          <Property Name="Age23" Type="real" />
+          <Property Name="Age24" Type="real" />
+          <Property Name="Age25" Type="real" />
+          <Property Name="Age26" Type="real" />
+          <Property Name="Age27" Type="real" />
+          <Property Name="Age28" Type="real" />
+          <Property Name="Age29" Type="real" />
+          <Property Name="Age30" Type="real" />
+          <Property Name="Age31" Type="real" />
+          <Property Name="Age32" Type="real" />
+          <Property Name="Age33" Type="real" />
+          <Property Name="Age34" Type="real" />
+          <Property Name="Age35" Type="real" />
+          <Property Name="Age36" Type="real" />
+          <Property Name="Age37" Type="real" />
+          <Property Name="Age38" Type="real" />
+          <Property Name="Age39" Type="real" />
+          <Property Name="Age40" Type="real" />
+          <Property Name="Age41" Type="real" />
+          <Property Name="Age42" Type="real" />
+          <Property Name="Age43" Type="real" />
+          <Property Name="Age44" Type="real" />
+          <Property Name="Age45" Type="real" />
+          <Property Name="Age46" Type="real" />
+          <Property Name="Age47" Type="real" />
+          <Property Name="Age48" Type="real" />
+          <Property Name="Age49" Type="real" />
+          <Property Name="Age50" Type="real" />
+          <Property Name="Age51" Type="real" />
+          <Property Name="Age52" Type="real" />
+          <Property Name="Age53" Type="real" />
+          <Property Name="Age54" Type="real" />
+          <Property Name="Age55" Type="real" />
+          <Property Name="Age56" Type="real" />
+          <Property Name="Age57" Type="real" />
+          <Property Name="Age58" Type="real" />
+          <Property Name="Age59" Type="real" />
+          <Property Name="Age60" Type="real" />
+          <Property Name="Age61" Type="real" />
+          <Property Name="Age62" Type="real" />
+          <Property Name="Age63" Type="real" />
+          <Property Name="Age64" Type="real" />
+          <Property Name="Age65" Type="real" />
+          <Property Name="Age66" Type="real" />
+          <Property Name="Age67" Type="real" />
+          <Property Name="Age68" Type="real" />
+          <Property Name="Age69" Type="real" />
+          <Property Name="Age70" Type="real" />
+          <Property Name="Age71" Type="real" />
+          <Property Name="Age72" Type="real" />
+          <Property Name="Age73" Type="real" />
+          <Property Name="Age74" Type="real" />
+          <Property Name="Age75" Type="real" />
+          <Property Name="Age76" Type="real" />
+          <Property Name="Age77" Type="real" />
+          <Property Name="Age78" Type="real" />
+          <Property Name="Age79" Type="real" />
+          <Property Name="Age80" Type="real" />
+          <Property Name="Age81" Type="real" />
+          <Property Name="Age82" Type="real" />
+          <Property Name="Age83" Type="real" />
+          <Property Name="Age84" Type="real" />
+          <Property Name="Age85" Type="real" />
+          <Property Name="Age86" Type="real" />
+          <Property Name="Age87" Type="real" />
+          <Property Name="Age88" Type="real" />
+          <Property Name="Age89" Type="real" />
+          <Property Name="Age90" Type="real" />
+          <Property Name="Age91" Type="real" />
+          <Property Name="Age92" Type="real" />
+          <Property Name="Age93" Type="real" />
+          <Property Name="Age94" Type="real" />
+          <Property Name="Age95" Type="real" />
+          <Property Name="Age96" Type="real" />
+          <Property Name="Age97" Type="real" />
+          <Property Name="Age98" Type="real" />
+          <Property Name="Age99" Type="real" />
+        </EntityType>
+        <EntityType Name="SYS_POP">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="integer" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Year" Type="integer" />
+          <Property Name="DestinationID" Type="integer" />
+          <Property Name="FIPS" Type="integer" />
+          <Property Name="Age0" Type="real" />
+          <Property Name="Age1" Type="real" />
+          <Property Name="Age2" Type="real" />
+          <Property Name="Age3" Type="real" />
+          <Property Name="Age4" Type="real" />
+          <Property Name="Age5" Type="real" />
+          <Property Name="Age6" Type="real" />
+          <Property Name="Age7" Type="real" />
+          <Property Name="Age8" Type="real" />
+          <Property Name="Age9" Type="real" />
+          <Property Name="Age10" Type="real" />
+          <Property Name="Age11" Type="real" />
+          <Property Name="Age12" Type="real" />
+          <Property Name="Age13" Type="real" />
+          <Property Name="Age14" Type="real" />
+          <Property Name="Age15" Type="real" />
+          <Property Name="Age16" Type="real" />
+          <Property Name="Age17" Type="real" />
+          <Property Name="Age18" Type="real" />
+          <Property Name="Age19" Type="real" />
+          <Property Name="Age20" Type="real" />
+          <Property Name="Age21" Type="real" />
+          <Property Name="Age22" Type="real" />
+          <Property Name="Age23" Type="real" />
+          <Property Name="Age24" Type="real" />
+          <Property Name="Age25" Type="real" />
+          <Property Name="Age26" Type="real" />
+          <Property Name="Age27" Type="real" />
+          <Property Name="Age28" Type="real" />
+          <Property Name="Age29" Type="real" />
+          <Property Name="Age30" Type="real" />
+          <Property Name="Age31" Type="real" />
+          <Property Name="Age32" Type="real" />
+          <Property Name="Age33" Type="real" />
+          <Property Name="Age34" Type="real" />
+          <Property Name="Age35" Type="real" />
+          <Property Name="Age36" Type="real" />
+          <Property Name="Age37" Type="real" />
+          <Property Name="Age38" Type="real" />
+          <Property Name="Age39" Type="real" />
+          <Property Name="Age40" Type="real" />
+          <Property Name="Age41" Type="real" />
+          <Property Name="Age42" Type="real" />
+          <Property Name="Age43" Type="real" />
+          <Property Name="Age44" Type="real" />
+          <Property Name="Age45" Type="real" />
+          <Property Name="Age46" Type="real" />
+          <Property Name="Age47" Type="real" />
+          <Property Name="Age48" Type="real" />
+          <Property Name="Age49" Type="real" />
+          <Property Name="Age50" Type="real" />
+          <Property Name="Age51" Type="real" />
+          <Property Name="Age52" Type="real" />
+          <Property Name="Age53" Type="real" />
+          <Property Name="Age54" Type="real" />
+          <Property Name="Age55" Type="real" />
+          <Property Name="Age56" Type="real" />
+          <Property Name="Age57" Type="real" />
+          <Property Name="Age58" Type="real" />
+          <Property Name="Age59" Type="real" />
+          <Property Name="Age60" Type="real" />
+          <Property Name="Age61" Type="real" />
+          <Property Name="Age62" Type="real" />
+          <Property Name="Age63" Type="real" />
+          <Property Name="Age64" Type="real" />
+          <Property Name="Age65" Type="real" />
+          <Property Name="Age66" Type="real" />
+          <Property Name="Age67" Type="real" />
+          <Property Name="Age68" Type="real" />
+          <Property Name="Age69" Type="real" />
+          <Property Name="Age70" Type="real" />
+          <Property Name="Age71" Type="real" />
+          <Property Name="Age72" Type="real" />
+          <Property Name="Age73" Type="real" />
+          <Property Name="Age74" Type="real" />
+          <Property Name="Age75" Type="real" />
+          <Property Name="Age76" Type="real" />
+          <Property Name="Age77" Type="real" />
+          <Property Name="Age78" Type="real" />
+          <Property Name="Age79" Type="real" />
+          <Property Name="Age80" Type="real" />
+          <Property Name="Age81" Type="real" />
+          <Property Name="Age82" Type="real" />
+          <Property Name="Age83" Type="real" />
+          <Property Name="Age84" Type="real" />
+          <Property Name="Age85" Type="real" />
+          <Property Name="Age86" Type="real" />
+          <Property Name="Age87" Type="real" />
+          <Property Name="Age88" Type="real" />
+          <Property Name="Age89" Type="real" />
+          <Property Name="Age90" Type="real" />
+          <Property Name="Age91" Type="real" />
+          <Property Name="Age92" Type="real" />
+          <Property Name="Age93" Type="real" />
+          <Property Name="Age94" Type="real" />
+          <Property Name="Age95" Type="real" />
+          <Property Name="Age96" Type="real" />
+          <Property Name="Age97" Type="real" />
+          <Property Name="Age98" Type="real" />
+          <Property Name="Age99" Type="real" />
+        </EntityType>
+        <EntityType Name="SYS_Results">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="integer" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="destindx" Type="integer" />
+          <Property Name="BASE_FINAL_PM" Type="real" />
+          <Property Name="CTRL_FINAL_PM" Type="real" />
+          <Property Name="DELTA_FINAL_PM" Type="real" />
+			<Property Name="BASE_FINAL_O3" Type="real" />
+			<Property Name="CTRL_FINAL_O3" Type="real" />
+			<Property Name="DELTA_FINAL_O3" Type="real" />
+          <Property Name="PM Acute Myocardial Infarction Nonfatal" Type="real" />
+		  <Property Name="PM HA All Respiratory" Type="real" />
+          <Property Name="PM Minor Restricted Activity Days" Type="real" />
+          <Property Name="PM Mortality All Cause (low)" Type="real" />
+          <Property Name="PM Mortality All Cause (high)" Type="real" />
+          <Property Name="PM Infant Mortality" Type="real" />
+          <Property Name="PM Work Loss Days" Type="real" />
+		  <Property Name="PM Incidence Lung Cancer" Type="real" />
+		  <Property Name="PM Incidence Hay Fever Rhinitis" Type="real" />
+			<Property Name="PM Incidence Asthma" Type="real" />
+			<Property Name="PM HA Cardio Cerebro and Peripheral Vascular Disease" Type="real" />
+			<Property Name="PM HA Alzheimers Disease" Type="real" />
+			<Property Name="PM HA Parkinsons Disease" Type="real" />
+			<Property Name="PM Incidence Stroke" Type="real" />
+			<Property Name="PM Incidence Out of Hospital Cardiac Arrest" Type="real" />
+			<Property Name="PM Asthma Symptoms Albuterol use" Type="real" />
+			<Property Name="PM HA Respiratory2" Type="real" />
+			<Property Name="PM ER visits respiratory" Type="real" />
+			<Property Name="PM ER visits All Cardiac Outcomes" Type="real" />
+			<Property Name="O3 ER visits respiratory" Type="real" />
+			<Property Name="O3 HA All Respiratory" Type="real" />
+			<Property Name="O3 Incidence Hay Fever Rhinitis" Type="real" />
+			<Property Name="O3 Incidence Asthma" Type="real" />
+			<Property Name="O3 Asthma Symptoms Chest Tightness" Type="real" />
+			<Property Name="O3 Asthma Symptoms Cough" Type="real" />
+			<Property Name="O3 Asthma Symptoms Shortness of Breath" Type="real" />
+			<Property Name="O3 Asthma Symptoms Wheeze" Type="real" />
+			<Property Name="O3 ER Visits Asthma" Type="real" />
+			<Property Name="O3 School Loss Days" Type="real" />
+			<Property Name="O3 Mortality Longterm exposure" Type="real" />
+			<Property Name="O3 Mortality Shortterm exposure" Type="real" />
+
+
+
+
+
+			<Property Name="$ PM Acute Myocardial Infarction Nonfatal" Type="real" />
+
+          <Property Name="$ PM Resp Hosp Adm" Type="real" />
+
+          <Property Name="$ PM Minor Restricted Activity Days" Type="real" />
+          <Property Name="$ PM Mortality All Cause (low)" Type="real" />
+          <Property Name="$ PM Mortality All Cause (high)" Type="real" />
+          <Property Name="$ PM Infant Mortality" Type="real" />
+          <Property Name="$ PM Work Loss Days" Type="real" />
+			<Property Name="$ PM Incidence Hay Fever Rhinitis" Type="real" />
+			<Property Name="$ PM Incidence Asthma" Type="real" />
+			<Property Name="$ PM HA Cardio Cerebro and Peripheral Vascular Disease" Type="real" />
+			<Property Name="$ PM HA Alzheimers Disease" Type="real" />
+			<Property Name="$ PM HA Parkinsons Disease" Type="real" />
+			<Property Name="$ PM Incidence Stroke" Type="real" />
+			<Property Name="$ PM Incidence Out of Hospital Cardiac Arrest" Type="real" />
+			<Property Name="$ PM Asthma Symptoms Albuterol use" Type="real" />
+			<Property Name="$ PM HA Respiratory2" Type="real" />
+			<Property Name="$ PM ER visits respiratory" Type="real" />
+			<Property Name="$ PM ER visits All Cardiac Outcomes" Type="real" />
+			<Property Name="$ O3 ER visits respiratory" Type="real" />
+			<Property Name="$ O3 HA All Respiratory" Type="real" />
+			<Property Name="$ O3 Incidence Hay Fever Rhinitis" Type="real" />
+			<Property Name="$ O3 Incidence Asthma" Type="real" />
+			<Property Name="$ O3 Asthma Symptoms Chest Tightness" Type="real" />
+			<Property Name="$ O3 Asthma Symptoms Cough" Type="real" />
+			<Property Name="$ O3 Asthma Symptoms Shortness of Breath" Type="real" />
+			<Property Name="$ O3 Asthma Symptoms Wheeze" Type="real" />
+			<Property Name="$ O3 ER Visits Asthma" Type="real" />
+			<Property Name="$ O3 School Loss Days" Type="real" />
+			<Property Name="$ O3 Mortality Longterm exposure" Type="real" />
+			<Property Name="$ O3 Mortality Shortterm exposure" Type="real" />
+
+			<Property Name="$ PM Incidence Lung Cancer" Type="real" />
+          <Property Name="FIPS" Type="nvarchar" MaxLength="2147483647" />
+          <Property Name="STATE" Type="nvarchar" MaxLength="2147483647" />
+          <Property Name="COUNTY" Type="nvarchar" MaxLength="2147483647" />
+        </EntityType>
+        <EntityType Name="SYS_ScenarioEmissions_Staging">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="integer" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="typeindx" Type="integer" />
+          <Property Name="sourceindx" Type="integer" />
+          <Property Name="stid" Type="integer" />
+          <Property Name="cyid" Type="integer" />
+          <Property Name="TIER1" Type="integer" />
+          <Property Name="TIER2" Type="integer" />
+          <Property Name="TIER3" Type="integer" />
+          <Property Name="BASE_NOx" Type="real" />
+          <Property Name="BASE_SO2" Type="real" />
+          <Property Name="BASE_NH3" Type="real" />
+          <Property Name="BASE_PM25" Type="real" />
+          <Property Name="BASE_VOC" Type="real" />
+          <Property Name="CTRL_NOx" Type="real" />
+          <Property Name="CTRL_SO2" Type="real" />
+          <Property Name="CTRL_NH3" Type="real" />
+          <Property Name="CTRL_PM25" Type="real" />
+          <Property Name="CTRL_VOC" Type="real" />
+        </EntityType>
+        <EntityType Name="SYS_Srmatrix_2025">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="integer" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="typeindx" Type="integer" />
+          <Property Name="sourceindx" Type="integer" />
+          <Property Name="destindx" Type="integer" />
+          <Property Name="c_PM25" Type="real" />
+          <Property Name="c_NO3" Type="real" />
+          <Property Name="c_SO4" Type="real" />
+          <Property Name="tx_nh3" Type="real" />
+        </EntityType>
+        <EntityType Name="SYS_Stacks">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="integer" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="typeindx" Type="integer" />
+          <Property Name="NAME" Type="nvarchar" MaxLength="2147483647" />
+        </EntityType>
+        <EntityType Name="SYS_SummarizedEmissions">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="integer" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="sourceindx" Type="integer" />
+          <Property Name="BASE_NOx" Type="real" />
+          <Property Name="BASE_SO2" Type="real" />
+          <Property Name="BASE_NH3" Type="real" />
+          <Property Name="BASE_PM25" Type="real" />
+          <Property Name="BASE_VOC" Type="real" />
+          <Property Name="CTRL_NOx" Type="real" />
+          <Property Name="CTRL_SO2" Type="real" />
+          <Property Name="CTRL_NH3" Type="real" />
+          <Property Name="CTRL_PM25" Type="real" />
+          <Property Name="CTRL_VOC" Type="real" />
+          <Property Name="DELTA_NOx" Type="real" />
+          <Property Name="DELTA_SO2" Type="real" />
+          <Property Name="DELTA_NH3" Type="real" />
+          <Property Name="DELTA_PM25" Type="real" />
+          <Property Name="DELTA_VOC" Type="real" />
+          <Property Name="TIER1NAME" Type="nvarchar" MaxLength="2147483647" />
+          <Property Name="TIER2NAME" Type="nvarchar" MaxLength="2147483647" />
+          <Property Name="TIER3NAME" Type="nvarchar" MaxLength="2147483647" />
+          <Property Name="FIPS" Type="nvarchar" MaxLength="2147483647" />
+          <Property Name="STATENAME" Type="nvarchar" MaxLength="2147483647" />
+          <Property Name="COUNTYNAME" Type="nvarchar" MaxLength="2147483647" />
+        </EntityType>
+        <EntityType Name="SYS_Tiers">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="integer" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="TIER1" Type="integer" />
+          <Property Name="TIER2" Type="integer" />
+          <Property Name="TIER3" Type="integer" />
+          <Property Name="TIER1NAME" Type="nvarchar" MaxLength="2147483647" />
+          <Property Name="TIER2NAME" Type="nvarchar" MaxLength="2147483647" />
+          <Property Name="TIER3NAME" Type="nvarchar" MaxLength="2147483647" />
+        </EntityType>
+        <EntityType Name="SYS_Valuation">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="integer" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="CRFunctionID" Type="integer" />
+          <Property Name="Endpoint" Type="nvarchar" MaxLength="2147483647" />
+          <Property Name="PoolingWeight" Type="real" />
+          <Property Name="Seasonal_Metric" Type="nvarchar" MaxLength="2147483647" />
+          <Property Name="Study_Author" Type="nvarchar" MaxLength="2147483647" />
+          <Property Name="Study_Year" Type="integer" />
+          <Property Name="Start_Age" Type="integer" />
+          <Property Name="End_Age" Type="integer" />
+          <Property Name="Function" Type="nvarchar" MaxLength="2147483647" />
+          <Property Name="Beta" Type="real" />
+          <Property Name="Adjusted" Type="nvarchar" MaxLength="2147483647" />
+          <Property Name="Parameter_1_Beta" Type="real" />
+          <Property Name="A" Type="real" />
+          <Property Name="Name_A" Type="nvarchar" MaxLength="2147483647" />
+          <Property Name="B" Type="real" />
+          <Property Name="Name_B" Type="nvarchar" MaxLength="2147483647" />
+          <Property Name="C" Type="real" />
+          <Property Name="Name_C" Type="nvarchar" MaxLength="2147483647" />
+          <Property Name="Cases" Type="integer" />
+          <Property Name="HealthEffect" Type="nvarchar" MaxLength="2147483647" />
+          <Property Name="ValuationMethod" Type="nvarchar" MaxLength="2147483647" />
+          <Property Name="Value" Type="real" />
+          <Property Name="ApplyDiscount" Type="nvarchar" MaxLength="2147483647" />
+          <Property Name="IncidenceEndpoint" Type="nvarchar" MaxLength="2147483647" />
+        </EntityType>
+        <EntityType Name="SYS_voc2soa">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="integer" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="TIER1" Type="integer" />
+          <Property Name="TIER2" Type="integer" />
+          <Property Name="TIER3" Type="integer" />
+          <Property Name="FACTOR" Type="real" />
+        </EntityType>
+        <EntityContainer Name="cobraModelStoreContainer">
+          <EntitySet Name="SYS_CR" EntityType="Self.SYS_CR" store:Type="Tables" />
+          <EntitySet Name="SYS_Destination" EntityType="Self.SYS_Destination" store:Type="Tables" />
+          <EntitySet Name="SYS_Dict" EntityType="Self.SYS_Dict" store:Type="Tables" />
+          <EntitySet Name="SYS_Emissions" EntityType="Self.SYS_Emissions" store:Type="Tables" />
+          <EntitySet Name="SYS_Emissions_Base" EntityType="Self.SYS_Emissions_Base" store:Type="Tables" />
+          <EntitySet Name="SYS_Emissions_Base_Summarized" EntityType="Self.SYS_Emissions_Base_Summarized" store:Type="Tables" />
+          <EntitySet Name="SYS_Emissions_Control" EntityType="Self.SYS_Emissions_Control" store:Type="Tables" />
+          <EntitySet Name="SYS_Emissions_Control_Summarized" EntityType="Self.SYS_Emissions_Control_Summarized" store:Type="Tables" />
+          <EntitySet Name="SYS_Emissions_Staging" EntityType="Self.SYS_Emissions_Staging" store:Type="Tables" />
+          <EntitySet Name="SYS_Incidence" EntityType="Self.SYS_Incidence" store:Type="Tables" />
+          <EntitySet Name="SYS_POP" EntityType="Self.SYS_POP" store:Type="Tables" />
+          <EntitySet Name="SYS_Results" EntityType="Self.SYS_Results" store:Type="Tables" />
+          <EntitySet Name="SYS_ScenarioEmissions_Staging" EntityType="Self.SYS_ScenarioEmissions_Staging" store:Type="Tables" />
+          <EntitySet Name="SYS_Srmatrix_2025" EntityType="Self.SYS_Srmatrix_2025" store:Type="Tables" />
+          <EntitySet Name="SYS_Stacks" EntityType="Self.SYS_Stacks" store:Type="Tables" />
+          <EntitySet Name="SYS_SummarizedEmissions" EntityType="Self.SYS_SummarizedEmissions" store:Type="Tables" />
+          <EntitySet Name="SYS_Tiers" EntityType="Self.SYS_Tiers" store:Type="Tables" />
+          <EntitySet Name="SYS_Valuation" EntityType="Self.SYS_Valuation" store:Type="Tables" />
+          <EntitySet Name="SYS_voc2soa" EntityType="Self.SYS_voc2soa" store:Type="Tables" />
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="cobraModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityContainer Name="cobraEntities" annotation:LazyLoadingEnabled="true" >
+          <EntitySet Name="SYS_CR" EntityType="cobraModel.SYS_CR" />
+          <EntitySet Name="SYS_Destination" EntityType="cobraModel.SYS_Destination" />
+          <EntitySet Name="SYS_Dict" EntityType="cobraModel.SYS_Dict" />
+          <EntitySet Name="SYS_Emissions" EntityType="cobraModel.SYS_Emissions" />
+          <EntitySet Name="SYS_Emissions_Base" EntityType="cobraModel.SYS_Emissions_Base" />
+          <EntitySet Name="SYS_Emissions_Base_Summarized" EntityType="cobraModel.SYS_Emissions_Base_Summarized" />
+          <EntitySet Name="SYS_Emissions_Control" EntityType="cobraModel.SYS_Emissions_Control" />
+          <EntitySet Name="SYS_Emissions_Control_Summarized" EntityType="cobraModel.SYS_Emissions_Control_Summarized" />
+          <EntitySet Name="SYS_Emissions_Staging" EntityType="cobraModel.SYS_Emissions_Staging" />
+          <EntitySet Name="SYS_Incidence" EntityType="cobraModel.SYS_Incidence" />
+          <EntitySet Name="SYS_POP" EntityType="cobraModel.SYS_POP" />
+          <EntitySet Name="SYS_ScenarioEmissions_Staging" EntityType="cobraModel.SYS_ScenarioEmissions_Staging" />
+          <EntitySet Name="SYS_Srmatrix_2025" EntityType="cobraModel.SYS_Srmatrix_2025" />
+          <EntitySet Name="SYS_Stacks" EntityType="cobraModel.SYS_Stacks" />
+          <EntitySet Name="SYS_SummarizedEmissions" EntityType="cobraModel.SYS_SummarizedEmissions" />
+          <EntitySet Name="SYS_Tiers" EntityType="cobraModel.SYS_Tiers" />
+          <EntitySet Name="SYS_Valuation" EntityType="cobraModel.SYS_Valuation" />
+          <EntitySet Name="SYS_voc2soa" EntityType="cobraModel.SYS_voc2soa" />
+          <EntitySet Name="SYS_Results" EntityType="cobraModel.SYS_Results" />
+        </EntityContainer>
+        <EntityType Name="SYS_CR">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="FunctionID" Type="Int64" />
+          <Property Name="Endpoint" Type="String" MaxLength="2147483647" FixedLength="false" Unicode="true" />
+          <Property Name="PoolingWeight" Type="Double" />
+          <Property Name="Seasonal_Metric" Type="String" MaxLength="2147483647" FixedLength="false" Unicode="true" />
+          <Property Name="Study_Author" Type="String" MaxLength="2147483647" FixedLength="false" Unicode="true" />
+          <Property Name="Study_Year" Type="Int64" />
+          <Property Name="Start_Age" Type="Int64" />
+          <Property Name="End_Age" Type="Int64" />
+          <Property Name="Function" Type="String" MaxLength="2147483647" FixedLength="false" Unicode="true" />
+          <Property Name="Beta" Type="Double" />
+          <Property Name="Adjusted" Type="String" MaxLength="2147483647" FixedLength="false" Unicode="true" />
+          <Property Name="Parameter_1_Beta" Type="Double" />
+          <Property Name="A" Type="Double" />
+          <Property Name="Name_A" Type="String" MaxLength="2147483647" FixedLength="false" Unicode="true" />
+          <Property Name="B" Type="Double" />
+          <Property Name="Name_B" Type="String" MaxLength="2147483647" FixedLength="false" Unicode="true" />
+          <Property Name="C" Type="Double" />
+          <Property Name="Name_C" Type="String" MaxLength="2147483647" FixedLength="false" Unicode="true" />
+          <Property Name="Cases" Type="Int64" />
+          <Property Name="IncidenceEndpoint" Type="String" MaxLength="2147483647" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="SYS_Destination">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="destindx" Type="Int64" />
+          <Property Name="BASE_NOx" Type="Double" />
+          <Property Name="BASE_SO2" Type="Double" />
+          <Property Name="BASE_NH3" Type="Double" />
+          <Property Name="BASE_SOA" Type="Double" />
+          <Property Name="BASE_PM25" Type="Double" />
+          <Property Name="BASE_VOC" Type="Double" />
+		  <Property Name="BASE_O3N" Type="Double" />
+          <Property Name="CTRL_NOx" Type="Double" />
+          <Property Name="CTRL_SO2" Type="Double" />
+          <Property Name="CTRL_NH3" Type="Double" />
+          <Property Name="CTRL_SOA" Type="Double" />
+          <Property Name="CTRL_PM25" Type="Double" />
+          <Property Name="CTRL_VOC" Type="Double" />
+		  <Property Name="CTRL_O3N" Type="Double" />
+          <Property Name="F" Type="Double" />
+          <Property Name="BASE_FINAL_PM" Type="Double" />
+          <Property Name="CTRL_FINAL_PM" Type="Double" />
+          <Property Name="DELTA_FINAL_PM" Type="Double" />
+		  <Property Name="BASE_FINAL_O3" Type="Double" />
+		  <Property Name="CTRL_FINAL_O3" Type="Double" />
+	      <Property Name="DELTA_FINAL_O3" Type="Double" />
+        </EntityType>
+        <EntityType Name="SYS_Dict">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="SOURCEINDX" Type="Int64" />
+          <Property Name="FIPS" Type="String" MaxLength="2147483647" FixedLength="false" Unicode="true" />
+          <Property Name="STFIPS" Type="String" MaxLength="2147483647" FixedLength="false" Unicode="true" />
+          <Property Name="CNTYFIPS" Type="String" MaxLength="2147483647" FixedLength="false" Unicode="true" />
+          <Property Name="STNAME" Type="String" MaxLength="2147483647" FixedLength="false" Unicode="true" />
+          <Property Name="CYNAME" Type="String" MaxLength="2147483647" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="SYS_Emissions">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="typeindx" Type="Int64" />
+          <Property Name="sourceindx" Type="Int64" />
+          <Property Name="stid" Type="Int64" />
+          <Property Name="cyid" Type="Int64" />
+          <Property Name="TIER1" Type="Int64" />
+          <Property Name="TIER2" Type="Int64" />
+          <Property Name="TIER3" Type="Int64" />
+          <Property Name="BASE_NOx" Type="Double" />
+          <Property Name="BASE_SO2" Type="Double" />
+          <Property Name="BASE_NH3" Type="Double" />
+          <Property Name="BASE_PM25" Type="Double" />
+          <Property Name="BASE_VOC" Type="Double" />
+          <Property Name="CTRL_NOx" Type="Double" />
+          <Property Name="CTRL_SO2" Type="Double" />
+          <Property Name="CTRL_NH3" Type="Double" />
+          <Property Name="CTRL_PM25" Type="Double" />
+          <Property Name="CTRL_VOC" Type="Double" />
+          <Property Name="TIER1NAME" Type="String" MaxLength="2147483647" FixedLength="false" Unicode="true" />
+          <Property Name="TIER2NAME" Type="String" MaxLength="2147483647" FixedLength="false" Unicode="true" />
+          <Property Name="TIER3NAME" Type="String" MaxLength="2147483647" FixedLength="false" Unicode="true" />
+          <Property Name="FIPS" Type="String" MaxLength="2147483647" FixedLength="false" Unicode="true" />
+          <Property Name="STATE" Type="String" MaxLength="2147483647" FixedLength="false" Unicode="true" />
+          <Property Name="COUNTY" Type="String" MaxLength="2147483647" FixedLength="false" Unicode="true" />
+          <Property Name="TYPE" Type="String" MaxLength="2147483647" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="SYS_Emissions_Base">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="typeindx" Type="Int64" />
+          <Property Name="sourceindx" Type="Int64" />
+          <Property Name="stid" Type="Int64" />
+          <Property Name="cyid" Type="Int64" />
+          <Property Name="TIER1" Type="Int64" />
+          <Property Name="TIER2" Type="Int64" />
+          <Property Name="TIER3" Type="Int64" />
+          <Property Name="NOx" Type="Double" />
+          <Property Name="SO2" Type="Double" />
+          <Property Name="NH3" Type="Double" />
+          <Property Name="SOA" Type="Double" />
+          <Property Name="PM25" Type="Double" />
+          <Property Name="VOC" Type="Double" />
+        </EntityType>
+        <EntityType Name="SYS_Emissions_Base_Summarized">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="typeindx" Type="Int64" />
+          <Property Name="sourceindx" Type="Int64" />
+          <Property Name="NOx" Type="Double" />
+          <Property Name="SO2" Type="Double" />
+          <Property Name="NH3" Type="Double" />
+          <Property Name="SOA" Type="Double" />
+          <Property Name="PM25" Type="Double" />
+          <Property Name="VOC" Type="Double" />
+        </EntityType>
+        <EntityType Name="SYS_Emissions_Control">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="typeindx" Type="Int64" />
+          <Property Name="sourceindx" Type="Int64" />
+          <Property Name="stid" Type="Int64" />
+          <Property Name="cyid" Type="Int64" />
+          <Property Name="TIER1" Type="Int64" />
+          <Property Name="TIER2" Type="Int64" />
+          <Property Name="TIER3" Type="Int64" />
+          <Property Name="NOx" Type="Double" />
+          <Property Name="SO2" Type="Double" />
+          <Property Name="NH3" Type="Double" />
+          <Property Name="SOA" Type="Double" />
+          <Property Name="PM25" Type="Double" />
+          <Property Name="VOC" Type="Double" />
+        </EntityType>
+        <EntityType Name="SYS_Emissions_Control_Summarized">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="typeindx" Type="Int64" />
+          <Property Name="sourceindx" Type="Int64" />
+          <Property Name="NOx" Type="Double" />
+          <Property Name="SO2" Type="Double" />
+          <Property Name="NH3" Type="Double" />
+          <Property Name="SOA" Type="Double" />
+          <Property Name="PM25" Type="Double" />
+          <Property Name="VOC" Type="Double" />
+        </EntityType>
+        <EntityType Name="SYS_Emissions_Staging">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="typeindx" Type="Int64" />
+          <Property Name="sourceindx" Type="Int64" />
+          <Property Name="stid" Type="Int64" />
+          <Property Name="cyid" Type="Int64" />
+          <Property Name="TIER1" Type="Int64" />
+          <Property Name="TIER2" Type="Int64" />
+          <Property Name="TIER3" Type="Int64" />
+          <Property Name="NOx" Type="Double" />
+          <Property Name="SO2" Type="Double" />
+          <Property Name="NH3" Type="Double" />
+          <Property Name="PM25" Type="Double" />
+          <Property Name="VOC" Type="Double" />
+        </EntityType>
+        <EntityType Name="SYS_Incidence">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Year" Type="Int64" />
+          <Property Name="DestinationID" Type="Int64" />
+          <Property Name="FIPS" Type="Int64" />
+          <Property Name="Endpoint" Type="String" MaxLength="2147483647" FixedLength="false" Unicode="true" />
+          <Property Name="Age0" Type="Double" />
+          <Property Name="Age1" Type="Double" />
+          <Property Name="Age2" Type="Double" />
+          <Property Name="Age3" Type="Double" />
+          <Property Name="Age4" Type="Double" />
+          <Property Name="Age5" Type="Double" />
+          <Property Name="Age6" Type="Double" />
+          <Property Name="Age7" Type="Double" />
+          <Property Name="Age8" Type="Double" />
+          <Property Name="Age9" Type="Double" />
+          <Property Name="Age10" Type="Double" />
+          <Property Name="Age11" Type="Double" />
+          <Property Name="Age12" Type="Double" />
+          <Property Name="Age13" Type="Double" />
+          <Property Name="Age14" Type="Double" />
+          <Property Name="Age15" Type="Double" />
+          <Property Name="Age16" Type="Double" />
+          <Property Name="Age17" Type="Double" />
+          <Property Name="Age18" Type="Double" />
+          <Property Name="Age19" Type="Double" />
+          <Property Name="Age20" Type="Double" />
+          <Property Name="Age21" Type="Double" />
+          <Property Name="Age22" Type="Double" />
+          <Property Name="Age23" Type="Double" />
+          <Property Name="Age24" Type="Double" />
+          <Property Name="Age25" Type="Double" />
+          <Property Name="Age26" Type="Double" />
+          <Property Name="Age27" Type="Double" />
+          <Property Name="Age28" Type="Double" />
+          <Property Name="Age29" Type="Double" />
+          <Property Name="Age30" Type="Double" />
+          <Property Name="Age31" Type="Double" />
+          <Property Name="Age32" Type="Double" />
+          <Property Name="Age33" Type="Double" />
+          <Property Name="Age34" Type="Double" />
+          <Property Name="Age35" Type="Double" />
+          <Property Name="Age36" Type="Double" />
+          <Property Name="Age37" Type="Double" />
+          <Property Name="Age38" Type="Double" />
+          <Property Name="Age39" Type="Double" />
+          <Property Name="Age40" Type="Double" />
+          <Property Name="Age41" Type="Double" />
+          <Property Name="Age42" Type="Double" />
+          <Property Name="Age43" Type="Double" />
+          <Property Name="Age44" Type="Double" />
+          <Property Name="Age45" Type="Double" />
+          <Property Name="Age46" Type="Double" />
+          <Property Name="Age47" Type="Double" />
+          <Property Name="Age48" Type="Double" />
+          <Property Name="Age49" Type="Double" />
+          <Property Name="Age50" Type="Double" />
+          <Property Name="Age51" Type="Double" />
+          <Property Name="Age52" Type="Double" />
+          <Property Name="Age53" Type="Double" />
+          <Property Name="Age54" Type="Double" />
+          <Property Name="Age55" Type="Double" />
+          <Property Name="Age56" Type="Double" />
+          <Property Name="Age57" Type="Double" />
+          <Property Name="Age58" Type="Double" />
+          <Property Name="Age59" Type="Double" />
+          <Property Name="Age60" Type="Double" />
+          <Property Name="Age61" Type="Double" />
+          <Property Name="Age62" Type="Double" />
+          <Property Name="Age63" Type="Double" />
+          <Property Name="Age64" Type="Double" />
+          <Property Name="Age65" Type="Double" />
+          <Property Name="Age66" Type="Double" />
+          <Property Name="Age67" Type="Double" />
+          <Property Name="Age68" Type="Double" />
+          <Property Name="Age69" Type="Double" />
+          <Property Name="Age70" Type="Double" />
+          <Property Name="Age71" Type="Double" />
+          <Property Name="Age72" Type="Double" />
+          <Property Name="Age73" Type="Double" />
+          <Property Name="Age74" Type="Double" />
+          <Property Name="Age75" Type="Double" />
+          <Property Name="Age76" Type="Double" />
+          <Property Name="Age77" Type="Double" />
+          <Property Name="Age78" Type="Double" />
+          <Property Name="Age79" Type="Double" />
+          <Property Name="Age80" Type="Double" />
+          <Property Name="Age81" Type="Double" />
+          <Property Name="Age82" Type="Double" />
+          <Property Name="Age83" Type="Double" />
+          <Property Name="Age84" Type="Double" />
+          <Property Name="Age85" Type="Double" />
+          <Property Name="Age86" Type="Double" />
+          <Property Name="Age87" Type="Double" />
+          <Property Name="Age88" Type="Double" />
+          <Property Name="Age89" Type="Double" />
+          <Property Name="Age90" Type="Double" />
+          <Property Name="Age91" Type="Double" />
+          <Property Name="Age92" Type="Double" />
+          <Property Name="Age93" Type="Double" />
+          <Property Name="Age94" Type="Double" />
+          <Property Name="Age95" Type="Double" />
+          <Property Name="Age96" Type="Double" />
+          <Property Name="Age97" Type="Double" />
+          <Property Name="Age98" Type="Double" />
+          <Property Name="Age99" Type="Double" />
+        </EntityType>
+        <EntityType Name="SYS_POP">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Year" Type="Int64" />
+          <Property Name="DestinationID" Type="Int64" />
+          <Property Name="FIPS" Type="Int64" />
+          <Property Name="Age0" Type="Double" />
+          <Property Name="Age1" Type="Double" />
+          <Property Name="Age2" Type="Double" />
+          <Property Name="Age3" Type="Double" />
+          <Property Name="Age4" Type="Double" />
+          <Property Name="Age5" Type="Double" />
+          <Property Name="Age6" Type="Double" />
+          <Property Name="Age7" Type="Double" />
+          <Property Name="Age8" Type="Double" />
+          <Property Name="Age9" Type="Double" />
+          <Property Name="Age10" Type="Double" />
+          <Property Name="Age11" Type="Double" />
+          <Property Name="Age12" Type="Double" />
+          <Property Name="Age13" Type="Double" />
+          <Property Name="Age14" Type="Double" />
+          <Property Name="Age15" Type="Double" />
+          <Property Name="Age16" Type="Double" />
+          <Property Name="Age17" Type="Double" />
+          <Property Name="Age18" Type="Double" />
+          <Property Name="Age19" Type="Double" />
+          <Property Name="Age20" Type="Double" />
+          <Property Name="Age21" Type="Double" />
+          <Property Name="Age22" Type="Double" />
+          <Property Name="Age23" Type="Double" />
+          <Property Name="Age24" Type="Double" />
+          <Property Name="Age25" Type="Double" />
+          <Property Name="Age26" Type="Double" />
+          <Property Name="Age27" Type="Double" />
+          <Property Name="Age28" Type="Double" />
+          <Property Name="Age29" Type="Double" />
+          <Property Name="Age30" Type="Double" />
+          <Property Name="Age31" Type="Double" />
+          <Property Name="Age32" Type="Double" />
+          <Property Name="Age33" Type="Double" />
+          <Property Name="Age34" Type="Double" />
+          <Property Name="Age35" Type="Double" />
+          <Property Name="Age36" Type="Double" />
+          <Property Name="Age37" Type="Double" />
+          <Property Name="Age38" Type="Double" />
+          <Property Name="Age39" Type="Double" />
+          <Property Name="Age40" Type="Double" />
+          <Property Name="Age41" Type="Double" />
+          <Property Name="Age42" Type="Double" />
+          <Property Name="Age43" Type="Double" />
+          <Property Name="Age44" Type="Double" />
+          <Property Name="Age45" Type="Double" />
+          <Property Name="Age46" Type="Double" />
+          <Property Name="Age47" Type="Double" />
+          <Property Name="Age48" Type="Double" />
+          <Property Name="Age49" Type="Double" />
+          <Property Name="Age50" Type="Double" />
+          <Property Name="Age51" Type="Double" />
+          <Property Name="Age52" Type="Double" />
+          <Property Name="Age53" Type="Double" />
+          <Property Name="Age54" Type="Double" />
+          <Property Name="Age55" Type="Double" />
+          <Property Name="Age56" Type="Double" />
+          <Property Name="Age57" Type="Double" />
+          <Property Name="Age58" Type="Double" />
+          <Property Name="Age59" Type="Double" />
+          <Property Name="Age60" Type="Double" />
+          <Property Name="Age61" Type="Double" />
+          <Property Name="Age62" Type="Double" />
+          <Property Name="Age63" Type="Double" />
+          <Property Name="Age64" Type="Double" />
+          <Property Name="Age65" Type="Double" />
+          <Property Name="Age66" Type="Double" />
+          <Property Name="Age67" Type="Double" />
+          <Property Name="Age68" Type="Double" />
+          <Property Name="Age69" Type="Double" />
+          <Property Name="Age70" Type="Double" />
+          <Property Name="Age71" Type="Double" />
+          <Property Name="Age72" Type="Double" />
+          <Property Name="Age73" Type="Double" />
+          <Property Name="Age74" Type="Double" />
+          <Property Name="Age75" Type="Double" />
+          <Property Name="Age76" Type="Double" />
+          <Property Name="Age77" Type="Double" />
+          <Property Name="Age78" Type="Double" />
+          <Property Name="Age79" Type="Double" />
+          <Property Name="Age80" Type="Double" />
+          <Property Name="Age81" Type="Double" />
+          <Property Name="Age82" Type="Double" />
+          <Property Name="Age83" Type="Double" />
+          <Property Name="Age84" Type="Double" />
+          <Property Name="Age85" Type="Double" />
+          <Property Name="Age86" Type="Double" />
+          <Property Name="Age87" Type="Double" />
+          <Property Name="Age88" Type="Double" />
+          <Property Name="Age89" Type="Double" />
+          <Property Name="Age90" Type="Double" />
+          <Property Name="Age91" Type="Double" />
+          <Property Name="Age92" Type="Double" />
+          <Property Name="Age93" Type="Double" />
+          <Property Name="Age94" Type="Double" />
+          <Property Name="Age95" Type="Double" />
+          <Property Name="Age96" Type="Double" />
+          <Property Name="Age97" Type="Double" />
+          <Property Name="Age98" Type="Double" />
+          <Property Name="Age99" Type="Double" />
+        </EntityType>
+        <EntityType Name="SYS_ScenarioEmissions_Staging">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="typeindx" Type="Int64" />
+          <Property Name="sourceindx" Type="Int64" />
+          <Property Name="stid" Type="Int64" />
+          <Property Name="cyid" Type="Int64" />
+          <Property Name="TIER1" Type="Int64" />
+          <Property Name="TIER2" Type="Int64" />
+          <Property Name="TIER3" Type="Int64" />
+          <Property Name="BASE_NOx" Type="Double" />
+          <Property Name="BASE_SO2" Type="Double" />
+          <Property Name="BASE_NH3" Type="Double" />
+          <Property Name="BASE_PM25" Type="Double" />
+          <Property Name="BASE_VOC" Type="Double" />
+          <Property Name="CTRL_NOx" Type="Double" />
+          <Property Name="CTRL_SO2" Type="Double" />
+          <Property Name="CTRL_NH3" Type="Double" />
+          <Property Name="CTRL_PM25" Type="Double" />
+          <Property Name="CTRL_VOC" Type="Double" />
+        </EntityType>
+        <EntityType Name="SYS_Srmatrix_2025">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="typeindx" Type="Int64" />
+          <Property Name="sourceindx" Type="Int64" />
+          <Property Name="destindx" Type="Int64" />
+          <Property Name="c_PM25" Type="Double" />
+          <Property Name="c_NO3" Type="Double" />
+          <Property Name="c_SO4" Type="Double" />
+          <Property Name="tx_nh3" Type="Double" />
+        </EntityType>
+        <EntityType Name="SYS_Stacks">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="typeindx" Type="Int64" />
+          <Property Name="NAME" Type="String" MaxLength="2147483647" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="SYS_SummarizedEmissions">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="sourceindx" Type="Int64" />
+          <Property Name="BASE_NOx" Type="Double" />
+          <Property Name="BASE_SO2" Type="Double" />
+          <Property Name="BASE_NH3" Type="Double" />
+          <Property Name="BASE_PM25" Type="Double" />
+          <Property Name="BASE_VOC" Type="Double" />
+          <Property Name="CTRL_NOx" Type="Double" />
+          <Property Name="CTRL_SO2" Type="Double" />
+          <Property Name="CTRL_NH3" Type="Double" />
+          <Property Name="CTRL_PM25" Type="Double" />
+          <Property Name="CTRL_VOC" Type="Double" />
+          <Property Name="DELTA_NOx" Type="Double" />
+          <Property Name="DELTA_SO2" Type="Double" />
+          <Property Name="DELTA_NH3" Type="Double" />
+          <Property Name="DELTA_PM25" Type="Double" />
+          <Property Name="DELTA_VOC" Type="Double" />
+          <Property Name="TIER1NAME" Type="String" MaxLength="2147483647" FixedLength="false" Unicode="true" />
+          <Property Name="TIER2NAME" Type="String" MaxLength="2147483647" FixedLength="false" Unicode="true" />
+          <Property Name="TIER3NAME" Type="String" MaxLength="2147483647" FixedLength="false" Unicode="true" />
+          <Property Name="FIPS" Type="String" MaxLength="2147483647" FixedLength="false" Unicode="true" />
+          <Property Name="STATENAME" Type="String" MaxLength="2147483647" FixedLength="false" Unicode="true" />
+          <Property Name="COUNTYNAME" Type="String" MaxLength="2147483647" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="SYS_Tiers">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="TIER1" Type="Int64" />
+          <Property Name="TIER2" Type="Int64" />
+          <Property Name="TIER3" Type="Int64" />
+          <Property Name="TIER1NAME" Type="String" MaxLength="2147483647" FixedLength="false" Unicode="true" />
+          <Property Name="TIER2NAME" Type="String" MaxLength="2147483647" FixedLength="false" Unicode="true" />
+          <Property Name="TIER3NAME" Type="String" MaxLength="2147483647" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="SYS_Valuation">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="CRFunctionID" Type="Int64" />
+          <Property Name="Endpoint" Type="String" MaxLength="2147483647" FixedLength="false" Unicode="true" />
+          <Property Name="PoolingWeight" Type="Double" />
+          <Property Name="Seasonal_Metric" Type="String" MaxLength="2147483647" FixedLength="false" Unicode="true" />
+          <Property Name="Study_Author" Type="String" MaxLength="2147483647" FixedLength="false" Unicode="true" />
+          <Property Name="Study_Year" Type="Int64" />
+          <Property Name="Start_Age" Type="Int64" />
+          <Property Name="End_Age" Type="Int64" />
+          <Property Name="Function" Type="String" MaxLength="2147483647" FixedLength="false" Unicode="true" />
+          <Property Name="Beta" Type="Double" />
+          <Property Name="Adjusted" Type="String" MaxLength="2147483647" FixedLength="false" Unicode="true" />
+          <Property Name="Parameter_1_Beta" Type="Double" />
+          <Property Name="A" Type="Double" />
+          <Property Name="Name_A" Type="String" MaxLength="2147483647" FixedLength="false" Unicode="true" />
+          <Property Name="B" Type="Double" />
+          <Property Name="Name_B" Type="String" MaxLength="2147483647" FixedLength="false" Unicode="true" />
+          <Property Name="C" Type="Double" />
+          <Property Name="Name_C" Type="String" MaxLength="2147483647" FixedLength="false" Unicode="true" />
+          <Property Name="Cases" Type="Int64" />
+          <Property Name="HealthEffect" Type="String" MaxLength="2147483647" FixedLength="false" Unicode="true" />
+          <Property Name="ValuationMethod" Type="String" MaxLength="2147483647" FixedLength="false" Unicode="true" />
+          <Property Name="Value" Type="Double" />
+          <Property Name="ApplyDiscount" Type="String" MaxLength="2147483647" FixedLength="false" Unicode="true" />
+          <Property Name="IncidenceEndpoint" Type="String" MaxLength="2147483647" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="SYS_voc2soa">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="TIER1" Type="Int64" />
+          <Property Name="TIER2" Type="Int64" />
+          <Property Name="TIER3" Type="Int64" />
+          <Property Name="FACTOR" Type="Double" />
+        </EntityType>
+        <EntityType Name="SYS_Results">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="destindx" Type="Int64" />
+          <Property Name="BASE_FINAL_PM" Type="Double" />
+          <Property Name="CTRL_FINAL_PM" Type="Double" />
+          <Property Name="DELTA_FINAL_PM" Type="Double" />
+			<Property Name="BASE_FINAL_O3" Type="Double" />
+			<Property Name="CTRL_FINAL_O3" Type="Double" />
+			<Property Name="DELTA_FINAL_O3" Type="Double" />
+          <Property Name="PM_Acute_Myocardial_Infarction_Nonfatal" Type="Double" />
+          <Property Name="PM_HA_All_Respiratory" Type="Double" />
+          <Property Name="PM_Minor_Restricted_Activity_Days" Type="Double" />
+          <Property Name="PM_Mortality_All_Cause__low_" Type="Double" />
+          <Property Name="PM_Mortality_All_Cause__high_" Type="Double" />
+          <Property Name="PM_Infant_Mortality" Type="Double" />
+          <Property Name="PM_Work_Loss_Days" Type="Double" />
+		  <Property Name="PM_Incidence_Lung_Cancer" Type="Double" />
+		  <Property Name="PM_Incidence_Hay_Fever_Rhinitis" Type="Double" />
+		  <Property Name="PM_Incidence_Asthma" Type="Double" />
+		  <Property Name="PM_HA_Cardio_Cerebro_and_Peripheral_Vascular_Disease" Type="Double" />
+		  <Property Name="PM_HA_Alzheimers_Disease" Type="Double" />
+		  <Property Name="PM_HA_Parkinsons_Disease" Type="Double" />
+		  <Property Name="PM_Incidence_Stroke" Type="Double" />
+		  <Property Name="PM_Incidence_Out_of_Hospital_Cardiac_Arrest" Type="Double" />
+		  <Property Name="PM_Asthma_Symptoms_Albuterol_use" Type="Double" />
+		  <Property Name="PM_HA_Respiratory2" Type="Double" />
+		  <Property Name="PM_ER_visits_respiratory" Type="Double" />
+		  <Property Name="PM_ER_visits_All_Cardiac_Outcomes" Type="Double" />
+			<Property Name="O3_ER_visits_respiratory" Type="Double" />
+			<Property Name="O3_HA_All_Respiratory" Type="Double" />
+			<Property Name="O3_Incidence_Hay_Fever_Rhinitis" Type="Double" />
+			<Property Name="O3_Incidence_Asthma" Type="Double" />
+			<Property Name="O3_Asthma_Symptoms_Chest_Tightness" Type="Double" />
+			<Property Name="O3_Asthma_Symptoms_Cough" Type="Double" />
+			<Property Name="O3_Asthma_Symptoms_Shortness_of_Breath" Type="Double" />
+			<Property Name="O3_Asthma_Symptoms_Wheeze" Type="Double" />
+			<Property Name="O3_ER_Visits_Asthma" Type="Double" />
+			<Property Name="O3_School_Loss_Days" Type="Double" />
+			<Property Name="O3_Mortality_Longterm_exposure" Type="Double" />
+			<Property Name="O3_Mortality_Shortterm_exposure" Type="Double" />
+          <Property Name="C__PM_Acute_Myocardial_Infarction_Nonfatal" Type="Double" />
+          <Property Name="C__PM_Resp_Hosp_Adm" Type="Double" />
+          <Property Name="C__PM_Minor_Restricted_Activity_Days" Type="Double" />
+          <Property Name="C__PM_Mortality_All_Cause__low_" Type="Double" />
+          <Property Name="C__PM_Mortality_All_Cause__high_" Type="Double" />
+          <Property Name="C__PM_Infant_Mortality" Type="Double" />
+          <Property Name="C__PM_Work_Loss_Days" Type="Double" />
+		  <Property Name="C__PM_Incidence_Lung_Cancer" Type="Double" />
+	      <Property Name="C__PM_Incidence_Hay_Fever_Rhinitis" Type="Double" />
+		  <Property Name="C__PM_Incidence_Asthma" Type="Double" />
+		  <Property Name="C__PM_HA_Cardio_Cerebro_and_Peripheral_Vascular_Disease" Type="Double" />
+		  <Property Name="C__PM_HA_Alzheimers_Disease" Type="Double" />
+		  <Property Name="C__PM_HA_Parkinsons_Disease" Type="Double" />
+		  <Property Name="C__PM_Incidence_Stroke" Type="Double" />
+		  <Property Name="C__PM_Incidence_Out_of_Hospital_Cardiac_Arrest" Type="Double" />
+		  <Property Name="C__PM_Asthma_Symptoms_Albuterol_use" Type="Double" />
+		  <Property Name="C__PM_HA_Respiratory2" Type="Double" />
+		  <Property Name="C__PM_ER_visits_respiratory" Type="Double" />
+		  <Property Name="C__PM_ER_visits_All_Cardiac_Outcomes" Type="Double" />
+			<Property Name="C__O3_ER_visits_respiratory" Type="Double" />
+			<Property Name="C__O3_HA_All_Respiratory" Type="Double" />
+			<Property Name="C__O3_Incidence_Hay_Fever_Rhinitis" Type="Double" />
+			<Property Name="C__O3_Incidence_Asthma" Type="Double" />
+			<Property Name="C__O3_Asthma_Symptoms_Chest_Tightness" Type="Double" />
+			<Property Name="C__O3_Asthma_Symptoms_Cough" Type="Double" />
+			<Property Name="C__O3_Asthma_Symptoms_Shortness_of_Breath" Type="Double" />
+			<Property Name="C__O3_Asthma_Symptoms_Wheeze" Type="Double" />
+			<Property Name="C__O3_ER_Visits_Asthma" Type="Double" />
+			<Property Name="C__O3_School_Loss_Days" Type="Double" />
+			<Property Name="C__O3_Mortality_Longterm_exposure" Type="Double" />
+			<Property Name="C__O3_Mortality_Shortterm_exposure" Type="Double" />
+
+			<Property Name="FIPS" Type="String" MaxLength="2147483647" FixedLength="false" Unicode="true" />
+          <Property Name="STATE" Type="String" MaxLength="2147483647" FixedLength="false" Unicode="true" />
+          <Property Name="COUNTY" Type="String" MaxLength="2147483647" FixedLength="false" Unicode="true" />
+        </EntityType>
+        </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="cobraModelStoreContainer" CdmEntityContainer="cobraEntities" >
+          <EntitySetMapping Name="SYS_CR">
+            <EntityTypeMapping TypeName="cobraModel.SYS_CR">
+              <MappingFragment StoreEntitySet="SYS_CR">
+                <ScalarProperty Name="IncidenceEndpoint" ColumnName="IncidenceEndpoint" />
+                <ScalarProperty Name="Cases" ColumnName="Cases" />
+                <ScalarProperty Name="Name_C" ColumnName="Name_C" />
+                <ScalarProperty Name="C" ColumnName="C" />
+                <ScalarProperty Name="Name_B" ColumnName="Name_B" />
+                <ScalarProperty Name="B" ColumnName="B" />
+                <ScalarProperty Name="Name_A" ColumnName="Name_A" />
+                <ScalarProperty Name="A" ColumnName="A" />
+                <ScalarProperty Name="Parameter_1_Beta" ColumnName="Parameter_1_Beta" />
+                <ScalarProperty Name="Adjusted" ColumnName="Adjusted" />
+                <ScalarProperty Name="Beta" ColumnName="Beta" />
+                <ScalarProperty Name="Function" ColumnName="Function" />
+                <ScalarProperty Name="End_Age" ColumnName="End_Age" />
+                <ScalarProperty Name="Start_Age" ColumnName="Start_Age" />
+                <ScalarProperty Name="Study_Year" ColumnName="Study_Year" />
+                <ScalarProperty Name="Study_Author" ColumnName="Study_Author" />
+                <ScalarProperty Name="Seasonal_Metric" ColumnName="Seasonal_Metric" />
+                <ScalarProperty Name="PoolingWeight" ColumnName="PoolingWeight" />
+                <ScalarProperty Name="Endpoint" ColumnName="Endpoint" />
+                <ScalarProperty Name="FunctionID" ColumnName="FunctionID" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="SYS_Destination">
+            <EntityTypeMapping TypeName="cobraModel.SYS_Destination">
+              <MappingFragment StoreEntitySet="SYS_Destination">
+                <ScalarProperty Name="DELTA_FINAL_PM" ColumnName="DELTA_FINAL_PM" />
+                <ScalarProperty Name="CTRL_FINAL_PM" ColumnName="CTRL_FINAL_PM" />
+                <ScalarProperty Name="BASE_FINAL_PM" ColumnName="BASE_FINAL_PM" />
+				<ScalarProperty Name="DELTA_FINAL_O3" ColumnName="DELTA_FINAL_O3" />
+				<ScalarProperty Name="CTRL_FINAL_O3" ColumnName="CTRL_FINAL_O3" />
+				<ScalarProperty Name="BASE_FINAL_O3" ColumnName="BASE_FINAL_O3" />
+                <ScalarProperty Name="F" ColumnName="F" />
+				<ScalarProperty Name="CTRL_O3N" ColumnName="CTRL_O3N" />
+                <ScalarProperty Name="CTRL_VOC" ColumnName="CTRL_VOC" />
+                <ScalarProperty Name="CTRL_PM25" ColumnName="CTRL_PM25" />
+                <ScalarProperty Name="CTRL_SOA" ColumnName="CTRL_SOA" />
+                <ScalarProperty Name="CTRL_NH3" ColumnName="CTRL_NH3" />
+                <ScalarProperty Name="CTRL_SO2" ColumnName="CTRL_SO2" />
+                <ScalarProperty Name="CTRL_NOx" ColumnName="CTRL_NOx" />
+				<ScalarProperty Name="BASE_O3N" ColumnName="BASE_O3N" />
+                <ScalarProperty Name="BASE_VOC" ColumnName="BASE_VOC" />
+                <ScalarProperty Name="BASE_PM25" ColumnName="BASE_PM25" />
+                <ScalarProperty Name="BASE_SOA" ColumnName="BASE_SOA" />
+                <ScalarProperty Name="BASE_NH3" ColumnName="BASE_NH3" />
+                <ScalarProperty Name="BASE_SO2" ColumnName="BASE_SO2" />
+                <ScalarProperty Name="BASE_NOx" ColumnName="BASE_NOx" />
+                <ScalarProperty Name="destindx" ColumnName="destindx" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="SYS_Dict">
+            <EntityTypeMapping TypeName="cobraModel.SYS_Dict">
+              <MappingFragment StoreEntitySet="SYS_Dict">
+                <ScalarProperty Name="CYNAME" ColumnName="CYNAME" />
+                <ScalarProperty Name="STNAME" ColumnName="STNAME" />
+                <ScalarProperty Name="CNTYFIPS" ColumnName="CNTYFIPS" />
+                <ScalarProperty Name="STFIPS" ColumnName="STFIPS" />
+                <ScalarProperty Name="FIPS" ColumnName="FIPS" />
+                <ScalarProperty Name="SOURCEINDX" ColumnName="SOURCEINDX" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="SYS_Emissions">
+            <EntityTypeMapping TypeName="cobraModel.SYS_Emissions">
+              <MappingFragment StoreEntitySet="SYS_Emissions">
+                <ScalarProperty Name="TYPE" ColumnName="TYPE" />
+                <ScalarProperty Name="COUNTY" ColumnName="COUNTY" />
+                <ScalarProperty Name="STATE" ColumnName="STATE" />
+                <ScalarProperty Name="FIPS" ColumnName="FIPS" />
+                <ScalarProperty Name="TIER3NAME" ColumnName="TIER3NAME" />
+                <ScalarProperty Name="TIER2NAME" ColumnName="TIER2NAME" />
+                <ScalarProperty Name="TIER1NAME" ColumnName="TIER1NAME" />
+                <ScalarProperty Name="CTRL_VOC" ColumnName="CTRL_VOC" />
+                <ScalarProperty Name="CTRL_PM25" ColumnName="CTRL_PM25" />
+                <ScalarProperty Name="CTRL_NH3" ColumnName="CTRL_NH3" />
+                <ScalarProperty Name="CTRL_SO2" ColumnName="CTRL_SO2" />
+                <ScalarProperty Name="CTRL_NOx" ColumnName="CTRL_NOx" />
+                <ScalarProperty Name="BASE_VOC" ColumnName="BASE_VOC" />
+                <ScalarProperty Name="BASE_PM25" ColumnName="BASE_PM25" />
+                <ScalarProperty Name="BASE_NH3" ColumnName="BASE_NH3" />
+                <ScalarProperty Name="BASE_SO2" ColumnName="BASE_SO2" />
+                <ScalarProperty Name="BASE_NOx" ColumnName="BASE_NOx" />
+                <ScalarProperty Name="TIER3" ColumnName="TIER3" />
+                <ScalarProperty Name="TIER2" ColumnName="TIER2" />
+                <ScalarProperty Name="TIER1" ColumnName="TIER1" />
+                <ScalarProperty Name="cyid" ColumnName="cyid" />
+                <ScalarProperty Name="stid" ColumnName="stid" />
+                <ScalarProperty Name="sourceindx" ColumnName="sourceindx" />
+                <ScalarProperty Name="typeindx" ColumnName="typeindx" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="SYS_Emissions_Base">
+            <EntityTypeMapping TypeName="cobraModel.SYS_Emissions_Base">
+              <MappingFragment StoreEntitySet="SYS_Emissions_Base">
+                <ScalarProperty Name="VOC" ColumnName="VOC" />
+                <ScalarProperty Name="PM25" ColumnName="PM25" />
+                <ScalarProperty Name="SOA" ColumnName="SOA" />
+                <ScalarProperty Name="NH3" ColumnName="NH3" />
+                <ScalarProperty Name="SO2" ColumnName="SO2" />
+                <ScalarProperty Name="NOx" ColumnName="NOx" />
+                <ScalarProperty Name="TIER3" ColumnName="TIER3" />
+                <ScalarProperty Name="TIER2" ColumnName="TIER2" />
+                <ScalarProperty Name="TIER1" ColumnName="TIER1" />
+                <ScalarProperty Name="cyid" ColumnName="cyid" />
+                <ScalarProperty Name="stid" ColumnName="stid" />
+                <ScalarProperty Name="sourceindx" ColumnName="sourceindx" />
+                <ScalarProperty Name="typeindx" ColumnName="typeindx" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="SYS_Emissions_Base_Summarized">
+            <EntityTypeMapping TypeName="cobraModel.SYS_Emissions_Base_Summarized">
+              <MappingFragment StoreEntitySet="SYS_Emissions_Base_Summarized">
+                <ScalarProperty Name="VOC" ColumnName="VOC" />
+                <ScalarProperty Name="PM25" ColumnName="PM25" />
+                <ScalarProperty Name="SOA" ColumnName="SOA" />
+                <ScalarProperty Name="NH3" ColumnName="NH3" />
+                <ScalarProperty Name="SO2" ColumnName="SO2" />
+                <ScalarProperty Name="NOx" ColumnName="NOx" />
+                <ScalarProperty Name="sourceindx" ColumnName="sourceindx" />
+                <ScalarProperty Name="typeindx" ColumnName="typeindx" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="SYS_Emissions_Control">
+            <EntityTypeMapping TypeName="cobraModel.SYS_Emissions_Control">
+              <MappingFragment StoreEntitySet="SYS_Emissions_Control">
+                <ScalarProperty Name="VOC" ColumnName="VOC" />
+                <ScalarProperty Name="PM25" ColumnName="PM25" />
+                <ScalarProperty Name="SOA" ColumnName="SOA" />
+                <ScalarProperty Name="NH3" ColumnName="NH3" />
+                <ScalarProperty Name="SO2" ColumnName="SO2" />
+                <ScalarProperty Name="NOx" ColumnName="NOx" />
+                <ScalarProperty Name="TIER3" ColumnName="TIER3" />
+                <ScalarProperty Name="TIER2" ColumnName="TIER2" />
+                <ScalarProperty Name="TIER1" ColumnName="TIER1" />
+                <ScalarProperty Name="cyid" ColumnName="cyid" />
+                <ScalarProperty Name="stid" ColumnName="stid" />
+                <ScalarProperty Name="sourceindx" ColumnName="sourceindx" />
+                <ScalarProperty Name="typeindx" ColumnName="typeindx" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="SYS_Emissions_Control_Summarized">
+            <EntityTypeMapping TypeName="cobraModel.SYS_Emissions_Control_Summarized">
+              <MappingFragment StoreEntitySet="SYS_Emissions_Control_Summarized">
+                <ScalarProperty Name="VOC" ColumnName="VOC" />
+                <ScalarProperty Name="PM25" ColumnName="PM25" />
+                <ScalarProperty Name="SOA" ColumnName="SOA" />
+                <ScalarProperty Name="NH3" ColumnName="NH3" />
+                <ScalarProperty Name="SO2" ColumnName="SO2" />
+                <ScalarProperty Name="NOx" ColumnName="NOx" />
+                <ScalarProperty Name="sourceindx" ColumnName="sourceindx" />
+                <ScalarProperty Name="typeindx" ColumnName="typeindx" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="SYS_Emissions_Staging">
+            <EntityTypeMapping TypeName="cobraModel.SYS_Emissions_Staging">
+              <MappingFragment StoreEntitySet="SYS_Emissions_Staging">
+                <ScalarProperty Name="VOC" ColumnName="VOC" />
+                <ScalarProperty Name="PM25" ColumnName="PM25" />
+                <ScalarProperty Name="NH3" ColumnName="NH3" />
+                <ScalarProperty Name="SO2" ColumnName="SO2" />
+                <ScalarProperty Name="NOx" ColumnName="NOx" />
+                <ScalarProperty Name="TIER3" ColumnName="TIER3" />
+                <ScalarProperty Name="TIER2" ColumnName="TIER2" />
+                <ScalarProperty Name="TIER1" ColumnName="TIER1" />
+                <ScalarProperty Name="cyid" ColumnName="cyid" />
+                <ScalarProperty Name="stid" ColumnName="stid" />
+                <ScalarProperty Name="sourceindx" ColumnName="sourceindx" />
+                <ScalarProperty Name="typeindx" ColumnName="typeindx" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="SYS_Incidence">
+            <EntityTypeMapping TypeName="cobraModel.SYS_Incidence">
+              <MappingFragment StoreEntitySet="SYS_Incidence">
+                <ScalarProperty Name="Age99" ColumnName="Age99" />
+                <ScalarProperty Name="Age98" ColumnName="Age98" />
+                <ScalarProperty Name="Age97" ColumnName="Age97" />
+                <ScalarProperty Name="Age96" ColumnName="Age96" />
+                <ScalarProperty Name="Age95" ColumnName="Age95" />
+                <ScalarProperty Name="Age94" ColumnName="Age94" />
+                <ScalarProperty Name="Age93" ColumnName="Age93" />
+                <ScalarProperty Name="Age92" ColumnName="Age92" />
+                <ScalarProperty Name="Age91" ColumnName="Age91" />
+                <ScalarProperty Name="Age90" ColumnName="Age90" />
+                <ScalarProperty Name="Age89" ColumnName="Age89" />
+                <ScalarProperty Name="Age88" ColumnName="Age88" />
+                <ScalarProperty Name="Age87" ColumnName="Age87" />
+                <ScalarProperty Name="Age86" ColumnName="Age86" />
+                <ScalarProperty Name="Age85" ColumnName="Age85" />
+                <ScalarProperty Name="Age84" ColumnName="Age84" />
+                <ScalarProperty Name="Age83" ColumnName="Age83" />
+                <ScalarProperty Name="Age82" ColumnName="Age82" />
+                <ScalarProperty Name="Age81" ColumnName="Age81" />
+                <ScalarProperty Name="Age80" ColumnName="Age80" />
+                <ScalarProperty Name="Age79" ColumnName="Age79" />
+                <ScalarProperty Name="Age78" ColumnName="Age78" />
+                <ScalarProperty Name="Age77" ColumnName="Age77" />
+                <ScalarProperty Name="Age76" ColumnName="Age76" />
+                <ScalarProperty Name="Age75" ColumnName="Age75" />
+                <ScalarProperty Name="Age74" ColumnName="Age74" />
+                <ScalarProperty Name="Age73" ColumnName="Age73" />
+                <ScalarProperty Name="Age72" ColumnName="Age72" />
+                <ScalarProperty Name="Age71" ColumnName="Age71" />
+                <ScalarProperty Name="Age70" ColumnName="Age70" />
+                <ScalarProperty Name="Age69" ColumnName="Age69" />
+                <ScalarProperty Name="Age68" ColumnName="Age68" />
+                <ScalarProperty Name="Age67" ColumnName="Age67" />
+                <ScalarProperty Name="Age66" ColumnName="Age66" />
+                <ScalarProperty Name="Age65" ColumnName="Age65" />
+                <ScalarProperty Name="Age64" ColumnName="Age64" />
+                <ScalarProperty Name="Age63" ColumnName="Age63" />
+                <ScalarProperty Name="Age62" ColumnName="Age62" />
+                <ScalarProperty Name="Age61" ColumnName="Age61" />
+                <ScalarProperty Name="Age60" ColumnName="Age60" />
+                <ScalarProperty Name="Age59" ColumnName="Age59" />
+                <ScalarProperty Name="Age58" ColumnName="Age58" />
+                <ScalarProperty Name="Age57" ColumnName="Age57" />
+                <ScalarProperty Name="Age56" ColumnName="Age56" />
+                <ScalarProperty Name="Age55" ColumnName="Age55" />
+                <ScalarProperty Name="Age54" ColumnName="Age54" />
+                <ScalarProperty Name="Age53" ColumnName="Age53" />
+                <ScalarProperty Name="Age52" ColumnName="Age52" />
+                <ScalarProperty Name="Age51" ColumnName="Age51" />
+                <ScalarProperty Name="Age50" ColumnName="Age50" />
+                <ScalarProperty Name="Age49" ColumnName="Age49" />
+                <ScalarProperty Name="Age48" ColumnName="Age48" />
+                <ScalarProperty Name="Age47" ColumnName="Age47" />
+                <ScalarProperty Name="Age46" ColumnName="Age46" />
+                <ScalarProperty Name="Age45" ColumnName="Age45" />
+                <ScalarProperty Name="Age44" ColumnName="Age44" />
+                <ScalarProperty Name="Age43" ColumnName="Age43" />
+                <ScalarProperty Name="Age42" ColumnName="Age42" />
+                <ScalarProperty Name="Age41" ColumnName="Age41" />
+                <ScalarProperty Name="Age40" ColumnName="Age40" />
+                <ScalarProperty Name="Age39" ColumnName="Age39" />
+                <ScalarProperty Name="Age38" ColumnName="Age38" />
+                <ScalarProperty Name="Age37" ColumnName="Age37" />
+                <ScalarProperty Name="Age36" ColumnName="Age36" />
+                <ScalarProperty Name="Age35" ColumnName="Age35" />
+                <ScalarProperty Name="Age34" ColumnName="Age34" />
+                <ScalarProperty Name="Age33" ColumnName="Age33" />
+                <ScalarProperty Name="Age32" ColumnName="Age32" />
+                <ScalarProperty Name="Age31" ColumnName="Age31" />
+                <ScalarProperty Name="Age30" ColumnName="Age30" />
+                <ScalarProperty Name="Age29" ColumnName="Age29" />
+                <ScalarProperty Name="Age28" ColumnName="Age28" />
+                <ScalarProperty Name="Age27" ColumnName="Age27" />
+                <ScalarProperty Name="Age26" ColumnName="Age26" />
+                <ScalarProperty Name="Age25" ColumnName="Age25" />
+                <ScalarProperty Name="Age24" ColumnName="Age24" />
+                <ScalarProperty Name="Age23" ColumnName="Age23" />
+                <ScalarProperty Name="Age22" ColumnName="Age22" />
+                <ScalarProperty Name="Age21" ColumnName="Age21" />
+                <ScalarProperty Name="Age20" ColumnName="Age20" />
+                <ScalarProperty Name="Age19" ColumnName="Age19" />
+                <ScalarProperty Name="Age18" ColumnName="Age18" />
+                <ScalarProperty Name="Age17" ColumnName="Age17" />
+                <ScalarProperty Name="Age16" ColumnName="Age16" />
+                <ScalarProperty Name="Age15" ColumnName="Age15" />
+                <ScalarProperty Name="Age14" ColumnName="Age14" />
+                <ScalarProperty Name="Age13" ColumnName="Age13" />
+                <ScalarProperty Name="Age12" ColumnName="Age12" />
+                <ScalarProperty Name="Age11" ColumnName="Age11" />
+                <ScalarProperty Name="Age10" ColumnName="Age10" />
+                <ScalarProperty Name="Age9" ColumnName="Age9" />
+                <ScalarProperty Name="Age8" ColumnName="Age8" />
+                <ScalarProperty Name="Age7" ColumnName="Age7" />
+                <ScalarProperty Name="Age6" ColumnName="Age6" />
+                <ScalarProperty Name="Age5" ColumnName="Age5" />
+                <ScalarProperty Name="Age4" ColumnName="Age4" />
+                <ScalarProperty Name="Age3" ColumnName="Age3" />
+                <ScalarProperty Name="Age2" ColumnName="Age2" />
+                <ScalarProperty Name="Age1" ColumnName="Age1" />
+                <ScalarProperty Name="Age0" ColumnName="Age0" />
+                <ScalarProperty Name="Endpoint" ColumnName="Endpoint" />
+                <ScalarProperty Name="FIPS" ColumnName="FIPS" />
+                <ScalarProperty Name="DestinationID" ColumnName="DestinationID" />
+                <ScalarProperty Name="Year" ColumnName="Year" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="SYS_POP">
+            <EntityTypeMapping TypeName="cobraModel.SYS_POP">
+              <MappingFragment StoreEntitySet="SYS_POP">
+                <ScalarProperty Name="Age99" ColumnName="Age99" />
+                <ScalarProperty Name="Age98" ColumnName="Age98" />
+                <ScalarProperty Name="Age97" ColumnName="Age97" />
+                <ScalarProperty Name="Age96" ColumnName="Age96" />
+                <ScalarProperty Name="Age95" ColumnName="Age95" />
+                <ScalarProperty Name="Age94" ColumnName="Age94" />
+                <ScalarProperty Name="Age93" ColumnName="Age93" />
+                <ScalarProperty Name="Age92" ColumnName="Age92" />
+                <ScalarProperty Name="Age91" ColumnName="Age91" />
+                <ScalarProperty Name="Age90" ColumnName="Age90" />
+                <ScalarProperty Name="Age89" ColumnName="Age89" />
+                <ScalarProperty Name="Age88" ColumnName="Age88" />
+                <ScalarProperty Name="Age87" ColumnName="Age87" />
+                <ScalarProperty Name="Age86" ColumnName="Age86" />
+                <ScalarProperty Name="Age85" ColumnName="Age85" />
+                <ScalarProperty Name="Age84" ColumnName="Age84" />
+                <ScalarProperty Name="Age83" ColumnName="Age83" />
+                <ScalarProperty Name="Age82" ColumnName="Age82" />
+                <ScalarProperty Name="Age81" ColumnName="Age81" />
+                <ScalarProperty Name="Age80" ColumnName="Age80" />
+                <ScalarProperty Name="Age79" ColumnName="Age79" />
+                <ScalarProperty Name="Age78" ColumnName="Age78" />
+                <ScalarProperty Name="Age77" ColumnName="Age77" />
+                <ScalarProperty Name="Age76" ColumnName="Age76" />
+                <ScalarProperty Name="Age75" ColumnName="Age75" />
+                <ScalarProperty Name="Age74" ColumnName="Age74" />
+                <ScalarProperty Name="Age73" ColumnName="Age73" />
+                <ScalarProperty Name="Age72" ColumnName="Age72" />
+                <ScalarProperty Name="Age71" ColumnName="Age71" />
+                <ScalarProperty Name="Age70" ColumnName="Age70" />
+                <ScalarProperty Name="Age69" ColumnName="Age69" />
+                <ScalarProperty Name="Age68" ColumnName="Age68" />
+                <ScalarProperty Name="Age67" ColumnName="Age67" />
+                <ScalarProperty Name="Age66" ColumnName="Age66" />
+                <ScalarProperty Name="Age65" ColumnName="Age65" />
+                <ScalarProperty Name="Age64" ColumnName="Age64" />
+                <ScalarProperty Name="Age63" ColumnName="Age63" />
+                <ScalarProperty Name="Age62" ColumnName="Age62" />
+                <ScalarProperty Name="Age61" ColumnName="Age61" />
+                <ScalarProperty Name="Age60" ColumnName="Age60" />
+                <ScalarProperty Name="Age59" ColumnName="Age59" />
+                <ScalarProperty Name="Age58" ColumnName="Age58" />
+                <ScalarProperty Name="Age57" ColumnName="Age57" />
+                <ScalarProperty Name="Age56" ColumnName="Age56" />
+                <ScalarProperty Name="Age55" ColumnName="Age55" />
+                <ScalarProperty Name="Age54" ColumnName="Age54" />
+                <ScalarProperty Name="Age53" ColumnName="Age53" />
+                <ScalarProperty Name="Age52" ColumnName="Age52" />
+                <ScalarProperty Name="Age51" ColumnName="Age51" />
+                <ScalarProperty Name="Age50" ColumnName="Age50" />
+                <ScalarProperty Name="Age49" ColumnName="Age49" />
+                <ScalarProperty Name="Age48" ColumnName="Age48" />
+                <ScalarProperty Name="Age47" ColumnName="Age47" />
+                <ScalarProperty Name="Age46" ColumnName="Age46" />
+                <ScalarProperty Name="Age45" ColumnName="Age45" />
+                <ScalarProperty Name="Age44" ColumnName="Age44" />
+                <ScalarProperty Name="Age43" ColumnName="Age43" />
+                <ScalarProperty Name="Age42" ColumnName="Age42" />
+                <ScalarProperty Name="Age41" ColumnName="Age41" />
+                <ScalarProperty Name="Age40" ColumnName="Age40" />
+                <ScalarProperty Name="Age39" ColumnName="Age39" />
+                <ScalarProperty Name="Age38" ColumnName="Age38" />
+                <ScalarProperty Name="Age37" ColumnName="Age37" />
+                <ScalarProperty Name="Age36" ColumnName="Age36" />
+                <ScalarProperty Name="Age35" ColumnName="Age35" />
+                <ScalarProperty Name="Age34" ColumnName="Age34" />
+                <ScalarProperty Name="Age33" ColumnName="Age33" />
+                <ScalarProperty Name="Age32" ColumnName="Age32" />
+                <ScalarProperty Name="Age31" ColumnName="Age31" />
+                <ScalarProperty Name="Age30" ColumnName="Age30" />
+                <ScalarProperty Name="Age29" ColumnName="Age29" />
+                <ScalarProperty Name="Age28" ColumnName="Age28" />
+                <ScalarProperty Name="Age27" ColumnName="Age27" />
+                <ScalarProperty Name="Age26" ColumnName="Age26" />
+                <ScalarProperty Name="Age25" ColumnName="Age25" />
+                <ScalarProperty Name="Age24" ColumnName="Age24" />
+                <ScalarProperty Name="Age23" ColumnName="Age23" />
+                <ScalarProperty Name="Age22" ColumnName="Age22" />
+                <ScalarProperty Name="Age21" ColumnName="Age21" />
+                <ScalarProperty Name="Age20" ColumnName="Age20" />
+                <ScalarProperty Name="Age19" ColumnName="Age19" />
+                <ScalarProperty Name="Age18" ColumnName="Age18" />
+                <ScalarProperty Name="Age17" ColumnName="Age17" />
+                <ScalarProperty Name="Age16" ColumnName="Age16" />
+                <ScalarProperty Name="Age15" ColumnName="Age15" />
+                <ScalarProperty Name="Age14" ColumnName="Age14" />
+                <ScalarProperty Name="Age13" ColumnName="Age13" />
+                <ScalarProperty Name="Age12" ColumnName="Age12" />
+                <ScalarProperty Name="Age11" ColumnName="Age11" />
+                <ScalarProperty Name="Age10" ColumnName="Age10" />
+                <ScalarProperty Name="Age9" ColumnName="Age9" />
+                <ScalarProperty Name="Age8" ColumnName="Age8" />
+                <ScalarProperty Name="Age7" ColumnName="Age7" />
+                <ScalarProperty Name="Age6" ColumnName="Age6" />
+                <ScalarProperty Name="Age5" ColumnName="Age5" />
+                <ScalarProperty Name="Age4" ColumnName="Age4" />
+                <ScalarProperty Name="Age3" ColumnName="Age3" />
+                <ScalarProperty Name="Age2" ColumnName="Age2" />
+                <ScalarProperty Name="Age1" ColumnName="Age1" />
+                <ScalarProperty Name="Age0" ColumnName="Age0" />
+                <ScalarProperty Name="FIPS" ColumnName="FIPS" />
+                <ScalarProperty Name="DestinationID" ColumnName="DestinationID" />
+                <ScalarProperty Name="Year" ColumnName="Year" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="SYS_ScenarioEmissions_Staging">
+            <EntityTypeMapping TypeName="cobraModel.SYS_ScenarioEmissions_Staging">
+              <MappingFragment StoreEntitySet="SYS_ScenarioEmissions_Staging">
+                <ScalarProperty Name="CTRL_VOC" ColumnName="CTRL_VOC" />
+                <ScalarProperty Name="CTRL_PM25" ColumnName="CTRL_PM25" />
+                <ScalarProperty Name="CTRL_NH3" ColumnName="CTRL_NH3" />
+                <ScalarProperty Name="CTRL_SO2" ColumnName="CTRL_SO2" />
+                <ScalarProperty Name="CTRL_NOx" ColumnName="CTRL_NOx" />
+                <ScalarProperty Name="BASE_VOC" ColumnName="BASE_VOC" />
+                <ScalarProperty Name="BASE_PM25" ColumnName="BASE_PM25" />
+                <ScalarProperty Name="BASE_NH3" ColumnName="BASE_NH3" />
+                <ScalarProperty Name="BASE_SO2" ColumnName="BASE_SO2" />
+                <ScalarProperty Name="BASE_NOx" ColumnName="BASE_NOx" />
+                <ScalarProperty Name="TIER3" ColumnName="TIER3" />
+                <ScalarProperty Name="TIER2" ColumnName="TIER2" />
+                <ScalarProperty Name="TIER1" ColumnName="TIER1" />
+                <ScalarProperty Name="cyid" ColumnName="cyid" />
+                <ScalarProperty Name="stid" ColumnName="stid" />
+                <ScalarProperty Name="sourceindx" ColumnName="sourceindx" />
+                <ScalarProperty Name="typeindx" ColumnName="typeindx" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="SYS_Srmatrix_2025">
+            <EntityTypeMapping TypeName="cobraModel.SYS_Srmatrix_2025">
+              <MappingFragment StoreEntitySet="SYS_Srmatrix_2025">
+                <ScalarProperty Name="tx_nh3" ColumnName="tx_nh3" />
+                <ScalarProperty Name="c_SO4" ColumnName="c_SO4" />
+                <ScalarProperty Name="c_NO3" ColumnName="c_NO3" />
+                <ScalarProperty Name="c_PM25" ColumnName="c_PM25" />
+                <ScalarProperty Name="destindx" ColumnName="destindx" />
+                <ScalarProperty Name="sourceindx" ColumnName="sourceindx" />
+                <ScalarProperty Name="typeindx" ColumnName="typeindx" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="SYS_Stacks">
+            <EntityTypeMapping TypeName="cobraModel.SYS_Stacks">
+              <MappingFragment StoreEntitySet="SYS_Stacks">
+                <ScalarProperty Name="NAME" ColumnName="NAME" />
+                <ScalarProperty Name="typeindx" ColumnName="typeindx" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="SYS_SummarizedEmissions">
+            <EntityTypeMapping TypeName="cobraModel.SYS_SummarizedEmissions">
+              <MappingFragment StoreEntitySet="SYS_SummarizedEmissions">
+                <ScalarProperty Name="COUNTYNAME" ColumnName="COUNTYNAME" />
+                <ScalarProperty Name="STATENAME" ColumnName="STATENAME" />
+                <ScalarProperty Name="FIPS" ColumnName="FIPS" />
+                <ScalarProperty Name="TIER3NAME" ColumnName="TIER3NAME" />
+                <ScalarProperty Name="TIER2NAME" ColumnName="TIER2NAME" />
+                <ScalarProperty Name="TIER1NAME" ColumnName="TIER1NAME" />
+                <ScalarProperty Name="DELTA_VOC" ColumnName="DELTA_VOC" />
+                <ScalarProperty Name="DELTA_PM25" ColumnName="DELTA_PM25" />
+                <ScalarProperty Name="DELTA_NH3" ColumnName="DELTA_NH3" />
+                <ScalarProperty Name="DELTA_SO2" ColumnName="DELTA_SO2" />
+                <ScalarProperty Name="DELTA_NOx" ColumnName="DELTA_NOx" />
+                <ScalarProperty Name="CTRL_VOC" ColumnName="CTRL_VOC" />
+                <ScalarProperty Name="CTRL_PM25" ColumnName="CTRL_PM25" />
+                <ScalarProperty Name="CTRL_NH3" ColumnName="CTRL_NH3" />
+                <ScalarProperty Name="CTRL_SO2" ColumnName="CTRL_SO2" />
+                <ScalarProperty Name="CTRL_NOx" ColumnName="CTRL_NOx" />
+                <ScalarProperty Name="BASE_VOC" ColumnName="BASE_VOC" />
+                <ScalarProperty Name="BASE_PM25" ColumnName="BASE_PM25" />
+                <ScalarProperty Name="BASE_NH3" ColumnName="BASE_NH3" />
+                <ScalarProperty Name="BASE_SO2" ColumnName="BASE_SO2" />
+                <ScalarProperty Name="BASE_NOx" ColumnName="BASE_NOx" />
+                <ScalarProperty Name="sourceindx" ColumnName="sourceindx" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="SYS_Tiers">
+            <EntityTypeMapping TypeName="cobraModel.SYS_Tiers">
+              <MappingFragment StoreEntitySet="SYS_Tiers">
+                <ScalarProperty Name="TIER3NAME" ColumnName="TIER3NAME" />
+                <ScalarProperty Name="TIER2NAME" ColumnName="TIER2NAME" />
+                <ScalarProperty Name="TIER1NAME" ColumnName="TIER1NAME" />
+                <ScalarProperty Name="TIER3" ColumnName="TIER3" />
+                <ScalarProperty Name="TIER2" ColumnName="TIER2" />
+                <ScalarProperty Name="TIER1" ColumnName="TIER1" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="SYS_Valuation">
+            <EntityTypeMapping TypeName="cobraModel.SYS_Valuation">
+              <MappingFragment StoreEntitySet="SYS_Valuation">
+                <ScalarProperty Name="IncidenceEndpoint" ColumnName="IncidenceEndpoint" />
+                <ScalarProperty Name="ApplyDiscount" ColumnName="ApplyDiscount" />
+                <ScalarProperty Name="Value" ColumnName="Value" />
+                <ScalarProperty Name="ValuationMethod" ColumnName="ValuationMethod" />
+                <ScalarProperty Name="HealthEffect" ColumnName="HealthEffect" />
+                <ScalarProperty Name="Cases" ColumnName="Cases" />
+                <ScalarProperty Name="Name_C" ColumnName="Name_C" />
+                <ScalarProperty Name="C" ColumnName="C" />
+                <ScalarProperty Name="Name_B" ColumnName="Name_B" />
+                <ScalarProperty Name="B" ColumnName="B" />
+                <ScalarProperty Name="Name_A" ColumnName="Name_A" />
+                <ScalarProperty Name="A" ColumnName="A" />
+                <ScalarProperty Name="Parameter_1_Beta" ColumnName="Parameter_1_Beta" />
+                <ScalarProperty Name="Adjusted" ColumnName="Adjusted" />
+                <ScalarProperty Name="Beta" ColumnName="Beta" />
+                <ScalarProperty Name="Function" ColumnName="Function" />
+                <ScalarProperty Name="End_Age" ColumnName="End_Age" />
+                <ScalarProperty Name="Start_Age" ColumnName="Start_Age" />
+                <ScalarProperty Name="Study_Year" ColumnName="Study_Year" />
+                <ScalarProperty Name="Study_Author" ColumnName="Study_Author" />
+                <ScalarProperty Name="Seasonal_Metric" ColumnName="Seasonal_Metric" />
+                <ScalarProperty Name="PoolingWeight" ColumnName="PoolingWeight" />
+                <ScalarProperty Name="Endpoint" ColumnName="Endpoint" />
+                <ScalarProperty Name="CRFunctionID" ColumnName="CRFunctionID" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="SYS_voc2soa">
+            <EntityTypeMapping TypeName="cobraModel.SYS_voc2soa">
+              <MappingFragment StoreEntitySet="SYS_voc2soa">
+                <ScalarProperty Name="FACTOR" ColumnName="FACTOR" />
+                <ScalarProperty Name="TIER3" ColumnName="TIER3" />
+                <ScalarProperty Name="TIER2" ColumnName="TIER2" />
+                <ScalarProperty Name="TIER1" ColumnName="TIER1" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="SYS_Results">
+            <EntityTypeMapping TypeName="cobraModel.SYS_Results">
+              <MappingFragment StoreEntitySet="SYS_Results">
+                <ScalarProperty Name="COUNTY" ColumnName="COUNTY" />
+                <ScalarProperty Name="STATE" ColumnName="STATE" />
+                <ScalarProperty Name="FIPS" ColumnName="FIPS" />
+                <ScalarProperty Name="C__PM_Work_Loss_Days" ColumnName="$ PM Work Loss Days" />
+				<ScalarProperty Name="C__PM_Incidence_Lung_Cancer" ColumnName="$ PM Incidence Lung Cancer" />
+
+			    <ScalarProperty Name="C__PM_Incidence_Hay_Fever_Rhinitis" ColumnName="$ PM Incidence Hay Fever Rhinitis" />
+				<ScalarProperty Name="C__PM_Incidence_Asthma" ColumnName="$ PM Incidence Asthma" />
+				  <ScalarProperty Name="C__PM_HA_Cardio_Cerebro_and_Peripheral_Vascular_Disease" ColumnName="$ PM HA Cardio Cerebro and Peripheral Vascular Disease" />
+				  <ScalarProperty Name="C__PM_HA_Alzheimers_Disease" ColumnName="$ PM HA Alzheimers Disease" />
+				  <ScalarProperty Name="C__PM_HA_Parkinsons_Disease" ColumnName="$ PM HA Parkinsons Disease" />
+				  <ScalarProperty Name="C__PM_Incidence_Stroke" ColumnName="$ PM Incidence Stroke" />
+				  <ScalarProperty Name="C__PM_Incidence_Out_of_Hospital_Cardiac_Arrest" ColumnName="$ PM Incidence Out of Hospital Cardiac Arrest" />
+				  <ScalarProperty Name="C__PM_Asthma_Symptoms_Albuterol_use" ColumnName="$ PM Asthma Symptoms Albuterol use" />
+				  <ScalarProperty Name="C__PM_HA_Respiratory2" ColumnName="$ PM HA Respiratory2" />
+				  <ScalarProperty Name="C__PM_ER_visits_respiratory" ColumnName="$ PM ER visits respiratory" />
+				  <ScalarProperty Name="C__PM_ER_visits_All_Cardiac_Outcomes" ColumnName="$ PM ER visits All Cardiac Outcomes" />
+				  
+				  
+				  
+                <ScalarProperty Name="C__PM_Infant_Mortality" ColumnName="$ PM Infant Mortality" />
+                <ScalarProperty Name="C__PM_Mortality_All_Cause__high_" ColumnName="$ PM Mortality All Cause (high)" />
+                <ScalarProperty Name="C__PM_Mortality_All_Cause__low_" ColumnName="$ PM Mortality All Cause (low)" />
+                <ScalarProperty Name="C__PM_Minor_Restricted_Activity_Days" ColumnName="$ PM Minor Restricted Activity Days" />
+                <ScalarProperty Name="C__PM_Resp_Hosp_Adm" ColumnName="$ PM Resp Hosp Adm" />
+                <ScalarProperty Name="C__PM_Acute_Myocardial_Infarction_Nonfatal" ColumnName="$ PM Acute Myocardial Infarction Nonfatal" />
+				  <ScalarProperty Name="C__O3_ER_visits_respiratory" ColumnName="$ O3 ER visits respiratory" />
+				  <ScalarProperty Name="C__O3_HA_All_Respiratory" ColumnName="$ O3 HA All Respiratory" />
+				  <ScalarProperty Name="C__O3_Incidence_Hay_Fever_Rhinitis" ColumnName="$ O3 Incidence Hay Fever Rhinitis" />
+				  <ScalarProperty Name="C__O3_Incidence_Asthma" ColumnName="$ O3 Incidence Asthma" />
+				  <ScalarProperty Name="C__O3_Asthma_Symptoms_Chest_Tightness" ColumnName="$ O3 Asthma Symptoms Chest Tightness" />
+				  <ScalarProperty Name="C__O3_Asthma_Symptoms_Cough" ColumnName="$ O3 Asthma Symptoms Cough" />
+				  <ScalarProperty Name="C__O3_Asthma_Symptoms_Shortness_of_Breath" ColumnName="$ O3 Asthma Symptoms Shortness of Breath" />
+				  <ScalarProperty Name="C__O3_Asthma_Symptoms_Wheeze" ColumnName="$ O3 Asthma Symptoms Wheeze" />
+				  <ScalarProperty Name="C__O3_ER_Visits_Asthma" ColumnName="$ O3 ER Visits Asthma" />
+				  <ScalarProperty Name="C__O3_School_Loss_Days" ColumnName="$ O3 School Loss Days" />
+				  <ScalarProperty Name="C__O3_Mortality_Longterm_exposure" ColumnName="$ O3 Mortality Longterm exposure" />
+				  <ScalarProperty Name="C__O3_Mortality_Shortterm_exposure" ColumnName="$ O3 Mortality Shortterm exposure" />
+
+				  <ScalarProperty Name="PM_Work_Loss_Days" ColumnName="PM Work Loss Days" />
+				<ScalarProperty Name="PM_Incidence_Lung_Cancer" ColumnName="PM Incidence Lung Cancer" />
+				  
+				<ScalarProperty Name="PM_Incidence_Hay_Fever_Rhinitis" ColumnName="PM Incidence Hay Fever Rhinitis" />
+				  <ScalarProperty Name="PM_Incidence_Asthma" ColumnName="PM Incidence Asthma" />
+				  <ScalarProperty Name="PM_HA_Cardio_Cerebro_and_Peripheral_Vascular_Disease" ColumnName="PM HA Cardio Cerebro and Peripheral Vascular Disease" />
+				  <ScalarProperty Name="PM_HA_Alzheimers_Disease" ColumnName="PM HA Alzheimers Disease" />
+				  <ScalarProperty Name="PM_HA_Parkinsons_Disease" ColumnName="PM HA Parkinsons Disease" />
+				  <ScalarProperty Name="PM_Incidence_Stroke" ColumnName="PM Incidence Stroke" />
+				  <ScalarProperty Name="PM_Incidence_Out_of_Hospital_Cardiac_Arrest" ColumnName="PM Incidence Out of Hospital Cardiac Arrest" />
+				  <ScalarProperty Name="PM_Asthma_Symptoms_Albuterol_use" ColumnName="PM Asthma Symptoms Albuterol use" />
+				  <ScalarProperty Name="PM_HA_Respiratory2" ColumnName="PM HA Respiratory2" />
+				  <ScalarProperty Name="PM_ER_visits_respiratory" ColumnName="PM ER visits respiratory" />
+				  <ScalarProperty Name="PM_ER_visits_All_Cardiac_Outcomes" ColumnName="PM ER visits All Cardiac Outcomes" />
+				  
+				  
+                <ScalarProperty Name="PM_Infant_Mortality" ColumnName="PM Infant Mortality" />
+                <ScalarProperty Name="PM_Mortality_All_Cause__high_" ColumnName="PM Mortality All Cause (high)" />
+                <ScalarProperty Name="PM_Mortality_All_Cause__low_" ColumnName="PM Mortality All Cause (low)" />
+                <ScalarProperty Name="PM_Minor_Restricted_Activity_Days" ColumnName="PM Minor Restricted Activity Days" />
+                <ScalarProperty Name="PM_HA_All_Respiratory" ColumnName="PM HA All Respiratory" />
+                <ScalarProperty Name="PM_Acute_Myocardial_Infarction_Nonfatal" ColumnName="PM Acute Myocardial Infarction Nonfatal" />
+				  <ScalarProperty Name="O3_ER_visits_respiratory" ColumnName="O3 ER visits respiratory" />
+				  <ScalarProperty Name="O3_HA_All_Respiratory" ColumnName="O3 HA All Respiratory" />
+				  <ScalarProperty Name="O3_Incidence_Hay_Fever_Rhinitis" ColumnName="O3 Incidence Hay Fever Rhinitis" />
+				  <ScalarProperty Name="O3_Incidence_Asthma" ColumnName="O3 Incidence Asthma" />
+				  <ScalarProperty Name="O3_Asthma_Symptoms_Chest_Tightness" ColumnName="O3 Asthma Symptoms Chest Tightness" />
+				  <ScalarProperty Name="O3_Asthma_Symptoms_Cough" ColumnName="O3 Asthma Symptoms Cough" />
+				  <ScalarProperty Name="O3_Asthma_Symptoms_Shortness_of_Breath" ColumnName="O3 Asthma Symptoms Shortness of Breath" />
+				  <ScalarProperty Name="O3_Asthma_Symptoms_Wheeze" ColumnName="O3 Asthma Symptoms Wheeze" />
+				  <ScalarProperty Name="O3_ER_Visits_Asthma" ColumnName="O3 ER Visits Asthma" />
+				  <ScalarProperty Name="O3_School_Loss_Days" ColumnName="O3 School Loss Days" />
+				  <ScalarProperty Name="O3_Mortality_Longterm_exposure" ColumnName="O3 Mortality Longterm exposure" />
+				  <ScalarProperty Name="O3_Mortality_Shortterm_exposure" ColumnName="O3 Mortality Shortterm exposure" />
+
+				  <ScalarProperty Name="DELTA_FINAL_PM" ColumnName="DELTA_FINAL_PM" />
+                <ScalarProperty Name="CTRL_FINAL_PM" ColumnName="CTRL_FINAL_PM" />
+                <ScalarProperty Name="BASE_FINAL_PM" ColumnName="BASE_FINAL_PM" />
+				  <ScalarProperty Name="DELTA_FINAL_O3" ColumnName="DELTA_FINAL_O3" />
+				  <ScalarProperty Name="CTRL_FINAL_O3" ColumnName="CTRL_FINAL_O3" />
+				  <ScalarProperty Name="BASE_FINAL_O3" ColumnName="BASE_FINAL_O3" />
+                <ScalarProperty Name="destindx" ColumnName="destindx" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="False" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="False" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

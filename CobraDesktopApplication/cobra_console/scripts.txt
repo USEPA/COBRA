@@ -1,0 +1,45 @@
+﻿old create statenments
+
+CREATE TABLE "SYS_Destination" ( `destindx` INTEGER, `BASE_NOx` REAL, `BASE_SO2` REAL, `BASE_NH3` REAL, `BASE_SOA` REAL, `BASE_PM25` REAL, `BASE_VOC` REAL, `BASE_O3N` REAL, `CTRL_NOx` REAL, `CTRL_SO2` REAL, `CTRL_NH3` REAL, `CTRL_SOA` REAL, `CTRL_PM25` REAL, `CTRL_VOC` REAL, `CTRL_O3N` REAL )
+CREATE TABLE "SYS_Emissions" ( `typeindx` INTEGER, `sourceindx` INTEGER, `stid` INTEGER, `cyid` INTEGER, `TIER1` INTEGER, `TIER2` INTEGER, `TIER3` INTEGER, `BASE_NOx` REAL, `BASE_SO2` REAL, `BASE_NH3` REAL, `BASE_SOA` REAL, `BASE_PM25` REAL, `BASE_VOC` REAL, `CTRL_NOx` REAL, `CTRL_SO2` REAL, `CTRL_NH3` REAL, `CTRL_SOA` REAL, `CTRL_PM25` REAL, `CTRL_VOC` REAL )
+CREATE TABLE "SYS_Emissions_Base" ( `typeindx` INTEGER, `sourceindx` INTEGER, `stid` INTEGER, `cyid` INTEGER, `TIER1` INTEGER, `TIER2` INTEGER, `TIER3` INTEGER, `NOx` REAL, `SO2` REAL, `NH3` REAL, `SOA` REAL, `PM25` REAL, `VOC` REAL )
+CREATE TABLE "SYS_Emissions_Control" ( `typeindx` INTEGER, `sourceindx` INTEGER, `stid` INTEGER, `cyid` INTEGER, `TIER1` INTEGER, `TIER2` INTEGER, `TIER3` INTEGER, `NOx` REAL, `SO2` REAL, `NH3` REAL, `SOA` REAL, `PM25` REAL, `VOC` REAL )
+CREATE TABLE "SYS_Srmatrix_2025" ( `typeindx` INTEGER, `sourceindx` INTEGER, `destindx` INTEGER, `c_PM25` REAL, `c_NO3` REAL, `c_SO4` REAL, `tx_nh3` REAL )
+CREATE TABLE "SYS_SummarizedEmissions" ( `typeindx` INTEGER, `sourceindx` INTEGER, `BASE_NOx` REAL, `BASE_SO2` REAL, `BASE_NH3` REAL, `BASE_SOA` REAL, `BASE_PM25` REAL, `BASE_VOC` REAL, `CTRL_NOx` REAL, `CTRL_SO2` REAL, `CTRL_NH3` REAL, `CTRL_SOA` REAL, `CTRL_PM25` REAL, `CTRL_VOC` REAL )
+
+
+old index statements
+
+CREATE UNIQUE INDEX sys_destinationidx ON `SYS_Destination` (destindx)
+CREATE INDEX `sys_emissionsindex` ON `SYS_Emissions` (`sourceindx`, `typeindx` )
+CREATE INDEX `sys_emissionsindex_base` ON "SYS_Emissions_Base" (`sourceindx`, `typeindx` )
+CREATE INDEX `sys_emissionsindex_ctrl` ON "SYS_Emissions_Control" (`sourceindx`, `typeindx` )
+CREATE INDEX sys_srindex ON "SYS_Srmatrix_2025" (sourceindx,typeindx)
+CREATE INDEX `sys_summarizedemissionsindex` ON `SYS_SummarizedEmissions` (`sourceindx`, `typeindx` )
+
+CREATE TABLE "SYS_Destination" ( `ID` INTEGER PRIMARY KEY AUTOINCREMENT, `destindx` INTEGER, `BASE_NOx` REAL, `BASE_SO2` REAL, `BASE_NH3` REAL, `BASE_SOA` REAL, `BASE_PM25` REAL, `BASE_VOC` REAL, `BASE_O3N` REAL, `CTRL_NOx` REAL, `CTRL_SO2` REAL, `CTRL_NH3` REAL, `CTRL_SOA` REAL, `CTRL_PM25` REAL, `CTRL_VOC` REAL, `CTRL_O3N` REAL)	
+CREATE TABLE "SYS_Emissions" ( `ID` INTEGER PRIMARY KEY AUTOINCREMENT, `typeindx` INTEGER, `sourceindx` INTEGER, `stid` INTEGER, `cyid` INTEGER, `TIER1` INTEGER, `TIER2` INTEGER, `TIER3` INTEGER, `BASE_NOx` REAL, `BASE_SO2` REAL, `BASE_NH3` REAL, `BASE_SOA` REAL, `BASE_PM25` REAL, `BASE_VOC` REAL, `CTRL_NOx` REAL, `CTRL_SO2` REAL, `CTRL_NH3` REAL, `CTRL_SOA` REAL, `CTRL_PM25` REAL, `CTRL_VOC` REAL )
+CREATE TABLE "SYS_Emissions_Base" ( `ID` INTEGER PRIMARY KEY AUTOINCREMENT, `typeindx` INTEGER, `sourceindx` INTEGER, `stid` INTEGER, `cyid` INTEGER, `TIER1` INTEGER, `TIER2` INTEGER, `TIER3` INTEGER, `NOx` REAL, `SO2` REAL, `NH3` REAL, `SOA` REAL, `PM25` REAL, `VOC` REAL )
+CREATE TABLE "SYS_Emissions_Control" ( `ID` INTEGER PRIMARY KEY AUTOINCREMENT, `typeindx` INTEGER, `sourceindx` INTEGER, `stid` INTEGER, `cyid` INTEGER, `TIER1` INTEGER, `TIER2` INTEGER, `TIER3` INTEGER, `NOx` REAL, `SO2` REAL, `NH3` REAL, `SOA` REAL, `PM25` REAL, `VOC` REAL )
+CREATE TABLE "SYS_Srmatrix_2025" ( `ID` INTEGER PRIMARY KEY AUTOINCREMENT, `typeindx` INTEGER, `sourceindx` INTEGER, `destindx` INTEGER, `c_PM25` REAL, `c_NO3` REAL, `c_SO4` REAL, `tx_nh3` REAL )
+CREATE TABLE "SYS_SummarizedEmissions" ( `ID` INTEGER PRIMARY KEY AUTOINCREMENT, `typeindx` INTEGER, `sourceindx` INTEGER, `BASE_NOx` REAL, `BASE_SO2` REAL, `BASE_NH3` REAL, `BASE_SOA` REAL, `BASE_PM25` REAL, `BASE_VOC` REAL, `CTRL_NOx` REAL, `CTRL_SO2` REAL, `CTRL_NH3` REAL, `CTRL_SOA` REAL, `CTRL_PM25` REAL, `CTRL_VOC` REAL )
+
+
+SELECT 
+      SYS_Emissions_Control.*,
+      SYS_Emissions_Base.*
+FROM 
+      SYS_Emissions_Control
+      INNER JOIN SYS_Emissions_Base ON (SYS_Emissions_Control.typeindx = SYS_Emissions_Base.typeindx) and (SYS_Emissions_Control.sourceindx = SYS_Emissions_Base.sourceindx) and (SYS_Emissions_Control.Tier1 = SYS_Emissions_Base.Tier1) 
+	  and (SYS_Emissions_Control.Tier2 = SYS_Emissions_Base.Tier2)
+	  and (SYS_Emissions_Control.Tier3 = SYS_Emissions_Base.Tier3)
+
+
+
+
+	  CREATE TABLE "SYS_Destination" ( `ID` INTEGER PRIMARY KEY AUTOINCREMENT, `destindx` INTEGER, `BASE_NOx` REAL, `BASE_SO2` REAL, `BASE_NH3` REAL, `BASE_SOA` REAL, `BASE_PM25` REAL, `BASE_VOC` REAL, `CTRL_NOx` REAL, `CTRL_SO2` REAL, `CTRL_NH3` REAL, `CTRL_SOA` REAL, `CTRL_PM25` REAL, `CTRL_VOC` REAL)
+
+
+	  CREATE INDEX `sys_emissionsindex` ON `SYS_Emissions` (`sourceindx`, `typeindx` )
+	  CREATE INDEX `sys_summarizedemissionsindex` ON `SYS_SummarizedEmissions` (`sourceindx`, `typeindx` )
+

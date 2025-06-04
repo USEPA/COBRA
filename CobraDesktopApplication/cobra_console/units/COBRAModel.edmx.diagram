@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="211dfb32ee124c35a804e1c4e6584298" Name="Diagram1" ZoomLevel="56" >
+        <EntityTypeShape EntityType="cobraModel.SYS_CR" Width="1.5" PointX="0.75" PointY="0.75" />
+        <EntityTypeShape EntityType="cobraModel.SYS_Destination" Width="1.5" PointX="2.75" PointY="0.75" />
+        <EntityTypeShape EntityType="cobraModel.SYS_Dict" Width="1.5" PointX="4.75" PointY="0.75" />
+        <EntityTypeShape EntityType="cobraModel.SYS_Emissions" Width="1.5" PointX="4.75" PointY="4.75" />
+        <EntityTypeShape EntityType="cobraModel.SYS_Emissions_Base" Width="1.5" PointX="6.75" PointY="0.75" />
+        <EntityTypeShape EntityType="cobraModel.SYS_Emissions_Base_Summarized" Width="1.5" PointX="0.75" PointY="6.75" />
+        <EntityTypeShape EntityType="cobraModel.SYS_Emissions_Control" Width="1.5" PointX="6.75" PointY="5.75" />
+        <EntityTypeShape EntityType="cobraModel.SYS_Emissions_Control_Summarized" Width="1.5" PointX="8.75" PointY="0.75" />
+        <EntityTypeShape EntityType="cobraModel.SYS_Emissions_Staging" Width="1.5" PointX="8.75" PointY="4.75" />
+        <EntityTypeShape EntityType="cobraModel.SYS_Incidence" Width="1.5" PointX="8.75" PointY="9.75" />
+        <EntityTypeShape EntityType="cobraModel.SYS_POP" Width="1.5" PointX="10.75" PointY="0.75" />
+        <EntityTypeShape EntityType="cobraModel.SYS_ScenarioEmissions_Staging" Width="1.5" PointX="2.75" PointY="11.75" />
+        <EntityTypeShape EntityType="cobraModel.SYS_Srmatrix_2025" Width="1.5" PointX="4.75" PointY="11.75" />
+        <EntityTypeShape EntityType="cobraModel.SYS_Stacks" Width="1.5" PointX="12.75" PointY="0.75" />
+        <EntityTypeShape EntityType="cobraModel.SYS_SummarizedEmissions" Width="1.5" PointX="12.75" PointY="3.75" />
+        <EntityTypeShape EntityType="cobraModel.SYS_Tiers" Width="1.5" PointX="12.75" PointY="10.75" />
+        <EntityTypeShape EntityType="cobraModel.SYS_Valuation" Width="1.5" PointX="14.75" PointY="0.75" />
+        <EntityTypeShape EntityType="cobraModel.SYS_voc2soa" Width="1.5" PointX="14.75" PointY="7.75" />
+        <EntityTypeShape EntityType="cobraModel.SYS_Results" Width="1.5" PointX="0.5" PointY="10.625" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

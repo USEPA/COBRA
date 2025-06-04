@@ -3,3 +3,36 @@
 /.vs
 /CobraComputeAPI/bin
 /CobraComputeAPI/obj
+
+CobraDesktopApplication/cobra_console/bin/
+CobraDesktopApplication/COBRA/obj/
+packages/
+CobraDesktopApplication/COBRA/bin/Debug/COBRA.vshost.exe.manifest
+CobraDesktopApplication/COBRA/bin/
+CobraDesktopApplication/cobra_console/obj/Debug/
+CobraDesktopApplication/cobra_console/obj/
+CobraDesktopApplication/COBRA/data/cobra.db
+utility/
+CobraDesktopApplication/COBRA/outputs/
+bin/
+obj/
+
+CobraDesktopApplication/cobra_console/cobradata_log.ldf
+CobraDesktopApplication/cobra_console/cobradata.mdf
+
+data/cobradata_log.ldf
+data/cobradata.mdf
+appData/cobradata_log.ldf
+appData/cobradata.mdf
+input files/
+outputs/
+data/cobra.db
+lib/RCWF/
+CobraDesktopApplication/cobra_console/test/
+
+Dotspatial/
+Progress/
+installer/
+data load/
+
+avert scenarios/
