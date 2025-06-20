@@ -19,6 +19,6 @@ Data for COBRA WEB is accessed by the web application from a cloud hosted s3 buc
 Census-level COBRA is a beta version of the COBRA tool that calculates emissions and produces results on the census tract level (84,000+ census tracts) rather than just the county level (~3,000 counties). 
 It contains analagous codebases to county-level COBRA, but due to the increased scale, requires much more data, storage, and memory to install and run.
 
-1. Cobra's Frontend Angular Web Application (Census_COBRAFrontend)
-2. Cobra's Angular Web API (Census_COBRAApi)
-3. Cobra's C# Desktop Application (Census_COBRADesktopApplication)
+1. Cobra Web's Frontend Angular Application (Census_COBRAFrontend)
+2. The Cobra Web API (Census_COBRAApi)
+3. The Cobra C# Desktop Application (Census_COBRADesktopApplication)
