@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
+    <RemoteDebugEnabled>false</RemoteDebugEnabled>
+    <StartArguments>"C:\Users\developer\Documents\Visual Studio 2015\Projects\COBRA\COBRA\data\cobra.db" "C:\Users\developer\Documents\Visual Studio 2015\Projects\COBRA\data\QAQC\BASEEMISSIONS.csv" "C:\Users\developer\Documents\Visual Studio 2015\Projects\COBRA\data\QAQC\CONTROLEMISSIONS.csv" "C:\Users\developer\documents\out.csv" YES</StartArguments>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ProjectView>ShowAllFiles</ProjectView>
+    <PublishUrlHistory>publish\</PublishUrlHistory>
+    <InstallUrlHistory />
+    <SupportUrlHistory />
+    <UpdateUrlHistory />
+    <BootstrapperUrlHistory />
+    <ErrorReportUrlHistory />
+    <FallbackCulture>en-US</FallbackCulture>
+    <VerifyUploadedFiles>false</VerifyUploadedFiles>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|AnyCPU'">
+    <StartArguments>"C:\Users\developer\Documents\Visual Studio 2015\Projects\COBRA\COBRA\data\cobra.db" "C:\Users\developer\Documents\Visual Studio 2015\Projects\COBRA\data\QAQC\BASEEMISSIONS.csv" "C:\Users\developer\Documents\Visual Studio 2015\Projects\COBRA\data\QAQC\CONTROLEMISSIONS.csv" "C:\Users\developer\documents\out.csv" YES</StartArguments>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
+    <StartArguments>"D:\Users\maiera\Documents\Projects\COBRA\example_scenarios\cobra_console.exe" -d "D:\Users\maiera\Documents\Projects\COBRA\example_scenarios\cobra.db" -b "D:\Users\maiera\Documents\Projects\COBRA\example_scenarios\ref_emissions_2050.csv" -c "D:\Users\maiera\Documents\Projects\COBRA\example_scenarios\high_elec_emissions_2050.csv" "D:\Users\maiera\Documents\Projects\COBRA\example_scenarios\population_2050.csv" "D:\Users\maiera\Documents\Projects\COBRA\example_scenarios\incidence_2050.csv" -o "D:\Users\maiera\Documents\Projects\COBRA\example_scenarios\results_no.csv" --pct3 NO -y 2028</StartArguments>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
+    <StartArguments>"D:\Users\maiera\Documents\Projects\COBRA\example_scenarios\cobra_console.exe" -d "D:\Users\maiera\Documents\Projects\COBRA\example_scenarios\cobra.db" -b "D:\Users\maiera\Documents\Projects\COBRA\example_scenarios\ref_emissions_2050.csv" -c "D:\Users\maiera\Documents\Projects\COBRA\example_scenarios\high_elec_emissions_2050.csv" "D:\Users\maiera\Documents\Projects\COBRA\example_scenarios\population_2050.csv" "D:\Users\maiera\Documents\Projects\COBRA\example_scenarios\incidence_2050.csv" -o "D:\Users\maiera\Documents\Projects\COBRA\example_scenarios\results_yes.csv" --pct3 Yes -y 2028</StartArguments>
+  </PropertyGroup>
+</Project>

@@ -1,0 +1,101 @@
+cobra_console/bin/
+COBRA/obj/
+packages/
+COBRA/bin/Debug/COBRA.vshost.exe.manifest
+COBRA/bin/
+cobra_console/obj/Debug/
+data/working database/cobra.db
+data/QAQC/
+data/reference files/
+cobra_console/obj/
+COBRA/data/cobra - backup 20170802.db
+COBRA/data/cobra.db
+utility/
+data/working database/cobra - Copy.db
+COBRA/outputs/
+bin/
+obj/
+COBRA/appData/cobradata_log.ldf
+COBRA/appData/cobradata.mdf
+cobra_console/cobradata_log.ldf
+cobra_console/cobradata.mdf
+COBRA/data/cobradata_log.ldf
+COBRA/data/cobradata.mdf
+data/cobradata_log.ldf
+data/cobradata.mdf
+appData/cobradata_log.ldf
+appData/cobradata.mdf
+input files/
+outputs/
+data/cobra.db
+COBRA_Backup_2017.09.05_05.49.13/
+lib/RCWF/
+COBRA_Report.htm
+COBRA/data/cobra - before intermediate tables.db
+COBRA/data/cobra2017 edition.7z
+COBRA/data/cobra - delivered modified to COBRA 2017 adjustment factors.7z
+COBRA/data/cobra - as delivered.7z
+COBRA/data/cobra - Copy.db
+COBRA/data/__cobra 2017 adjusted.7z
+COBRA/data/export.zip
+COBRA/data/export/
+COBRA/data/export20180227/
+COBRA/data/oldexport/
+cobra_console/test/
+COBRA/data/cobra - Copy (2).db
+.vs/
+COBRA/data/cobrabatch.db
+Dotspatial/
+COBRA/data/cobra_full2025matrix.7z
+COBRA/data/cobra_state as of 20181029.7z
+installer/cobrainstaller
+COBRA.API/COBRA.NET.API/testdata/
+COBRA.API/client/node_modules/
+COBRA.API/COBRA.NET.API/CobraComputeClient - Copy/
+COBRA/publish/
+COBRA.API/COBRA.NET.API - Copy/
+COBRA.API/COBRA.NET.API/Ceras-master/
+COBRA.API/COBRA.NET.API/CobraComputeAPI/altdataformats/
+COBRA.API/COBRA.NET.API/CobraComputeAPI/RedisHelper.cs
+COBRA.API/COBRA.NET.API/CobraComputeAPI/altdataformats/
+COBRA.API/COBRA.NET.API/Ceras-master/
+COBRA/data/cobra - prior 2020 update.7z
+COBRA/data/cobra_inrpogress.7z
+COBRA/data/cobrabatch.7z
+COBRA/data/cobra - Copy before stripping down.db
+COBRA/data/cobra - Copy before stripping down.7z
+data load/
+COBRA.API/COBRA.NET.API/stack/netcore/publish/
+COBRA.API/COBRA.NET.API/cloud.gov/notes.txt
+re_export/
+2023_issue/
+COBRA.API/COBRA.NET.API/CobraComputeAPI/data - Copy/
+COBRA.API/COBRA.NET.API/stack/minio_data_for_manual_upload/
+COBRA.API/COBRA@EPA.zip
+COBRA.API/COBRA.NET.API/stack.zip
+QAQC/cobra/34017_2023.json
+QAQC/cobra/34017_2023_output.txt
+QAQC/cobra/36005_2023.json
+QAQC/cobra/36005_2023_output.txt
+QAQC/cobra/36005_2023_output_AM.txt
+QAQC/cobra/36005_2023mod.json
+QAQC/cobra/cobra_health_comparison.ods
+QAQC/cobra/cobra_health_comparison.xlsx
+QAQC/cobra/cobralive.json
+QAQC/cobra/computegeneric.txt
+QAQC/cobra/computeimpacts.txt
+QAQC/cobra/sys_cr_inventory.csv
+QAQC/cobra/valuation_inventory_2023.csv
+COBRA.API/COBRA.NET.API/queformat.json
+avert scenarios/
+COBRA.API/COBRA.NET.API/asdeployed/
+COBRA.API/COBRA.NET.API/deployments/api/Minio.dll
+COBRA.API/COBRA.NET.API/deployments/
+srm.FIPS2FIPS.O3+PM.area.r3.csv.gz
+srm.FIPS2FIPS.O3+PM.low.r3.csv.gz
+srm.FIPS2FIPS.O3+PM.medium.r3.csv.gz
+srm.FIPS2FIPS.O3+PM.tall.r3.csv.gz
+srm.FIPS2FIPS.O3+PM.area.r3.csv/srm.FIPS2FIPS.O3+PM.area.r3.csv
+srm.FIPS2FIPS.O3+PM.low.r3.csv/srm.FIPS2FIPS.O3+PM.low.r3.csv
+srm.FIPS2FIPS.O3+PM.medium.r3.csv/srm.FIPS2FIPS.O3+PM.medium.r3.csv
+srm.FIPS2FIPS.O3+PM.tall.r3.csv/srm.FIPS2FIPS.O3+PM.tall.r3.csv
