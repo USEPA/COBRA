@@ -1,5 +1,5 @@
 # COBRA
-CO-Benefits Risk Assessment (COBRA) Health Impacts Screening and Mapping Tool
+This repository contains all the codebases relevant to EPA's CO-Benefits Risk Assessment (COBRA) Health Impacts Screening and Mapping Tools
 
 ## County-level COBRA (v5)
 County-level COBRA is the currently deployed production ready version of COBRA.
