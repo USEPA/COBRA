@@ -1,0 +1,1448 @@
+<div class="report-preview" id="report">
+  <div class="topRightButtons">
+    <a
+    [attr.href]="windowOrigin + '/cobra-beta-questions-and-answers#24'"
+    target="_blank"
+    rel="noopener noreferrer"
+  >
+    FAQ
+  </a>
+    |
+    <button
+      id="export-report-data"
+      (click)="exportReportData()"
+      class="report-export-buttons"
+    >
+      Export Data |
+    </button>
+    <span id="reset-button-container">
+      <ng-container *ngIf="showResetReport"
+        ><button
+          (click)="resetReport()"
+          id="reset-button"
+          class="report-export-buttons"
+        >
+          Reset Report</button
+        >{{ "  " }}|{{ "  " }}</ng-container
+      >
+    </span>
+    <button
+      id="print-button"
+      (click)="print('report')"
+      class="report-export-buttons"
+    >
+      Print this report
+    </button>
+  </div>
+  <h1>
+    <img
+      src="../../assets/images//COBRA_logo_160x180.jpg"
+      alt="heartbeat health icon"
+      class="report-logo"
+    />
+    COBRA Benefits Summary: {{ title }}
+  </h1>
+  <div
+    *ngIf="toggleSections.betaNote"
+    class="toggle-section flex-div"
+    id="beta-note"
+  >
+    <div class="header-content">
+      <p class="betaNote">
+        Note: These results were generated using a beta version of COBRA v6.0.
+        This beta version presents benefits at the census tract-level. Only
+        primary PM2.5 is modeled at the census tract-level; all other pollutants
+        are modeled at the county-level. This beta version represents an initial
+        step to estimating benefits at the census tract-level, which allows for
+        the calculation of benefits in user-defined communities of interest
+        (COI). This report summarizes those benefits. If you have any comments
+        or feedback on this beta version, please reach out to cobra@epa.gov.
+      </p>
+
+      <img
+        alt=""
+        class="icon-inline toggle-icon"
+        src="../../../assets/images/visibility.svg"
+        style="fill: #005ea2"
+        onmouseover="this.src='../../../assets/images/visibility_off.svg'"
+        onmouseout="this.src='../../../assets/images/visibility.svg'"
+        data-tooltip="Hide report section"
+        title="Hide report section"
+        (click)="toggleSectionVisibility('betaNote')"
+      />
+    </div>
+  </div>
+
+  <div
+    id="inputs-section"
+    class="report-section"
+    *ngIf="toggleSections.cobraInputs || toggleSections.avertInputs"
+  >
+    <!--<hr *ngIf="toggleSections.cobraInputs" />-->
+    <h3 id="input-header">Scenario Inputs</h3>
+
+    <div class="sideBySide">
+      <div
+        class="toggle-section flex-div"
+        *ngIf="toggleSections.cobraInputs"
+        id="COBRA-emissions-changes"
+      >
+        <div class="header-content">
+          <h5>Emissions Changes</h5>
+          <div>
+            <img
+              alt="download table as png"
+              src="../../../assets/images/file_download.svg"
+              style="fill: #005ea2"
+              class="download-png icon-inline toggle-icon"
+              title="Download figure as png"
+              (click)="downloadToPng('COBRA-emissions-changes')"
+            />
+            <img
+              alt=""
+              class="icon-inline toggle-icon"
+              src="../../../assets/images/visibility.svg"
+              style="fill: #005ea2"
+              onmouseover="this.src='../../../assets/images/visibility_off.svg'"
+              onmouseout="this.src='../../../assets/images/visibility.svg'"
+              data-tooltip="Hide report section"
+              title="Hide report section"
+              (click)="toggleSectionVisibility('cobraInputs')"
+            />
+          </div>
+        </div>
+        <div class="report-inputs">
+          <div class="cobra-inputs">
+            <div class="usa-table-container">
+              <table
+                id="cobra-inputs-table"
+                aria-label="scenario_inputs"
+                class="usa-table usa-table--borderless usa-table--numeric"
+              >
+                <tbody>
+                  <col />
+                  <colgroup span="2"></colgroup>
+                  <colgroup span="2"></colgroup>
+                  <tr class="border-y-2px main-header">
+                    <th rowspan="1" colspan="1" class="" id="input_sector">
+                      Sector
+                    </th>
+                    <th rowspan="1" class="" id="changed-pollutant">
+                      Pollutant
+                    </th>
+                    <th colspan="1" scope="colgroup" class="" id="change_input">
+                      Change (short tons per year)
+                    </th>
+                  </tr>
+                  <!-- Loop through each component in groupedComponents -->
+                  <ng-container *ngFor="let component of groupedComponents">
+                    <ng-container *ngIf="hasVisibleChanges(component)">
+                      <tr class="detail-row">
+                        <!-- Sector Name, with dynamic rowspan -->
+                        <th
+                          scope="row"
+                          [attr.rowspan]="calculateRowspan(component)"
+                          headers="input_sector"
+                        >
+                          {{ getSector(component) }}
+                        </th>
+                      </tr>
+
+                      <!-- Pollutant rows -->
+                      <tr class="detail-row" *ngIf="component.changes['PM2.5']">
+                        <td headers="changed-pollutant">PM<sub>2.5</sub></td>
+                        <td headers="change_input">
+                          {{ getChanges("PM2.5", component) }}
+                        </td>
+                      </tr>
+                      <tr class="detail-row" *ngIf="component.changes['SO2']">
+                        <td headers="changed-pollutant">SO<sub>2</sub></td>
+                        <td headers="change_input">
+                          {{ getChanges("SO2", component) }}
+                        </td>
+                      </tr>
+                      <tr class="detail-row" *ngIf="component.changes['NOx']">
+                        <td headers="changed-pollutant">NO<sub>x</sub></td>
+                        <td headers="change_input">
+                          {{ getChanges("NOx", component) }}
+                        </td>
+                      </tr>
+                      <tr class="detail-row" *ngIf="component.changes['VOC']">
+                        <td headers="changed-pollutant">VOC</td>
+                        <td headers="change_input">
+                          {{ getChanges("VOC", component) }}
+                        </td>
+                      </tr>
+                    </ng-container>
+                  </ng-container>
+                </tbody>
+              </table>
+              <p class="note" *ngIf="title !== 'Nationwide'">
+                Note: emissions changes in this table could include changes
+                outside of {{ title }}
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div
+        class="toggle-section flex-div"
+        *ngIf="toggleSections.avertInputs"
+        id="COBRA-avert-inputs"
+      >
+        <div class="header-content">
+          <h5>AVERT Scenario</h5>
+          <div>
+            <img
+              alt="download table as png"
+              src="../../../assets/images/file_download.svg"
+              style="fill: #005ea2"
+              class="download-png icon-inline toggle-icon"
+              title="Download figure as png"
+              (click)="downloadToPng('COBRA-avert-inputs')"
+            />
+            <img
+              alt=""
+              class="icon-inline toggle-icon"
+              src="../../../assets/images/visibility.svg"
+              style="fill: #005ea2"
+              onmouseover="this.src='../../../assets/images/visibility_off.svg'"
+              onmouseout="this.src='../../../assets/images/visibility.svg'"
+              data-tooltip="Hide report section"
+              title="Hide report section"
+              (click)="toggleSectionVisibility('avertInputs')"
+            />
+          </div>
+        </div>
+
+        <!-- AVERT TABLE-->
+        <table
+          id="avert-inputs-table"
+          aria-label="avert scenario inputs"
+          class="usa-table usa-table--borderless usa-table--numeric"
+        >
+          <col />
+          <thead>
+            <tr class="border-y-2px main-header">
+              <th rowspan="1" colspan="1" class="" id="project_type">
+                Project Type
+              </th>
+              <th rowspan="1" class="" id="avert_changes">Changes</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let row of avertRows" class="detail-row">
+              <td headers="project_type">{{ row.projectType }}</td>
+              <td headers="avert_changes">
+                <div *ngFor="let change of row.changes">{{ change }}</div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+        <p class="note">
+          *Note: Emissions changes are based off the following scenario from
+          AVERT for the <strong>{{ getAvertRegions() }}</strong
+          >. If you made additional changes in COBRA after importing from AVERT,
+          this table may not fully reflect the emissions changes in the COBRA
+          scenario.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <div id="outputs-section" class="report-section">
+    <h3 id="output-header">Scenario Outputs</h3>
+
+    <div class="clr-row" id="filter-container">
+      <div
+        class="clr-col-sm-12"
+        [ngClass]="showAdvancedFilters ? 'clr-col-md-3' : 'clr-col-md-5'"
+      >
+        <label class="usa-label" for="state_dd">Filter by state:</label>
+        <select
+          class="usa-select"
+          id="state_dd"
+          name="state_dd"
+          (change)="updateCountyDropDownAndFilterVal(selectedStateIndex)"
+          [(ngModel)]="selectedStateIndex"
+        >
+          <option id="state_default" value="" selected>
+            All contiguous U.S. states
+          </option>
+          <option
+            *ngFor="let state of state_clr_structure"
+            value="{{ state.index }}"
+          >
+            {{ state.STNAME }}
+          </option>
+        </select>
+      </div>
+      <div
+        class="clr-col-sm-12"
+        [ngClass]="showAdvancedFilters ? 'clr-col-md-3' : 'clr-col-md-4'"
+      >
+        <label class="usa-label" for="county_dd_report"
+          >Filter by county:</label
+        >
+        <select
+          class="usa-select"
+          id="county_dd_report"
+          name="county_dd_report"
+          (change)="
+            showHideStateCountyNameAndUpdateFilterVal(
+              selectedStateIndex,
+              selectedCountyIndex
+            )
+          "
+          [disabled]="!counties_for_state || counties_for_state.length === 0"
+          [(ngModel)]="selectedCountyIndex"
+        >
+          <option id="county_default" value="" selected>All counties</option>
+          <option
+            *ngFor="let county of counties_for_state"
+            value="{{ county.county }}{{ county.FIPS }}"
+          >
+            {{ county.county }}
+          </option>
+        </select>
+      </div>
+
+      <!-- Toggle switch for LIDC Definition -->
+      <!--<div class="clr-col-sm-12 clr-col-md-2">
+        <label class="usa-label">
+          <span class="has-tooltip"
+            >LIDAC Definition:
+            <clr-tooltip>
+              <clr-icon
+                clrTooltipTrigger
+                shape="info-circle"
+                class="is-solid is-info"
+                size="22"
+                aria-label="Incidence refers to the number of new cases of a health endpoint over a specified period of time. The change in incidence is not necessarily a whole number because COBRA calculates statistical risk reductions which are then aggregated over the population. For example, if 150,000 people experience a 0.001% reduction in mortality risk, this would be reported as 1.5 statistical lives saved. This statistical life, and its associated monetary value, represents the sum of many small risk reductions and does not correspond to the loss or value of an individual life."
+              >
+              </clr-icon>
+              <clr-tooltip-content
+                clrPosition="bottom-right"
+                clrSize="lg"
+                *clrIfOpen
+              >
+                <!--<span
+                  >Choose to use either the CEJST or IRA definition of Low
+                  Income Disadvantaged Communities (LIDAC).</span
+                >-->
+      <!---- <span
+                  >Choose how you wish to define Low Income Disadvantaged
+                  Communities (LIDAC).</span
+                >
+              </clr-tooltip-content>
+            </clr-tooltip>
+          </span></label
+        >
+        <div class="toggle-container">
+          <label class="toggle-label">
+            <input
+              type="radio"
+              name="lidcDefinition"
+              value="IRA_fraction"
+              [(ngModel)]="lidcDefinition"
+              (change)="onDACToggle('IRA_fraction')"
+            />
+            IRA
+          </label>
+          <!--<br />
+          <label class="toggle-label">
+            <input
+              type="radio"
+              name="lidcDefinition"
+              value="CJEST"
+              [(ngModel)]="lidcDefinition"
+              (change)="onDACToggle('CJEST')"
+            />
+            CEJST
+            <a
+              href="https://screeningtool.geoplatform.gov/en/previous-versions"
+              target="”_blank”"
+              rel="noopener noreferrer"
+              >(1.0)</a
+            >
+          </label>-->
+      <!--</div>
+      </div>-->
+
+      <div
+        class="clr-col-sm-12"
+        [ngClass]="showAdvancedFilters ? 'clr-col-md-6' : 'clr-col-md-3'"
+      >
+        <div class="advanced-filters-container">
+          <div class="inline-filter-header">
+            <!-- Toggle Button to open/close the advanced filters panel -->
+            <div style="max-width: 100%">
+              <!-- <button class="btn btn-outline-primary btn-sm" (click)="toggleAdvancedFilters()">
+              Filter by Community of Interest (COI) <clr-icon [attr.shape]="showAdvancedFilters ? 'caret up' : 'caret down'"></clr-icon>
+            </button>-->
+              <label class="usa-label" for="county_dd_report"
+                >Filter by community of interest (COI):
+                <clr-tooltip clrTooltipTrigger="click">
+                  <clr-icon
+                    clrTooltipTrigger
+                    shape="info-circle"
+                    class="is-solid is-info"
+                    size="22"
+                    aria-label="Incidence refers to the number of new cases of a health endpoint over a specified period of time. The change in incidence is not necessarily a whole number because COBRA calculates statistical risk reductions which are then aggregated over the population. For example, if 150,000 people experience a 0.001% reduction in mortality risk, this would be reported as 1.5 statistical lives saved. This statistical life, and its associated monetary value, represents the sum of many small risk reductions and does not correspond to the loss or value of an individual life."
+                  >
+                  </clr-icon>
+                  <clr-tooltip-content
+                    clrPosition="top-left"
+                    clrSize="lg"
+                    *clrIfOpen
+                  >
+                    <span>
+                      Filter this report by census tracts with criteria that is
+                      greater than or less than the national percentile.
+                    </span>
+                    <br />
+                    Refer to COBRA's FAQ for more information.
+                  </clr-tooltip-content>
+                </clr-tooltip>
+              </label>
+            </div>
+            <span
+              *ngIf="showAdvancedFilters"
+              @slideInOut
+              class="header-controls"
+              style="margin-top: -10px"
+            >
+              <!-- Logic toggle for combining filters -->
+              <span class="logic-toggle" *ngIf="advancedFilters.length > 1">
+                <label for="logicSelect" style="color: #005ea2"
+                  >Filter Logic:
+                </label>
+                <div class="btn-group" role="group">
+                  <button
+                    type="button"
+                    class="btn"
+                    [ngClass]="{
+                      'btn-primary': filterLogic === 'AND',
+                      'btn-secondary': filterLogic !== 'AND'
+                    }"
+                    (click)="filterLogic = 'AND'; onFilterChange()"
+                  >
+                    AND
+                  </button>
+                  <button
+                    type="button"
+                    class="btn"
+                    [ngClass]="{
+                      'btn-primary': filterLogic === 'OR',
+                      'btn-secondary': filterLogic !== 'OR'
+                    }"
+                    [class.active]="filterLogic === 'OR'"
+                    (click)="filterLogic = 'OR'; onFilterChange()"
+                  >
+                    OR
+                  </button>
+                </div>
+                <!--<select id="logicSelect" [(ngModel)]="filterLogic" (ngModelChange)="onFilterChange()" class="advanced-filter-form-control" style="margin: 0">
+                  <option value="AND">AND</option>
+                  <option value="OR">OR</option>
+                </select>-->
+              </span>
+            </span>
+          </div>
+
+<!-- Advanced filters panel (hidden/shown based on a component variable) -->
+<div *ngIf="showAdvancedFilters" class="advanced-filters-panel">
+  <!-- List out any added filters -->
+  <div
+    *ngFor="let filter of advancedFilters; let i = index"
+
+    [style.margin-bottom]="i === advancedFilters.length - 1 ? '0' : ''"
+  >
+  <div     class="filter-item">
+    <!-- Filter Category -->
+    <select
+      [(ngModel)]="filter.category"
+      (change)="onFilterChange(filter)"
+      class="advanced-filter-form-control usa-select"
+    >
+      <option value="" disabled selected style="color: #949494">
+        Select a filter...
+      </option>
+      <option value="LIFEEXPPCT">Life Expectancy</option>
+      <option value="LOWINCOME">Income</option>
+      <!-- Single Energy Burden option -->
+      <!--<option value="ENERGYBURDENPCT">Energy Burden (Percentile)</option>-->
+      <option value="ENERGYBURDEN">Energy Burden (Threshold)</option>
+      <option value="P_PM25">Ambient PM<sub>2.5</sub></option>
+      <option value="P_OZONE">Ambient Ozone</option>
+      <!-- Add more options as needed -->
+    </select>
+
+    <!-- For non–Energy Burden filters, show operator and slider -->
+    <div *ngIf="filter.category !== 'ENERGYBURDEN'" class="filter-slider">
+      <!-- Operator Selection -->
+      <button
+        type="button"
+        class="btn operator-toggle"
+        (click)="toggleOperator(filter)"
+      >
+        <span>{{ filter.operator }}</span>
+      </button>
+      <!-- Slider for Percentile -->
+      <div class="slider-container">
+        <input
+          type="range"
+          min="0"
+          max="100"
+          [(ngModel)]="filter.value"
+          (ngModelChange)="onFilterChange()"
+          class="slider"
+          [style.background]="getSliderBackground(filter.value)"
+        />
+        <span class="slider-value">
+          <input
+            type="number"
+            name="percent"
+            class="percent-input"
+            [(ngModel)]="filter.value"
+            (change)="onFilterChange()"
+            style="font-weight: bold; max-width: 52px; display: inline-block"
+            step="1"
+            min="0"
+            max="100"
+          />%ile
+        </span>
+      </div>
+    </div>
+
+
+
+      <!-- When in threshold mode, show threshold radio buttons -->
+     <ng-container *ngIf="filter.mode === 'threshold'">
+  <div class="threshold-options">
+    <!-- Wrap all labels in a flex container -->
+    <div class="threshold-options__choices">
+      <label class="threshold-options__label">
+        <input
+          type="radio"
+          name="energyThreshold{{ i }}"
+          [(ngModel)]="filter.threshold"
+          [value]="'ENERGYBURDEN<6PCT'"
+          (change)="onFilterChange()"
+        />
+        &lt; 6%
+      </label>
+
+      <label class="threshold-options__label">
+        <input
+          type="radio"
+          name="energyThreshold{{ i }}"
+          [(ngModel)]="filter.threshold"
+          [value]="'ENERGYBURDEN>=6PCT'"
+          (change)="onFilterChange()"
+        />
+        ≥ 6% 
+      </label>
+
+      <label class="threshold-options__label">
+        <input
+          type="radio"
+          name="energyThreshold{{ i }}"
+          [(ngModel)]="filter.threshold"
+          [value]="'ENERGYBURDEN>=10PCT'"
+          (change)="onFilterChange()"
+        />
+        ≥ 10%
+      </label>
+    </div>
+
+    <!-- Explaining energy burden threshold -->
+    <div class="threshold-options__description">
+      Filter census tracts by average % of household
+      income spent on energy costs.
+    </div>
+  </div>
+</ng-container>
+
+
+    <!-- Remove filter button -->
+    <button
+      type="button"
+      class="btn btn-link btn-sm remove-btn"
+      (click)="removeAdvancedFilter(i)"
+    >
+      &times;
+    </button>
+
+
+</div>
+  <!--- end of filter item div -->
+
+    <!-- PERCENTILE VS THRESHOLD TOGGLE control placed in its own row underneath the slider -->
+    <!--<div *ngIf="filter.category === 'ENERGYBURDEN'" class="toggle-control" style="margin-top: 2px; text-align: left;">
+      <div style="display: inline-flex; align-items: center;">
+
+        <span
+          style="margin-right: 8px; font-size: 12px;"
+          [ngStyle]="{ 'font-weight': filter.mode === 'threshold' ? 'bold' : 'normal' }"
+        >
+          Threshold
+        </span>
+    
+
+        <label class="switch">
+          <input
+            type="checkbox"
+            [checked]="filter.mode === 'percentile'"
+            (change)="onModeToggle(filter, $event.target.checked)"
+          >
+          <span class="toggle round"></span>
+        </label>
+
+        <span
+          style="margin-left: 8px; font-size: 12px;"
+          [ngStyle]="{ 'font-weight': filter.mode === 'percentile' ? 'bold' : 'normal' }"
+        >
+          Percentile
+        </span>
+      </div>
+    </div>-->
+  </div>
+</div>
+
+<!-- Button to add another filter condition -->
+<button
+  type="button"
+  class="btn btn-link btn-sm"
+  (click)="addAdvancedFilter()"
+  style="color: #005ea2"
+>
+  + Add Filter
+</button>
+
+
+
+        </div>
+      </div>
+    </div>
+
+    <div
+      class="toggle-section"
+      *ngIf="toggleSections.summary"
+      id="report-summary"
+    >
+      <div class="header-content">
+        <h5>High-Level Summary</h5>
+        <div>
+          <img
+            alt="Download figure as png"
+            src="../../../assets/images/file_download.svg"
+            style="fill: #005ea2"
+            class="download-png icon-inline toggle-icon"
+            title="Download figure as png"
+            (click)="downloadToPng('report-summary')"
+          />
+          <img
+            alt=""
+            class="icon-inline toggle-icon"
+            src="../../../assets/images/visibility.svg"
+            style="fill: #005ea2"
+            onmouseover="this.src='../../../assets/images/visibility_off.svg'"
+            onmouseout="this.src='../../../assets/images/visibility.svg'"
+            data-tooltip="Hide report section"
+            title="Hide report section"
+            (click)="toggleSectionVisibility('summary')"
+          />
+        </div>
+      </div>
+      <div class="summary-bubble">
+        <p>
+          In {{ title === "Nationwide" ? "the United States" : title }}, your
+          user-defined Communities of Interest (COI) comprise
+          <strong
+            >{{ round(populationData.dacPercentPop) }}% of the total
+            population</strong
+          >
+          and are expected to receive approximately
+          <strong
+            >{{
+              !populationData.benefits && populationData.disbenefits
+                ? round(populationData.disbenefitsGoingtoDAC)
+                : round(populationData.benefitsGoingtoDAC)
+            }}% of the total
+            {{
+              !populationData.benefits && populationData.disbenefits
+                ? "disbenefits"
+                : "benefits"
+            }}</strong
+          >
+          <span *ngIf="populationData.benefits">
+            of the scenario entered into COBRA. This result shows that
+            communities of interest received a{{
+              round(populationData.benefitsGoingtoDAC) >
+              round(populationData.dacPercentPop)
+                ? " higher"
+                : round(populationData.benefitsGoingtoDAC) <
+                  round(populationData.dacPercentPop)
+                ? " lower"
+                : "n equal"
+            }}
+          </span>
+          <span *ngIf="!populationData.benefits && populationData.disbenefits">
+            of the scenario entered into COBRA. This result shows that
+            communities of interest received a{{
+              round(populationData.disbenefitsGoingtoDAC) >
+              round(populationData.dacPercentPop)
+                ? " higher"
+                : round(populationData.disbenefitsGoingtoDAC) <
+                  round(populationData.dacPercentPop)
+                ? " lower"
+                : "n equal"
+            }}
+          </span>
+          share of the total
+          {{
+            populationData.benefits && populationData.disbenefits
+              ? "benefits"
+              : populationData.benefits
+              ? "benefits"
+              : "disbenefits"
+          }}
+          relative to their population.
+        </p>
+        <br />
+
+        <!--{{  title === "Nationwide" ? "the United States" : title }}, -->
+        <div *ngIf="getValidSliderFilters().length > 0">
+        In comparison to census tracts in the United States, filtered COI meet {{ filterLogic === 'AND' ? "all" : "any"}} of the following criteria:  
+        <ul >
+          <li *ngFor="let filter of getValidSliderFilters(); let i = index" [style.margin-bottom]="i === getValidSliderFilters().length - 1 ? '0' : ''">
+            {{ getFilterDescription(filter) }}
+          </li>
+        </ul>
+      
+      <br>
+      </div>
+        <p>
+          Based on this scenario, there will be an estimated net benefit for
+          <strong>{{ round(populationData.percentDACBenefits) || 0 }}%</strong> of
+          the COI population in
+          {{ title === "Nationwide" ? "the United States" : title }}, and an
+          estimated net disbenefit for
+          <strong>{{ round(populationData.percentDACHurt) }}%</strong> of the
+          COI population<!-- report unimpacted population if exists--><span
+            *ngIf="populationData.percentDACUnimpacted > 0"
+            >, and no significant impacts for
+            <strong>{{ round(populationData.percentDACUnimpacted) }}%</strong>
+            of the COI population</span
+          >.
+        </p>
+      </div>
+    </div>
+
+
+    <br />
+    <div class="sideBySide">
+      <div
+        class="HealthImpacts toggle-section"
+        *ngIf="toggleSections.impactsTable"
+        id="COBRA-health-impacts-table"
+      >
+        <div class="header-content">
+          <h5>Estimated Health Impacts</h5>
+          <div>
+            <img
+              alt="download table as png"
+              src="../../../assets/images/file_download.svg"
+              style="fill: #005ea2"
+              class="download-png icon-inline toggle-icon"
+              title="Download figure as png"
+              (click)="downloadToPng('COBRA-health-impacts-table')"
+            />
+            <img
+              alt=""
+              class="icon-inline toggle-icon"
+              src="../../../assets/images/visibility.svg"
+              style="fill: #005ea2"
+              onmouseover="this.src='../../../assets/images/visibility_off.svg'"
+              onmouseout="this.src='../../../assets/images/visibility.svg'"
+              data-tooltip="Hide report section"
+              title="Hide report section"
+              (click)="toggleSectionVisibility('impactsTable')"
+            />
+          </div>
+        </div>
+
+        <table
+          id="cobra-inputs-table"
+          aria-label="scenario_inputs"
+          class="usa-table usa-table--borderless usa-table--numeric"
+        >
+          <tbody>
+            <col />
+            <colgroup span="2"></colgroup>
+            <colgroup span="2"></colgroup>
+            <tr class="border-y-2px main-header">
+              <th rowspan="2" colspan="1" class="" id="impacts">
+                Health Effect Impacts
+              </th>
+              <th rowspan="1" class="" colspan="2" id="monetary-value">
+                Monetary Value ($, annual)
+              </th>
+            </tr>
+            <tr class="main-header">
+              <th
+                rowspan="1"
+                colspan="1"
+                class=""
+                id="low$"
+                header="monetary-value"
+              >
+                Low
+              </th>
+              <th
+                rowspan="1"
+                colspan="1"
+                class=""
+                id="high$"
+                header="monetary-value"
+              >
+                High
+              </th>
+            </tr>
+
+            <tr>
+              <th header="impacts" id="filter">{{ title }}</th>
+              <th header="low$" id="lowTotal">
+                {{ twoSigFigs(impactData.totalPopLowImpacts, true) }}
+              </th>
+              <th header="high$" id="highTotal">
+                {{ twoSigFigs(impactData.totalPopHighImpacts, true) }}
+              </th>
+            </tr>
+            <tr>
+              <td header="impacts" id="filter">
+                Communities of Interest (COI)
+              </td>
+              <td header="low$" id="lowTotal">
+                {{ twoSigFigs(impactData.dacLowImpacts, true) }}
+              </td>
+              <td header="high$" id="highTotal">
+                {{ twoSigFigs(impactData.dacHighImpacts, true) }}
+              </td>
+            </tr>
+            <tr>
+              <td header="impacts" id="filter">Population Outside COI</td>
+              <td header="low$" id="lowTotal">
+                {{ twoSigFigs(impactData.nonDacLowImpacts, true) }}
+              </td>
+              <td header="high$" id="highTotal">
+                {{ twoSigFigs(impactData.nonDacHighImpacts, true) }}
+              </td>
+            </tr>
+
+            <!-- Loop through each component in inputComponents -->
+            <ng-container *ngIf="title !== 'Nationwide'">
+              <tr>
+                <th header="impacts" id="filter">Nationwide</th>
+                <th header="low$" id="lowTotal">
+                  {{ twoSigFigs(nationalImpactData.totalPopLowImpacts, true) }}
+                </th>
+                <th header="high$" id="highTotal">
+                  {{ twoSigFigs(nationalImpactData.totalPopHighImpacts, true) }}
+                </th>
+              </tr>
+              <tr>
+                <td header="impacts" id="filter">
+                  Communities of Interest (COI)
+                </td>
+                <td header="low$" id="lowTotal">
+                  {{ twoSigFigs(nationalImpactData.dacLowImpacts, true) }}
+                </td>
+                <td header="high$" id="highTotal">
+                  {{ twoSigFigs(nationalImpactData.dacHighImpacts, true) }}
+                </td>
+              </tr>
+              <tr>
+                <td header="impacts" id="filter">Population Outisde COI</td>
+                <td header="low$" id="lowTotal">
+                  {{ twoSigFigs(nationalImpactData.nonDacLowImpacts, true) }}
+                </td>
+                <td header="high$" id="highTotal">
+                  {{ twoSigFigs(nationalImpactData.nonDacHighImpacts, true) }}
+                </td>
+              </tr>
+            </ng-container>
+          </tbody>
+        </table>
+        <br />
+
+
+      </div>
+      <div
+        class="dacChart toggle-section"
+        *ngIf="toggleSections.dacChart"
+        id="COBRA-community-impacts-chart"
+      >
+        <div class="header-content">
+          <h5>
+            Community-level Impacts in
+            {{ title === "Nationwide" ? "the United States" : title }}
+          </h5>
+          <div>
+            <img
+              alt="download table as png"
+              src="../../../assets/images/file_download.svg"
+              style="fill: #005ea2"
+              class="download-png icon-inline toggle-icon"
+              title="Download figure as png"
+              (click)="downloadToPng('COBRA-community-impacts-chart')"
+            />
+            <img
+              alt=""
+              class="icon-inline toggle-icon"
+              src="../../../assets/images/visibility.svg"
+              style="fill: #005ea2"
+              onmouseover="this.src='../../../assets/images/visibility_off.svg'"
+              onmouseout="this.src='../../../assets/images/visibility.svg'"
+              data-tooltip="Hide report section"
+              title="Hide report section"
+              (click)="toggleSectionVisibility('dacChart')"
+            />
+          </div>
+        </div>
+
+        <app-dac-chart [populationData]="populationData"></app-dac-chart>
+      </div>
+    </div>
+
+    
+    <div
+      class="toggle-section"
+      *ngIf="toggleSections.benefitsTable"
+      id="COBRA-benefits-table"
+    >
+      <div class="header-content">
+        <h5>
+          Community Benefits and Disbenefits in
+          {{ title === "Nationwide" ? "the United States" : title }}
+        </h5>
+        <div>
+          <img
+            alt="download table as png"
+            src="../../../assets/images/file_download.svg"
+            style="fill: #005ea2"
+            class="download-png icon-inline toggle-icon"
+            title="Download figure as png"
+            (click)="downloadToPng('COBRA-benefits-table')"
+          />
+          <img
+            alt=""
+            class="icon-inline toggle-icon"
+            src="../../../assets/images/visibility.svg"
+            style="fill: #005ea2"
+            onmouseover="this.src='../../../assets/images/visibility_off.svg'"
+            onmouseout="this.src='../../../assets/images/visibility.svg'"
+            data-tooltip="Hide report section"
+            title="Hide report section"
+            style="bottom: 5"
+            (click)="toggleSectionVisibility('benefitsTable')"
+          />
+        </div>
+      </div>
+
+      <div class="usa-table-container">
+        <table
+          id="cobra-inputs-table"
+          aria-label="scenario_inputs"
+          class="usa-table usa-table--borderless usa-table--numeric"
+        >
+          <tbody>
+            <col />
+            <colgroup span="2"></colgroup>
+            <colgroup span="2"></colgroup>
+            <tr class="border-y-2px main-header">
+              <th rowspan="1" colspan="1" class="" id="population_Type">
+                Population Type
+              </th>
+              <th rowspan="1" class="" id="dac">
+                Communities of Interest (COI)
+              </th>
+              <th colspan="1" scope="colgroup" class="" id="non-dac">
+                Population outside COI
+              </th>
+              <th colspan="1" scope="colgroup" class="" id="total_pop">
+                Total Population
+              </th>
+            </tr>
+            <!-- Additional rows for other changed-pollutants -->
+            <!--<tr class="detail-row">
+              <td headers="population_type">Fraction of Total Population</td>
+              <td headers="dac">
+                <span class="has-tooltip">
+                  <clr-tooltip>
+                    <span
+                      clrTooltipTrigger
+                      [attr.aria-label]="
+                        round(populationData.dacPercentPop) +
+                        '% of the population in ' +
+                        (title === 'Nationwide' ? 'the United States' : title) +
+                        ' is within your community of interest.'
+                      "
+                    >
+                      {{ round(populationData.dacPercentPop) }}%
+                    </span>
+                    <clr-tooltip-content
+                      clrPosition="bottom-right"
+                      clrSize="lg"
+                      *clrIfOpen
+                    >
+                      <span
+                        >{{ round(populationData.dacPercentPop) }}% of the
+                        population in
+                        {{
+                          title === "Nationwide" ? "the United States" : title
+                        }}
+                        is within your community of interest.</span
+                      >
+                    </clr-tooltip-content>
+                  </clr-tooltip>
+                </span>
+              </td>
+
+              <td headers="non-dac">
+                <span class="has-tooltip">
+                  <clr-tooltip>
+                    <span
+                      clrTooltipTrigger
+                      [attr.aria-label]="
+                        round(populationData.nonDacPercentPop) +
+                        '% of the population in ' +
+                        (title === 'Nationwide' ? 'the United States' : title) +
+                        ' is outside of your community of interest.'
+                      "
+                    >
+                      {{ round(populationData.nonDacPercentPop) }}%
+                    </span>
+                    <clr-tooltip-content
+                      clrPosition="bottom-right"
+                      clrSize="lg"
+                      *clrIfOpen
+                    >
+                      <span>
+                        {{ round(populationData.nonDacPercentPop) }}% of the
+                        population in
+                        {{
+                          title === "Nationwide" ? "the United States" : title
+                        }}
+                        is outside of your community of interest.</span
+                      >
+                    </clr-tooltip-content>
+                  </clr-tooltip>
+                </span>
+              </td>
+              <td headers="total_pop">100%</td>
+            </tr>-->
+            <tr class="detail-row">
+              <td headers="population_type">Population Receiving Benefits</td>
+              <td headers="dac">
+                <span class="has-tooltip">
+                  <clr-tooltip>
+                    <span
+                      clrTooltipTrigger
+                      [attr.aria-label]="
+                        round(populationData.percentDACBenefits) +
+                        '% of communities of interest in ' +
+                        (title === 'Nationwide' ? 'the United States' : title) +
+                        ' are receiving benefits'
+                      "
+                    >
+                      {{ round(populationData.percentDACBenefits) }}%
+                    </span>
+                    <clr-tooltip-content
+                      clrPosition="bottom-right"
+                      clrSize="lg"
+                      *clrIfOpen
+                    >
+                      <span>
+                        {{ round(populationData.percentDACBenefits) }}% of your
+                        defined communities of interest in
+                        {{
+                          title === "Nationwide" ? "the United States" : title
+                        }}
+                        are receiving benefits.
+                      </span>
+                    </clr-tooltip-content>
+                  </clr-tooltip>
+                </span>
+              </td>
+              <td headers="non-dac">
+                <span class="has-tooltip">
+                  <clr-tooltip>
+                    <span
+                      clrTooltipTrigger
+                      [attr.aria-label]="
+                        round(populationData.percentNONDACBenefits) +
+                        '% of the population outside your communities of interest in ' +
+                        (title === 'Nationwide' ? 'the United States' : title) +
+                        ' are receiving benefits'
+                      "
+                    >
+                      {{ round(populationData.percentNONDACBenefits) }}%
+                    </span>
+                    <clr-tooltip-content
+                      clrPosition="bottom-right"
+                      clrSize="lg"
+                      *clrIfOpen
+                    >
+                      <span>
+                        {{ round(populationData.percentNONDACBenefits) }}% of
+                        the population outside your communities of interest in
+                        {{
+                          title === "Nationwide" ? "the United States" : title
+                        }}
+                        are receiving benefits.
+                      </span>
+                    </clr-tooltip-content>
+                  </clr-tooltip>
+                </span>
+              </td>
+              <td headers="total_pop">
+                <span class="has-tooltip">
+                  <clr-tooltip>
+                    <span
+                      clrTooltipTrigger
+                      [attr.aria-label]="
+                        round(populationData.totalPopulationBenefits) +
+                        '% of ' +
+                        (title === 'Nationwide' ? 'the United States' : title) +
+                        ' is receiving benefits'
+                      "
+                    >
+                      {{ round(populationData.totalPopulationBenefits) }}%
+                    </span>
+                    <clr-tooltip-content
+                      clrPosition="bottom-left"
+                      clrSize="lg"
+                      *clrIfOpen
+                    >
+                      <span>
+                        {{ round(populationData.totalPopulationBenefits) }}% of
+                        {{
+                          title === "Nationwide" ? "the United States" : title
+                        }}
+                        is receiving benefits.
+                      </span>
+                    </clr-tooltip-content>
+                  </clr-tooltip>
+                </span>
+              </td>
+            </tr>
+            <tr class="detail-row">
+              <td headers="population_type">
+                Population Receiving Disbenefits
+              </td>
+              <td headers="dac">
+                <span class="has-tooltip">
+                  <clr-tooltip>
+                    <span
+                      clrTooltipTrigger
+                      [attr.aria-label]="
+                        round(populationData.percentDACHurt) +
+                        '% of the population in ' +
+                        (title === 'Nationwide' ? 'the United States' : title) +
+                        ' are receiving disbenefits.'
+                      "
+                    >
+                      {{ round(populationData.percentDACHurt) }}%
+                    </span>
+                    <clr-tooltip-content
+                      clrPosition="bottom-left"
+                      clrSize="lg"
+                      *clrIfOpen
+                    >
+                      <span>
+                        {{ round(populationData.percentDACHurt) }}% of your
+                        defined communities of interest in
+                        {{
+                          title === "Nationwide" ? "the United States" : title
+                        }}
+                        are receiving disbenefits.
+                      </span>
+                    </clr-tooltip-content>
+                  </clr-tooltip>
+                </span>
+              </td>
+              <td headers="non-dac">
+                <span class="has-tooltip">
+                  <clr-tooltip>
+                    <span
+                      clrTooltipTrigger
+                      [attr.aria-label]="
+                        round(populationData.percentNONDACHurt) +
+                        '% of the population outside your communities of interest ' +
+                        (title === 'Nationwide' ? 'the United States' : title) +
+                        ' are receiving disbenefits.'
+                      "
+                    >
+                      {{ round(populationData.percentNONDACHurt) }}%
+                    </span>
+                    <clr-tooltip-content
+                      clrPosition="bottom-left"
+                      clrSize="lg"
+                      *clrIfOpen
+                    >
+                      <span>
+                        {{ round(populationData.percentNONDACHurt) }}% of the
+                        population outside your communities of interest in
+                        {{
+                          title === "Nationwide" ? "the United States" : title
+                        }}
+                        are receiving disbenefits.
+                      </span>
+                    </clr-tooltip-content>
+                  </clr-tooltip>
+                </span>
+              </td>
+              <td headers="total_pop">
+                <span class="has-tooltip">
+                  <clr-tooltip>
+                    <span
+                      clrTooltipTrigger
+                      [attr.aria-label]="
+                        round(populationData.totalPopulationHurt) +
+                        '% of ' +
+                        (title === 'Nationwide' ? 'the United States' : title) +
+                        ' is receiving disbenefits.'
+                      "
+                    >
+                      {{ round(populationData.totalPopulationHurt) }}%
+                    </span>
+                    <clr-tooltip-content
+                      clrPosition="bottom-left"
+                      clrSize="lg"
+                      *clrIfOpen
+                    >
+                      <span>
+                        {{ round(populationData.totalPopulationHurt) }}% of
+                        {{
+                          title === "Nationwide" ? "the United States" : title
+                        }}
+                        is receiving disbenefits.
+                      </span>
+                    </clr-tooltip-content>
+                  </clr-tooltip>
+                </span>
+              </td>
+            </tr>
+
+            <tr
+              class="detail-row"
+              *ngIf="populationData.unimpactedTotalPercent > 0"
+            >
+              <td headers="population_type">
+                Population Receiving No Significant Impacts*
+              </td>
+              <td headers="dac">
+                <span class="has-tooltip">
+                  <clr-tooltip>
+                    <span
+                      clrTooltipTrigger
+                      [attr.aria-label]="
+                        round(populationData.percentDACUnimpacted) +
+                        '% of the population in ' +
+                        (title === 'Nationwide' ? 'the United States' : title) +
+                        ' are unimpacted*.'
+                      "
+                    >
+                      {{ round(populationData.percentDACUnimpacted) }}%
+                    </span>
+                    <clr-tooltip-content
+                      clrPosition="bottom-left"
+                      clrSize="lg"
+                      *clrIfOpen
+                    >
+                      <span>
+                        {{ round(populationData.percentDACUnimpacted) }}% of
+                        your communities of interest in
+                        {{
+                          title === "Nationwide" ? "the United States" : title
+                        }}
+                        are unimpacted*.
+                      </span>
+                    </clr-tooltip-content>
+                  </clr-tooltip>
+                </span>
+              </td>
+              <td headers="non-dac">
+                <span class="has-tooltip">
+                  <clr-tooltip>
+                    <span
+                      clrTooltipTrigger
+                      [attr.aria-label]="
+                        round(populationData.percentNonDACUnimpacted) +
+                        '% of the population outside your communities of interest in ' +
+                        (title === 'Nationwide' ? 'the United States' : title) +
+                        ' are unimpacted*.'
+                      "
+                    >
+                      {{ round(populationData.percentNonDACUnimpacted) }}%
+                    </span>
+                    <clr-tooltip-content
+                      clrPosition="bottom-left"
+                      clrSize="lg"
+                      *clrIfOpen
+                    >
+                      <span>
+                        {{ round(populationData.percentNonDACUnimpacted) }}% of
+                        the population outside your communities of interest in
+                        {{
+                          title === "Nationwide" ? "the United States" : title
+                        }}
+                        are unimpacted*.
+                      </span>
+                    </clr-tooltip-content>
+                  </clr-tooltip>
+                </span>
+              </td>
+              <td headers="total_pop">
+                <span class="has-tooltip">
+                  <clr-tooltip>
+                    <span
+                      clrTooltipTrigger
+                      [attr.aria-label]="
+                        round(populationData.unimpactedTotalPercent) +
+                        '% of ' +
+                        (title === 'Nationwide' ? 'the United States' : title) +
+                        ' is unimpacted*.'
+                      "
+                    >
+                      {{ round(populationData.unimpactedTotalPercent) }}%
+                    </span>
+                    <clr-tooltip-content
+                      clrPosition="bottom-left"
+                      clrSize="lg"
+                      *clrIfOpen
+                    >
+                      <span>
+                        {{ round(populationData.unimpactedTotalPercent) }}% of
+                        {{
+                          title === "Nationwide" ? "the United States" : title
+                        }}
+                        is unimpacted*.
+                      </span>
+                    </clr-tooltip-content>
+                  </clr-tooltip>
+                </span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <!-- BEGGINING OF ARCHIVED /COMMENTED OUT THRESHOLD
+        <p class="threshold-paragraph">
+          *COBRA calculates health impacts for all census tracts in the
+          contiguous United States. Depending on the scenario, many census
+          tracts far away from the emissions changes may have negligible
+          positive or negative impacts. For this reason, when calculating the populations that receive benefits or disbenefits, this report defines
+          census tracts with <strong>&plusmn;</strong>
+          <input
+            type="number"
+            name="percent"
+            value="percent"
+            [(ngModel)]="thresholdInputs.percent"
+            (change)="updateThresholdInputs('percent', $event)"
+            [style.width]="
+              (thresholdInputs.percent?.toString().length + 5 || 1) + 'ch'
+            "
+            style="font-weight: bold"
+            step="0.001"
+            min="0"
+          />
+          <strong>%</strong> of the total national-level health impacts (i.e.,
+          census tracts with <strong>± $</strong
+          ><input
+            type="number"
+            name="dollars"
+            value="dollars"
+            [(ngModel)]="thresholdInputs.dollars"
+            (change)="updateThresholdInputs('dollars', $event)"
+            [style.width]="
+              (thresholdInputs.dollars?.toString().length + 5 || 1) + 'ch'
+            "
+            style="font-weight: bold"
+            step="1"
+            min="0"
+          />
+          in health changes in this scenario) as having “no significant
+          impacts.” Census tracts with benefits above this threshold still
+          account for
+
+          <!-- only show benefits input if there are in fact benefits-->
+          <!--<span *ngIf="nationalImpactData.totalBenefitsLowValue >= 0">
+            <strong></strong
+            ><input
+              type="number"
+              name="percentBenefitsWithThreshold"
+              value="percentBenefitsWithThreshold"
+              [(ngModel)]="thresholdInputs.percentBenefitsWithThreshold"
+              (change)="
+                updateThresholdInputs('percentBenefitsWithThreshold', $event)
+              "
+              style="font-weight: bold"
+              [style.width]="
+                (thresholdInputs.percentBenefitsWithThreshold?.toString()
+                  .length + 5 || 1) + 'ch'
+              "
+              step="1"
+              min="0"
+            /><strong>%</strong> of the total national-level benefits</span
+          >
+          <!-- end of benefits input -->
+          <!-- only add "and" if there are benefits and disbenefits -->
+          <!--<span
+            *ngIf="
+              nationalImpactData.totalBenefitsLowValue >= 0 &&
+              nationalImpactData.totalDisbenefitsLowValue !== 0
+            "
+          >
+            and
+          </span>
+
+          <!-- only show disbenefits input if there are disbenefits in the scenario -->
+          <!--<span *ngIf="nationalImpactData.totalDisbenefitsLowValue !== 0">
+            <input
+              type="number"
+              name="percentDisbenefitsWithThreshold"
+              value="percentDisbenefitsWithThreshold"
+              [(ngModel)]="thresholdInputs.percentDisbenefitsWithThreshold"
+              (change)="
+                updateThresholdInputs('percentDisbenefitsWithThreshold', $event)
+              "
+              [style.width]="
+                (thresholdInputs.percentDisbenefitsWithThreshold?.toString()
+                  .length + 5 || 1) + 'ch'
+              "
+              style="font-weight: bold"
+              step="1"
+              min="0"
+            /><strong>%</strong> of the total national-level disbenefits</span
+          >.
+        </p>
+        END OF COMMENTED OUT THRESHOLD-->
+      </div>
+    </div>
+
+
+  </div>
+  <p class="note">
+    Note: COBRA is a screening-level tool that provides estimates of census
+    tract health benefits from changes in air pollution. COBRA has limitations
+    that may affect the precision and accuracy of the results, including the use
+    of a reduced-form air quality model to estimate changes in air pollutant
+    concentrations and the use of county-,state-, or national-level baseline
+    health incidence data, as census tract-level incidence is not currently
+    available for use in COBRA.
+  </p>
+</div>

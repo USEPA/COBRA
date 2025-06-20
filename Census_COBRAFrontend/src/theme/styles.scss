@@ -1,0 +1,40 @@
+// Import individual theme settings
+@import "uswds-theme-general";
+@import "uswds-theme-typography";
+@import "uswds-theme-spacing";
+@import "uswds-theme-color";
+@import "uswds-theme-utilities";
+
+// components import needs to be last
+@import "uswds-theme-components";
+
+// Import individual USWDS packages...
+// See https://designsystem.digital.gov/components/
+
+// First import required and global packages...
+@import 'node_modules/uswds/dist/scss/packages/required'; 
+@import 'node_modules/uswds/dist/scss/packages/global';
+
+// Then import individual component packages...
+@import 'node_modules/uswds/dist/scss/packages/form-controls';
+@import 'node_modules/uswds/dist/scss/packages/layout-grid';
+@import 'node_modules/uswds/dist/scss/packages/typography';
+@import 'node_modules/uswds/dist/scss/packages/validation';
+@import 'node_modules/uswds/dist/scss/packages/usa-alert';
+@import 'node_modules/uswds/dist/scss/packages/usa-button';
+@import 'node_modules/uswds/dist/scss/packages/usa-button-group';
+@import 'node_modules/uswds/dist/scss/packages/usa-checklist';
+@import 'node_modules/uswds/dist/scss/packages/usa-media-block';
+@import 'node_modules/uswds/dist/scss/packages/usa-table';
+@import 'node_modules/uswds/dist/scss/packages/usa-tag';
+@import 'node_modules/uswds/dist/scss/packages/uswds-utilities';
+
+// Import clarity styles
+@import "@clr/icons/clr-icons.min";
+@import "@clr/ui/clr-ui.min";
+
+// Import leaflet styles
+@import "leaflet/dist/leaflet";
+
+// Import theme custom styles
+@import "uswds-theme-custom-styles";

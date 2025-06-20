@@ -1,0 +1,195 @@
+<div id="step1" class="panel emissions panel-active">
+
+  <clr-modal [(clrModalOpen)]="showConflictModal" [clrModalClosable]="true" [clrModalStaticBackdrop]="false">
+    <h3 class="modal-title">Conflict Detected</h3>
+    <div class="modal-body">
+      <p>The emission changes for this sector and location(s) conflict with emissions changes you have already entered.
+        Please enter emission changes for a different sector or location.</p>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="usa-button usa-button--secondary" (click)="showConflictModal=false">Ok</button>
+    </div>
+  </clr-modal>
+
+  <div id="panel_circle_id" class="panel-circle">
+    <div class="panel-circle__inner">
+      <div class="panel-circle__wrapper">
+        <div class="panel-circle__content">Start</div>
+      </div>
+    </div>
+  </div>
+  <div class="usa-prose">
+    <h1>Step 1: Build Scenario</h1>
+    <p>Complete the sections below and click "Add to Scenario."</p>
+  </div>
+  <div class="subpanel">
+    <h3>A. Select Location <span class="usa-tag text-normal">Required</span></h3>
+    <p>Select the states or counties where the emissions changes will <span class="has-tooltip">occur.
+        <clr-tooltip>
+          <clr-icon clrTooltipTrigger shape="info-circle" class="is-solid is-info" size="22"
+            aria-label="If you select multiple states or counties, COBRA will distribute the emissions changes you enter under C. Modify Emissions below to each county based on the proportion of baseline emissions in each county.">
+          </clr-icon>
+          <clr-tooltip-content clrPosition="top-right" clrSize="lg" *clrIfOpen>
+            <span>If you select multiple states or counties, COBRA will distribute the emissions changes you enter under
+              "C. Modify Emissions" below to each county based on the proportion of baseline emissions in each
+              county.</span>
+          </clr-tooltip-content>
+        </clr-tooltip>
+      </span>
+      <div id="statetree_spinner">
+        <span class="spinner spinner-inline">
+          Loading...
+        </span>
+        <span>
+          Loading...
+        </span>
+      </div>
+      <div id="statestree_and_btns" [hidden]="true">
+        <div class="states_tree_view">
+          <clr-tree [clrLazy]="true">
+            <clr-tree-node *ngFor="let state of state_clr_structure" [(clrSelected)]="state.selected"
+              [clrExpanded]="state.expanded" (change)="updateStatetreeItemsSelected(); checkIfBaselinesShow()">
+              {{state.STNAME}}
+              <ng-template [(clrIfExpanded)]="state.expanded">
+                <clr-tree-node *ngFor="let county of state.counties" [(clrSelected)]="county.selected">
+                  {{county.county}}
+                </clr-tree-node>
+              </ng-template>
+            </clr-tree-node>
+          </clr-tree>
+        </div>
+        <button class="usa-button--unstyled margin-top-1" id="select_all_btn" type="button"
+          (click)="selectAllStates(); checkIfBaselinesShow()">Select All</button>
+
+          <span *ngIf="lastUsedLocations">  <span>&nbsp;|&nbsp;</span> <button class="usa-button--unstyled margin-top-1" id="clear_btn_1" type="button"
+          (click)="selectLastUsedLocations(lastUsedLocations); checkIfBaselinesShow()">Last Used Locations</button>
+        </span>
+          
+
+        <span>&nbsp;|&nbsp;</span>
+        <button class="usa-button--unstyled margin-top-1" id="clear_btn_1" type="button"
+          (click)="clearStateSelections(); checkIfBaselinesShow()">Deselect All</button>
+      </div>
+  </div>
+  <form class="usa-form subpanel">
+    <h3>B. Select Sector <span class="usa-tag text-normal">Required</span></h3>
+    <p class="padding-bottom-105">Select the industry or sector where the emissions changes will <span class="has-tooltip">occur.
+        <clr-tooltip>
+          <clr-icon clrTooltipTrigger shape="info-circle" class="is-solid is-info" size="22"
+            aria-label="You may select subsectors if you have data on specific subsectors that will be impacted by the emissions changes. Alternatively, you may select “All subsectors” and COBRA will distribute the emissions changes to each subsector based on the proportion of baseline emissions from each subsector.">
+          </clr-icon>
+          <clr-tooltip-content clrPosition="top-right" clrSize="lg" *clrIfOpen>
+            <span>You may select subsectors if you have data on specific subsectors that will be impacted by the
+              emissions changes. Alternatively, you may select “All subsectors” and COBRA will distribute the emissions
+              changes to each subsector based on the proportion of baseline emissions from each subsector.</span>
+          </clr-tooltip-content>
+        </clr-tooltip>
+      </span>
+    </p>
+    <label class="usa-label" for="tier1">Sector</label>
+    <select class="usa-select" id="tier1" name="tier1"
+      (change)="updateTier2Dropdown(selectTier1.value); checkIfBaselinesShow()" #selectTier1>
+      <option id="tier1_default" value="" disabled selected>Select a sector</option>
+      <option *ngFor="let tier1_item of tiertree_treeview" value="{{tier1_item.tier1_dd_order}}">{{tier1_item.text}}
+      </option>
+    </select>
+    <label class="usa-label" for="tier2">Subsector (optional)</label>
+    <select disabled class="usa-select" id="tier2" name="tier2" (change)="updateTier3Dropdown(selectTier2.value)"
+      #selectTier2>
+      <option value="all">All subsectors</option>
+      <option *ngFor="let tier2_item of tier2_items" value="{{tier2_item.tier2_dd_order}}">{{tier2_item.text}}</option>
+    </select>
+    <label class="usa-label" for="tier3">Subsector (optional)</label>
+    <select disabled class="usa-select" id="tier3" name="tier3" (change)="updateItemsSelectedTier3(selectTier3.value)"
+      #selectTier3>
+      <option value="all">All subsectors</option>
+      <option *ngFor="let tier3_item of tier3_items" value="{{tier3_item.tier3_dd_order}}">{{tier3_item.text}}</option>
+    </select>
+  </form>
+  <form class="subpanel usa-form" id="modify-emissions" #modifyemissions="ngForm"
+    (ngSubmit)="addComponentToScenario(modifyemissions)">
+    <h3>C. Modify Emissions <span class="usa-tag text-normal">Required</span></h3>
+    <p>Enter emissions changes for <span class="text-bold">at least one</span> of the four pollutants <span
+        class="has-tooltip">below.
+        <clr-tooltip>
+          <clr-icon clrTooltipTrigger shape="info-circle" class="is-solid is-info" size="22"
+            aria-label="COBRA provides projected baseline emissions for 2023 for the sector and location(s) you select. You cannot reduce emissions below this baseline level. There are no restrictions on the amount of increased emissions you can enter.">
+          </clr-icon>
+          <clr-tooltip-content clrPosition="top-right" clrSize="lg" *clrIfOpen>
+            <span>COBRA provides projected baseline emissions for 2023 for the sector and location(s) you select. You
+              cannot reduce emissions below this baseline level. There are no restrictions on the amount of increased
+              emissions you can enter.</span>
+          </clr-tooltip-content>
+        </clr-tooltip>
+      </span>
+
+      <fieldset class="usa-fieldset pollutant" *ngFor="let pollutant of pollutants">
+        <legend class="usa-label padding-top-105 margin-top-0">
+          <span [innerHTML]="pollutant.name_sub" [ngStyle]="{'color': pollutant.name === 'NH3' ? 'rgba(27, 27, 27, 0.3)' : 'black'}"></span>
+          <span *ngIf="pollutant.name === 'NH3'" class="has-tooltip"
+          >
+          <clr-tooltip>
+            <clr-icon
+              clrTooltipTrigger
+              shape="info-circle"
+              class="is-solid is-info"
+              size="22"
+              aria-label="In the results table, positive numbers indicate annual reductions in the number of cases and the associated costs avoided. Negative numbers signify increases in the number of cases and associated costs accrued."
+            >
+            </clr-icon>
+            <clr-tooltip-content
+              clrPosition="top-right"
+              clrSize="lg"
+              *clrIfOpen
+            >
+              <span
+                >Note that previous versions of COBRA also included ammonia (NH<sub>3</sub>) as an input. The updated air quality model included in COBRA v5.0 does not require NH<sub>3</sub> as an input to estimate changes in PM<sub>2.5</sub> concentrations at this time. See the User's Manual for more details.</span
+              >
+            </clr-tooltip-content>
+          </clr-tooltip>
+        </span>
+          <span *ngIf="showBaselines && (pollutant.baseline_rounded_up != null)" [ngStyle]="{'color': pollutant.name === 'NH3' ? 'rgba(27, 27, 27, 0.3)' : 'black'}">
+            (Baseline = {{pollutant.baseline_rounded_up.toLocaleString('en-US', {maximumFractionDigits: 2}) }} tons)
+          </span>
+        </legend>
+        <div class="switch-field">
+          <input type="radio" attr.id="{{pollutant.ri_switch_reduce_id}}" [(ngModel)]="pollutant.ri_switch_model"
+            attr.title="reduce {{pollutant.name}} by" name="{{pollutant.ri_switch_name}}" value="reduce"
+            (change)="validateEmissionsPanelInput(pollutant.index)" checked  [attr.disabled]="pollutant.name === 'NH3' ? 'disabled' : null"/>
+          <label for="{{pollutant.ri_switch_reduce_id}}">reduce by</label>
+          <input type="radio" attr.id="{{pollutant.ri_switch_increase_id}}" [(ngModel)]="pollutant.ri_switch_model"
+            attr.title="increase {{pollutant.name}} by" name="{{pollutant.ri_switch_name}}" value="increase"
+            (change)="validateEmissionsPanelInput(pollutant.index)" [attr.disabled]="pollutant.name === 'NH3' ? 'disabled' : null"/>
+          <label for="{{pollutant.ri_switch_increase_id}}">increase by</label>
+        </div>
+        <div>
+          <input attr.aria-label="{{pollutant.name}} input" attr.aria-describedby="{{pollutant.name}}"
+            placeholder="enter #" class="usa-input usa-input--inline display-inline-block" name="{{pollutant.input_name}}"
+            [(ngModel)]="pollutant.input_model" type="text" min="0" step="0.01" pattern="^[0-9]+(\.[0-9]{1,10})?$"
+            (input)="validateEmissionsPanelInput(pollutant.index)" (input)="activateDeactivateAddToScenarioButton()" [attr.disabled]="pollutant.name === 'NH3' ? 'disabled' : null">
+          <div class="usa-radio display-inline-block margin-left-105" >
+            <input class="usa-radio__input" type="radio" attr.id="{{pollutant.pt_switch_tons_id}}"
+              [(ngModel)]="pollutant.name === 'NH3' ? null : pollutant.pt_switch_model" name="{{pollutant.pt_switch_name}}" value="tons"
+              (change)="validateEmissionsPanelInput(pollutant.index)" checked [attr.disabled]="pollutant.name === 'NH3' ? 'disabled' : null"/>
+            <label class="usa-radio__label units radio-btn__label text-middle" for="{{pollutant.pt_switch_tons_id}}">tons</label>
+          </div>
+          <div class="usa-radio display-inline-block margin-top-1 margin-left-105">
+            <input class="usa-radio__input" type="radio" attr.id="{{pollutant.pt_switch_percent_id}}"
+              [(ngModel)]="pollutant.pt_switch_model" name="{{pollutant.pt_switch_name}}" value="percent"
+              (change)="validateEmissionsPanelInput(pollutant.index)" [attr.disabled]="pollutant.name === 'NH3' ? 'disabled' : null"/>
+            <label class="usa-radio__label units radio-btn__label text-middle" for="{{pollutant.pt_switch_percent_id}}">percent</label>
+          </div>
+        </div>
+        <span attr.id="{{pollutant.name}}" class="usa-error-message"
+          *ngIf="showErrorNotNumber[pollutant.index]">{{error_notnumber}}</span>
+        <span attr.id="{{pollutant.name}}" class="usa-error-message"
+          *ngIf="showErrorOutOfRange[pollutant.index]">{{error_outofrange}}</span>
+        <span attr.id="{{pollutant.name}}" class="usa-error-message"
+          *ngIf="showErrorLargerThanBaseline[pollutant.index]">{{error_largerthanbaseline}}</span>
+        <span attr.id="{{pollutant.name}}" class="usa-error-message"
+          *ngIf="showErrorCantReduceBaseline[pollutant.index]">{{error_cantreducebaseline}}</span>
+      </fieldset>
+  </form>
+  <button class="usa-button width-full" id="add_to_scenario_btn" type="button"
+    (click)="addComponentToScenario(modifyemissions)" disabled>Add to Scenario</button>
+</div>

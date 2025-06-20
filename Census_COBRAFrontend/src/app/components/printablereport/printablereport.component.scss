@@ -1,0 +1,534 @@
+.report-preview {
+  position: fixed; /* Stays in the same place even when scrolling */
+  top: 10px; /* Center vertically */
+  left: 50%; /* Center horizontally */
+  transform: translateX(-50%); /* Shift back by 50% to truly center */
+  width: calc(100vw - 40px); /* Small padding from the sides of the viewport */
+  max-width: 1200px; /* Limits width to prevent stretching too far */
+  z-index: 100000; /* Ensure it stays on top of other elements */
+  background-color: white;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  height: calc(100vh-40px);
+  max-height: calc(100vh - 40px);
+  overflow-y: auto;
+  hr {
+    color: black;
+    background-color: black;
+    height: 3px;
+  }
+
+  label {
+    margin-top: 0px;
+    font-size: 0.8rem;
+  }
+
+  h5 {
+    color: black;
+    font-weight: bold;
+    margin-top: 0px;
+    padding: 0;
+  }
+
+  h3 {
+    color: white;
+    border-radius: 2px;
+    border-bottom-left-radius: 0px;
+    border-bottom-right-radius: 0px;
+    padding: 5px;
+    margin: 0 !important;
+  }
+
+  select {
+    margin-bottom: 20px;
+  }
+
+  .main-header th {
+    background-color: #ececec;
+  }
+
+  table {
+    border: 2px solid black;
+    border-top: 0px solid black;
+    margin: 2px;
+    background-color: white;
+  }
+
+  th {
+    font-weight: bold;
+    color: black;
+    vertical-align: middle; /* Center aligns vertically within the cell */
+    text-align: left; /* Aligns text to the left; change to 'center' or 'right' as needed */
+    padding: 5px !important; /* Adds padding for better spacing */
+    font-size: 0.8rem !important;
+  }
+
+  td {
+    vertical-align: middle; /* Center aligns vertically within the cell */
+    text-align: left; /* Aligns text to the left; match this with header cells for consistency */
+    padding: 5px !important; /* Adds padding to match header cells */
+    font-size: 0.8rem !important;
+  }
+
+  .report-inputs {
+    display: flex;
+  }
+
+  .cobra-inputs {
+    width: 100%;
+  }
+
+  .detail-row {
+    border-bottom: none !important;
+    color: black;
+  }
+
+  .topRightButtons {
+    float: right;
+  }
+
+  .report-export-buttons {
+    background-color: rgba(0, 0, 0, 0) !important;
+    color: #005ea2;
+    text-decoration: underline;
+    padding: 1px !important;
+  }
+
+  .sideBySide {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .HealthImpacts,
+  .dacChart,
+  .flex-div {
+    width: 50%;
+    padding: 5px;
+    flex-grow: 1;
+    transition: flex-grow 0.3s ease; /* Adjust duration and timing function as needed */
+  }
+
+  p {
+    font-size: 0.78rem;
+  }
+
+  .toggle-icon {
+    visibility: hidden;
+  }
+
+  .screenshot-mode .toggle-icon {
+    visibility: hidden !important;
+  }
+  .toggle-section,
+  #filter-container {
+    /* should have same padding values*/
+    padding: 10px;
+    margin-top: 5px;
+  }
+
+  #beta-note {
+    width: 100%;
+    padding: 0 10px !important;
+  }
+
+  .toggle-section:hover {
+    cursor: pointer;
+    box-shadow: 0 0 6px rgba(0, 0, 0, 0.5);
+    border-radius: 2px;
+    .toggle-icon {
+      visibility: visible;
+    }
+  }
+
+  .header-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .icon-inline {
+    margin-left: 0px; /* Optional: adjust spacing between icon and header */
+    height: 24px; /* Optional: set icon height */
+    width: 24px; /* Optional: set icon width */
+    position: relative;
+    bottom: 5px;
+    right: 5px;
+  }
+
+  .toggle-icon::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    bottom: 100%; /* Position above the icon */
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #333;
+    color: #fff;
+    padding: 5px;
+    border-radius: 4px;
+    font-size: 12px;
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s ease-in-out;
+    visibility: hidden;
+  }
+
+  .report-section {
+    border-radius: 5px;
+    margin: 10px;
+    padding: 0;
+  }
+
+  #inputs-section {
+    border: 2px solid #673091;
+    background-color: rgba(103, 48, 145, 0.1);
+  }
+
+  #report-summary {
+    h5 {
+      color: mix(#005ea2, black, 50%);
+      font-weight: bold;
+    }
+    .summary-bubble {
+      border: 2px solid mix(#005ea2, black, 50%);
+      border-radius: 5px;
+      padding: 10px;
+      background-color: white;
+      font-size: 0.78rem;
+    }
+  }
+
+  #outputs-section {
+    border: 2px solid mix(#005ea2, black, 50%);
+    background-color: rgba(0, 94, 162, 0.1);
+  }
+
+  #input-header {
+    background-color: #673091;
+  }
+
+  #output-header {
+    background-color: mix(#005ea2, black, 50%);
+  }
+
+  #chart-container {
+    border: 2px solid black;
+  }
+
+  .note {
+    font-size: 0.7rem;
+    font-style: italic;
+  }
+
+  .report-logo {
+    width: 35px;
+  }
+
+  #reset-button-container {
+    display: inline-block;
+  }
+
+  .download-png {
+    margin: 1px 10px;
+    fill: red;
+    color: red;
+  }
+
+  .download-png:hover {
+    cursor: pointer;
+    box-shadow: 0 0 6px rgba(0, 0, 0, 0.5);
+  }
+
+  .download-png:active {
+    cursor: pointer;
+    box-shadow: 0 0 6px rgba(0, 0, 0, 0.9);
+  }
+
+  #cobra-inputs-table {
+
+    .has-tooltip:hover {
+      font-weight: bold;
+      color: #005ea2;
+
+    }
+  }
+
+
+  /**** communities of interest CSS ****/
+
+  /* Container for each filter item: Flexbox layout to keep items inline */
+.filter-item {
+  display: flex;
+  align-items: flex-start;   
+  justify-content: space-between;
+  gap: 0.5rem;
+  margin-top: 0.3rem;
+}
+
+/* Styling for all select boxes */
+.filter-item select.advanced-filter-form-control {
+  /*padding: 0.4rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background-color: #fff;
+  appearance: none;*/
+  margin: 0 !important;
+  width: 220px;
+  min-width: 220px !important;
+
+}
+
+/* Slider container styling */
+.slider-container {
+  display: flex;
+  align-items: center;
+  margin-top: 5px;
+}
+
+/* Slider input styling */
+.slider-container input.slider {
+  min-width: 100px;
+  margin-right: 0.5rem;
+  cursor: pointer;
+
+}
+
+/* Slider value display styling */
+.slider-container .slider-value {
+  min-width: 35px;
+  text-align: center;
+  font-weight: normal;
+  display: flex;
+  align-items: center;
+}
+
+.percent-input {
+  font-weight: bold;
+  max-width: 52px;
+  text-align: center;
+  padding: 2px 5px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.filter-slider {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-right: 30px;
+}
+
+/* Remove button styling */
+.remove-btn {
+  background: transparent;
+  border: none;
+  font-size: 1.5rem;
+  line-height: 1;
+  cursor: pointer;
+  padding: 0;
+  transition: color 0.2s ease;
+  margin-left: auto;
+  color: black;
+  position: absolute;
+  right: 15px;
+}
+
+.remove-btn:hover {
+  color: #005ea2;;
+  
+}
+
+input[type="range"].slider {
+  -webkit-appearance: none;
+  width: 120px;
+  height: 6px;
+  border-radius: 3px;
+  background: #ccc; /* fallback */
+  outline: none;
+  margin: 0;
+  flex: 1;
+}
+
+input[type="range"].slider::-webkit-slider-runnable-track {
+  -webkit-appearance: none;
+  appearance: none;
+  background: transparent;
+  border: none;
+  border-radius: 3px;
+}
+
+/* For WebKit browsers */
+input[type="range"].slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #005ea2;
+  cursor: pointer;
+  margin-top: -5px; /* Align thumb vertically */
+}
+
+/* For Firefox */
+input[type="range"].slider::-moz-range-thumb {
+  width: 16px;
+  height: 16px;
+  border: none;
+  border-radius: 50%;
+  background: #005ea2;
+  cursor: pointer;
+}
+
+.operator-toggle {
+  min-width: 50px;
+  text-align: center;
+  font-weight: bold;
+  border: 1px solid #ccc;
+  color: black;
+  font-size: 1.5rem;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center; /* Ensures horizontal centering too */
+  height: 100%; /* Ensures full button height */
+  background: white;
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
+  margin-right: 10px;
+
+  span {
+    margin-bottom: 2px;
+  }
+}
+
+.operator-toggle:hover {
+  color: #005ea2;
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
+}
+
+.inline-filter-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 0;
+  button {
+    margin: 0;
+  }
+  label {
+    margin: 0;
+  }
+}
+
+.logic-toggle {
+  margin-top: -10px;
+  .btn-primary {
+    background-color: #005ea2; 
+  }
+
+  .btn-secondary {
+    color: #005ea2; 
+    border-color: #005ea2;
+  }
+  color: #005ea2;
+}
+
+
+.threshold-options {
+  /* Optional: overall container styling */
+  margin: 1rem 0;
+  margin-top: 10px;
+  font-family: Arial, sans-serif;
+}
+
+.threshold-options__choices {
+  display: flex;
+  align-items: center;       /* Vertically center   (if your labels have uneven heights) */
+  gap: 1rem;                 /* Space between each label */
+  flex-wrap: wrap;           /* Prevent overflow on very small screens */
+}
+
+.threshold-options__label {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  font-size: 0.95rem;
+  color: #333;
+}
+
+.threshold-options__label input[type="radio"] {
+  margin-right: 0.25rem;     /* Slight spacing between radio circle and text */
+}
+
+.threshold-options__description {
+  margin-top: 0.5rem;
+  font-size: 0.88rem;
+  color: #555;
+  padding: 0 10px;
+  line-height: 1.4;
+}
+/************************* toggle */
+/* The switch - the box around the slider */
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 40px;   /* Reduced width */
+  height: 24px;  /* Reduced height */
+}
+
+/* Hide default HTML checkbox */
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+/* The toggle */
+.toggle {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  transition: .4s;
+  border-radius: 24px; /* Adjusted for new height */
+}
+
+.toggle:before {
+  position: absolute;
+  content: "";
+  height: 18px;    /* Smaller knob */
+  width: 18px;     /* Smaller knob */
+  left: 3px;       /* Adjust margin */
+  bottom: 3px;     /* Adjust margin */
+  background-color: white;
+  transition: .4s;
+  border-radius: 50%;
+}
+
+input:checked + .toggle {
+  background-color: #2196F3;
+}
+
+input:focus + .toggle {
+  box-shadow: 0 0 1px #2196F3;
+}
+
+input:checked + .toggle:before {
+  transform: translateX(16px); /* 40 - 18 - (2*3) = 16px */
+}
+
+/* Rounded toggles */
+.toggle.round {
+  border-radius: 34px;
+}
+
+.toggle.round:before {
+  border-radius: 50%;
+}
+
+.threshold-paragraph {
+  margin-top: 2px;
+}
+
+}

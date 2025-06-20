@@ -1,0 +1,29 @@
+#loading_heart {
+  margin: 0 auto;
+  display: table;
+  text-align: center;
+}
+
+.st0 {
+  fill: #f0f0f0;
+}
+
+.heart-shape {
+  fill: #662F8D;
+}
+
+.heart-path {
+  stroke-dasharray: 500;
+  stroke-dashoffset: 500;
+  animation: line 3.5s linear infinite;
+  fill: none;
+  stroke: #f0f0f0;
+  stroke-width: 7;
+  stroke-miterlimit: 10;
+}
+
+@keyframes line {
+  to {
+  stroke-dashoffset: -500;
+  }
+}
