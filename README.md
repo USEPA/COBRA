@@ -11,7 +11,7 @@ County-level COBRA has 3 code bases:
 1. The Desktop application (County_COBRADesktopApplication). The data for desktop tool can be found within the installer that is downloaded from https://www.epa.gov/cobra/forms/download-cobra-and-sign-updates.
 2. The Angular frontend for COBRA WEB (County_COBRAFrontend)
 3. The C# Api for COBRA WEB (County_COBRAApi)
-Data for COBRA WEB is accessed by the web application from a cloud hosted s3 bucket, but can be recproduced by grabbing data from the cobra desktop database.
+Data for COBRA WEB is accessed by the web application from a cloud hosted s3 bucket, but can be reproduced by grabbing data from the cobra desktop database.
 
 ## Census-level COBRA (v6)
 Census-level COBRA is a BETA version of the COBRA tool that calculates emissions and produces results on the census tract level (84,000+ census tracts) rather than just the county level (~3,000 counties). 
