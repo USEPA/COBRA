@@ -54,7 +54,7 @@ export class ReviewpanelComponent implements OnInit {
   public showEditHelp4 = false;
 
   /* discount rate variables */
-  public discountRate = '2';
+  public discountRate = '3';
   public disCusValue: any = '';
   public showErrorNotValid: boolean = false;
   public dataForResultsPanel: any = {};
@@ -389,7 +389,7 @@ calculateChanges(data): {"NOx": number, "PM2.5": number, "SO2": number, "NH3": n
       this.showReviewHelp = true;
       this.showEditHelp3 = false;
       this.showEditHelp4 = false;
-      this.discountRate = '2';
+      this.discountRate = '3';
       this.disCusValue = '';
       this.showErrorNotValid = false;
       this.emitFromReviewPanelToResultspanelRemovedAllComponents();
@@ -502,7 +502,7 @@ calculateChanges(data): {"NOx": number, "PM2.5": number, "SO2": number, "NH3": n
     this.showReviewHelp = true;
     this.showEditHelp3 = false;
     this.showEditHelp4 = false;
-    this.discountRate = '2';
+    this.discountRate = '3';
     this.disCusValue = '';
     this.showErrorNotValid = false;
     this.dataForResultsPanel = {};

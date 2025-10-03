@@ -180,7 +180,7 @@ export class ResultspanelComponent implements OnInit, AfterViewInit {
 
   /* variables used as arguments in cobraDataService.getResults() */
   public filtervalue = '00';
-  public discountRate = '2';
+  public discountRate = '3';
 
   /* variables to show and hide Exporting status for CSV exports */
   public showAllResultsBtn = true;

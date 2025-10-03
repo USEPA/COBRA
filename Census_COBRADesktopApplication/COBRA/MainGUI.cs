@@ -804,7 +804,7 @@ namespace COBRA
             //for now just hardcode adding CJEST and IRA
             //comboBox_DAC.Items.Add("CJEST");
             //comboBox_DAC.Items.Add("IRA");
-            using (var qry = new QueryHelper())
+            /*using (var qry = new QueryHelper())
             {
                 DataTable datal2 = qry.getDataTable("select distinct tribe_name from Tribal_Land_Fractions order by tribe_name");
                 foreach (DataRow rowl2 in datal2.Rows)
@@ -812,7 +812,7 @@ namespace COBRA
                     string stateName = rowl2.Field<string>("tribe_name");
                     comboBox_States.Items.Add(stateName);
                 }
-            }
+            }*/
 
         }
 
@@ -1460,8 +1460,16 @@ $@"\fs44 \b \cf1 \ql Result Summary for: {selection}\b0 \fs28 \cf0 \par
             if (radioButtonDR3.Checked)
             {
 
-                Console.WriteLine("COMPUTING IMPACTS WITH A DISCOUNT RATE OF 2%");
-                impactprocessor.ComputeImpacts(true, Decimal.ToDouble(2), popdata, incidencedata, crdata, valdata);
+                Console.WriteLine("COMPUTING IMPACTS WITH A DISCOUNT RATE OF 3%");
+                impactprocessor.ComputeImpacts(true, Decimal.ToDouble(3), popdata, incidencedata, crdata, valdata);
+
+
+            }
+            else if (radioButtonDR7.Checked)
+            {
+
+                Console.WriteLine("COMPUTING IMPACTS WITH A DISCOUNT RATE OF 7%");
+                impactprocessor.ComputeImpacts(true, Decimal.ToDouble(7), popdata, incidencedata, crdata, valdata);
 
 
             }
@@ -3772,6 +3780,8 @@ $@"\fs44 \b \cf1 \ql Result Summary for: {selection}\b0 \fs28 \cf0 \par
 
         }
 
+
+
         private void tabPageHealth_Click(object sender, EventArgs e)
         {
 
@@ -3838,6 +3848,11 @@ $@"\fs44 \b \cf1 \ql Result Summary for: {selection}\b0 \fs28 \cf0 \par
         }
 
         private void label_Computing_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void discountrateUpDown_ValueChanged(object sender, EventArgs e)
         {
 
         }

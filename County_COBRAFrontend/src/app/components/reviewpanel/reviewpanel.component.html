@@ -289,7 +289,7 @@
                   shape="info-circle"
                   class="is-solid is-info"
                   size="22"
-                  aria-label="COBRA uses a discount rate to express future economic values in present terms because not all health effects and associated economic values occur in the year of analysis. (For example, COBRA assumes changes in adult mortality and non-fatal heart attacks occur over a 20-year period.) EPA recommends using a 2% discount rate based on the U.S. Office of Management and Budget Circular No. A-4 guidance. You may also enter a custom discount rate."
+                  aria-label="COBRA uses a discount rate to express future economic values in present terms because not all health effects and associated economic values occur in the year of analysis. (COBRA assumes changes in adult mortality and non-fatal heart attacks occur over a 20-year period.) EPA recommends using both 3% and 7% discount rates. You may also enter a custom discount rate."
                 >
                 </clr-icon>
                 <clr-tooltip-content
@@ -298,14 +298,7 @@
                   *clrIfOpen
                 >
                   <span
-                    >COBRA uses a discount rate to express future economic
-                    values in present terms because not all health effects and
-                    associated economic values occur in the year of analysis.
-                    (For example, COBRA assumes changes in adult mortality and
-                    non-fatal heart attacks occur over a 20-year period.) EPA
-                    recommends using a 2% discount rate based on the U.S. Office
-                    of Management and Budget Circular No. A-4 guidance. You may
-                    also enter a custom discount rate.</span
+                    >COBRA uses a discount rate to express future economic values in present terms because not all health effects and associated economic values occur in the year of analysis. (COBRA assumes changes in adult mortality and non-fatal heart attacks occur over a 20-year period.) EPA recommends using both 3% and 7% discount rates. You may also enter a custom discount rate.</span
                   >
                 </clr-tooltip-content>
               </clr-tooltip>
@@ -313,23 +306,23 @@
             <div class="usa-radio">
               <input
                 class="usa-radio__input"
-                id="discount_two"
+                id="discount_three"
                 type="radio"
-                title="2 percent discount rate"
+                title="3 percent discount rate"
                 [(ngModel)]="discountRate"
                 name="rates_discount"
-                value="2"
+                value="3"
                 (change)="
                   clearCustomValue(); activateDeactivateRunScenarioButton()
                 "
               />
               <label
                 class="usa-radio__label radio-btn__label"
-                for="discount_two"
-                >2%</label
+                for="discount_three"
+                >3%</label
               >
             </div>
-            <!--<div class="usa-radio">
+            <div class="usa-radio">
               <input
                 class="usa-radio__input"
                 id="discount_seven"
@@ -347,7 +340,7 @@
                 for="discount_seven"
                 >7%</label
               >
-            </div>-->
+            </div>
             <div class="grid-row flex-row">
               <div class="usa-radio grid-col-auto margin-right-1">
                 <input

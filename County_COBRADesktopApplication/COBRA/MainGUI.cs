@@ -1380,8 +1380,16 @@ $@"\fs44 \b \cf1 \ql Result Summary for: {selection}\b0 \fs28 \cf0 \par
             if (radioButtonDR3.Checked)
             {
 
-                Console.WriteLine("COMPUTING IMPACTS WITH A DISCOUNT RATE OF 2%");
-                impactprocessor.ComputeImpacts(true, Decimal.ToDouble(2), popdata, incidencedata, crdata, valdata);
+                Console.WriteLine("COMPUTING IMPACTS WITH A DISCOUNT RATE OF 3%");
+                impactprocessor.ComputeImpacts(true, Decimal.ToDouble(3), popdata, incidencedata, crdata, valdata);
+
+
+            }
+            else if (radioButtonDR7.Checked)
+            {
+
+                Console.WriteLine("COMPUTING IMPACTS WITH A DISCOUNT RATE OF 7%");
+                impactprocessor.ComputeImpacts(true, Decimal.ToDouble(7), popdata, incidencedata, crdata, valdata);
 
 
             }

@@ -41,7 +41,7 @@ namespace cobra_console
             [Option('o', "output", Required = true, HelpText = "Output file to be written.")]
             public string OutputFile { get; set; }
 
-            [Option("discountrate", Required = true, HelpText = "Enter discount rate from 1-100 (%)?")]
+            [Option("discountrate", Required = true, HelpText = "Enter discount rate from 1-100 (%)? EPA Recommends using 3 or 7.")]
             public string DiscountRate { get; set; }
 
         }
@@ -85,7 +85,7 @@ namespace cobra_console
 
                        //bool usePct3 = FormatHelper.StringToBoolean(o.Pct3.ToLower());
 
-                       double discountRate = 2;
+                       double discountRate = 3;
 
                        if (double.TryParse(o.DiscountRate, out double doubleValue))
                        {
@@ -96,7 +96,7 @@ namespace cobra_console
                        else
                        {
                            // Conversion failed, handle the case where the string cannot be converted to double
-                           Console.WriteLine("Cannot convert inputted discountrate to double, using default 2% rate");
+                           Console.WriteLine("Cannot convert inputted discountrate to double, using default 3% rate");
                        }
 
                        string connString = ConfigurationManager.ConnectionStrings["cobraEntities"].ConnectionString;

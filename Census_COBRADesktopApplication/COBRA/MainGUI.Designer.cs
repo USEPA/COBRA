@@ -30,145 +30,145 @@
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainGUI));
-            Telerik.WinControls.UI.GridViewDecimalColumn gridViewDecimalColumn1 = new Telerik.WinControls.UI.GridViewDecimalColumn();
-            Telerik.WinControls.UI.GridViewTextBoxColumn gridViewTextBoxColumn1 = new Telerik.WinControls.UI.GridViewTextBoxColumn();
-            Telerik.WinControls.UI.GridViewTextBoxColumn gridViewTextBoxColumn2 = new Telerik.WinControls.UI.GridViewTextBoxColumn();
-            Telerik.WinControls.UI.GridViewTextBoxColumn gridViewTextBoxColumn3 = new Telerik.WinControls.UI.GridViewTextBoxColumn();
-            Telerik.WinControls.UI.GridViewDecimalColumn gridViewDecimalColumn2 = new Telerik.WinControls.UI.GridViewDecimalColumn();
-            Telerik.WinControls.UI.GridViewDecimalColumn gridViewDecimalColumn3 = new Telerik.WinControls.UI.GridViewDecimalColumn();
-            Telerik.WinControls.UI.GridViewDecimalColumn gridViewDecimalColumn4 = new Telerik.WinControls.UI.GridViewDecimalColumn();
-            Telerik.WinControls.UI.GridViewDecimalColumn gridViewDecimalColumn5 = new Telerik.WinControls.UI.GridViewDecimalColumn();
-            Telerik.WinControls.UI.GridViewDecimalColumn gridViewDecimalColumn6 = new Telerik.WinControls.UI.GridViewDecimalColumn();
-            Telerik.WinControls.UI.GridViewDecimalColumn gridViewDecimalColumn7 = new Telerik.WinControls.UI.GridViewDecimalColumn();
-            Telerik.WinControls.UI.GridViewDecimalColumn gridViewDecimalColumn8 = new Telerik.WinControls.UI.GridViewDecimalColumn();
-            Telerik.WinControls.UI.GridViewTextBoxColumn gridViewTextBoxColumn4 = new Telerik.WinControls.UI.GridViewTextBoxColumn();
-            Telerik.WinControls.UI.GridViewTextBoxColumn gridViewTextBoxColumn5 = new Telerik.WinControls.UI.GridViewTextBoxColumn();
-            Telerik.WinControls.UI.GridViewTextBoxColumn gridViewTextBoxColumn6 = new Telerik.WinControls.UI.GridViewTextBoxColumn();
-            Telerik.WinControls.UI.GridViewTextBoxColumn gridViewTextBoxColumn7 = new Telerik.WinControls.UI.GridViewTextBoxColumn();
-            Telerik.WinControls.UI.GridViewCheckBoxColumn gridViewCheckBoxColumn1 = new Telerik.WinControls.UI.GridViewCheckBoxColumn();
-            Telerik.WinControls.UI.GridViewDecimalColumn gridViewDecimalColumn9 = new Telerik.WinControls.UI.GridViewDecimalColumn();
-            Telerik.WinControls.UI.GridViewDecimalColumn gridViewDecimalColumn10 = new Telerik.WinControls.UI.GridViewDecimalColumn();
-            Telerik.WinControls.UI.GridViewDecimalColumn gridViewDecimalColumn11 = new Telerik.WinControls.UI.GridViewDecimalColumn();
-            Telerik.WinControls.UI.GridViewDecimalColumn gridViewDecimalColumn12 = new Telerik.WinControls.UI.GridViewDecimalColumn();
-            Telerik.WinControls.UI.GridViewDecimalColumn gridViewDecimalColumn13 = new Telerik.WinControls.UI.GridViewDecimalColumn();
-            Telerik.WinControls.UI.GridViewDecimalColumn gridViewDecimalColumn14 = new Telerik.WinControls.UI.GridViewDecimalColumn();
-            Telerik.WinControls.UI.GridViewDecimalColumn gridViewDecimalColumn15 = new Telerik.WinControls.UI.GridViewDecimalColumn();
-            Telerik.WinControls.UI.GridViewDecimalColumn gridViewDecimalColumn16 = new Telerik.WinControls.UI.GridViewDecimalColumn();
-            Telerik.WinControls.UI.GridViewDecimalColumn gridViewDecimalColumn17 = new Telerik.WinControls.UI.GridViewDecimalColumn();
-            Telerik.WinControls.UI.GridViewDecimalColumn gridViewDecimalColumn18 = new Telerik.WinControls.UI.GridViewDecimalColumn();
-            Telerik.WinControls.UI.GridViewDecimalColumn gridViewDecimalColumn19 = new Telerik.WinControls.UI.GridViewDecimalColumn();
-            Telerik.WinControls.UI.GridViewDecimalColumn gridViewDecimalColumn20 = new Telerik.WinControls.UI.GridViewDecimalColumn();
-            Telerik.WinControls.UI.GridViewDecimalColumn gridViewDecimalColumn21 = new Telerik.WinControls.UI.GridViewDecimalColumn();
-            Telerik.WinControls.UI.GridViewDecimalColumn gridViewDecimalColumn22 = new Telerik.WinControls.UI.GridViewDecimalColumn();
-            Telerik.WinControls.UI.GridViewDecimalColumn gridViewDecimalColumn23 = new Telerik.WinControls.UI.GridViewDecimalColumn();
-            Telerik.WinControls.Data.SortDescriptor sortDescriptor1 = new Telerik.WinControls.Data.SortDescriptor();
-            Telerik.WinControls.UI.GridViewSummaryItem gridViewSummaryItem1 = new Telerik.WinControls.UI.GridViewSummaryItem();
-            Telerik.WinControls.UI.GridViewSummaryItem gridViewSummaryItem2 = new Telerik.WinControls.UI.GridViewSummaryItem();
-            Telerik.WinControls.UI.GridViewSummaryItem gridViewSummaryItem3 = new Telerik.WinControls.UI.GridViewSummaryItem();
-            Telerik.WinControls.UI.GridViewSummaryItem gridViewSummaryItem4 = new Telerik.WinControls.UI.GridViewSummaryItem();
-            Telerik.WinControls.UI.TableViewDefinition tableViewDefinition1 = new Telerik.WinControls.UI.TableViewDefinition();
-            Telerik.WinControls.UI.GridViewDecimalColumn gridViewDecimalColumn24 = new Telerik.WinControls.UI.GridViewDecimalColumn();
-            Telerik.WinControls.UI.GridViewDecimalColumn gridViewDecimalColumn25 = new Telerik.WinControls.UI.GridViewDecimalColumn();
-            Telerik.WinControls.UI.GridViewTextBoxColumn gridViewTextBoxColumn8 = new Telerik.WinControls.UI.GridViewTextBoxColumn();
-            Telerik.WinControls.UI.GridViewTextBoxColumn gridViewTextBoxColumn9 = new Telerik.WinControls.UI.GridViewTextBoxColumn();
-            Telerik.WinControls.UI.GridViewTextBoxColumn gridViewTextBoxColumn10 = new Telerik.WinControls.UI.GridViewTextBoxColumn();
-            Telerik.WinControls.UI.GridViewDecimalColumn gridViewDecimalColumn26 = new Telerik.WinControls.UI.GridViewDecimalColumn();
-            Telerik.WinControls.UI.GridViewDecimalColumn gridViewDecimalColumn27 = new Telerik.WinControls.UI.GridViewDecimalColumn();
-            Telerik.WinControls.UI.GridViewDecimalColumn gridViewDecimalColumn28 = new Telerik.WinControls.UI.GridViewDecimalColumn();
-            Telerik.WinControls.UI.GridViewDecimalColumn gridViewDecimalColumn29 = new Telerik.WinControls.UI.GridViewDecimalColumn();
-            Telerik.WinControls.UI.GridViewDecimalColumn gridViewDecimalColumn30 = new Telerik.WinControls.UI.GridViewDecimalColumn();
-            Telerik.WinControls.UI.GridViewDecimalColumn gridViewDecimalColumn31 = new Telerik.WinControls.UI.GridViewDecimalColumn();
-            Telerik.WinControls.UI.GridViewDecimalColumn gridViewDecimalColumn32 = new Telerik.WinControls.UI.GridViewDecimalColumn();
-            Telerik.WinControls.UI.GridViewDecimalColumn gridViewDecimalColumn33 = new Telerik.WinControls.UI.GridViewDecimalColumn();
-            Telerik.WinControls.UI.GridViewDecimalColumn gridViewDecimalColumn34 = new Telerik.WinControls.UI.GridViewDecimalColumn();
-            Telerik.WinControls.UI.GridViewDecimalColumn gridViewDecimalColumn35 = new Telerik.WinControls.UI.GridViewDecimalColumn();
-            Telerik.WinControls.UI.GridViewDecimalColumn gridViewDecimalColumn36 = new Telerik.WinControls.UI.GridViewDecimalColumn();
-            Telerik.WinControls.UI.GridViewDecimalColumn gridViewDecimalColumn37 = new Telerik.WinControls.UI.GridViewDecimalColumn();
-            Telerik.WinControls.UI.GridViewDecimalColumn gridViewDecimalColumn38 = new Telerik.WinControls.UI.GridViewDecimalColumn();
-            Telerik.WinControls.UI.GridViewDecimalColumn gridViewDecimalColumn39 = new Telerik.WinControls.UI.GridViewDecimalColumn();
-            Telerik.WinControls.UI.GridViewDecimalColumn gridViewDecimalColumn40 = new Telerik.WinControls.UI.GridViewDecimalColumn();
-            Telerik.WinControls.UI.GridViewDecimalColumn gridViewDecimalColumn41 = new Telerik.WinControls.UI.GridViewDecimalColumn();
-            Telerik.WinControls.UI.GridViewDecimalColumn gridViewDecimalColumn42 = new Telerik.WinControls.UI.GridViewDecimalColumn();
-            Telerik.WinControls.UI.GridViewDecimalColumn gridViewDecimalColumn43 = new Telerik.WinControls.UI.GridViewDecimalColumn();
-            Telerik.WinControls.UI.GridViewDecimalColumn gridViewDecimalColumn44 = new Telerik.WinControls.UI.GridViewDecimalColumn();
-            Telerik.WinControls.UI.GridViewDecimalColumn gridViewDecimalColumn45 = new Telerik.WinControls.UI.GridViewDecimalColumn();
-            Telerik.WinControls.UI.GridViewDecimalColumn gridViewDecimalColumn46 = new Telerik.WinControls.UI.GridViewDecimalColumn();
-            Telerik.WinControls.UI.GridViewDecimalColumn gridViewDecimalColumn47 = new Telerik.WinControls.UI.GridViewDecimalColumn();
-            Telerik.WinControls.UI.GridViewDecimalColumn gridViewDecimalColumn48 = new Telerik.WinControls.UI.GridViewDecimalColumn();
-            Telerik.WinControls.UI.GridViewDecimalColumn gridViewDecimalColumn49 = new Telerik.WinControls.UI.GridViewDecimalColumn();
-            Telerik.WinControls.UI.GridViewDecimalColumn gridViewDecimalColumn50 = new Telerik.WinControls.UI.GridViewDecimalColumn();
-            Telerik.WinControls.UI.GridViewDecimalColumn gridViewDecimalColumn51 = new Telerik.WinControls.UI.GridViewDecimalColumn();
-            Telerik.WinControls.UI.GridViewDecimalColumn gridViewDecimalColumn52 = new Telerik.WinControls.UI.GridViewDecimalColumn();
-            Telerik.WinControls.UI.GridViewDecimalColumn gridViewDecimalColumn53 = new Telerik.WinControls.UI.GridViewDecimalColumn();
-            Telerik.WinControls.UI.GridViewDecimalColumn gridViewDecimalColumn54 = new Telerik.WinControls.UI.GridViewDecimalColumn();
-            Telerik.WinControls.UI.GridViewDecimalColumn gridViewDecimalColumn55 = new Telerik.WinControls.UI.GridViewDecimalColumn();
-            Telerik.WinControls.UI.GridViewDecimalColumn gridViewDecimalColumn56 = new Telerik.WinControls.UI.GridViewDecimalColumn();
-            Telerik.WinControls.UI.GridViewDecimalColumn gridViewDecimalColumn57 = new Telerik.WinControls.UI.GridViewDecimalColumn();
-            Telerik.WinControls.UI.GridViewDecimalColumn gridViewDecimalColumn58 = new Telerik.WinControls.UI.GridViewDecimalColumn();
-            Telerik.WinControls.UI.GridViewDecimalColumn gridViewDecimalColumn59 = new Telerik.WinControls.UI.GridViewDecimalColumn();
-            Telerik.WinControls.UI.GridViewDecimalColumn gridViewDecimalColumn60 = new Telerik.WinControls.UI.GridViewDecimalColumn();
-            Telerik.WinControls.UI.GridViewDecimalColumn gridViewDecimalColumn61 = new Telerik.WinControls.UI.GridViewDecimalColumn();
-            Telerik.WinControls.UI.GridViewDecimalColumn gridViewDecimalColumn62 = new Telerik.WinControls.UI.GridViewDecimalColumn();
-            Telerik.WinControls.UI.GridViewDecimalColumn gridViewDecimalColumn63 = new Telerik.WinControls.UI.GridViewDecimalColumn();
-            Telerik.WinControls.UI.GridViewDecimalColumn gridViewDecimalColumn64 = new Telerik.WinControls.UI.GridViewDecimalColumn();
-            Telerik.WinControls.UI.GridViewDecimalColumn gridViewDecimalColumn65 = new Telerik.WinControls.UI.GridViewDecimalColumn();
-            Telerik.WinControls.UI.GridViewDecimalColumn gridViewDecimalColumn66 = new Telerik.WinControls.UI.GridViewDecimalColumn();
-            Telerik.WinControls.UI.GridViewDecimalColumn gridViewDecimalColumn67 = new Telerik.WinControls.UI.GridViewDecimalColumn();
-            Telerik.WinControls.UI.GridViewDecimalColumn gridViewDecimalColumn68 = new Telerik.WinControls.UI.GridViewDecimalColumn();
-            Telerik.WinControls.UI.GridViewDecimalColumn gridViewDecimalColumn69 = new Telerik.WinControls.UI.GridViewDecimalColumn();
-            Telerik.WinControls.UI.GridViewDecimalColumn gridViewDecimalColumn70 = new Telerik.WinControls.UI.GridViewDecimalColumn();
-            Telerik.WinControls.UI.GridViewDecimalColumn gridViewDecimalColumn71 = new Telerik.WinControls.UI.GridViewDecimalColumn();
-            Telerik.WinControls.UI.GridViewDecimalColumn gridViewDecimalColumn72 = new Telerik.WinControls.UI.GridViewDecimalColumn();
-            Telerik.WinControls.UI.GridViewDecimalColumn gridViewDecimalColumn73 = new Telerik.WinControls.UI.GridViewDecimalColumn();
-            Telerik.WinControls.UI.GridViewDecimalColumn gridViewDecimalColumn74 = new Telerik.WinControls.UI.GridViewDecimalColumn();
-            Telerik.WinControls.UI.GridViewDecimalColumn gridViewDecimalColumn75 = new Telerik.WinControls.UI.GridViewDecimalColumn();
-            Telerik.WinControls.UI.GridViewDecimalColumn gridViewDecimalColumn76 = new Telerik.WinControls.UI.GridViewDecimalColumn();
-            Telerik.WinControls.UI.GridViewDecimalColumn gridViewDecimalColumn77 = new Telerik.WinControls.UI.GridViewDecimalColumn();
-            Telerik.WinControls.UI.GridViewDecimalColumn gridViewDecimalColumn78 = new Telerik.WinControls.UI.GridViewDecimalColumn();
-            Telerik.WinControls.UI.GridViewDecimalColumn gridViewDecimalColumn79 = new Telerik.WinControls.UI.GridViewDecimalColumn();
-            Telerik.WinControls.UI.GridViewDecimalColumn gridViewDecimalColumn80 = new Telerik.WinControls.UI.GridViewDecimalColumn();
-            Telerik.WinControls.UI.GridViewDecimalColumn gridViewDecimalColumn81 = new Telerik.WinControls.UI.GridViewDecimalColumn();
-            Telerik.WinControls.UI.GridViewDecimalColumn gridViewDecimalColumn82 = new Telerik.WinControls.UI.GridViewDecimalColumn();
-            Telerik.WinControls.UI.GridViewDecimalColumn gridViewDecimalColumn83 = new Telerik.WinControls.UI.GridViewDecimalColumn();
-            Telerik.WinControls.UI.GridViewDecimalColumn gridViewDecimalColumn84 = new Telerik.WinControls.UI.GridViewDecimalColumn();
-            Telerik.WinControls.UI.GridViewDecimalColumn gridViewDecimalColumn85 = new Telerik.WinControls.UI.GridViewDecimalColumn();
-            Telerik.WinControls.UI.GridViewDecimalColumn gridViewDecimalColumn86 = new Telerik.WinControls.UI.GridViewDecimalColumn();
-            Telerik.WinControls.UI.GridViewDecimalColumn gridViewDecimalColumn87 = new Telerik.WinControls.UI.GridViewDecimalColumn();
-            Telerik.WinControls.UI.GridViewDecimalColumn gridViewDecimalColumn88 = new Telerik.WinControls.UI.GridViewDecimalColumn();
-            Telerik.WinControls.UI.GridViewDecimalColumn gridViewDecimalColumn89 = new Telerik.WinControls.UI.GridViewDecimalColumn();
-            Telerik.WinControls.UI.GridViewDecimalColumn gridViewDecimalColumn90 = new Telerik.WinControls.UI.GridViewDecimalColumn();
-            Telerik.WinControls.UI.GridViewDecimalColumn gridViewDecimalColumn91 = new Telerik.WinControls.UI.GridViewDecimalColumn();
-            Telerik.WinControls.UI.GridViewDecimalColumn gridViewDecimalColumn92 = new Telerik.WinControls.UI.GridViewDecimalColumn();
-            Telerik.WinControls.UI.GridViewDecimalColumn gridViewDecimalColumn93 = new Telerik.WinControls.UI.GridViewDecimalColumn();
-            Telerik.WinControls.UI.GridViewDecimalColumn gridViewDecimalColumn94 = new Telerik.WinControls.UI.GridViewDecimalColumn();
-            Telerik.WinControls.UI.GridViewDecimalColumn gridViewDecimalColumn95 = new Telerik.WinControls.UI.GridViewDecimalColumn();
-            Telerik.WinControls.UI.GridViewDecimalColumn gridViewDecimalColumn96 = new Telerik.WinControls.UI.GridViewDecimalColumn();
-            Telerik.WinControls.UI.GridViewDecimalColumn gridViewDecimalColumn97 = new Telerik.WinControls.UI.GridViewDecimalColumn();
-            Telerik.WinControls.UI.GridViewDecimalColumn gridViewDecimalColumn98 = new Telerik.WinControls.UI.GridViewDecimalColumn();
-            Telerik.WinControls.UI.GridViewDecimalColumn gridViewDecimalColumn99 = new Telerik.WinControls.UI.GridViewDecimalColumn();
-            Telerik.WinControls.UI.GridViewDecimalColumn gridViewDecimalColumn100 = new Telerik.WinControls.UI.GridViewDecimalColumn();
-            Telerik.WinControls.UI.GridViewDecimalColumn gridViewDecimalColumn101 = new Telerik.WinControls.UI.GridViewDecimalColumn();
-            Telerik.WinControls.UI.GridViewDecimalColumn gridViewDecimalColumn102 = new Telerik.WinControls.UI.GridViewDecimalColumn();
-            Telerik.WinControls.UI.GridViewDecimalColumn gridViewDecimalColumn103 = new Telerik.WinControls.UI.GridViewDecimalColumn();
-            Telerik.WinControls.UI.GridViewDecimalColumn gridViewDecimalColumn104 = new Telerik.WinControls.UI.GridViewDecimalColumn();
-            Telerik.WinControls.UI.GridViewDecimalColumn gridViewDecimalColumn105 = new Telerik.WinControls.UI.GridViewDecimalColumn();
-            Telerik.WinControls.UI.GridViewDecimalColumn gridViewDecimalColumn106 = new Telerik.WinControls.UI.GridViewDecimalColumn();
-            Telerik.WinControls.UI.GridViewDecimalColumn gridViewDecimalColumn107 = new Telerik.WinControls.UI.GridViewDecimalColumn();
-            Telerik.WinControls.UI.GridViewDecimalColumn gridViewDecimalColumn108 = new Telerik.WinControls.UI.GridViewDecimalColumn();
-            Telerik.WinControls.UI.GridViewDecimalColumn gridViewDecimalColumn109 = new Telerik.WinControls.UI.GridViewDecimalColumn();
-            Telerik.WinControls.UI.GridViewDecimalColumn gridViewDecimalColumn110 = new Telerik.WinControls.UI.GridViewDecimalColumn();
-            Telerik.WinControls.UI.GridViewDecimalColumn gridViewDecimalColumn111 = new Telerik.WinControls.UI.GridViewDecimalColumn();
-            Telerik.WinControls.UI.GridViewDecimalColumn gridViewDecimalColumn112 = new Telerik.WinControls.UI.GridViewDecimalColumn();
-            Telerik.WinControls.UI.GridViewDecimalColumn gridViewDecimalColumn113 = new Telerik.WinControls.UI.GridViewDecimalColumn();
-            Telerik.WinControls.UI.GridViewDecimalColumn gridViewDecimalColumn114 = new Telerik.WinControls.UI.GridViewDecimalColumn();
-            Telerik.WinControls.UI.GridViewDecimalColumn gridViewDecimalColumn115 = new Telerik.WinControls.UI.GridViewDecimalColumn();
-            Telerik.WinControls.UI.GridViewDecimalColumn gridViewDecimalColumn116 = new Telerik.WinControls.UI.GridViewDecimalColumn();
-            Telerik.WinControls.UI.GridViewDecimalColumn gridViewDecimalColumn117 = new Telerik.WinControls.UI.GridViewDecimalColumn();
-            Telerik.WinControls.UI.GridViewSummaryItem gridViewSummaryItem5 = new Telerik.WinControls.UI.GridViewSummaryItem();
-            Telerik.WinControls.UI.GridViewSummaryItem gridViewSummaryItem6 = new Telerik.WinControls.UI.GridViewSummaryItem();
-            Telerik.WinControls.UI.GridViewSummaryItem gridViewSummaryItem7 = new Telerik.WinControls.UI.GridViewSummaryItem();
-            Telerik.WinControls.UI.GridViewSummaryItem gridViewSummaryItem8 = new Telerik.WinControls.UI.GridViewSummaryItem();
-            Telerik.WinControls.UI.TableViewDefinition tableViewDefinition2 = new Telerik.WinControls.UI.TableViewDefinition();
+            Telerik.WinControls.UI.GridViewDecimalColumn gridViewDecimalColumn118 = new Telerik.WinControls.UI.GridViewDecimalColumn();
+            Telerik.WinControls.UI.GridViewTextBoxColumn gridViewTextBoxColumn11 = new Telerik.WinControls.UI.GridViewTextBoxColumn();
+            Telerik.WinControls.UI.GridViewTextBoxColumn gridViewTextBoxColumn12 = new Telerik.WinControls.UI.GridViewTextBoxColumn();
+            Telerik.WinControls.UI.GridViewTextBoxColumn gridViewTextBoxColumn13 = new Telerik.WinControls.UI.GridViewTextBoxColumn();
+            Telerik.WinControls.UI.GridViewDecimalColumn gridViewDecimalColumn119 = new Telerik.WinControls.UI.GridViewDecimalColumn();
+            Telerik.WinControls.UI.GridViewDecimalColumn gridViewDecimalColumn120 = new Telerik.WinControls.UI.GridViewDecimalColumn();
+            Telerik.WinControls.UI.GridViewDecimalColumn gridViewDecimalColumn121 = new Telerik.WinControls.UI.GridViewDecimalColumn();
+            Telerik.WinControls.UI.GridViewDecimalColumn gridViewDecimalColumn122 = new Telerik.WinControls.UI.GridViewDecimalColumn();
+            Telerik.WinControls.UI.GridViewDecimalColumn gridViewDecimalColumn123 = new Telerik.WinControls.UI.GridViewDecimalColumn();
+            Telerik.WinControls.UI.GridViewDecimalColumn gridViewDecimalColumn124 = new Telerik.WinControls.UI.GridViewDecimalColumn();
+            Telerik.WinControls.UI.GridViewDecimalColumn gridViewDecimalColumn125 = new Telerik.WinControls.UI.GridViewDecimalColumn();
+            Telerik.WinControls.UI.GridViewTextBoxColumn gridViewTextBoxColumn14 = new Telerik.WinControls.UI.GridViewTextBoxColumn();
+            Telerik.WinControls.UI.GridViewTextBoxColumn gridViewTextBoxColumn15 = new Telerik.WinControls.UI.GridViewTextBoxColumn();
+            Telerik.WinControls.UI.GridViewTextBoxColumn gridViewTextBoxColumn16 = new Telerik.WinControls.UI.GridViewTextBoxColumn();
+            Telerik.WinControls.UI.GridViewTextBoxColumn gridViewTextBoxColumn17 = new Telerik.WinControls.UI.GridViewTextBoxColumn();
+            Telerik.WinControls.UI.GridViewCheckBoxColumn gridViewCheckBoxColumn2 = new Telerik.WinControls.UI.GridViewCheckBoxColumn();
+            Telerik.WinControls.UI.GridViewDecimalColumn gridViewDecimalColumn126 = new Telerik.WinControls.UI.GridViewDecimalColumn();
+            Telerik.WinControls.UI.GridViewDecimalColumn gridViewDecimalColumn127 = new Telerik.WinControls.UI.GridViewDecimalColumn();
+            Telerik.WinControls.UI.GridViewDecimalColumn gridViewDecimalColumn128 = new Telerik.WinControls.UI.GridViewDecimalColumn();
+            Telerik.WinControls.UI.GridViewDecimalColumn gridViewDecimalColumn129 = new Telerik.WinControls.UI.GridViewDecimalColumn();
+            Telerik.WinControls.UI.GridViewDecimalColumn gridViewDecimalColumn130 = new Telerik.WinControls.UI.GridViewDecimalColumn();
+            Telerik.WinControls.UI.GridViewDecimalColumn gridViewDecimalColumn131 = new Telerik.WinControls.UI.GridViewDecimalColumn();
+            Telerik.WinControls.UI.GridViewDecimalColumn gridViewDecimalColumn132 = new Telerik.WinControls.UI.GridViewDecimalColumn();
+            Telerik.WinControls.UI.GridViewDecimalColumn gridViewDecimalColumn133 = new Telerik.WinControls.UI.GridViewDecimalColumn();
+            Telerik.WinControls.UI.GridViewDecimalColumn gridViewDecimalColumn134 = new Telerik.WinControls.UI.GridViewDecimalColumn();
+            Telerik.WinControls.UI.GridViewDecimalColumn gridViewDecimalColumn135 = new Telerik.WinControls.UI.GridViewDecimalColumn();
+            Telerik.WinControls.UI.GridViewDecimalColumn gridViewDecimalColumn136 = new Telerik.WinControls.UI.GridViewDecimalColumn();
+            Telerik.WinControls.UI.GridViewDecimalColumn gridViewDecimalColumn137 = new Telerik.WinControls.UI.GridViewDecimalColumn();
+            Telerik.WinControls.UI.GridViewDecimalColumn gridViewDecimalColumn138 = new Telerik.WinControls.UI.GridViewDecimalColumn();
+            Telerik.WinControls.UI.GridViewDecimalColumn gridViewDecimalColumn139 = new Telerik.WinControls.UI.GridViewDecimalColumn();
+            Telerik.WinControls.UI.GridViewDecimalColumn gridViewDecimalColumn140 = new Telerik.WinControls.UI.GridViewDecimalColumn();
+            Telerik.WinControls.Data.SortDescriptor sortDescriptor2 = new Telerik.WinControls.Data.SortDescriptor();
+            Telerik.WinControls.UI.GridViewSummaryItem gridViewSummaryItem9 = new Telerik.WinControls.UI.GridViewSummaryItem();
+            Telerik.WinControls.UI.GridViewSummaryItem gridViewSummaryItem10 = new Telerik.WinControls.UI.GridViewSummaryItem();
+            Telerik.WinControls.UI.GridViewSummaryItem gridViewSummaryItem11 = new Telerik.WinControls.UI.GridViewSummaryItem();
+            Telerik.WinControls.UI.GridViewSummaryItem gridViewSummaryItem12 = new Telerik.WinControls.UI.GridViewSummaryItem();
+            Telerik.WinControls.UI.TableViewDefinition tableViewDefinition3 = new Telerik.WinControls.UI.TableViewDefinition();
+            Telerik.WinControls.UI.GridViewDecimalColumn gridViewDecimalColumn141 = new Telerik.WinControls.UI.GridViewDecimalColumn();
+            Telerik.WinControls.UI.GridViewDecimalColumn gridViewDecimalColumn142 = new Telerik.WinControls.UI.GridViewDecimalColumn();
+            Telerik.WinControls.UI.GridViewTextBoxColumn gridViewTextBoxColumn18 = new Telerik.WinControls.UI.GridViewTextBoxColumn();
+            Telerik.WinControls.UI.GridViewTextBoxColumn gridViewTextBoxColumn19 = new Telerik.WinControls.UI.GridViewTextBoxColumn();
+            Telerik.WinControls.UI.GridViewTextBoxColumn gridViewTextBoxColumn20 = new Telerik.WinControls.UI.GridViewTextBoxColumn();
+            Telerik.WinControls.UI.GridViewDecimalColumn gridViewDecimalColumn143 = new Telerik.WinControls.UI.GridViewDecimalColumn();
+            Telerik.WinControls.UI.GridViewDecimalColumn gridViewDecimalColumn144 = new Telerik.WinControls.UI.GridViewDecimalColumn();
+            Telerik.WinControls.UI.GridViewDecimalColumn gridViewDecimalColumn145 = new Telerik.WinControls.UI.GridViewDecimalColumn();
+            Telerik.WinControls.UI.GridViewDecimalColumn gridViewDecimalColumn146 = new Telerik.WinControls.UI.GridViewDecimalColumn();
+            Telerik.WinControls.UI.GridViewDecimalColumn gridViewDecimalColumn147 = new Telerik.WinControls.UI.GridViewDecimalColumn();
+            Telerik.WinControls.UI.GridViewDecimalColumn gridViewDecimalColumn148 = new Telerik.WinControls.UI.GridViewDecimalColumn();
+            Telerik.WinControls.UI.GridViewDecimalColumn gridViewDecimalColumn149 = new Telerik.WinControls.UI.GridViewDecimalColumn();
+            Telerik.WinControls.UI.GridViewDecimalColumn gridViewDecimalColumn150 = new Telerik.WinControls.UI.GridViewDecimalColumn();
+            Telerik.WinControls.UI.GridViewDecimalColumn gridViewDecimalColumn151 = new Telerik.WinControls.UI.GridViewDecimalColumn();
+            Telerik.WinControls.UI.GridViewDecimalColumn gridViewDecimalColumn152 = new Telerik.WinControls.UI.GridViewDecimalColumn();
+            Telerik.WinControls.UI.GridViewDecimalColumn gridViewDecimalColumn153 = new Telerik.WinControls.UI.GridViewDecimalColumn();
+            Telerik.WinControls.UI.GridViewDecimalColumn gridViewDecimalColumn154 = new Telerik.WinControls.UI.GridViewDecimalColumn();
+            Telerik.WinControls.UI.GridViewDecimalColumn gridViewDecimalColumn155 = new Telerik.WinControls.UI.GridViewDecimalColumn();
+            Telerik.WinControls.UI.GridViewDecimalColumn gridViewDecimalColumn156 = new Telerik.WinControls.UI.GridViewDecimalColumn();
+            Telerik.WinControls.UI.GridViewDecimalColumn gridViewDecimalColumn157 = new Telerik.WinControls.UI.GridViewDecimalColumn();
+            Telerik.WinControls.UI.GridViewDecimalColumn gridViewDecimalColumn158 = new Telerik.WinControls.UI.GridViewDecimalColumn();
+            Telerik.WinControls.UI.GridViewDecimalColumn gridViewDecimalColumn159 = new Telerik.WinControls.UI.GridViewDecimalColumn();
+            Telerik.WinControls.UI.GridViewDecimalColumn gridViewDecimalColumn160 = new Telerik.WinControls.UI.GridViewDecimalColumn();
+            Telerik.WinControls.UI.GridViewDecimalColumn gridViewDecimalColumn161 = new Telerik.WinControls.UI.GridViewDecimalColumn();
+            Telerik.WinControls.UI.GridViewDecimalColumn gridViewDecimalColumn162 = new Telerik.WinControls.UI.GridViewDecimalColumn();
+            Telerik.WinControls.UI.GridViewDecimalColumn gridViewDecimalColumn163 = new Telerik.WinControls.UI.GridViewDecimalColumn();
+            Telerik.WinControls.UI.GridViewDecimalColumn gridViewDecimalColumn164 = new Telerik.WinControls.UI.GridViewDecimalColumn();
+            Telerik.WinControls.UI.GridViewDecimalColumn gridViewDecimalColumn165 = new Telerik.WinControls.UI.GridViewDecimalColumn();
+            Telerik.WinControls.UI.GridViewDecimalColumn gridViewDecimalColumn166 = new Telerik.WinControls.UI.GridViewDecimalColumn();
+            Telerik.WinControls.UI.GridViewDecimalColumn gridViewDecimalColumn167 = new Telerik.WinControls.UI.GridViewDecimalColumn();
+            Telerik.WinControls.UI.GridViewDecimalColumn gridViewDecimalColumn168 = new Telerik.WinControls.UI.GridViewDecimalColumn();
+            Telerik.WinControls.UI.GridViewDecimalColumn gridViewDecimalColumn169 = new Telerik.WinControls.UI.GridViewDecimalColumn();
+            Telerik.WinControls.UI.GridViewDecimalColumn gridViewDecimalColumn170 = new Telerik.WinControls.UI.GridViewDecimalColumn();
+            Telerik.WinControls.UI.GridViewDecimalColumn gridViewDecimalColumn171 = new Telerik.WinControls.UI.GridViewDecimalColumn();
+            Telerik.WinControls.UI.GridViewDecimalColumn gridViewDecimalColumn172 = new Telerik.WinControls.UI.GridViewDecimalColumn();
+            Telerik.WinControls.UI.GridViewDecimalColumn gridViewDecimalColumn173 = new Telerik.WinControls.UI.GridViewDecimalColumn();
+            Telerik.WinControls.UI.GridViewDecimalColumn gridViewDecimalColumn174 = new Telerik.WinControls.UI.GridViewDecimalColumn();
+            Telerik.WinControls.UI.GridViewDecimalColumn gridViewDecimalColumn175 = new Telerik.WinControls.UI.GridViewDecimalColumn();
+            Telerik.WinControls.UI.GridViewDecimalColumn gridViewDecimalColumn176 = new Telerik.WinControls.UI.GridViewDecimalColumn();
+            Telerik.WinControls.UI.GridViewDecimalColumn gridViewDecimalColumn177 = new Telerik.WinControls.UI.GridViewDecimalColumn();
+            Telerik.WinControls.UI.GridViewDecimalColumn gridViewDecimalColumn178 = new Telerik.WinControls.UI.GridViewDecimalColumn();
+            Telerik.WinControls.UI.GridViewDecimalColumn gridViewDecimalColumn179 = new Telerik.WinControls.UI.GridViewDecimalColumn();
+            Telerik.WinControls.UI.GridViewDecimalColumn gridViewDecimalColumn180 = new Telerik.WinControls.UI.GridViewDecimalColumn();
+            Telerik.WinControls.UI.GridViewDecimalColumn gridViewDecimalColumn181 = new Telerik.WinControls.UI.GridViewDecimalColumn();
+            Telerik.WinControls.UI.GridViewDecimalColumn gridViewDecimalColumn182 = new Telerik.WinControls.UI.GridViewDecimalColumn();
+            Telerik.WinControls.UI.GridViewDecimalColumn gridViewDecimalColumn183 = new Telerik.WinControls.UI.GridViewDecimalColumn();
+            Telerik.WinControls.UI.GridViewDecimalColumn gridViewDecimalColumn184 = new Telerik.WinControls.UI.GridViewDecimalColumn();
+            Telerik.WinControls.UI.GridViewDecimalColumn gridViewDecimalColumn185 = new Telerik.WinControls.UI.GridViewDecimalColumn();
+            Telerik.WinControls.UI.GridViewDecimalColumn gridViewDecimalColumn186 = new Telerik.WinControls.UI.GridViewDecimalColumn();
+            Telerik.WinControls.UI.GridViewDecimalColumn gridViewDecimalColumn187 = new Telerik.WinControls.UI.GridViewDecimalColumn();
+            Telerik.WinControls.UI.GridViewDecimalColumn gridViewDecimalColumn188 = new Telerik.WinControls.UI.GridViewDecimalColumn();
+            Telerik.WinControls.UI.GridViewDecimalColumn gridViewDecimalColumn189 = new Telerik.WinControls.UI.GridViewDecimalColumn();
+            Telerik.WinControls.UI.GridViewDecimalColumn gridViewDecimalColumn190 = new Telerik.WinControls.UI.GridViewDecimalColumn();
+            Telerik.WinControls.UI.GridViewDecimalColumn gridViewDecimalColumn191 = new Telerik.WinControls.UI.GridViewDecimalColumn();
+            Telerik.WinControls.UI.GridViewDecimalColumn gridViewDecimalColumn192 = new Telerik.WinControls.UI.GridViewDecimalColumn();
+            Telerik.WinControls.UI.GridViewDecimalColumn gridViewDecimalColumn193 = new Telerik.WinControls.UI.GridViewDecimalColumn();
+            Telerik.WinControls.UI.GridViewDecimalColumn gridViewDecimalColumn194 = new Telerik.WinControls.UI.GridViewDecimalColumn();
+            Telerik.WinControls.UI.GridViewDecimalColumn gridViewDecimalColumn195 = new Telerik.WinControls.UI.GridViewDecimalColumn();
+            Telerik.WinControls.UI.GridViewDecimalColumn gridViewDecimalColumn196 = new Telerik.WinControls.UI.GridViewDecimalColumn();
+            Telerik.WinControls.UI.GridViewDecimalColumn gridViewDecimalColumn197 = new Telerik.WinControls.UI.GridViewDecimalColumn();
+            Telerik.WinControls.UI.GridViewDecimalColumn gridViewDecimalColumn198 = new Telerik.WinControls.UI.GridViewDecimalColumn();
+            Telerik.WinControls.UI.GridViewDecimalColumn gridViewDecimalColumn199 = new Telerik.WinControls.UI.GridViewDecimalColumn();
+            Telerik.WinControls.UI.GridViewDecimalColumn gridViewDecimalColumn200 = new Telerik.WinControls.UI.GridViewDecimalColumn();
+            Telerik.WinControls.UI.GridViewDecimalColumn gridViewDecimalColumn201 = new Telerik.WinControls.UI.GridViewDecimalColumn();
+            Telerik.WinControls.UI.GridViewDecimalColumn gridViewDecimalColumn202 = new Telerik.WinControls.UI.GridViewDecimalColumn();
+            Telerik.WinControls.UI.GridViewDecimalColumn gridViewDecimalColumn203 = new Telerik.WinControls.UI.GridViewDecimalColumn();
+            Telerik.WinControls.UI.GridViewDecimalColumn gridViewDecimalColumn204 = new Telerik.WinControls.UI.GridViewDecimalColumn();
+            Telerik.WinControls.UI.GridViewDecimalColumn gridViewDecimalColumn205 = new Telerik.WinControls.UI.GridViewDecimalColumn();
+            Telerik.WinControls.UI.GridViewDecimalColumn gridViewDecimalColumn206 = new Telerik.WinControls.UI.GridViewDecimalColumn();
+            Telerik.WinControls.UI.GridViewDecimalColumn gridViewDecimalColumn207 = new Telerik.WinControls.UI.GridViewDecimalColumn();
+            Telerik.WinControls.UI.GridViewDecimalColumn gridViewDecimalColumn208 = new Telerik.WinControls.UI.GridViewDecimalColumn();
+            Telerik.WinControls.UI.GridViewDecimalColumn gridViewDecimalColumn209 = new Telerik.WinControls.UI.GridViewDecimalColumn();
+            Telerik.WinControls.UI.GridViewDecimalColumn gridViewDecimalColumn210 = new Telerik.WinControls.UI.GridViewDecimalColumn();
+            Telerik.WinControls.UI.GridViewDecimalColumn gridViewDecimalColumn211 = new Telerik.WinControls.UI.GridViewDecimalColumn();
+            Telerik.WinControls.UI.GridViewDecimalColumn gridViewDecimalColumn212 = new Telerik.WinControls.UI.GridViewDecimalColumn();
+            Telerik.WinControls.UI.GridViewDecimalColumn gridViewDecimalColumn213 = new Telerik.WinControls.UI.GridViewDecimalColumn();
+            Telerik.WinControls.UI.GridViewDecimalColumn gridViewDecimalColumn214 = new Telerik.WinControls.UI.GridViewDecimalColumn();
+            Telerik.WinControls.UI.GridViewDecimalColumn gridViewDecimalColumn215 = new Telerik.WinControls.UI.GridViewDecimalColumn();
+            Telerik.WinControls.UI.GridViewDecimalColumn gridViewDecimalColumn216 = new Telerik.WinControls.UI.GridViewDecimalColumn();
+            Telerik.WinControls.UI.GridViewDecimalColumn gridViewDecimalColumn217 = new Telerik.WinControls.UI.GridViewDecimalColumn();
+            Telerik.WinControls.UI.GridViewDecimalColumn gridViewDecimalColumn218 = new Telerik.WinControls.UI.GridViewDecimalColumn();
+            Telerik.WinControls.UI.GridViewDecimalColumn gridViewDecimalColumn219 = new Telerik.WinControls.UI.GridViewDecimalColumn();
+            Telerik.WinControls.UI.GridViewDecimalColumn gridViewDecimalColumn220 = new Telerik.WinControls.UI.GridViewDecimalColumn();
+            Telerik.WinControls.UI.GridViewDecimalColumn gridViewDecimalColumn221 = new Telerik.WinControls.UI.GridViewDecimalColumn();
+            Telerik.WinControls.UI.GridViewDecimalColumn gridViewDecimalColumn222 = new Telerik.WinControls.UI.GridViewDecimalColumn();
+            Telerik.WinControls.UI.GridViewDecimalColumn gridViewDecimalColumn223 = new Telerik.WinControls.UI.GridViewDecimalColumn();
+            Telerik.WinControls.UI.GridViewDecimalColumn gridViewDecimalColumn224 = new Telerik.WinControls.UI.GridViewDecimalColumn();
+            Telerik.WinControls.UI.GridViewDecimalColumn gridViewDecimalColumn225 = new Telerik.WinControls.UI.GridViewDecimalColumn();
+            Telerik.WinControls.UI.GridViewDecimalColumn gridViewDecimalColumn226 = new Telerik.WinControls.UI.GridViewDecimalColumn();
+            Telerik.WinControls.UI.GridViewDecimalColumn gridViewDecimalColumn227 = new Telerik.WinControls.UI.GridViewDecimalColumn();
+            Telerik.WinControls.UI.GridViewDecimalColumn gridViewDecimalColumn228 = new Telerik.WinControls.UI.GridViewDecimalColumn();
+            Telerik.WinControls.UI.GridViewDecimalColumn gridViewDecimalColumn229 = new Telerik.WinControls.UI.GridViewDecimalColumn();
+            Telerik.WinControls.UI.GridViewDecimalColumn gridViewDecimalColumn230 = new Telerik.WinControls.UI.GridViewDecimalColumn();
+            Telerik.WinControls.UI.GridViewDecimalColumn gridViewDecimalColumn231 = new Telerik.WinControls.UI.GridViewDecimalColumn();
+            Telerik.WinControls.UI.GridViewDecimalColumn gridViewDecimalColumn232 = new Telerik.WinControls.UI.GridViewDecimalColumn();
+            Telerik.WinControls.UI.GridViewDecimalColumn gridViewDecimalColumn233 = new Telerik.WinControls.UI.GridViewDecimalColumn();
+            Telerik.WinControls.UI.GridViewDecimalColumn gridViewDecimalColumn234 = new Telerik.WinControls.UI.GridViewDecimalColumn();
+            Telerik.WinControls.UI.GridViewSummaryItem gridViewSummaryItem13 = new Telerik.WinControls.UI.GridViewSummaryItem();
+            Telerik.WinControls.UI.GridViewSummaryItem gridViewSummaryItem14 = new Telerik.WinControls.UI.GridViewSummaryItem();
+            Telerik.WinControls.UI.GridViewSummaryItem gridViewSummaryItem15 = new Telerik.WinControls.UI.GridViewSummaryItem();
+            Telerik.WinControls.UI.GridViewSummaryItem gridViewSummaryItem16 = new Telerik.WinControls.UI.GridViewSummaryItem();
+            Telerik.WinControls.UI.TableViewDefinition tableViewDefinition4 = new Telerik.WinControls.UI.TableViewDefinition();
             this.headerPanel = new System.Windows.Forms.Panel();
             this.warninglabel = new System.Windows.Forms.Label();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
@@ -360,6 +360,7 @@
             this.sYS_CR_INVENTORY_DESCRIPTIONTableAdapter = new COBRA.cobraDataSetTableAdapters.SYS_CR_INVENTORY_DESCRIPTIONTableAdapter();
             this.sYS_Valuation_INVENTORY_DESCRIPTIONTableAdapter = new COBRA.cobraDataSetTableAdapters.SYS_Valuation_INVENTORY_DESCRIPTIONTableAdapter();
             this.sYS_AnalysisYearTableAdapter = new COBRA.cobraDataSetTableAdapters.SYS_AnalysisYearTableAdapter();
+            this.radioButtonDR7 = new System.Windows.Forms.RadioButton();
             this.headerPanel.SuspendLayout();
             this.menuStrip1.SuspendLayout();
             this.tabControl_Main.SuspendLayout();
@@ -1992,293 +1993,293 @@
             // 
             // 
             this.radGridView2.MasterTemplate.AutoSizeColumnsMode = Telerik.WinControls.UI.GridViewAutoSizeColumnsMode.Fill;
-            gridViewDecimalColumn1.DataType = typeof(long);
-            gridViewDecimalColumn1.EnableExpressionEditor = false;
-            gridViewDecimalColumn1.FieldName = "ID";
-            gridViewDecimalColumn1.HeaderText = "ID";
-            gridViewDecimalColumn1.IsAutoGenerated = true;
-            gridViewDecimalColumn1.IsVisible = false;
-            gridViewDecimalColumn1.Name = "ID";
-            gridViewDecimalColumn1.Width = 25;
-            gridViewTextBoxColumn1.EnableExpressionEditor = false;
-            gridViewTextBoxColumn1.FieldName = "FIPS";
-            gridViewTextBoxColumn1.HeaderText = "FIPS";
-            gridViewTextBoxColumn1.IsAutoGenerated = true;
-            gridViewTextBoxColumn1.Name = "FIPS";
-            gridViewTextBoxColumn1.Width = 54;
-            gridViewTextBoxColumn2.EnableExpressionEditor = false;
-            gridViewTextBoxColumn2.FieldName = "STATE";
-            gridViewTextBoxColumn2.HeaderText = "State";
-            gridViewTextBoxColumn2.IsAutoGenerated = true;
-            gridViewTextBoxColumn2.Name = "STATE";
-            gridViewTextBoxColumn2.Width = 54;
-            gridViewTextBoxColumn3.EnableExpressionEditor = false;
-            gridViewTextBoxColumn3.FieldName = "COUNTY";
-            gridViewTextBoxColumn3.HeaderText = "County";
-            gridViewTextBoxColumn3.IsAutoGenerated = true;
-            gridViewTextBoxColumn3.Name = "COUNTY";
-            gridViewTextBoxColumn3.Width = 91;
-            gridViewDecimalColumn2.DataType = typeof(long);
-            gridViewDecimalColumn2.EnableExpressionEditor = false;
-            gridViewDecimalColumn2.FieldName = "typeindx";
-            gridViewDecimalColumn2.HeaderText = "typeindx";
-            gridViewDecimalColumn2.IsAutoGenerated = true;
-            gridViewDecimalColumn2.IsVisible = false;
-            gridViewDecimalColumn2.Name = "typeindx";
-            gridViewDecimalColumn2.Width = 85;
-            gridViewDecimalColumn3.DataType = typeof(long);
-            gridViewDecimalColumn3.EnableExpressionEditor = false;
-            gridViewDecimalColumn3.FieldName = "sourceindx";
-            gridViewDecimalColumn3.HeaderText = "sourceindx";
-            gridViewDecimalColumn3.IsAutoGenerated = true;
-            gridViewDecimalColumn3.IsVisible = false;
-            gridViewDecimalColumn3.Name = "sourceindx";
-            gridViewDecimalColumn3.Width = 85;
-            gridViewDecimalColumn4.DataType = typeof(long);
-            gridViewDecimalColumn4.EnableExpressionEditor = false;
-            gridViewDecimalColumn4.FieldName = "stid";
-            gridViewDecimalColumn4.HeaderText = "stid";
-            gridViewDecimalColumn4.IsAutoGenerated = true;
-            gridViewDecimalColumn4.IsVisible = false;
-            gridViewDecimalColumn4.Name = "stid";
-            gridViewDecimalColumn4.Width = 85;
-            gridViewDecimalColumn5.DataType = typeof(long);
-            gridViewDecimalColumn5.EnableExpressionEditor = false;
-            gridViewDecimalColumn5.FieldName = "cyid";
-            gridViewDecimalColumn5.HeaderText = "cyid";
-            gridViewDecimalColumn5.IsAutoGenerated = true;
-            gridViewDecimalColumn5.IsVisible = false;
-            gridViewDecimalColumn5.Name = "cyid";
-            gridViewDecimalColumn5.Width = 85;
-            gridViewDecimalColumn6.DataType = typeof(long);
-            gridViewDecimalColumn6.EnableExpressionEditor = false;
-            gridViewDecimalColumn6.FieldName = "TIER1";
-            gridViewDecimalColumn6.HeaderText = "TIER1";
-            gridViewDecimalColumn6.IsAutoGenerated = true;
-            gridViewDecimalColumn6.IsVisible = false;
-            gridViewDecimalColumn6.Name = "TIER1";
-            gridViewDecimalColumn6.Width = 100;
-            gridViewDecimalColumn7.DataType = typeof(long);
-            gridViewDecimalColumn7.EnableExpressionEditor = false;
-            gridViewDecimalColumn7.FieldName = "TIER2";
-            gridViewDecimalColumn7.HeaderText = "TIER2";
-            gridViewDecimalColumn7.IsAutoGenerated = true;
-            gridViewDecimalColumn7.IsVisible = false;
-            gridViewDecimalColumn7.Name = "TIER2";
-            gridViewDecimalColumn7.Width = 85;
-            gridViewDecimalColumn8.DataType = typeof(long);
-            gridViewDecimalColumn8.EnableExpressionEditor = false;
-            gridViewDecimalColumn8.FieldName = "TIER3";
-            gridViewDecimalColumn8.HeaderText = "TIER3";
-            gridViewDecimalColumn8.IsAutoGenerated = true;
-            gridViewDecimalColumn8.IsVisible = false;
-            gridViewDecimalColumn8.Name = "TIER3";
-            gridViewDecimalColumn8.Width = 85;
-            gridViewTextBoxColumn4.EnableExpressionEditor = false;
-            gridViewTextBoxColumn4.FieldName = "TIER1NAME";
-            gridViewTextBoxColumn4.HeaderText = "TIER 1";
-            gridViewTextBoxColumn4.IsAutoGenerated = true;
-            gridViewTextBoxColumn4.Name = "TIER1NAME";
-            gridViewTextBoxColumn4.Width = 107;
-            gridViewTextBoxColumn5.EnableExpressionEditor = false;
-            gridViewTextBoxColumn5.FieldName = "TIER2NAME";
-            gridViewTextBoxColumn5.HeaderText = "TIER 2";
-            gridViewTextBoxColumn5.IsAutoGenerated = true;
-            gridViewTextBoxColumn5.Name = "TIER2NAME";
-            gridViewTextBoxColumn5.SortOrder = Telerik.WinControls.UI.RadSortOrder.Ascending;
-            gridViewTextBoxColumn5.Width = 107;
-            gridViewTextBoxColumn6.EnableExpressionEditor = false;
-            gridViewTextBoxColumn6.FieldName = "TIER3NAME";
-            gridViewTextBoxColumn6.HeaderText = "TIER 3";
-            gridViewTextBoxColumn6.IsAutoGenerated = true;
-            gridViewTextBoxColumn6.Name = "TIER3NAME";
-            gridViewTextBoxColumn6.Width = 107;
-            gridViewTextBoxColumn7.EnableExpressionEditor = false;
-            gridViewTextBoxColumn7.FieldName = "TYPE";
-            gridViewTextBoxColumn7.HeaderText = "TYPE";
-            gridViewTextBoxColumn7.IsAutoGenerated = true;
-            gridViewTextBoxColumn7.Name = "TYPE";
-            gridViewTextBoxColumn7.Width = 54;
-            gridViewCheckBoxColumn1.DataType = typeof(long);
-            gridViewCheckBoxColumn1.EnableExpressionEditor = false;
-            gridViewCheckBoxColumn1.FieldName = "MODIFIED";
-            gridViewCheckBoxColumn1.HeaderText = "MODIFIED";
-            gridViewCheckBoxColumn1.IsAutoGenerated = true;
-            gridViewCheckBoxColumn1.MinWidth = 27;
-            gridViewCheckBoxColumn1.Name = "MODIFIED";
-            gridViewCheckBoxColumn1.ReadOnly = true;
-            gridViewCheckBoxColumn1.Width = 54;
-            gridViewDecimalColumn9.DataType = typeof(double);
-            gridViewDecimalColumn9.EnableExpressionEditor = false;
-            gridViewDecimalColumn9.FieldName = "BASE_NOx";
-            gridViewDecimalColumn9.HeaderText = "Base NOx";
-            gridViewDecimalColumn9.IsAutoGenerated = true;
-            gridViewDecimalColumn9.Name = "BASE_NOx";
-            gridViewDecimalColumn9.Width = 91;
-            gridViewDecimalColumn10.DataType = typeof(double);
-            gridViewDecimalColumn10.EnableExpressionEditor = false;
-            gridViewDecimalColumn10.FieldName = "BASE_SO2";
-            gridViewDecimalColumn10.HeaderText = "Base SO2";
-            gridViewDecimalColumn10.IsAutoGenerated = true;
-            gridViewDecimalColumn10.Name = "BASE_SO2";
-            gridViewDecimalColumn10.Width = 91;
-            gridViewDecimalColumn11.DataType = typeof(double);
-            gridViewDecimalColumn11.EnableExpressionEditor = false;
-            gridViewDecimalColumn11.FieldName = "BASE_NH3";
-            gridViewDecimalColumn11.HeaderText = "Base NH3";
-            gridViewDecimalColumn11.IsAutoGenerated = true;
-            gridViewDecimalColumn11.Name = "BASE_NH3";
-            gridViewDecimalColumn11.Width = 91;
-            gridViewDecimalColumn12.DataType = typeof(double);
-            gridViewDecimalColumn12.EnableExpressionEditor = false;
-            gridViewDecimalColumn12.FieldName = "BASE_PM25";
-            gridViewDecimalColumn12.HeaderText = "Base PM 2.5";
-            gridViewDecimalColumn12.IsAutoGenerated = true;
-            gridViewDecimalColumn12.Name = "BASE_PM25";
-            gridViewDecimalColumn12.Width = 95;
-            gridViewDecimalColumn13.DataType = typeof(double);
-            gridViewDecimalColumn13.EnableExpressionEditor = false;
-            gridViewDecimalColumn13.FieldName = "BASE_VOC";
-            gridViewDecimalColumn13.HeaderText = "Base VOC";
-            gridViewDecimalColumn13.IsAutoGenerated = true;
-            gridViewDecimalColumn13.Name = "BASE_VOC";
-            gridViewDecimalColumn13.Width = 91;
-            gridViewDecimalColumn14.DataType = typeof(double);
-            gridViewDecimalColumn14.EnableExpressionEditor = false;
-            gridViewDecimalColumn14.FieldName = "CTRL_NOx";
-            gridViewDecimalColumn14.HeaderText = "Control NOx";
-            gridViewDecimalColumn14.IsAutoGenerated = true;
-            gridViewDecimalColumn14.Name = "CTRL_NOx";
-            gridViewDecimalColumn14.Width = 91;
-            gridViewDecimalColumn15.DataType = typeof(double);
-            gridViewDecimalColumn15.EnableExpressionEditor = false;
-            gridViewDecimalColumn15.FieldName = "CTRL_SO2";
-            gridViewDecimalColumn15.HeaderText = "Control SO2";
-            gridViewDecimalColumn15.IsAutoGenerated = true;
-            gridViewDecimalColumn15.Name = "CTRL_SO2";
-            gridViewDecimalColumn15.Width = 91;
-            gridViewDecimalColumn16.DataType = typeof(double);
-            gridViewDecimalColumn16.EnableExpressionEditor = false;
-            gridViewDecimalColumn16.FieldName = "CTRL_NH3";
-            gridViewDecimalColumn16.HeaderText = "Control NH3";
-            gridViewDecimalColumn16.IsAutoGenerated = true;
-            gridViewDecimalColumn16.Name = "CTRL_NH3";
-            gridViewDecimalColumn16.Width = 91;
-            gridViewDecimalColumn17.DataType = typeof(double);
-            gridViewDecimalColumn17.EnableExpressionEditor = false;
-            gridViewDecimalColumn17.FieldName = "CTRL_PM25";
-            gridViewDecimalColumn17.HeaderText = "Control PM 2.5";
-            gridViewDecimalColumn17.IsAutoGenerated = true;
-            gridViewDecimalColumn17.Name = "CTRL_PM25";
-            gridViewDecimalColumn17.Width = 95;
-            gridViewDecimalColumn18.DataType = typeof(double);
-            gridViewDecimalColumn18.EnableExpressionEditor = false;
-            gridViewDecimalColumn18.FieldName = "CTRL_VOC";
-            gridViewDecimalColumn18.HeaderText = "Control VOC";
-            gridViewDecimalColumn18.IsAutoGenerated = true;
-            gridViewDecimalColumn18.Name = "CTRL_VOC";
-            gridViewDecimalColumn18.Width = 91;
-            gridViewDecimalColumn19.DataType = typeof(double);
-            gridViewDecimalColumn19.EnableExpressionEditor = false;
-            gridViewDecimalColumn19.FieldName = "DELTA_NOx";
-            gridViewDecimalColumn19.HeaderText = "Delta NOx";
-            gridViewDecimalColumn19.IsAutoGenerated = true;
-            gridViewDecimalColumn19.Name = "DELTA_NOx";
-            gridViewDecimalColumn19.ReadOnly = true;
-            gridViewDecimalColumn19.Width = 97;
-            gridViewDecimalColumn20.DataType = typeof(double);
-            gridViewDecimalColumn20.EnableExpressionEditor = false;
-            gridViewDecimalColumn20.FieldName = "DELTA_SO2";
-            gridViewDecimalColumn20.HeaderText = "Delta SO2";
-            gridViewDecimalColumn20.IsAutoGenerated = true;
-            gridViewDecimalColumn20.Name = "DELTA_SO2";
-            gridViewDecimalColumn20.ReadOnly = true;
-            gridViewDecimalColumn20.Width = 95;
-            gridViewDecimalColumn21.DataType = typeof(double);
-            gridViewDecimalColumn21.EnableExpressionEditor = false;
-            gridViewDecimalColumn21.FieldName = "DELTA_NH3";
-            gridViewDecimalColumn21.HeaderText = "Delta NH3";
-            gridViewDecimalColumn21.IsAutoGenerated = true;
-            gridViewDecimalColumn21.Name = "DELTA_NH3";
-            gridViewDecimalColumn21.ReadOnly = true;
-            gridViewDecimalColumn21.Width = 97;
-            gridViewDecimalColumn22.DataType = typeof(double);
-            gridViewDecimalColumn22.EnableExpressionEditor = false;
-            gridViewDecimalColumn22.FieldName = "DELTA_PM25";
-            gridViewDecimalColumn22.HeaderText = "Delta PM 2.5";
-            gridViewDecimalColumn22.IsAutoGenerated = true;
-            gridViewDecimalColumn22.Name = "DELTA_PM25";
-            gridViewDecimalColumn22.ReadOnly = true;
-            gridViewDecimalColumn22.Width = 106;
-            gridViewDecimalColumn23.DataType = typeof(double);
-            gridViewDecimalColumn23.EnableExpressionEditor = false;
-            gridViewDecimalColumn23.FieldName = "DELTA_VOC";
-            gridViewDecimalColumn23.HeaderText = "Delta VOC";
-            gridViewDecimalColumn23.IsAutoGenerated = true;
-            gridViewDecimalColumn23.Name = "DELTA_VOC";
-            gridViewDecimalColumn23.ReadOnly = true;
-            gridViewDecimalColumn23.Width = 100;
+            gridViewDecimalColumn118.DataType = typeof(long);
+            gridViewDecimalColumn118.EnableExpressionEditor = false;
+            gridViewDecimalColumn118.FieldName = "ID";
+            gridViewDecimalColumn118.HeaderText = "ID";
+            gridViewDecimalColumn118.IsAutoGenerated = true;
+            gridViewDecimalColumn118.IsVisible = false;
+            gridViewDecimalColumn118.Name = "ID";
+            gridViewDecimalColumn118.Width = 25;
+            gridViewTextBoxColumn11.EnableExpressionEditor = false;
+            gridViewTextBoxColumn11.FieldName = "FIPS";
+            gridViewTextBoxColumn11.HeaderText = "FIPS";
+            gridViewTextBoxColumn11.IsAutoGenerated = true;
+            gridViewTextBoxColumn11.Name = "FIPS";
+            gridViewTextBoxColumn11.Width = 54;
+            gridViewTextBoxColumn12.EnableExpressionEditor = false;
+            gridViewTextBoxColumn12.FieldName = "STATE";
+            gridViewTextBoxColumn12.HeaderText = "State";
+            gridViewTextBoxColumn12.IsAutoGenerated = true;
+            gridViewTextBoxColumn12.Name = "STATE";
+            gridViewTextBoxColumn12.Width = 54;
+            gridViewTextBoxColumn13.EnableExpressionEditor = false;
+            gridViewTextBoxColumn13.FieldName = "COUNTY";
+            gridViewTextBoxColumn13.HeaderText = "County";
+            gridViewTextBoxColumn13.IsAutoGenerated = true;
+            gridViewTextBoxColumn13.Name = "COUNTY";
+            gridViewTextBoxColumn13.Width = 91;
+            gridViewDecimalColumn119.DataType = typeof(long);
+            gridViewDecimalColumn119.EnableExpressionEditor = false;
+            gridViewDecimalColumn119.FieldName = "typeindx";
+            gridViewDecimalColumn119.HeaderText = "typeindx";
+            gridViewDecimalColumn119.IsAutoGenerated = true;
+            gridViewDecimalColumn119.IsVisible = false;
+            gridViewDecimalColumn119.Name = "typeindx";
+            gridViewDecimalColumn119.Width = 85;
+            gridViewDecimalColumn120.DataType = typeof(long);
+            gridViewDecimalColumn120.EnableExpressionEditor = false;
+            gridViewDecimalColumn120.FieldName = "sourceindx";
+            gridViewDecimalColumn120.HeaderText = "sourceindx";
+            gridViewDecimalColumn120.IsAutoGenerated = true;
+            gridViewDecimalColumn120.IsVisible = false;
+            gridViewDecimalColumn120.Name = "sourceindx";
+            gridViewDecimalColumn120.Width = 85;
+            gridViewDecimalColumn121.DataType = typeof(long);
+            gridViewDecimalColumn121.EnableExpressionEditor = false;
+            gridViewDecimalColumn121.FieldName = "stid";
+            gridViewDecimalColumn121.HeaderText = "stid";
+            gridViewDecimalColumn121.IsAutoGenerated = true;
+            gridViewDecimalColumn121.IsVisible = false;
+            gridViewDecimalColumn121.Name = "stid";
+            gridViewDecimalColumn121.Width = 85;
+            gridViewDecimalColumn122.DataType = typeof(long);
+            gridViewDecimalColumn122.EnableExpressionEditor = false;
+            gridViewDecimalColumn122.FieldName = "cyid";
+            gridViewDecimalColumn122.HeaderText = "cyid";
+            gridViewDecimalColumn122.IsAutoGenerated = true;
+            gridViewDecimalColumn122.IsVisible = false;
+            gridViewDecimalColumn122.Name = "cyid";
+            gridViewDecimalColumn122.Width = 85;
+            gridViewDecimalColumn123.DataType = typeof(long);
+            gridViewDecimalColumn123.EnableExpressionEditor = false;
+            gridViewDecimalColumn123.FieldName = "TIER1";
+            gridViewDecimalColumn123.HeaderText = "TIER1";
+            gridViewDecimalColumn123.IsAutoGenerated = true;
+            gridViewDecimalColumn123.IsVisible = false;
+            gridViewDecimalColumn123.Name = "TIER1";
+            gridViewDecimalColumn123.Width = 100;
+            gridViewDecimalColumn124.DataType = typeof(long);
+            gridViewDecimalColumn124.EnableExpressionEditor = false;
+            gridViewDecimalColumn124.FieldName = "TIER2";
+            gridViewDecimalColumn124.HeaderText = "TIER2";
+            gridViewDecimalColumn124.IsAutoGenerated = true;
+            gridViewDecimalColumn124.IsVisible = false;
+            gridViewDecimalColumn124.Name = "TIER2";
+            gridViewDecimalColumn124.Width = 85;
+            gridViewDecimalColumn125.DataType = typeof(long);
+            gridViewDecimalColumn125.EnableExpressionEditor = false;
+            gridViewDecimalColumn125.FieldName = "TIER3";
+            gridViewDecimalColumn125.HeaderText = "TIER3";
+            gridViewDecimalColumn125.IsAutoGenerated = true;
+            gridViewDecimalColumn125.IsVisible = false;
+            gridViewDecimalColumn125.Name = "TIER3";
+            gridViewDecimalColumn125.Width = 85;
+            gridViewTextBoxColumn14.EnableExpressionEditor = false;
+            gridViewTextBoxColumn14.FieldName = "TIER1NAME";
+            gridViewTextBoxColumn14.HeaderText = "TIER 1";
+            gridViewTextBoxColumn14.IsAutoGenerated = true;
+            gridViewTextBoxColumn14.Name = "TIER1NAME";
+            gridViewTextBoxColumn14.Width = 107;
+            gridViewTextBoxColumn15.EnableExpressionEditor = false;
+            gridViewTextBoxColumn15.FieldName = "TIER2NAME";
+            gridViewTextBoxColumn15.HeaderText = "TIER 2";
+            gridViewTextBoxColumn15.IsAutoGenerated = true;
+            gridViewTextBoxColumn15.Name = "TIER2NAME";
+            gridViewTextBoxColumn15.SortOrder = Telerik.WinControls.UI.RadSortOrder.Ascending;
+            gridViewTextBoxColumn15.Width = 107;
+            gridViewTextBoxColumn16.EnableExpressionEditor = false;
+            gridViewTextBoxColumn16.FieldName = "TIER3NAME";
+            gridViewTextBoxColumn16.HeaderText = "TIER 3";
+            gridViewTextBoxColumn16.IsAutoGenerated = true;
+            gridViewTextBoxColumn16.Name = "TIER3NAME";
+            gridViewTextBoxColumn16.Width = 107;
+            gridViewTextBoxColumn17.EnableExpressionEditor = false;
+            gridViewTextBoxColumn17.FieldName = "TYPE";
+            gridViewTextBoxColumn17.HeaderText = "TYPE";
+            gridViewTextBoxColumn17.IsAutoGenerated = true;
+            gridViewTextBoxColumn17.Name = "TYPE";
+            gridViewTextBoxColumn17.Width = 54;
+            gridViewCheckBoxColumn2.DataType = typeof(long);
+            gridViewCheckBoxColumn2.EnableExpressionEditor = false;
+            gridViewCheckBoxColumn2.FieldName = "MODIFIED";
+            gridViewCheckBoxColumn2.HeaderText = "MODIFIED";
+            gridViewCheckBoxColumn2.IsAutoGenerated = true;
+            gridViewCheckBoxColumn2.MinWidth = 27;
+            gridViewCheckBoxColumn2.Name = "MODIFIED";
+            gridViewCheckBoxColumn2.ReadOnly = true;
+            gridViewCheckBoxColumn2.Width = 54;
+            gridViewDecimalColumn126.DataType = typeof(double);
+            gridViewDecimalColumn126.EnableExpressionEditor = false;
+            gridViewDecimalColumn126.FieldName = "BASE_NOx";
+            gridViewDecimalColumn126.HeaderText = "Base NOx";
+            gridViewDecimalColumn126.IsAutoGenerated = true;
+            gridViewDecimalColumn126.Name = "BASE_NOx";
+            gridViewDecimalColumn126.Width = 91;
+            gridViewDecimalColumn127.DataType = typeof(double);
+            gridViewDecimalColumn127.EnableExpressionEditor = false;
+            gridViewDecimalColumn127.FieldName = "BASE_SO2";
+            gridViewDecimalColumn127.HeaderText = "Base SO2";
+            gridViewDecimalColumn127.IsAutoGenerated = true;
+            gridViewDecimalColumn127.Name = "BASE_SO2";
+            gridViewDecimalColumn127.Width = 91;
+            gridViewDecimalColumn128.DataType = typeof(double);
+            gridViewDecimalColumn128.EnableExpressionEditor = false;
+            gridViewDecimalColumn128.FieldName = "BASE_NH3";
+            gridViewDecimalColumn128.HeaderText = "Base NH3";
+            gridViewDecimalColumn128.IsAutoGenerated = true;
+            gridViewDecimalColumn128.Name = "BASE_NH3";
+            gridViewDecimalColumn128.Width = 91;
+            gridViewDecimalColumn129.DataType = typeof(double);
+            gridViewDecimalColumn129.EnableExpressionEditor = false;
+            gridViewDecimalColumn129.FieldName = "BASE_PM25";
+            gridViewDecimalColumn129.HeaderText = "Base PM 2.5";
+            gridViewDecimalColumn129.IsAutoGenerated = true;
+            gridViewDecimalColumn129.Name = "BASE_PM25";
+            gridViewDecimalColumn129.Width = 95;
+            gridViewDecimalColumn130.DataType = typeof(double);
+            gridViewDecimalColumn130.EnableExpressionEditor = false;
+            gridViewDecimalColumn130.FieldName = "BASE_VOC";
+            gridViewDecimalColumn130.HeaderText = "Base VOC";
+            gridViewDecimalColumn130.IsAutoGenerated = true;
+            gridViewDecimalColumn130.Name = "BASE_VOC";
+            gridViewDecimalColumn130.Width = 91;
+            gridViewDecimalColumn131.DataType = typeof(double);
+            gridViewDecimalColumn131.EnableExpressionEditor = false;
+            gridViewDecimalColumn131.FieldName = "CTRL_NOx";
+            gridViewDecimalColumn131.HeaderText = "Control NOx";
+            gridViewDecimalColumn131.IsAutoGenerated = true;
+            gridViewDecimalColumn131.Name = "CTRL_NOx";
+            gridViewDecimalColumn131.Width = 91;
+            gridViewDecimalColumn132.DataType = typeof(double);
+            gridViewDecimalColumn132.EnableExpressionEditor = false;
+            gridViewDecimalColumn132.FieldName = "CTRL_SO2";
+            gridViewDecimalColumn132.HeaderText = "Control SO2";
+            gridViewDecimalColumn132.IsAutoGenerated = true;
+            gridViewDecimalColumn132.Name = "CTRL_SO2";
+            gridViewDecimalColumn132.Width = 91;
+            gridViewDecimalColumn133.DataType = typeof(double);
+            gridViewDecimalColumn133.EnableExpressionEditor = false;
+            gridViewDecimalColumn133.FieldName = "CTRL_NH3";
+            gridViewDecimalColumn133.HeaderText = "Control NH3";
+            gridViewDecimalColumn133.IsAutoGenerated = true;
+            gridViewDecimalColumn133.Name = "CTRL_NH3";
+            gridViewDecimalColumn133.Width = 91;
+            gridViewDecimalColumn134.DataType = typeof(double);
+            gridViewDecimalColumn134.EnableExpressionEditor = false;
+            gridViewDecimalColumn134.FieldName = "CTRL_PM25";
+            gridViewDecimalColumn134.HeaderText = "Control PM 2.5";
+            gridViewDecimalColumn134.IsAutoGenerated = true;
+            gridViewDecimalColumn134.Name = "CTRL_PM25";
+            gridViewDecimalColumn134.Width = 95;
+            gridViewDecimalColumn135.DataType = typeof(double);
+            gridViewDecimalColumn135.EnableExpressionEditor = false;
+            gridViewDecimalColumn135.FieldName = "CTRL_VOC";
+            gridViewDecimalColumn135.HeaderText = "Control VOC";
+            gridViewDecimalColumn135.IsAutoGenerated = true;
+            gridViewDecimalColumn135.Name = "CTRL_VOC";
+            gridViewDecimalColumn135.Width = 91;
+            gridViewDecimalColumn136.DataType = typeof(double);
+            gridViewDecimalColumn136.EnableExpressionEditor = false;
+            gridViewDecimalColumn136.FieldName = "DELTA_NOx";
+            gridViewDecimalColumn136.HeaderText = "Delta NOx";
+            gridViewDecimalColumn136.IsAutoGenerated = true;
+            gridViewDecimalColumn136.Name = "DELTA_NOx";
+            gridViewDecimalColumn136.ReadOnly = true;
+            gridViewDecimalColumn136.Width = 97;
+            gridViewDecimalColumn137.DataType = typeof(double);
+            gridViewDecimalColumn137.EnableExpressionEditor = false;
+            gridViewDecimalColumn137.FieldName = "DELTA_SO2";
+            gridViewDecimalColumn137.HeaderText = "Delta SO2";
+            gridViewDecimalColumn137.IsAutoGenerated = true;
+            gridViewDecimalColumn137.Name = "DELTA_SO2";
+            gridViewDecimalColumn137.ReadOnly = true;
+            gridViewDecimalColumn137.Width = 95;
+            gridViewDecimalColumn138.DataType = typeof(double);
+            gridViewDecimalColumn138.EnableExpressionEditor = false;
+            gridViewDecimalColumn138.FieldName = "DELTA_NH3";
+            gridViewDecimalColumn138.HeaderText = "Delta NH3";
+            gridViewDecimalColumn138.IsAutoGenerated = true;
+            gridViewDecimalColumn138.Name = "DELTA_NH3";
+            gridViewDecimalColumn138.ReadOnly = true;
+            gridViewDecimalColumn138.Width = 97;
+            gridViewDecimalColumn139.DataType = typeof(double);
+            gridViewDecimalColumn139.EnableExpressionEditor = false;
+            gridViewDecimalColumn139.FieldName = "DELTA_PM25";
+            gridViewDecimalColumn139.HeaderText = "Delta PM 2.5";
+            gridViewDecimalColumn139.IsAutoGenerated = true;
+            gridViewDecimalColumn139.Name = "DELTA_PM25";
+            gridViewDecimalColumn139.ReadOnly = true;
+            gridViewDecimalColumn139.Width = 106;
+            gridViewDecimalColumn140.DataType = typeof(double);
+            gridViewDecimalColumn140.EnableExpressionEditor = false;
+            gridViewDecimalColumn140.FieldName = "DELTA_VOC";
+            gridViewDecimalColumn140.HeaderText = "Delta VOC";
+            gridViewDecimalColumn140.IsAutoGenerated = true;
+            gridViewDecimalColumn140.Name = "DELTA_VOC";
+            gridViewDecimalColumn140.ReadOnly = true;
+            gridViewDecimalColumn140.Width = 100;
             this.radGridView2.MasterTemplate.Columns.AddRange(new Telerik.WinControls.UI.GridViewDataColumn[] {
-            gridViewDecimalColumn1,
-            gridViewTextBoxColumn1,
-            gridViewTextBoxColumn2,
-            gridViewTextBoxColumn3,
-            gridViewDecimalColumn2,
-            gridViewDecimalColumn3,
-            gridViewDecimalColumn4,
-            gridViewDecimalColumn5,
-            gridViewDecimalColumn6,
-            gridViewDecimalColumn7,
-            gridViewDecimalColumn8,
-            gridViewTextBoxColumn4,
-            gridViewTextBoxColumn5,
-            gridViewTextBoxColumn6,
-            gridViewTextBoxColumn7,
-            gridViewCheckBoxColumn1,
-            gridViewDecimalColumn9,
-            gridViewDecimalColumn10,
-            gridViewDecimalColumn11,
-            gridViewDecimalColumn12,
-            gridViewDecimalColumn13,
-            gridViewDecimalColumn14,
-            gridViewDecimalColumn15,
-            gridViewDecimalColumn16,
-            gridViewDecimalColumn17,
-            gridViewDecimalColumn18,
-            gridViewDecimalColumn19,
-            gridViewDecimalColumn20,
-            gridViewDecimalColumn21,
-            gridViewDecimalColumn22,
-            gridViewDecimalColumn23});
+            gridViewDecimalColumn118,
+            gridViewTextBoxColumn11,
+            gridViewTextBoxColumn12,
+            gridViewTextBoxColumn13,
+            gridViewDecimalColumn119,
+            gridViewDecimalColumn120,
+            gridViewDecimalColumn121,
+            gridViewDecimalColumn122,
+            gridViewDecimalColumn123,
+            gridViewDecimalColumn124,
+            gridViewDecimalColumn125,
+            gridViewTextBoxColumn14,
+            gridViewTextBoxColumn15,
+            gridViewTextBoxColumn16,
+            gridViewTextBoxColumn17,
+            gridViewCheckBoxColumn2,
+            gridViewDecimalColumn126,
+            gridViewDecimalColumn127,
+            gridViewDecimalColumn128,
+            gridViewDecimalColumn129,
+            gridViewDecimalColumn130,
+            gridViewDecimalColumn131,
+            gridViewDecimalColumn132,
+            gridViewDecimalColumn133,
+            gridViewDecimalColumn134,
+            gridViewDecimalColumn135,
+            gridViewDecimalColumn136,
+            gridViewDecimalColumn137,
+            gridViewDecimalColumn138,
+            gridViewDecimalColumn139,
+            gridViewDecimalColumn140});
             this.radGridView2.MasterTemplate.DataSource = this.sYSEmissionsBindingSource;
             this.radGridView2.MasterTemplate.EnableFiltering = true;
             this.radGridView2.MasterTemplate.EnableGrouping = false;
-            sortDescriptor1.PropertyName = "TIER2NAME";
+            sortDescriptor2.PropertyName = "TIER2NAME";
             this.radGridView2.MasterTemplate.SortDescriptors.AddRange(new Telerik.WinControls.Data.SortDescriptor[] {
-            sortDescriptor1});
-            gridViewSummaryItem1.Aggregate = Telerik.WinControls.UI.GridAggregateFunction.Avg;
-            gridViewSummaryItem1.AggregateExpression = null;
-            gridViewSummaryItem1.FormatString = "{0:0.####}";
-            gridViewSummaryItem1.Name = "DELTA_FINAL_PM";
-            gridViewSummaryItem2.Aggregate = Telerik.WinControls.UI.GridAggregateFunction.Avg;
-            gridViewSummaryItem2.AggregateExpression = null;
-            gridViewSummaryItem2.FormatString = "{0:0.####}";
-            gridViewSummaryItem2.Name = "DELTA_FINAL_O3";
+            sortDescriptor2});
+            gridViewSummaryItem9.Aggregate = Telerik.WinControls.UI.GridAggregateFunction.Avg;
+            gridViewSummaryItem9.AggregateExpression = null;
+            gridViewSummaryItem9.FormatString = "{0:0.####}";
+            gridViewSummaryItem9.Name = "DELTA_FINAL_PM";
+            gridViewSummaryItem10.Aggregate = Telerik.WinControls.UI.GridAggregateFunction.Avg;
+            gridViewSummaryItem10.AggregateExpression = null;
+            gridViewSummaryItem10.FormatString = "{0:0.####}";
+            gridViewSummaryItem10.Name = "DELTA_FINAL_O3";
             this.radGridView2.MasterTemplate.SummaryRowsBottom.Add(new Telerik.WinControls.UI.GridViewSummaryRowItem(new Telerik.WinControls.UI.GridViewSummaryItem[] {
-                gridViewSummaryItem1}));
+                gridViewSummaryItem9}));
             this.radGridView2.MasterTemplate.SummaryRowsBottom.Add(new Telerik.WinControls.UI.GridViewSummaryRowItem(new Telerik.WinControls.UI.GridViewSummaryItem[] {
-                gridViewSummaryItem2}));
-            gridViewSummaryItem3.Aggregate = Telerik.WinControls.UI.GridAggregateFunction.Sum;
-            gridViewSummaryItem3.AggregateExpression = null;
-            gridViewSummaryItem3.FormatString = "Total: {0:0.####}";
-            gridViewSummaryItem3.Name = "PM Mortality All Cause (low)";
-            gridViewSummaryItem4.AggregateExpression = null;
-            gridViewSummaryItem4.FormatString = "{0}";
-            gridViewSummaryItem4.Name = null;
+                gridViewSummaryItem10}));
+            gridViewSummaryItem11.Aggregate = Telerik.WinControls.UI.GridAggregateFunction.Sum;
+            gridViewSummaryItem11.AggregateExpression = null;
+            gridViewSummaryItem11.FormatString = "Total: {0:0.####}";
+            gridViewSummaryItem11.Name = "PM Mortality All Cause (low)";
+            gridViewSummaryItem12.AggregateExpression = null;
+            gridViewSummaryItem12.FormatString = "{0}";
+            gridViewSummaryItem12.Name = null;
             this.radGridView2.MasterTemplate.SummaryRowsTop.Add(new Telerik.WinControls.UI.GridViewSummaryRowItem(new Telerik.WinControls.UI.GridViewSummaryItem[] {
-                gridViewSummaryItem3,
-                gridViewSummaryItem4}));
-            this.radGridView2.MasterTemplate.ViewDefinition = tableViewDefinition1;
+                gridViewSummaryItem11,
+                gridViewSummaryItem12}));
+            this.radGridView2.MasterTemplate.ViewDefinition = tableViewDefinition3;
             this.radGridView2.Name = "radGridView2";
             this.radGridView2.ReadOnly = true;
             this.radGridView2.RightToLeft = System.Windows.Forms.RightToLeft.No;
@@ -2356,11 +2357,12 @@
             this.label_Computing.Size = new System.Drawing.Size(330, 20);
             this.label_Computing.TabIndex = 9;
             this.label_Computing.Text = "Computing. Estimated time ≈ 45–60 min.";
-            this.label_Computing.Click += new System.EventHandler(this.label_Computing_Click);
             this.label_Computing.Visible = false;
+            this.label_Computing.Click += new System.EventHandler(this.label_Computing_Click);
             // 
             // groupBox_DiscountRate
             // 
+            this.groupBox_DiscountRate.Controls.Add(this.radioButtonDR7);
             this.groupBox_DiscountRate.Controls.Add(this.customRadio);
             this.groupBox_DiscountRate.Controls.Add(this.btnExecute);
             this.groupBox_DiscountRate.Controls.Add(this.discountrateUpDown);
@@ -2378,7 +2380,7 @@
             // customRadio
             // 
             this.customRadio.AutoSize = true;
-            this.customRadio.Location = new System.Drawing.Point(85, 32);
+            this.customRadio.Location = new System.Drawing.Point(129, 32);
             this.customRadio.Name = "customRadio";
             this.customRadio.Size = new System.Drawing.Size(100, 24);
             this.customRadio.TabIndex = 4;
@@ -2400,16 +2402,17 @@
             // discountrateUpDown
             // 
             this.discountrateUpDown.DecimalPlaces = 2;
-            this.discountrateUpDown.Location = new System.Drawing.Point(194, 32);
+            this.discountrateUpDown.Location = new System.Drawing.Point(235, 30);
             this.discountrateUpDown.Name = "discountrateUpDown";
             this.discountrateUpDown.Size = new System.Drawing.Size(67, 26);
             this.discountrateUpDown.TabIndex = 3;
             this.discountrateUpDown.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             this.discountrateUpDown.Value = new decimal(new int[] {
-            2,
+            3,
             0,
             0,
             0});
+            this.discountrateUpDown.ValueChanged += new System.EventHandler(this.discountrateUpDown_ValueChanged);
             // 
             // richTextBox1
             // 
@@ -2430,8 +2433,7 @@
             this.radioButtonDR3.Name = "radioButtonDR3";
             this.radioButtonDR3.Size = new System.Drawing.Size(50, 24);
             this.radioButtonDR3.TabIndex = 0;
-            this.radioButtonDR3.TabStop = true;
-            this.radioButtonDR3.Text = "2%";
+            this.radioButtonDR3.Text = "3%";
             this.radioButtonDR3.UseVisualStyleBackColor = true;
             this.radioButtonDR3.CheckedChanged += new System.EventHandler(this.radioButtonDR3_CheckedChanged);
             // 
@@ -2741,908 +2743,908 @@
             // 
             // 
             // 
-            gridViewDecimalColumn24.DataType = typeof(long);
-            gridViewDecimalColumn24.EnableExpressionEditor = false;
-            gridViewDecimalColumn24.FieldName = "ID";
-            gridViewDecimalColumn24.HeaderText = "ID";
-            gridViewDecimalColumn24.IsAutoGenerated = true;
-            gridViewDecimalColumn24.IsVisible = false;
-            gridViewDecimalColumn24.Name = "ID";
-            gridViewDecimalColumn24.Width = 19;
-            gridViewDecimalColumn25.DataType = typeof(long);
-            gridViewDecimalColumn25.EnableExpressionEditor = false;
-            gridViewDecimalColumn25.FieldName = "dest_tract";
-            gridViewDecimalColumn25.HeaderText = "Census Tract ID";
-            gridViewDecimalColumn25.IsAutoGenerated = true;
-            gridViewDecimalColumn25.IsVisible = false;
-            gridViewDecimalColumn25.Name = "dest_tract";
-            gridViewTextBoxColumn8.EnableExpressionEditor = false;
-            gridViewTextBoxColumn8.FieldName = "FIPS";
-            gridViewTextBoxColumn8.HeaderText = "FIPS";
-            gridViewTextBoxColumn8.IsAutoGenerated = true;
-            gridViewTextBoxColumn8.Name = "FIPS";
-            gridViewTextBoxColumn8.Width = 75;
-            gridViewTextBoxColumn9.EnableExpressionEditor = false;
-            gridViewTextBoxColumn9.FieldName = "STATE";
-            gridViewTextBoxColumn9.HeaderText = "State";
-            gridViewTextBoxColumn9.IsAutoGenerated = true;
-            gridViewTextBoxColumn9.Name = "STATE";
-            gridViewTextBoxColumn9.Width = 129;
-            gridViewTextBoxColumn10.EnableExpressionEditor = false;
-            gridViewTextBoxColumn10.FieldName = "COUNTY";
-            gridViewTextBoxColumn10.HeaderText = "County";
-            gridViewTextBoxColumn10.IsAutoGenerated = true;
-            gridViewTextBoxColumn10.Name = "COUNTY";
-            gridViewTextBoxColumn10.Width = 195;
-            gridViewDecimalColumn26.DataType = typeof(double);
-            gridViewDecimalColumn26.EnableExpressionEditor = false;
-            gridViewDecimalColumn26.FieldName = "BASE_FINAL_PM";
-            gridViewDecimalColumn26.FormatString = "{0:0.###}";
-            gridViewDecimalColumn26.HeaderText = "Base PM 2.5";
-            gridViewDecimalColumn26.IsAutoGenerated = true;
-            gridViewDecimalColumn26.Name = "BASE_FINAL_PM";
-            gridViewDecimalColumn26.Width = 69;
-            gridViewDecimalColumn27.DataType = typeof(double);
-            gridViewDecimalColumn27.EnableExpressionEditor = false;
-            gridViewDecimalColumn27.FieldName = "CTRL_FINAL_PM";
-            gridViewDecimalColumn27.FormatString = "{0:0.###}";
-            gridViewDecimalColumn27.HeaderText = "Control PM 2.5";
-            gridViewDecimalColumn27.IsAutoGenerated = true;
-            gridViewDecimalColumn27.Name = "CTRL_FINAL_PM";
-            gridViewDecimalColumn27.Width = 85;
-            gridViewDecimalColumn28.DataType = typeof(double);
-            gridViewDecimalColumn28.EnableExpressionEditor = false;
-            gridViewDecimalColumn28.FieldName = "DELTA_FINAL_PM";
-            gridViewDecimalColumn28.FormatString = "{0:0.####}";
-            gridViewDecimalColumn28.HeaderText = "Delta PM 2.5";
-            gridViewDecimalColumn28.IsAutoGenerated = true;
-            gridViewDecimalColumn28.Name = "DELTA_FINAL_PM";
-            gridViewDecimalColumn28.Width = 72;
-            gridViewDecimalColumn29.DataType = typeof(double);
-            gridViewDecimalColumn29.FieldName = "BASE_FINAL_O3";
-            gridViewDecimalColumn29.FormatString = "{0:0.###}";
-            gridViewDecimalColumn29.HeaderText = "Base O3";
-            gridViewDecimalColumn29.IsAutoGenerated = true;
-            gridViewDecimalColumn29.Name = "BASE_FINAL_O3";
-            gridViewDecimalColumn29.Width = 69;
-            gridViewDecimalColumn30.DataType = typeof(double);
-            gridViewDecimalColumn30.EnableExpressionEditor = false;
-            gridViewDecimalColumn30.FieldName = "CTRL_FINAL_O3";
-            gridViewDecimalColumn30.FormatString = "{0:0.###}";
-            gridViewDecimalColumn30.HeaderText = "Control O3";
-            gridViewDecimalColumn30.IsAutoGenerated = true;
-            gridViewDecimalColumn30.Name = "CTRL_FINAL_O3";
-            gridViewDecimalColumn30.Width = 85;
-            gridViewDecimalColumn31.DataType = typeof(double);
-            gridViewDecimalColumn31.EnableExpressionEditor = false;
-            gridViewDecimalColumn31.FieldName = "DELTA_FINAL_O3";
-            gridViewDecimalColumn31.FormatString = "{0:0.####}";
-            gridViewDecimalColumn31.HeaderText = "Delta O3";
-            gridViewDecimalColumn31.IsAutoGenerated = true;
-            gridViewDecimalColumn31.Name = "DELTA_FINAL_O3";
-            gridViewDecimalColumn31.Width = 72;
-            gridViewDecimalColumn32.DataType = typeof(double);
-            gridViewDecimalColumn32.EnableExpressionEditor = false;
-            gridViewDecimalColumn32.FieldName = "TOTALHELOW";
-            gridViewDecimalColumn32.FormatString = "{0:###,###,##0.##}";
-            gridViewDecimalColumn32.HeaderText = "$ Total Health Benefits (low estimate)";
-            gridViewDecimalColumn32.Name = "TOTALHELOW";
-            gridViewDecimalColumn32.ReadOnly = true;
-            gridViewDecimalColumn32.Width = 194;
-            gridViewDecimalColumn33.DataType = typeof(double);
-            gridViewDecimalColumn33.EnableExpressionEditor = false;
-            gridViewDecimalColumn33.FieldName = "TOTALHEHIGH";
-            gridViewDecimalColumn33.FormatString = "{0:###,###,##0.##}";
-            gridViewDecimalColumn33.HeaderText = "$ Total Health Benefits (high estimate)";
-            gridViewDecimalColumn33.Name = "TOTALHEHIGH";
-            gridViewDecimalColumn33.ReadOnly = true;
-            gridViewDecimalColumn33.Width = 199;
-            gridViewDecimalColumn34.DataType = typeof(double);
-            gridViewDecimalColumn34.EnableExpressionEditor = false;
-            gridViewDecimalColumn34.FieldName = "ALLMORTLOW";
-            gridViewDecimalColumn34.FormatString = "{0:0.####}";
-            gridViewDecimalColumn34.HeaderText = "Total Mortality (low estimate)";
-            gridViewDecimalColumn34.IsAutoGenerated = true;
-            gridViewDecimalColumn34.Name = "ALLMORTLOW";
-            gridViewDecimalColumn34.Width = 194;
-            gridViewDecimalColumn35.DataType = typeof(double);
-            gridViewDecimalColumn35.EnableExpressionEditor = false;
-            gridViewDecimalColumn35.FieldName = "ALLMORTLOWVAL";
-            gridViewDecimalColumn35.FormatString = "{0:###,###,##0.##}";
-            gridViewDecimalColumn35.HeaderText = "$ Total Mortality (low estimate)";
-            gridViewDecimalColumn35.IsAutoGenerated = true;
-            gridViewDecimalColumn35.Name = "ALLMORTLOWVAL";
-            gridViewDecimalColumn35.ThousandsSeparator = true;
-            gridViewDecimalColumn35.Width = 199;
-            gridViewDecimalColumn36.DataType = typeof(double);
-            gridViewDecimalColumn36.EnableExpressionEditor = false;
-            gridViewDecimalColumn36.FieldName = "ALLMORTHIGH";
-            gridViewDecimalColumn36.FormatString = "{0:0.####}";
-            gridViewDecimalColumn36.HeaderText = "Total Mortality (high estimate)";
-            gridViewDecimalColumn36.IsAutoGenerated = true;
-            gridViewDecimalColumn36.Name = "ALLMORTHIGH";
-            gridViewDecimalColumn36.Width = 200;
-            gridViewDecimalColumn37.DataType = typeof(double);
-            gridViewDecimalColumn37.EnableExpressionEditor = false;
-            gridViewDecimalColumn37.FieldName = "ALLMORTHIGHVAL";
-            gridViewDecimalColumn37.FormatString = "{0:###,###,##0.##}";
-            gridViewDecimalColumn37.HeaderText = "$ Total Mortality (high estimate)";
-            gridViewDecimalColumn37.IsAutoGenerated = true;
-            gridViewDecimalColumn37.Name = "ALLMORTHIGHVAL";
-            gridViewDecimalColumn37.ThousandsSeparator = true;
-            gridViewDecimalColumn37.Width = 200;
-            gridViewDecimalColumn38.DataType = typeof(double);
-            gridViewDecimalColumn38.EnableExpressionEditor = false;
-            gridViewDecimalColumn38.FieldName = "TOTALPMORTLOW";
-            gridViewDecimalColumn38.FormatString = "{0:0.####}";
-            gridViewDecimalColumn38.HeaderText = "PM Mortality (low estimate)";
-            gridViewDecimalColumn38.IsAutoGenerated = true;
-            gridViewDecimalColumn38.Name = "TOTALPMORTLOW";
-            gridViewDecimalColumn38.Width = 200;
-            gridViewDecimalColumn39.DataType = typeof(double);
-            gridViewDecimalColumn39.EnableExpressionEditor = false;
-            gridViewDecimalColumn39.FieldName = "TOTALPMORTLOWVAL";
-            gridViewDecimalColumn39.FormatString = "{0:###,###,##0.##}";
-            gridViewDecimalColumn39.HeaderText = "$ PM Mortality (low estimate)";
-            gridViewDecimalColumn39.IsAutoGenerated = true;
-            gridViewDecimalColumn39.Name = "TOTALPMORTLOWVAL";
-            gridViewDecimalColumn39.ThousandsSeparator = true;
-            gridViewDecimalColumn39.Width = 200;
-            gridViewDecimalColumn40.DataType = typeof(double);
-            gridViewDecimalColumn40.EnableExpressionEditor = false;
-            gridViewDecimalColumn40.FieldName = "TOTALPMORTHIGH";
-            gridViewDecimalColumn40.FormatString = "{0:0.####}";
-            gridViewDecimalColumn40.HeaderText = "PM Mortality (high estimate)";
-            gridViewDecimalColumn40.IsAutoGenerated = true;
-            gridViewDecimalColumn40.Name = "TOTALPMORTHIGH";
-            gridViewDecimalColumn40.Width = 200;
-            gridViewDecimalColumn41.DataType = typeof(double);
-            gridViewDecimalColumn41.EnableExpressionEditor = false;
-            gridViewDecimalColumn41.FieldName = "TOTALPMORTHIGHVAL";
-            gridViewDecimalColumn41.FormatString = "{0:###,###,##0.##}";
-            gridViewDecimalColumn41.HeaderText = "$ PM Mortality (high estimate)";
-            gridViewDecimalColumn41.IsAutoGenerated = true;
-            gridViewDecimalColumn41.Name = "TOTALPMORTHIGHVAL";
-            gridViewDecimalColumn41.ThousandsSeparator = true;
-            gridViewDecimalColumn41.Width = 200;
-            gridViewDecimalColumn42.DataType = typeof(double);
-            gridViewDecimalColumn42.EnableExpressionEditor = false;
-            gridViewDecimalColumn42.FieldName = "TOTALO3MORT";
-            gridViewDecimalColumn42.FormatString = "{0:0.####}";
-            gridViewDecimalColumn42.HeaderText = "Total O3 Mortality";
-            gridViewDecimalColumn42.IsAutoGenerated = true;
-            gridViewDecimalColumn42.Name = "TOTALO3MORT";
-            gridViewDecimalColumn42.Width = 131;
-            gridViewDecimalColumn43.DataType = typeof(double);
-            gridViewDecimalColumn43.EnableExpressionEditor = false;
-            gridViewDecimalColumn43.FieldName = "TOTALO3MORTVAL";
-            gridViewDecimalColumn43.FormatString = "{0:###,###,##0.##}";
-            gridViewDecimalColumn43.HeaderText = "$ Total O3 Mortality";
-            gridViewDecimalColumn43.IsAutoGenerated = true;
-            gridViewDecimalColumn43.Name = "TOTALO3MORTVAL";
-            gridViewDecimalColumn43.ThousandsSeparator = true;
-            gridViewDecimalColumn43.Width = 140;
-            gridViewDecimalColumn44.DataType = typeof(double);
-            gridViewDecimalColumn44.EnableExpressionEditor = false;
-            gridViewDecimalColumn44.FieldName = "O3 Mortality Shortterm exposure";
-            gridViewDecimalColumn44.FormatString = "{0:0.####}";
-            gridViewDecimalColumn44.HeaderText = "O3 Mortality (Short-term exposure)";
-            gridViewDecimalColumn44.IsAutoGenerated = true;
-            gridViewDecimalColumn44.Name = "O3 Mortality Shortterm exposure";
-            gridViewDecimalColumn44.Width = 200;
-            gridViewDecimalColumn45.DataType = typeof(double);
-            gridViewDecimalColumn45.EnableExpressionEditor = false;
-            gridViewDecimalColumn45.FieldName = "$ O3 Mortality Shortterm exposure";
-            gridViewDecimalColumn45.FormatString = "{0:###,###,##0.##}";
-            gridViewDecimalColumn45.HeaderText = "$ O3 Mortality (Short-term exposure)";
-            gridViewDecimalColumn45.IsAutoGenerated = true;
-            gridViewDecimalColumn45.Name = "$ O3 Mortality Shortterm exposure";
-            gridViewDecimalColumn45.ThousandsSeparator = true;
-            gridViewDecimalColumn45.Width = 200;
-            gridViewDecimalColumn46.DataType = typeof(double);
-            gridViewDecimalColumn46.EnableExpressionEditor = false;
-            gridViewDecimalColumn46.FieldName = "O3 Mortality Longterm exposure";
-            gridViewDecimalColumn46.FormatString = "{0:0.####}";
-            gridViewDecimalColumn46.HeaderText = "O3 Mortality (Long-term exposure)";
-            gridViewDecimalColumn46.IsAutoGenerated = true;
-            gridViewDecimalColumn46.Name = "O3 Mortality Longterm exposure";
-            gridViewDecimalColumn46.Width = 200;
-            gridViewDecimalColumn47.DataType = typeof(double);
-            gridViewDecimalColumn47.EnableExpressionEditor = false;
-            gridViewDecimalColumn47.FieldName = "$ O3 Mortality Longterm exposure";
-            gridViewDecimalColumn47.FormatString = "{0:###,###,##0.##}";
-            gridViewDecimalColumn47.HeaderText = "$ O3 Mortality (Long-term exposure)";
-            gridViewDecimalColumn47.IsAutoGenerated = true;
-            gridViewDecimalColumn47.Name = "$ O3 Mortality Longterm exposure";
-            gridViewDecimalColumn47.ThousandsSeparator = true;
-            gridViewDecimalColumn47.Width = 200;
-            gridViewDecimalColumn48.DataType = typeof(double);
-            gridViewDecimalColumn48.EnableExpressionEditor = false;
-            gridViewDecimalColumn48.FieldName = "ALLASTHMA";
-            gridViewDecimalColumn48.FormatString = "{0:0.####}";
-            gridViewDecimalColumn48.HeaderText = "Total Asthma Symptoms";
-            gridViewDecimalColumn48.IsAutoGenerated = true;
-            gridViewDecimalColumn48.Name = "ALLASTHMA";
-            gridViewDecimalColumn48.Width = 131;
-            gridViewDecimalColumn49.DataType = typeof(double);
-            gridViewDecimalColumn49.EnableExpressionEditor = false;
-            gridViewDecimalColumn49.FieldName = "ALLASTHMAVAL";
-            gridViewDecimalColumn49.FormatString = "{0:###,###,##0.##}";
-            gridViewDecimalColumn49.HeaderText = "$ Total Asthma Symptoms";
-            gridViewDecimalColumn49.IsAutoGenerated = true;
-            gridViewDecimalColumn49.Name = "ALLASTHMAVAL";
-            gridViewDecimalColumn49.ThousandsSeparator = true;
-            gridViewDecimalColumn49.Width = 140;
-            gridViewDecimalColumn50.DataType = typeof(double);
-            gridViewDecimalColumn50.EnableExpressionEditor = false;
-            gridViewDecimalColumn50.FieldName = "PM Asthma Symptoms Albuterol use";
-            gridViewDecimalColumn50.FormatString = "{0:0.####}";
-            gridViewDecimalColumn50.HeaderText = "PM Asthma Symptoms, Albuterol use";
-            gridViewDecimalColumn50.IsAutoGenerated = true;
-            gridViewDecimalColumn50.Name = "PM Asthma Symptoms Albuterol use";
-            gridViewDecimalColumn50.Width = 200;
-            gridViewDecimalColumn51.DataType = typeof(double);
-            gridViewDecimalColumn51.EnableExpressionEditor = false;
-            gridViewDecimalColumn51.FieldName = "$ PM Asthma Symptoms Albuterol use";
-            gridViewDecimalColumn51.FormatString = "{0:###,###,##0.##}";
-            gridViewDecimalColumn51.HeaderText = "$ PM Asthma Symptoms, Albuterol use";
-            gridViewDecimalColumn51.IsAutoGenerated = true;
-            gridViewDecimalColumn51.Name = "$ PM Asthma Symptoms Albuterol use";
-            gridViewDecimalColumn51.ThousandsSeparator = true;
-            gridViewDecimalColumn51.Width = 200;
-            gridViewDecimalColumn52.DataType = typeof(double);
-            gridViewDecimalColumn52.EnableExpressionEditor = false;
-            gridViewDecimalColumn52.FieldName = "O3 Asthma Symptoms Chest Tightness";
-            gridViewDecimalColumn52.FormatString = "{0:0.####}";
-            gridViewDecimalColumn52.HeaderText = "O3 Asthma Symptoms, Chest Tightness";
-            gridViewDecimalColumn52.IsAutoGenerated = true;
-            gridViewDecimalColumn52.Name = "O3 Asthma Symptoms Chest Tightness";
-            gridViewDecimalColumn52.Width = 200;
-            gridViewDecimalColumn53.DataType = typeof(double);
-            gridViewDecimalColumn53.EnableExpressionEditor = false;
-            gridViewDecimalColumn53.FieldName = "$ O3 Asthma Symptoms Chest Tightness";
-            gridViewDecimalColumn53.FormatString = "{0:###,###,##0.##}";
-            gridViewDecimalColumn53.HeaderText = "$ PM Asthma Symptoms, Chest Tightness";
-            gridViewDecimalColumn53.IsAutoGenerated = true;
-            gridViewDecimalColumn53.Name = "$ O3 Asthma Symptoms Chest Tightness";
-            gridViewDecimalColumn53.ThousandsSeparator = true;
-            gridViewDecimalColumn53.Width = 200;
-            gridViewDecimalColumn54.DataType = typeof(double);
-            gridViewDecimalColumn54.EnableExpressionEditor = false;
-            gridViewDecimalColumn54.FieldName = "O3 Asthma Symptoms Cough";
-            gridViewDecimalColumn54.FormatString = "{0:0.####}";
-            gridViewDecimalColumn54.HeaderText = "O3 Asthma Symptoms, Cough";
-            gridViewDecimalColumn54.IsAutoGenerated = true;
-            gridViewDecimalColumn54.Name = "O3 Asthma Symptoms Cough";
-            gridViewDecimalColumn54.Width = 180;
-            gridViewDecimalColumn55.DataType = typeof(double);
-            gridViewDecimalColumn55.EnableExpressionEditor = false;
-            gridViewDecimalColumn55.FieldName = "$ O3 Asthma Symptoms Cough";
-            gridViewDecimalColumn55.FormatString = "{0:###,###,##0.##}";
-            gridViewDecimalColumn55.HeaderText = "$ O3 Asthma Symptoms, Cough";
-            gridViewDecimalColumn55.IsAutoGenerated = true;
-            gridViewDecimalColumn55.Name = "$ O3 Asthma Symptoms Cough";
-            gridViewDecimalColumn55.ThousandsSeparator = true;
-            gridViewDecimalColumn55.Width = 190;
-            gridViewDecimalColumn56.DataType = typeof(double);
-            gridViewDecimalColumn56.EnableExpressionEditor = false;
-            gridViewDecimalColumn56.FieldName = "O3 Asthma Symptoms Shortness of Breath";
-            gridViewDecimalColumn56.FormatString = "{0:0.####}";
-            gridViewDecimalColumn56.HeaderText = "O3 Asthma Symptoms, Shortness of Breath";
-            gridViewDecimalColumn56.IsAutoGenerated = true;
-            gridViewDecimalColumn56.Name = "O3 Asthma Symptoms Shortness of Breath";
-            gridViewDecimalColumn56.Width = 200;
-            gridViewDecimalColumn57.DataType = typeof(double);
-            gridViewDecimalColumn57.EnableExpressionEditor = false;
-            gridViewDecimalColumn57.FieldName = "$ O3 Asthma Symptoms Shortness of Breath";
-            gridViewDecimalColumn57.FormatString = "{0:###,###,##0.##}";
-            gridViewDecimalColumn57.HeaderText = "$ O3 Asthma Symptoms, Shortness of Breath";
-            gridViewDecimalColumn57.IsAutoGenerated = true;
-            gridViewDecimalColumn57.Name = "$ O3 Asthma Symptoms Shortness of Breath";
-            gridViewDecimalColumn57.ThousandsSeparator = true;
-            gridViewDecimalColumn57.Width = 200;
-            gridViewDecimalColumn58.DataType = typeof(double);
-            gridViewDecimalColumn58.EnableExpressionEditor = false;
-            gridViewDecimalColumn58.FieldName = "O3 Asthma Symptoms Wheeze";
-            gridViewDecimalColumn58.FormatString = "{0:0.####}";
-            gridViewDecimalColumn58.HeaderText = "O3 Asthma Symptoms, Wheeze";
-            gridViewDecimalColumn58.IsAutoGenerated = true;
-            gridViewDecimalColumn58.Name = "O3 Asthma Symptoms Wheeze";
-            gridViewDecimalColumn58.Width = 180;
-            gridViewDecimalColumn59.DataType = typeof(double);
-            gridViewDecimalColumn59.EnableExpressionEditor = false;
-            gridViewDecimalColumn59.FieldName = "$ O3 Asthma Symptoms Wheeze";
-            gridViewDecimalColumn59.FormatString = "{0:###,###,##0.##}";
-            gridViewDecimalColumn59.HeaderText = "$ O3 Asthma Symptoms, Wheeze";
-            gridViewDecimalColumn59.IsAutoGenerated = true;
-            gridViewDecimalColumn59.Name = "$ O3 Asthma Symptoms Wheeze";
-            gridViewDecimalColumn59.ThousandsSeparator = true;
-            gridViewDecimalColumn59.Width = 190;
-            gridViewDecimalColumn60.DataType = typeof(double);
-            gridViewDecimalColumn60.EnableExpressionEditor = false;
-            gridViewDecimalColumn60.FieldName = "TOTALINCIDENCEASTHMA";
-            gridViewDecimalColumn60.FormatString = "{0:0.####}";
-            gridViewDecimalColumn60.HeaderText = "Total Incidence, Asthma";
-            gridViewDecimalColumn60.IsAutoGenerated = true;
-            gridViewDecimalColumn60.Name = "TOTALINCIDENCEASTHMA";
-            gridViewDecimalColumn60.Width = 180;
-            gridViewDecimalColumn61.DataType = typeof(double);
-            gridViewDecimalColumn61.EnableExpressionEditor = false;
-            gridViewDecimalColumn61.FieldName = "TOTALINCIDENCEASTHMAVAL";
-            gridViewDecimalColumn61.FormatString = "{0:###,###,##0.##}";
-            gridViewDecimalColumn61.HeaderText = "$ Total Incidence, Asthma";
-            gridViewDecimalColumn61.IsAutoGenerated = true;
-            gridViewDecimalColumn61.Name = "TOTALINCIDENCEASTHMAVAL";
-            gridViewDecimalColumn61.ThousandsSeparator = true;
-            gridViewDecimalColumn61.Width = 190;
-            gridViewDecimalColumn62.DataType = typeof(double);
-            gridViewDecimalColumn62.EnableExpressionEditor = false;
-            gridViewDecimalColumn62.FieldName = "PM Incidence Asthma";
-            gridViewDecimalColumn62.FormatString = "{0:0.####}";
-            gridViewDecimalColumn62.HeaderText = "PM Incidence, Asthma";
-            gridViewDecimalColumn62.IsAutoGenerated = true;
-            gridViewDecimalColumn62.Name = "PM Incidence Asthma";
-            gridViewDecimalColumn62.Width = 130;
-            gridViewDecimalColumn63.DataType = typeof(double);
-            gridViewDecimalColumn63.EnableExpressionEditor = false;
-            gridViewDecimalColumn63.FieldName = "$ PM Incidence Asthma";
-            gridViewDecimalColumn63.FormatString = "{0:###,###,##0.##}";
-            gridViewDecimalColumn63.HeaderText = "$ PM Incidence, Asthma";
-            gridViewDecimalColumn63.IsAutoGenerated = true;
-            gridViewDecimalColumn63.Name = "$ PM Incidence Asthma";
-            gridViewDecimalColumn63.ThousandsSeparator = true;
-            gridViewDecimalColumn63.Width = 140;
-            gridViewDecimalColumn64.DataType = typeof(double);
-            gridViewDecimalColumn64.EnableExpressionEditor = false;
-            gridViewDecimalColumn64.FieldName = "O3 Incidence Asthma";
-            gridViewDecimalColumn64.FormatString = "{0:0.####}";
-            gridViewDecimalColumn64.HeaderText = "O3 Incidence, Asthma";
-            gridViewDecimalColumn64.IsAutoGenerated = true;
-            gridViewDecimalColumn64.Name = "O3 Incidence Asthma";
-            gridViewDecimalColumn64.Width = 130;
-            gridViewDecimalColumn65.DataType = typeof(double);
-            gridViewDecimalColumn65.EnableExpressionEditor = false;
-            gridViewDecimalColumn65.FieldName = "$ O3 Incidence Asthma";
-            gridViewDecimalColumn65.FormatString = "{0:###,###,##0.##}";
-            gridViewDecimalColumn65.HeaderText = "$ O3 Incidence, Asthma";
-            gridViewDecimalColumn65.IsAutoGenerated = true;
-            gridViewDecimalColumn65.Name = "$ O3 Incidence Asthma";
-            gridViewDecimalColumn65.ThousandsSeparator = true;
-            gridViewDecimalColumn65.Width = 140;
-            gridViewDecimalColumn66.DataType = typeof(double);
-            gridViewDecimalColumn66.EnableExpressionEditor = false;
-            gridViewDecimalColumn66.FieldName = "TOTALHAYFEVER";
-            gridViewDecimalColumn66.FormatString = "{0:0.####}";
-            gridViewDecimalColumn66.HeaderText = "Total Incidence, Hay Fever/Rhinitis";
-            gridViewDecimalColumn66.IsAutoGenerated = true;
-            gridViewDecimalColumn66.Name = "TOTALHAYFEVER";
-            gridViewDecimalColumn66.Width = 180;
-            gridViewDecimalColumn67.DataType = typeof(double);
-            gridViewDecimalColumn67.EnableExpressionEditor = false;
-            gridViewDecimalColumn67.FieldName = "TOTALHAYFEVERVAL";
-            gridViewDecimalColumn67.FormatString = "{0:###,###,##0.##}";
-            gridViewDecimalColumn67.HeaderText = "$ Total Incidence, Hay Fever/Rhinitis";
-            gridViewDecimalColumn67.IsAutoGenerated = true;
-            gridViewDecimalColumn67.Name = "TOTALHAYFEVERVAL";
-            gridViewDecimalColumn67.ThousandsSeparator = true;
-            gridViewDecimalColumn67.Width = 190;
-            gridViewDecimalColumn68.DataType = typeof(double);
-            gridViewDecimalColumn68.EnableExpressionEditor = false;
-            gridViewDecimalColumn68.FieldName = "PM Incidence Hay Fever Rhinitis";
-            gridViewDecimalColumn68.FormatString = "{0:0.####}";
-            gridViewDecimalColumn68.HeaderText = "PM Incidence, Hay Fever/Rhinitis";
-            gridViewDecimalColumn68.IsAutoGenerated = true;
-            gridViewDecimalColumn68.Name = "PM Incidence Hay Fever Rhinitis";
-            gridViewDecimalColumn68.Width = 180;
-            gridViewDecimalColumn69.DataType = typeof(double);
-            gridViewDecimalColumn69.EnableExpressionEditor = false;
-            gridViewDecimalColumn69.FieldName = "$ PM Incidence Hay Fever Rhinitis";
-            gridViewDecimalColumn69.FormatString = "{0:###,###,##0.##}";
-            gridViewDecimalColumn69.HeaderText = "$ PM Incidence, Hay Fever/Rhinitis";
-            gridViewDecimalColumn69.IsAutoGenerated = true;
-            gridViewDecimalColumn69.Name = "$ PM Incidence Hay Fever Rhinitis";
-            gridViewDecimalColumn69.ThousandsSeparator = true;
-            gridViewDecimalColumn69.Width = 180;
-            gridViewDecimalColumn70.DataType = typeof(double);
-            gridViewDecimalColumn70.EnableExpressionEditor = false;
-            gridViewDecimalColumn70.FieldName = "O3 Incidence Hay Fever Rhinitis";
-            gridViewDecimalColumn70.FormatString = "{0:0.####}";
-            gridViewDecimalColumn70.HeaderText = "O3 Incidence, Hay Fever/Rhinitis";
-            gridViewDecimalColumn70.IsAutoGenerated = true;
-            gridViewDecimalColumn70.Name = "O3 Incidence Hay Fever Rhinitis";
-            gridViewDecimalColumn70.Width = 180;
-            gridViewDecimalColumn71.DataType = typeof(double);
-            gridViewDecimalColumn71.EnableExpressionEditor = false;
-            gridViewDecimalColumn71.FieldName = "$ O3 Incidence Hay Fever Rhinitis";
-            gridViewDecimalColumn71.FormatString = "{0:###,###,##0.##}";
-            gridViewDecimalColumn71.HeaderText = "$ O3 Incidence, Hay Fever/Rhinitis";
-            gridViewDecimalColumn71.IsAutoGenerated = true;
-            gridViewDecimalColumn71.Name = "$ O3 Incidence Hay Fever Rhinitis";
-            gridViewDecimalColumn71.ThousandsSeparator = true;
-            gridViewDecimalColumn71.Width = 180;
-            gridViewDecimalColumn72.DataType = typeof(double);
-            gridViewDecimalColumn72.EnableExpressionEditor = false;
-            gridViewDecimalColumn72.FieldName = "TOTALERRESP";
-            gridViewDecimalColumn72.FormatString = "{0:0.####}";
-            gridViewDecimalColumn72.HeaderText = "Total ER Visits, Respiratory";
-            gridViewDecimalColumn72.IsAutoGenerated = true;
-            gridViewDecimalColumn72.Name = "TOTALERRESP";
-            gridViewDecimalColumn72.Width = 180;
-            gridViewDecimalColumn73.DataType = typeof(double);
-            gridViewDecimalColumn73.EnableExpressionEditor = false;
-            gridViewDecimalColumn73.FieldName = "TOTALERRESPVAL";
-            gridViewDecimalColumn73.FormatString = "{0:###,###,##0.##}";
-            gridViewDecimalColumn73.HeaderText = "$ Total ER Visits, Respiratory";
-            gridViewDecimalColumn73.IsAutoGenerated = true;
-            gridViewDecimalColumn73.Name = "TOTALERRESPVAL";
-            gridViewDecimalColumn73.ThousandsSeparator = true;
-            gridViewDecimalColumn73.Width = 180;
-            gridViewDecimalColumn74.DataType = typeof(double);
-            gridViewDecimalColumn74.EnableExpressionEditor = false;
-            gridViewDecimalColumn74.FieldName = "PM ER visits respiratory";
-            gridViewDecimalColumn74.FormatString = "{0:0.####}";
-            gridViewDecimalColumn74.HeaderText = "PM ER visits, respiratory";
-            gridViewDecimalColumn74.IsAutoGenerated = true;
-            gridViewDecimalColumn74.Name = "PM ER visits respiratory";
-            gridViewDecimalColumn74.Width = 130;
-            gridViewDecimalColumn75.DataType = typeof(double);
-            gridViewDecimalColumn75.EnableExpressionEditor = false;
-            gridViewDecimalColumn75.FieldName = "$ PM ER visits respiratory";
-            gridViewDecimalColumn75.FormatString = "{0:###,###,##0.##}";
-            gridViewDecimalColumn75.HeaderText = "$ PM ER visits, respiratory";
-            gridViewDecimalColumn75.IsAutoGenerated = true;
-            gridViewDecimalColumn75.Name = "$ PM ER visits respiratory";
-            gridViewDecimalColumn75.ThousandsSeparator = true;
-            gridViewDecimalColumn75.Width = 140;
-            gridViewDecimalColumn76.DataType = typeof(double);
-            gridViewDecimalColumn76.EnableExpressionEditor = false;
-            gridViewDecimalColumn76.FieldName = "O3 ER visits respiratory";
-            gridViewDecimalColumn76.FormatString = "{0:0.####}";
-            gridViewDecimalColumn76.HeaderText = "O3 ER visits, respiratory";
-            gridViewDecimalColumn76.IsAutoGenerated = true;
-            gridViewDecimalColumn76.Name = "O3 ER visits respiratory";
-            gridViewDecimalColumn76.Width = 130;
-            gridViewDecimalColumn77.DataType = typeof(double);
-            gridViewDecimalColumn77.EnableExpressionEditor = false;
-            gridViewDecimalColumn77.FieldName = "$ O3 ER visits respiratory";
-            gridViewDecimalColumn77.FormatString = "{0:###,###,##0.##}";
-            gridViewDecimalColumn77.HeaderText = "$ O3 ER visits, respiratory";
-            gridViewDecimalColumn77.IsAutoGenerated = true;
-            gridViewDecimalColumn77.Name = "$ O3 ER visits respiratory";
-            gridViewDecimalColumn77.ThousandsSeparator = true;
-            gridViewDecimalColumn77.Width = 140;
-            gridViewDecimalColumn78.DataType = typeof(double);
-            gridViewDecimalColumn78.EnableExpressionEditor = false;
-            gridViewDecimalColumn78.FieldName = "HAALLRESP";
-            gridViewDecimalColumn78.FormatString = "{0:0.####}";
-            gridViewDecimalColumn78.HeaderText = "Total Hospital Admits, All Respiratory";
-            gridViewDecimalColumn78.IsAutoGenerated = true;
-            gridViewDecimalColumn78.Name = "HAALLRESP";
-            gridViewDecimalColumn78.ReadOnly = true;
-            gridViewDecimalColumn78.Width = 200;
-            gridViewDecimalColumn79.DataType = typeof(double);
-            gridViewDecimalColumn79.EnableExpressionEditor = false;
-            gridViewDecimalColumn79.FieldName = "HAALLRESPVAL";
-            gridViewDecimalColumn79.FormatString = "{0:0.####}";
-            gridViewDecimalColumn79.HeaderText = "$ Total Hospital Admits, All Respiratory";
-            gridViewDecimalColumn79.IsAutoGenerated = true;
-            gridViewDecimalColumn79.Name = "HAALLRESPVAL";
-            gridViewDecimalColumn79.ReadOnly = true;
-            gridViewDecimalColumn79.Width = 215;
-            gridViewDecimalColumn80.DataType = typeof(double);
-            gridViewDecimalColumn80.EnableExpressionEditor = false;
-            gridViewDecimalColumn80.FieldName = "PMHAALLRESP";
-            gridViewDecimalColumn80.FormatString = "{0:0.####}";
-            gridViewDecimalColumn80.HeaderText = "PM Hospital Admits, All Respiratory";
-            gridViewDecimalColumn80.IsAutoGenerated = true;
-            gridViewDecimalColumn80.Name = "PMHAALLRESP";
-            gridViewDecimalColumn80.ReadOnly = true;
-            gridViewDecimalColumn80.Width = 200;
-            gridViewDecimalColumn81.DataType = typeof(double);
-            gridViewDecimalColumn81.EnableExpressionEditor = false;
-            gridViewDecimalColumn81.FieldName = "PMHAALLRESPVAL";
-            gridViewDecimalColumn81.FormatString = "{0:0.####}";
-            gridViewDecimalColumn81.HeaderText = "$ PM Hospital Admits, All Respiratory";
-            gridViewDecimalColumn81.IsAutoGenerated = true;
-            gridViewDecimalColumn81.Name = "PMHAALLRESPVAL";
-            gridViewDecimalColumn81.ReadOnly = true;
-            gridViewDecimalColumn81.Width = 200;
-            gridViewDecimalColumn82.DataType = typeof(double);
-            gridViewDecimalColumn82.EnableExpressionEditor = false;
-            gridViewDecimalColumn82.FieldName = "O3 HA All Respiratory";
-            gridViewDecimalColumn82.FormatString = "{0:0.####}";
-            gridViewDecimalColumn82.HeaderText = "O3 Hospital Admits, All Respiratory";
-            gridViewDecimalColumn82.IsAutoGenerated = true;
-            gridViewDecimalColumn82.Name = "O3 HA All Respiratory";
-            gridViewDecimalColumn82.ReadOnly = true;
-            gridViewDecimalColumn82.Width = 200;
-            gridViewDecimalColumn83.DataType = typeof(double);
-            gridViewDecimalColumn83.EnableExpressionEditor = false;
-            gridViewDecimalColumn83.FieldName = "$ O3 HA All Respiratory";
-            gridViewDecimalColumn83.FormatString = "{0:0.####}";
-            gridViewDecimalColumn83.HeaderText = "$ O3 Hospital Admits, All Respiratory";
-            gridViewDecimalColumn83.IsAutoGenerated = true;
-            gridViewDecimalColumn83.Name = "$ O3 HA All Respiratory";
-            gridViewDecimalColumn83.ReadOnly = true;
-            gridViewDecimalColumn83.Width = 196;
-            gridViewDecimalColumn84.DataType = typeof(double);
-            gridViewDecimalColumn84.EnableExpressionEditor = false;
-            gridViewDecimalColumn84.FieldName = "PM Acute Myocardial Infarction Nonfatal";
-            gridViewDecimalColumn84.FormatString = "{0:0.####}";
-            gridViewDecimalColumn84.HeaderText = "Nonfatal Heart Attacks";
-            gridViewDecimalColumn84.IsAutoGenerated = true;
-            gridViewDecimalColumn84.Name = "PM Acute Myocardial Infarction Nonfatal";
-            gridViewDecimalColumn84.Width = 166;
-            gridViewDecimalColumn85.DataType = typeof(double);
-            gridViewDecimalColumn85.EnableExpressionEditor = false;
-            gridViewDecimalColumn85.FieldName = "$ PM Acute Myocardial Infarction Nonfatal";
-            gridViewDecimalColumn85.FormatString = "{0:###,###,##0.##}";
-            gridViewDecimalColumn85.HeaderText = "$ Nonfatal Heart Attacks";
-            gridViewDecimalColumn85.IsAutoGenerated = true;
-            gridViewDecimalColumn85.Name = "$ PM Acute Myocardial Infarction Nonfatal";
-            gridViewDecimalColumn85.ThousandsSeparator = true;
-            gridViewDecimalColumn85.Width = 150;
-            gridViewDecimalColumn86.DataType = typeof(double);
-            gridViewDecimalColumn86.EnableExpressionEditor = false;
-            gridViewDecimalColumn86.FieldName = "PM Minor Restricted Activity Days";
-            gridViewDecimalColumn86.FormatString = "{0:0.####}";
-            gridViewDecimalColumn86.HeaderText = "PM Minor Restricted Activity Days";
-            gridViewDecimalColumn86.IsAutoGenerated = true;
-            gridViewDecimalColumn86.Name = "PM Minor Restricted Activity Days";
-            gridViewDecimalColumn86.Width = 190;
-            gridViewDecimalColumn87.DataType = typeof(double);
-            gridViewDecimalColumn87.EnableExpressionEditor = false;
-            gridViewDecimalColumn87.FieldName = "$ PM Minor Restricted Activity Days";
-            gridViewDecimalColumn87.FormatString = "{0:###,###,##0.##}";
-            gridViewDecimalColumn87.HeaderText = "$ PM Minor Restricted Activity Days";
-            gridViewDecimalColumn87.IsAutoGenerated = true;
-            gridViewDecimalColumn87.Name = "$ PM Minor Restricted Activity Days";
-            gridViewDecimalColumn87.ThousandsSeparator = true;
-            gridViewDecimalColumn87.Width = 190;
-            gridViewDecimalColumn88.DataType = typeof(double);
-            gridViewDecimalColumn88.EnableExpressionEditor = false;
-            gridViewDecimalColumn88.FieldName = "PM Work Loss Days";
-            gridViewDecimalColumn88.FormatString = "{0:0.####}";
-            gridViewDecimalColumn88.HeaderText = "PM Work Loss Days";
-            gridViewDecimalColumn88.IsAutoGenerated = true;
-            gridViewDecimalColumn88.Name = "PM Work Loss Days";
-            gridViewDecimalColumn88.Width = 105;
-            gridViewDecimalColumn89.DataType = typeof(double);
-            gridViewDecimalColumn89.EnableExpressionEditor = false;
-            gridViewDecimalColumn89.FieldName = "$ PM Work Loss Days";
-            gridViewDecimalColumn89.FormatString = "{0:###,###,##0.##}";
-            gridViewDecimalColumn89.HeaderText = "$ PM Work Loss Days";
-            gridViewDecimalColumn89.IsAutoGenerated = true;
-            gridViewDecimalColumn89.Name = "$ PM Work Loss Days";
-            gridViewDecimalColumn89.ThousandsSeparator = true;
-            gridViewDecimalColumn89.Width = 110;
-            gridViewDecimalColumn90.DataType = typeof(double);
-            gridViewDecimalColumn90.EnableExpressionEditor = false;
-            gridViewDecimalColumn90.FieldName = "PM Incidence Lung Cancer";
-            gridViewDecimalColumn90.FormatString = "{0:0.####}";
-            gridViewDecimalColumn90.HeaderText = "PM Incidence, Lung Cancer";
-            gridViewDecimalColumn90.IsAutoGenerated = true;
-            gridViewDecimalColumn90.Name = "PM Incidence Lung Cancer";
-            gridViewDecimalColumn90.Width = 190;
-            gridViewDecimalColumn91.DataType = typeof(double);
-            gridViewDecimalColumn91.EnableExpressionEditor = false;
-            gridViewDecimalColumn91.FieldName = "$ PM Incidence Lung Cancer";
-            gridViewDecimalColumn91.FormatString = "{0:###,###,##0.##}";
-            gridViewDecimalColumn91.HeaderText = "$ PM Incidence, Lung Cancer";
-            gridViewDecimalColumn91.IsAutoGenerated = true;
-            gridViewDecimalColumn91.Name = "$ PM Incidence Lung Cancer";
-            gridViewDecimalColumn91.ThousandsSeparator = true;
-            gridViewDecimalColumn91.Width = 190;
-            gridViewDecimalColumn92.DataType = typeof(double);
-            gridViewDecimalColumn92.EnableExpressionEditor = false;
-            gridViewDecimalColumn92.FieldName = "PM HA Cardio Cerebro and Peripheral Vascular Disease";
-            gridViewDecimalColumn92.FormatString = "{0:0.####}";
-            gridViewDecimalColumn92.HeaderText = "PM Hospital Admits, Cardio-, Cerebro- and Peripheral Vascular Disease";
-            gridViewDecimalColumn92.IsAutoGenerated = true;
-            gridViewDecimalColumn92.Name = "PM HA Cardio Cerebro and Peripheral Vascular Disease";
-            gridViewDecimalColumn92.Width = 380;
-            gridViewDecimalColumn93.DataType = typeof(double);
-            gridViewDecimalColumn93.EnableExpressionEditor = false;
-            gridViewDecimalColumn93.FieldName = "$ PM HA Cardio Cerebro and Peripheral Vascular Disease";
-            gridViewDecimalColumn93.FormatString = "{0:###,###,##0.##}";
-            gridViewDecimalColumn93.HeaderText = "$ PM Hospital Admits, Cardio-, Cerebro and Peripheral Vascular Disease";
-            gridViewDecimalColumn93.IsAutoGenerated = true;
-            gridViewDecimalColumn93.Name = "$ PM HA Cardio Cerebro and Peripheral Vascular Disease";
-            gridViewDecimalColumn93.ThousandsSeparator = true;
-            gridViewDecimalColumn93.Width = 380;
-            gridViewDecimalColumn94.DataType = typeof(double);
-            gridViewDecimalColumn94.EnableExpressionEditor = false;
-            gridViewDecimalColumn94.FieldName = "PM HA Alzheimers Disease";
-            gridViewDecimalColumn94.FormatString = "{0:0.####}";
-            gridViewDecimalColumn94.HeaderText = "PM Hospital Admits, Alzheimers Disease";
-            gridViewDecimalColumn94.IsAutoGenerated = true;
-            gridViewDecimalColumn94.Name = "PM HA Alzheimers Disease";
-            gridViewDecimalColumn94.Width = 230;
-            gridViewDecimalColumn95.DataType = typeof(double);
-            gridViewDecimalColumn95.EnableExpressionEditor = false;
-            gridViewDecimalColumn95.FieldName = "$ PM HA Alzheimers Disease";
-            gridViewDecimalColumn95.FormatString = "{0:###,###,##0.##}";
-            gridViewDecimalColumn95.HeaderText = "$ PM Hospital Admits, Alzheimers Disease";
-            gridViewDecimalColumn95.IsAutoGenerated = true;
-            gridViewDecimalColumn95.Name = "$ PM HA Alzheimers Disease";
-            gridViewDecimalColumn95.ThousandsSeparator = true;
-            gridViewDecimalColumn95.Width = 230;
-            gridViewDecimalColumn96.DataType = typeof(double);
-            gridViewDecimalColumn96.EnableExpressionEditor = false;
-            gridViewDecimalColumn96.FieldName = "PM HA Parkinsons Disease";
-            gridViewDecimalColumn96.FormatString = "{0:0.####}";
-            gridViewDecimalColumn96.HeaderText = "PM Hospital Admits, Parkinsons Disease";
-            gridViewDecimalColumn96.IsAutoGenerated = true;
-            gridViewDecimalColumn96.Name = "PM HA Parkinsons Disease";
-            gridViewDecimalColumn96.Width = 230;
-            gridViewDecimalColumn97.DataType = typeof(double);
-            gridViewDecimalColumn97.EnableExpressionEditor = false;
-            gridViewDecimalColumn97.FieldName = "$ PM HA Parkinsons Disease";
-            gridViewDecimalColumn97.FormatString = "{0:###,###,##0.##}";
-            gridViewDecimalColumn97.HeaderText = "$ PM Hospital Admits, Parkinsons Disease";
-            gridViewDecimalColumn97.IsAutoGenerated = true;
-            gridViewDecimalColumn97.Name = "$ PM HA Parkinsons Disease";
-            gridViewDecimalColumn97.ThousandsSeparator = true;
-            gridViewDecimalColumn97.Width = 230;
-            gridViewDecimalColumn98.DataType = typeof(double);
-            gridViewDecimalColumn98.EnableExpressionEditor = false;
-            gridViewDecimalColumn98.FieldName = "PM Incidence Stroke";
-            gridViewDecimalColumn98.FormatString = "{0:0.####}";
-            gridViewDecimalColumn98.HeaderText = "PM Incidence, Stroke";
-            gridViewDecimalColumn98.IsAutoGenerated = true;
-            gridViewDecimalColumn98.Name = "PM Incidence Stroke";
-            gridViewDecimalColumn98.Width = 130;
-            gridViewDecimalColumn99.DataType = typeof(double);
-            gridViewDecimalColumn99.EnableExpressionEditor = false;
-            gridViewDecimalColumn99.FieldName = "$ PM Incidence Stroke";
-            gridViewDecimalColumn99.FormatString = "{0:###,###,##0.##}";
-            gridViewDecimalColumn99.HeaderText = "$ PM Incidence, Stroke";
-            gridViewDecimalColumn99.IsAutoGenerated = true;
-            gridViewDecimalColumn99.Name = "$ PM Incidence Stroke";
-            gridViewDecimalColumn99.ThousandsSeparator = true;
-            gridViewDecimalColumn99.Width = 140;
-            gridViewDecimalColumn100.DataType = typeof(double);
-            gridViewDecimalColumn100.EnableExpressionEditor = false;
-            gridViewDecimalColumn100.FieldName = "PM Incidence Out of Hospital Cardiac Arrest";
-            gridViewDecimalColumn100.FormatString = "{0:0.####}";
-            gridViewDecimalColumn100.HeaderText = "PM Incidence, Out of Hospital Cardiac Arrest";
-            gridViewDecimalColumn100.IsAutoGenerated = true;
-            gridViewDecimalColumn100.Name = "PM Incidence Out of Hospital Cardiac Arrest";
-            gridViewDecimalColumn100.Width = 240;
-            gridViewDecimalColumn101.DataType = typeof(double);
-            gridViewDecimalColumn101.EnableExpressionEditor = false;
-            gridViewDecimalColumn101.FieldName = "$ PM Incidence Out of Hospital Cardiac Arrest";
-            gridViewDecimalColumn101.FormatString = "{0:###,###,##0.##}";
-            gridViewDecimalColumn101.HeaderText = "$ PM Incidence, Out of Hospital Cardiac Arrest";
-            gridViewDecimalColumn101.IsAutoGenerated = true;
-            gridViewDecimalColumn101.Name = "$ PM Incidence Out of Hospital Cardiac Arrest";
-            gridViewDecimalColumn101.ThousandsSeparator = true;
-            gridViewDecimalColumn101.Width = 240;
-            gridViewDecimalColumn102.DataType = typeof(double);
-            gridViewDecimalColumn102.EnableExpressionEditor = false;
-            gridViewDecimalColumn102.FieldName = "PM ER visits All Cardiac Outcomes";
-            gridViewDecimalColumn102.FormatString = "{0:0.####}";
-            gridViewDecimalColumn102.HeaderText = "PM ER visits, All Cardiac Outcomes";
-            gridViewDecimalColumn102.IsAutoGenerated = true;
-            gridViewDecimalColumn102.Name = "PM ER visits All Cardiac Outcomes";
-            gridViewDecimalColumn102.Width = 180;
-            gridViewDecimalColumn103.DataType = typeof(double);
-            gridViewDecimalColumn103.EnableExpressionEditor = false;
-            gridViewDecimalColumn103.FieldName = "$ PM ER visits All Cardiac Outcomes";
-            gridViewDecimalColumn103.FormatString = "{0:###,###,##0.##}";
-            gridViewDecimalColumn103.HeaderText = "$ PM ER visits, All Cardiac Outcomes";
-            gridViewDecimalColumn103.IsAutoGenerated = true;
-            gridViewDecimalColumn103.Name = "$ PM ER visits All Cardiac Outcomes";
-            gridViewDecimalColumn103.ThousandsSeparator = true;
-            gridViewDecimalColumn103.Width = 180;
-            gridViewDecimalColumn104.DataType = typeof(double);
-            gridViewDecimalColumn104.EnableExpressionEditor = false;
-            gridViewDecimalColumn104.FieldName = "O3 ER Visits Asthma";
-            gridViewDecimalColumn104.FormatString = "{0:0.####}";
-            gridViewDecimalColumn104.HeaderText = "O3 ER visits, Asthma";
-            gridViewDecimalColumn104.IsAutoGenerated = true;
-            gridViewDecimalColumn104.Name = "O3 ER Visits Asthma";
-            gridViewDecimalColumn104.Width = 180;
-            gridViewDecimalColumn105.DataType = typeof(double);
-            gridViewDecimalColumn105.EnableExpressionEditor = false;
-            gridViewDecimalColumn105.FieldName = "$ O3 ER Visits Asthma";
-            gridViewDecimalColumn105.FormatString = "{0:###,###,##0.##}";
-            gridViewDecimalColumn105.HeaderText = "$ O3 ER visits, Asthma";
-            gridViewDecimalColumn105.IsAutoGenerated = true;
-            gridViewDecimalColumn105.Name = "$ O3 ER Visits Asthma";
-            gridViewDecimalColumn105.ThousandsSeparator = true;
-            gridViewDecimalColumn105.Width = 180;
-            gridViewDecimalColumn106.DataType = typeof(double);
-            gridViewDecimalColumn106.EnableExpressionEditor = false;
-            gridViewDecimalColumn106.FieldName = "O3 School Loss Days";
-            gridViewDecimalColumn106.FormatString = "{0:0.####}";
-            gridViewDecimalColumn106.HeaderText = "O3 School Loss Days, All Cause";
-            gridViewDecimalColumn106.IsAutoGenerated = true;
-            gridViewDecimalColumn106.Name = "O3 School Loss Days";
-            gridViewDecimalColumn106.Width = 180;
-            gridViewDecimalColumn107.DataType = typeof(double);
-            gridViewDecimalColumn107.EnableExpressionEditor = false;
-            gridViewDecimalColumn107.FieldName = "$ O3 School Loss Days";
-            gridViewDecimalColumn107.FormatString = "{0:###,###,##0.##}";
-            gridViewDecimalColumn107.HeaderText = "$ O3 School Loss Days, All Cause";
-            gridViewDecimalColumn107.IsAutoGenerated = true;
-            gridViewDecimalColumn107.Name = "$ O3 School Loss Days";
-            gridViewDecimalColumn107.ThousandsSeparator = true;
-            gridViewDecimalColumn107.Width = 180;
-            gridViewDecimalColumn108.DataType = typeof(double);
-            gridViewDecimalColumn108.FieldName = "PM HA All Respiratory";
-            gridViewDecimalColumn108.HeaderText = "PM HA All Respiratory";
-            gridViewDecimalColumn108.IsAutoGenerated = true;
-            gridViewDecimalColumn108.Name = "PM HA All Respiratory";
-            gridViewDecimalColumn109.DataType = typeof(double);
-            gridViewDecimalColumn109.FieldName = "PM Mortality All Cause (low)";
-            gridViewDecimalColumn109.HeaderText = "PM Mortality All Cause (low)";
-            gridViewDecimalColumn109.IsAutoGenerated = true;
-            gridViewDecimalColumn109.Name = "PM Mortality All Cause (low)";
-            gridViewDecimalColumn110.DataType = typeof(double);
-            gridViewDecimalColumn110.FieldName = "PM Mortality All Cause (high)";
-            gridViewDecimalColumn110.HeaderText = "PM Mortality All Cause (high)";
-            gridViewDecimalColumn110.IsAutoGenerated = true;
-            gridViewDecimalColumn110.Name = "PM Mortality All Cause (high)";
-            gridViewDecimalColumn111.DataType = typeof(double);
-            gridViewDecimalColumn111.FieldName = "PM Infant Mortality";
-            gridViewDecimalColumn111.HeaderText = "PM Infant Mortality";
-            gridViewDecimalColumn111.IsAutoGenerated = true;
-            gridViewDecimalColumn111.Name = "PM Infant Mortality";
-            gridViewDecimalColumn112.DataType = typeof(double);
-            gridViewDecimalColumn112.FieldName = "PM HA Respiratory2";
-            gridViewDecimalColumn112.HeaderText = "PM HA Respiratory2";
-            gridViewDecimalColumn112.IsAutoGenerated = true;
-            gridViewDecimalColumn112.Name = "PM HA Respiratory2";
-            gridViewDecimalColumn113.DataType = typeof(double);
-            gridViewDecimalColumn113.FieldName = "$ PM Resp Hosp Adm";
-            gridViewDecimalColumn113.HeaderText = "$ PM Resp Hosp Adm";
-            gridViewDecimalColumn113.IsAutoGenerated = true;
-            gridViewDecimalColumn113.Name = "$ PM Resp Hosp Adm";
-            gridViewDecimalColumn114.DataType = typeof(double);
-            gridViewDecimalColumn114.FieldName = "$ PM Mortality All Cause (low)";
-            gridViewDecimalColumn114.HeaderText = "$ PM Mortality All Cause (low)";
-            gridViewDecimalColumn114.IsAutoGenerated = true;
-            gridViewDecimalColumn114.Name = "$ PM Mortality All Cause (low)";
-            gridViewDecimalColumn115.DataType = typeof(double);
-            gridViewDecimalColumn115.FieldName = "$ PM Mortality All Cause (high)";
-            gridViewDecimalColumn115.HeaderText = "$ PM Mortality All Cause (high)";
-            gridViewDecimalColumn115.IsAutoGenerated = true;
-            gridViewDecimalColumn115.Name = "$ PM Mortality All Cause (high)";
-            gridViewDecimalColumn116.DataType = typeof(double);
-            gridViewDecimalColumn116.FieldName = "$ PM Infant Mortality";
-            gridViewDecimalColumn116.HeaderText = "$ PM Infant Mortality";
-            gridViewDecimalColumn116.IsAutoGenerated = true;
-            gridViewDecimalColumn116.Name = "$ PM Infant Mortality";
-            gridViewDecimalColumn117.DataType = typeof(double);
-            gridViewDecimalColumn117.FieldName = "$ PM HA Respiratory2";
-            gridViewDecimalColumn117.HeaderText = "$ PM HA Respiratory2";
-            gridViewDecimalColumn117.IsAutoGenerated = true;
-            gridViewDecimalColumn117.Name = "$ PM HA Respiratory2";
+            gridViewDecimalColumn141.DataType = typeof(long);
+            gridViewDecimalColumn141.EnableExpressionEditor = false;
+            gridViewDecimalColumn141.FieldName = "ID";
+            gridViewDecimalColumn141.HeaderText = "ID";
+            gridViewDecimalColumn141.IsAutoGenerated = true;
+            gridViewDecimalColumn141.IsVisible = false;
+            gridViewDecimalColumn141.Name = "ID";
+            gridViewDecimalColumn141.Width = 19;
+            gridViewDecimalColumn142.DataType = typeof(long);
+            gridViewDecimalColumn142.EnableExpressionEditor = false;
+            gridViewDecimalColumn142.FieldName = "dest_tract";
+            gridViewDecimalColumn142.HeaderText = "Census Tract ID";
+            gridViewDecimalColumn142.IsAutoGenerated = true;
+            gridViewDecimalColumn142.IsVisible = false;
+            gridViewDecimalColumn142.Name = "dest_tract";
+            gridViewTextBoxColumn18.EnableExpressionEditor = false;
+            gridViewTextBoxColumn18.FieldName = "FIPS";
+            gridViewTextBoxColumn18.HeaderText = "FIPS";
+            gridViewTextBoxColumn18.IsAutoGenerated = true;
+            gridViewTextBoxColumn18.Name = "FIPS";
+            gridViewTextBoxColumn18.Width = 75;
+            gridViewTextBoxColumn19.EnableExpressionEditor = false;
+            gridViewTextBoxColumn19.FieldName = "STATE";
+            gridViewTextBoxColumn19.HeaderText = "State";
+            gridViewTextBoxColumn19.IsAutoGenerated = true;
+            gridViewTextBoxColumn19.Name = "STATE";
+            gridViewTextBoxColumn19.Width = 129;
+            gridViewTextBoxColumn20.EnableExpressionEditor = false;
+            gridViewTextBoxColumn20.FieldName = "COUNTY";
+            gridViewTextBoxColumn20.HeaderText = "County";
+            gridViewTextBoxColumn20.IsAutoGenerated = true;
+            gridViewTextBoxColumn20.Name = "COUNTY";
+            gridViewTextBoxColumn20.Width = 195;
+            gridViewDecimalColumn143.DataType = typeof(double);
+            gridViewDecimalColumn143.EnableExpressionEditor = false;
+            gridViewDecimalColumn143.FieldName = "BASE_FINAL_PM";
+            gridViewDecimalColumn143.FormatString = "{0:0.###}";
+            gridViewDecimalColumn143.HeaderText = "Base PM 2.5";
+            gridViewDecimalColumn143.IsAutoGenerated = true;
+            gridViewDecimalColumn143.Name = "BASE_FINAL_PM";
+            gridViewDecimalColumn143.Width = 69;
+            gridViewDecimalColumn144.DataType = typeof(double);
+            gridViewDecimalColumn144.EnableExpressionEditor = false;
+            gridViewDecimalColumn144.FieldName = "CTRL_FINAL_PM";
+            gridViewDecimalColumn144.FormatString = "{0:0.###}";
+            gridViewDecimalColumn144.HeaderText = "Control PM 2.5";
+            gridViewDecimalColumn144.IsAutoGenerated = true;
+            gridViewDecimalColumn144.Name = "CTRL_FINAL_PM";
+            gridViewDecimalColumn144.Width = 85;
+            gridViewDecimalColumn145.DataType = typeof(double);
+            gridViewDecimalColumn145.EnableExpressionEditor = false;
+            gridViewDecimalColumn145.FieldName = "DELTA_FINAL_PM";
+            gridViewDecimalColumn145.FormatString = "{0:0.####}";
+            gridViewDecimalColumn145.HeaderText = "Delta PM 2.5";
+            gridViewDecimalColumn145.IsAutoGenerated = true;
+            gridViewDecimalColumn145.Name = "DELTA_FINAL_PM";
+            gridViewDecimalColumn145.Width = 72;
+            gridViewDecimalColumn146.DataType = typeof(double);
+            gridViewDecimalColumn146.FieldName = "BASE_FINAL_O3";
+            gridViewDecimalColumn146.FormatString = "{0:0.###}";
+            gridViewDecimalColumn146.HeaderText = "Base O3";
+            gridViewDecimalColumn146.IsAutoGenerated = true;
+            gridViewDecimalColumn146.Name = "BASE_FINAL_O3";
+            gridViewDecimalColumn146.Width = 69;
+            gridViewDecimalColumn147.DataType = typeof(double);
+            gridViewDecimalColumn147.EnableExpressionEditor = false;
+            gridViewDecimalColumn147.FieldName = "CTRL_FINAL_O3";
+            gridViewDecimalColumn147.FormatString = "{0:0.###}";
+            gridViewDecimalColumn147.HeaderText = "Control O3";
+            gridViewDecimalColumn147.IsAutoGenerated = true;
+            gridViewDecimalColumn147.Name = "CTRL_FINAL_O3";
+            gridViewDecimalColumn147.Width = 85;
+            gridViewDecimalColumn148.DataType = typeof(double);
+            gridViewDecimalColumn148.EnableExpressionEditor = false;
+            gridViewDecimalColumn148.FieldName = "DELTA_FINAL_O3";
+            gridViewDecimalColumn148.FormatString = "{0:0.####}";
+            gridViewDecimalColumn148.HeaderText = "Delta O3";
+            gridViewDecimalColumn148.IsAutoGenerated = true;
+            gridViewDecimalColumn148.Name = "DELTA_FINAL_O3";
+            gridViewDecimalColumn148.Width = 72;
+            gridViewDecimalColumn149.DataType = typeof(double);
+            gridViewDecimalColumn149.EnableExpressionEditor = false;
+            gridViewDecimalColumn149.FieldName = "TOTALHELOW";
+            gridViewDecimalColumn149.FormatString = "{0:###,###,##0.##}";
+            gridViewDecimalColumn149.HeaderText = "$ Total Health Benefits (low estimate)";
+            gridViewDecimalColumn149.Name = "TOTALHELOW";
+            gridViewDecimalColumn149.ReadOnly = true;
+            gridViewDecimalColumn149.Width = 194;
+            gridViewDecimalColumn150.DataType = typeof(double);
+            gridViewDecimalColumn150.EnableExpressionEditor = false;
+            gridViewDecimalColumn150.FieldName = "TOTALHEHIGH";
+            gridViewDecimalColumn150.FormatString = "{0:###,###,##0.##}";
+            gridViewDecimalColumn150.HeaderText = "$ Total Health Benefits (high estimate)";
+            gridViewDecimalColumn150.Name = "TOTALHEHIGH";
+            gridViewDecimalColumn150.ReadOnly = true;
+            gridViewDecimalColumn150.Width = 199;
+            gridViewDecimalColumn151.DataType = typeof(double);
+            gridViewDecimalColumn151.EnableExpressionEditor = false;
+            gridViewDecimalColumn151.FieldName = "ALLMORTLOW";
+            gridViewDecimalColumn151.FormatString = "{0:0.####}";
+            gridViewDecimalColumn151.HeaderText = "Total Mortality (low estimate)";
+            gridViewDecimalColumn151.IsAutoGenerated = true;
+            gridViewDecimalColumn151.Name = "ALLMORTLOW";
+            gridViewDecimalColumn151.Width = 194;
+            gridViewDecimalColumn152.DataType = typeof(double);
+            gridViewDecimalColumn152.EnableExpressionEditor = false;
+            gridViewDecimalColumn152.FieldName = "ALLMORTLOWVAL";
+            gridViewDecimalColumn152.FormatString = "{0:###,###,##0.##}";
+            gridViewDecimalColumn152.HeaderText = "$ Total Mortality (low estimate)";
+            gridViewDecimalColumn152.IsAutoGenerated = true;
+            gridViewDecimalColumn152.Name = "ALLMORTLOWVAL";
+            gridViewDecimalColumn152.ThousandsSeparator = true;
+            gridViewDecimalColumn152.Width = 199;
+            gridViewDecimalColumn153.DataType = typeof(double);
+            gridViewDecimalColumn153.EnableExpressionEditor = false;
+            gridViewDecimalColumn153.FieldName = "ALLMORTHIGH";
+            gridViewDecimalColumn153.FormatString = "{0:0.####}";
+            gridViewDecimalColumn153.HeaderText = "Total Mortality (high estimate)";
+            gridViewDecimalColumn153.IsAutoGenerated = true;
+            gridViewDecimalColumn153.Name = "ALLMORTHIGH";
+            gridViewDecimalColumn153.Width = 200;
+            gridViewDecimalColumn154.DataType = typeof(double);
+            gridViewDecimalColumn154.EnableExpressionEditor = false;
+            gridViewDecimalColumn154.FieldName = "ALLMORTHIGHVAL";
+            gridViewDecimalColumn154.FormatString = "{0:###,###,##0.##}";
+            gridViewDecimalColumn154.HeaderText = "$ Total Mortality (high estimate)";
+            gridViewDecimalColumn154.IsAutoGenerated = true;
+            gridViewDecimalColumn154.Name = "ALLMORTHIGHVAL";
+            gridViewDecimalColumn154.ThousandsSeparator = true;
+            gridViewDecimalColumn154.Width = 200;
+            gridViewDecimalColumn155.DataType = typeof(double);
+            gridViewDecimalColumn155.EnableExpressionEditor = false;
+            gridViewDecimalColumn155.FieldName = "TOTALPMORTLOW";
+            gridViewDecimalColumn155.FormatString = "{0:0.####}";
+            gridViewDecimalColumn155.HeaderText = "PM Mortality (low estimate)";
+            gridViewDecimalColumn155.IsAutoGenerated = true;
+            gridViewDecimalColumn155.Name = "TOTALPMORTLOW";
+            gridViewDecimalColumn155.Width = 200;
+            gridViewDecimalColumn156.DataType = typeof(double);
+            gridViewDecimalColumn156.EnableExpressionEditor = false;
+            gridViewDecimalColumn156.FieldName = "TOTALPMORTLOWVAL";
+            gridViewDecimalColumn156.FormatString = "{0:###,###,##0.##}";
+            gridViewDecimalColumn156.HeaderText = "$ PM Mortality (low estimate)";
+            gridViewDecimalColumn156.IsAutoGenerated = true;
+            gridViewDecimalColumn156.Name = "TOTALPMORTLOWVAL";
+            gridViewDecimalColumn156.ThousandsSeparator = true;
+            gridViewDecimalColumn156.Width = 200;
+            gridViewDecimalColumn157.DataType = typeof(double);
+            gridViewDecimalColumn157.EnableExpressionEditor = false;
+            gridViewDecimalColumn157.FieldName = "TOTALPMORTHIGH";
+            gridViewDecimalColumn157.FormatString = "{0:0.####}";
+            gridViewDecimalColumn157.HeaderText = "PM Mortality (high estimate)";
+            gridViewDecimalColumn157.IsAutoGenerated = true;
+            gridViewDecimalColumn157.Name = "TOTALPMORTHIGH";
+            gridViewDecimalColumn157.Width = 200;
+            gridViewDecimalColumn158.DataType = typeof(double);
+            gridViewDecimalColumn158.EnableExpressionEditor = false;
+            gridViewDecimalColumn158.FieldName = "TOTALPMORTHIGHVAL";
+            gridViewDecimalColumn158.FormatString = "{0:###,###,##0.##}";
+            gridViewDecimalColumn158.HeaderText = "$ PM Mortality (high estimate)";
+            gridViewDecimalColumn158.IsAutoGenerated = true;
+            gridViewDecimalColumn158.Name = "TOTALPMORTHIGHVAL";
+            gridViewDecimalColumn158.ThousandsSeparator = true;
+            gridViewDecimalColumn158.Width = 200;
+            gridViewDecimalColumn159.DataType = typeof(double);
+            gridViewDecimalColumn159.EnableExpressionEditor = false;
+            gridViewDecimalColumn159.FieldName = "TOTALO3MORT";
+            gridViewDecimalColumn159.FormatString = "{0:0.####}";
+            gridViewDecimalColumn159.HeaderText = "Total O3 Mortality";
+            gridViewDecimalColumn159.IsAutoGenerated = true;
+            gridViewDecimalColumn159.Name = "TOTALO3MORT";
+            gridViewDecimalColumn159.Width = 131;
+            gridViewDecimalColumn160.DataType = typeof(double);
+            gridViewDecimalColumn160.EnableExpressionEditor = false;
+            gridViewDecimalColumn160.FieldName = "TOTALO3MORTVAL";
+            gridViewDecimalColumn160.FormatString = "{0:###,###,##0.##}";
+            gridViewDecimalColumn160.HeaderText = "$ Total O3 Mortality";
+            gridViewDecimalColumn160.IsAutoGenerated = true;
+            gridViewDecimalColumn160.Name = "TOTALO3MORTVAL";
+            gridViewDecimalColumn160.ThousandsSeparator = true;
+            gridViewDecimalColumn160.Width = 140;
+            gridViewDecimalColumn161.DataType = typeof(double);
+            gridViewDecimalColumn161.EnableExpressionEditor = false;
+            gridViewDecimalColumn161.FieldName = "O3 Mortality Shortterm exposure";
+            gridViewDecimalColumn161.FormatString = "{0:0.####}";
+            gridViewDecimalColumn161.HeaderText = "O3 Mortality (Short-term exposure)";
+            gridViewDecimalColumn161.IsAutoGenerated = true;
+            gridViewDecimalColumn161.Name = "O3 Mortality Shortterm exposure";
+            gridViewDecimalColumn161.Width = 200;
+            gridViewDecimalColumn162.DataType = typeof(double);
+            gridViewDecimalColumn162.EnableExpressionEditor = false;
+            gridViewDecimalColumn162.FieldName = "$ O3 Mortality Shortterm exposure";
+            gridViewDecimalColumn162.FormatString = "{0:###,###,##0.##}";
+            gridViewDecimalColumn162.HeaderText = "$ O3 Mortality (Short-term exposure)";
+            gridViewDecimalColumn162.IsAutoGenerated = true;
+            gridViewDecimalColumn162.Name = "$ O3 Mortality Shortterm exposure";
+            gridViewDecimalColumn162.ThousandsSeparator = true;
+            gridViewDecimalColumn162.Width = 200;
+            gridViewDecimalColumn163.DataType = typeof(double);
+            gridViewDecimalColumn163.EnableExpressionEditor = false;
+            gridViewDecimalColumn163.FieldName = "O3 Mortality Longterm exposure";
+            gridViewDecimalColumn163.FormatString = "{0:0.####}";
+            gridViewDecimalColumn163.HeaderText = "O3 Mortality (Long-term exposure)";
+            gridViewDecimalColumn163.IsAutoGenerated = true;
+            gridViewDecimalColumn163.Name = "O3 Mortality Longterm exposure";
+            gridViewDecimalColumn163.Width = 200;
+            gridViewDecimalColumn164.DataType = typeof(double);
+            gridViewDecimalColumn164.EnableExpressionEditor = false;
+            gridViewDecimalColumn164.FieldName = "$ O3 Mortality Longterm exposure";
+            gridViewDecimalColumn164.FormatString = "{0:###,###,##0.##}";
+            gridViewDecimalColumn164.HeaderText = "$ O3 Mortality (Long-term exposure)";
+            gridViewDecimalColumn164.IsAutoGenerated = true;
+            gridViewDecimalColumn164.Name = "$ O3 Mortality Longterm exposure";
+            gridViewDecimalColumn164.ThousandsSeparator = true;
+            gridViewDecimalColumn164.Width = 200;
+            gridViewDecimalColumn165.DataType = typeof(double);
+            gridViewDecimalColumn165.EnableExpressionEditor = false;
+            gridViewDecimalColumn165.FieldName = "ALLASTHMA";
+            gridViewDecimalColumn165.FormatString = "{0:0.####}";
+            gridViewDecimalColumn165.HeaderText = "Total Asthma Symptoms";
+            gridViewDecimalColumn165.IsAutoGenerated = true;
+            gridViewDecimalColumn165.Name = "ALLASTHMA";
+            gridViewDecimalColumn165.Width = 131;
+            gridViewDecimalColumn166.DataType = typeof(double);
+            gridViewDecimalColumn166.EnableExpressionEditor = false;
+            gridViewDecimalColumn166.FieldName = "ALLASTHMAVAL";
+            gridViewDecimalColumn166.FormatString = "{0:###,###,##0.##}";
+            gridViewDecimalColumn166.HeaderText = "$ Total Asthma Symptoms";
+            gridViewDecimalColumn166.IsAutoGenerated = true;
+            gridViewDecimalColumn166.Name = "ALLASTHMAVAL";
+            gridViewDecimalColumn166.ThousandsSeparator = true;
+            gridViewDecimalColumn166.Width = 140;
+            gridViewDecimalColumn167.DataType = typeof(double);
+            gridViewDecimalColumn167.EnableExpressionEditor = false;
+            gridViewDecimalColumn167.FieldName = "PM Asthma Symptoms Albuterol use";
+            gridViewDecimalColumn167.FormatString = "{0:0.####}";
+            gridViewDecimalColumn167.HeaderText = "PM Asthma Symptoms, Albuterol use";
+            gridViewDecimalColumn167.IsAutoGenerated = true;
+            gridViewDecimalColumn167.Name = "PM Asthma Symptoms Albuterol use";
+            gridViewDecimalColumn167.Width = 200;
+            gridViewDecimalColumn168.DataType = typeof(double);
+            gridViewDecimalColumn168.EnableExpressionEditor = false;
+            gridViewDecimalColumn168.FieldName = "$ PM Asthma Symptoms Albuterol use";
+            gridViewDecimalColumn168.FormatString = "{0:###,###,##0.##}";
+            gridViewDecimalColumn168.HeaderText = "$ PM Asthma Symptoms, Albuterol use";
+            gridViewDecimalColumn168.IsAutoGenerated = true;
+            gridViewDecimalColumn168.Name = "$ PM Asthma Symptoms Albuterol use";
+            gridViewDecimalColumn168.ThousandsSeparator = true;
+            gridViewDecimalColumn168.Width = 200;
+            gridViewDecimalColumn169.DataType = typeof(double);
+            gridViewDecimalColumn169.EnableExpressionEditor = false;
+            gridViewDecimalColumn169.FieldName = "O3 Asthma Symptoms Chest Tightness";
+            gridViewDecimalColumn169.FormatString = "{0:0.####}";
+            gridViewDecimalColumn169.HeaderText = "O3 Asthma Symptoms, Chest Tightness";
+            gridViewDecimalColumn169.IsAutoGenerated = true;
+            gridViewDecimalColumn169.Name = "O3 Asthma Symptoms Chest Tightness";
+            gridViewDecimalColumn169.Width = 200;
+            gridViewDecimalColumn170.DataType = typeof(double);
+            gridViewDecimalColumn170.EnableExpressionEditor = false;
+            gridViewDecimalColumn170.FieldName = "$ O3 Asthma Symptoms Chest Tightness";
+            gridViewDecimalColumn170.FormatString = "{0:###,###,##0.##}";
+            gridViewDecimalColumn170.HeaderText = "$ PM Asthma Symptoms, Chest Tightness";
+            gridViewDecimalColumn170.IsAutoGenerated = true;
+            gridViewDecimalColumn170.Name = "$ O3 Asthma Symptoms Chest Tightness";
+            gridViewDecimalColumn170.ThousandsSeparator = true;
+            gridViewDecimalColumn170.Width = 200;
+            gridViewDecimalColumn171.DataType = typeof(double);
+            gridViewDecimalColumn171.EnableExpressionEditor = false;
+            gridViewDecimalColumn171.FieldName = "O3 Asthma Symptoms Cough";
+            gridViewDecimalColumn171.FormatString = "{0:0.####}";
+            gridViewDecimalColumn171.HeaderText = "O3 Asthma Symptoms, Cough";
+            gridViewDecimalColumn171.IsAutoGenerated = true;
+            gridViewDecimalColumn171.Name = "O3 Asthma Symptoms Cough";
+            gridViewDecimalColumn171.Width = 180;
+            gridViewDecimalColumn172.DataType = typeof(double);
+            gridViewDecimalColumn172.EnableExpressionEditor = false;
+            gridViewDecimalColumn172.FieldName = "$ O3 Asthma Symptoms Cough";
+            gridViewDecimalColumn172.FormatString = "{0:###,###,##0.##}";
+            gridViewDecimalColumn172.HeaderText = "$ O3 Asthma Symptoms, Cough";
+            gridViewDecimalColumn172.IsAutoGenerated = true;
+            gridViewDecimalColumn172.Name = "$ O3 Asthma Symptoms Cough";
+            gridViewDecimalColumn172.ThousandsSeparator = true;
+            gridViewDecimalColumn172.Width = 190;
+            gridViewDecimalColumn173.DataType = typeof(double);
+            gridViewDecimalColumn173.EnableExpressionEditor = false;
+            gridViewDecimalColumn173.FieldName = "O3 Asthma Symptoms Shortness of Breath";
+            gridViewDecimalColumn173.FormatString = "{0:0.####}";
+            gridViewDecimalColumn173.HeaderText = "O3 Asthma Symptoms, Shortness of Breath";
+            gridViewDecimalColumn173.IsAutoGenerated = true;
+            gridViewDecimalColumn173.Name = "O3 Asthma Symptoms Shortness of Breath";
+            gridViewDecimalColumn173.Width = 200;
+            gridViewDecimalColumn174.DataType = typeof(double);
+            gridViewDecimalColumn174.EnableExpressionEditor = false;
+            gridViewDecimalColumn174.FieldName = "$ O3 Asthma Symptoms Shortness of Breath";
+            gridViewDecimalColumn174.FormatString = "{0:###,###,##0.##}";
+            gridViewDecimalColumn174.HeaderText = "$ O3 Asthma Symptoms, Shortness of Breath";
+            gridViewDecimalColumn174.IsAutoGenerated = true;
+            gridViewDecimalColumn174.Name = "$ O3 Asthma Symptoms Shortness of Breath";
+            gridViewDecimalColumn174.ThousandsSeparator = true;
+            gridViewDecimalColumn174.Width = 200;
+            gridViewDecimalColumn175.DataType = typeof(double);
+            gridViewDecimalColumn175.EnableExpressionEditor = false;
+            gridViewDecimalColumn175.FieldName = "O3 Asthma Symptoms Wheeze";
+            gridViewDecimalColumn175.FormatString = "{0:0.####}";
+            gridViewDecimalColumn175.HeaderText = "O3 Asthma Symptoms, Wheeze";
+            gridViewDecimalColumn175.IsAutoGenerated = true;
+            gridViewDecimalColumn175.Name = "O3 Asthma Symptoms Wheeze";
+            gridViewDecimalColumn175.Width = 180;
+            gridViewDecimalColumn176.DataType = typeof(double);
+            gridViewDecimalColumn176.EnableExpressionEditor = false;
+            gridViewDecimalColumn176.FieldName = "$ O3 Asthma Symptoms Wheeze";
+            gridViewDecimalColumn176.FormatString = "{0:###,###,##0.##}";
+            gridViewDecimalColumn176.HeaderText = "$ O3 Asthma Symptoms, Wheeze";
+            gridViewDecimalColumn176.IsAutoGenerated = true;
+            gridViewDecimalColumn176.Name = "$ O3 Asthma Symptoms Wheeze";
+            gridViewDecimalColumn176.ThousandsSeparator = true;
+            gridViewDecimalColumn176.Width = 190;
+            gridViewDecimalColumn177.DataType = typeof(double);
+            gridViewDecimalColumn177.EnableExpressionEditor = false;
+            gridViewDecimalColumn177.FieldName = "TOTALINCIDENCEASTHMA";
+            gridViewDecimalColumn177.FormatString = "{0:0.####}";
+            gridViewDecimalColumn177.HeaderText = "Total Incidence, Asthma";
+            gridViewDecimalColumn177.IsAutoGenerated = true;
+            gridViewDecimalColumn177.Name = "TOTALINCIDENCEASTHMA";
+            gridViewDecimalColumn177.Width = 180;
+            gridViewDecimalColumn178.DataType = typeof(double);
+            gridViewDecimalColumn178.EnableExpressionEditor = false;
+            gridViewDecimalColumn178.FieldName = "TOTALINCIDENCEASTHMAVAL";
+            gridViewDecimalColumn178.FormatString = "{0:###,###,##0.##}";
+            gridViewDecimalColumn178.HeaderText = "$ Total Incidence, Asthma";
+            gridViewDecimalColumn178.IsAutoGenerated = true;
+            gridViewDecimalColumn178.Name = "TOTALINCIDENCEASTHMAVAL";
+            gridViewDecimalColumn178.ThousandsSeparator = true;
+            gridViewDecimalColumn178.Width = 190;
+            gridViewDecimalColumn179.DataType = typeof(double);
+            gridViewDecimalColumn179.EnableExpressionEditor = false;
+            gridViewDecimalColumn179.FieldName = "PM Incidence Asthma";
+            gridViewDecimalColumn179.FormatString = "{0:0.####}";
+            gridViewDecimalColumn179.HeaderText = "PM Incidence, Asthma";
+            gridViewDecimalColumn179.IsAutoGenerated = true;
+            gridViewDecimalColumn179.Name = "PM Incidence Asthma";
+            gridViewDecimalColumn179.Width = 130;
+            gridViewDecimalColumn180.DataType = typeof(double);
+            gridViewDecimalColumn180.EnableExpressionEditor = false;
+            gridViewDecimalColumn180.FieldName = "$ PM Incidence Asthma";
+            gridViewDecimalColumn180.FormatString = "{0:###,###,##0.##}";
+            gridViewDecimalColumn180.HeaderText = "$ PM Incidence, Asthma";
+            gridViewDecimalColumn180.IsAutoGenerated = true;
+            gridViewDecimalColumn180.Name = "$ PM Incidence Asthma";
+            gridViewDecimalColumn180.ThousandsSeparator = true;
+            gridViewDecimalColumn180.Width = 140;
+            gridViewDecimalColumn181.DataType = typeof(double);
+            gridViewDecimalColumn181.EnableExpressionEditor = false;
+            gridViewDecimalColumn181.FieldName = "O3 Incidence Asthma";
+            gridViewDecimalColumn181.FormatString = "{0:0.####}";
+            gridViewDecimalColumn181.HeaderText = "O3 Incidence, Asthma";
+            gridViewDecimalColumn181.IsAutoGenerated = true;
+            gridViewDecimalColumn181.Name = "O3 Incidence Asthma";
+            gridViewDecimalColumn181.Width = 130;
+            gridViewDecimalColumn182.DataType = typeof(double);
+            gridViewDecimalColumn182.EnableExpressionEditor = false;
+            gridViewDecimalColumn182.FieldName = "$ O3 Incidence Asthma";
+            gridViewDecimalColumn182.FormatString = "{0:###,###,##0.##}";
+            gridViewDecimalColumn182.HeaderText = "$ O3 Incidence, Asthma";
+            gridViewDecimalColumn182.IsAutoGenerated = true;
+            gridViewDecimalColumn182.Name = "$ O3 Incidence Asthma";
+            gridViewDecimalColumn182.ThousandsSeparator = true;
+            gridViewDecimalColumn182.Width = 140;
+            gridViewDecimalColumn183.DataType = typeof(double);
+            gridViewDecimalColumn183.EnableExpressionEditor = false;
+            gridViewDecimalColumn183.FieldName = "TOTALHAYFEVER";
+            gridViewDecimalColumn183.FormatString = "{0:0.####}";
+            gridViewDecimalColumn183.HeaderText = "Total Incidence, Hay Fever/Rhinitis";
+            gridViewDecimalColumn183.IsAutoGenerated = true;
+            gridViewDecimalColumn183.Name = "TOTALHAYFEVER";
+            gridViewDecimalColumn183.Width = 180;
+            gridViewDecimalColumn184.DataType = typeof(double);
+            gridViewDecimalColumn184.EnableExpressionEditor = false;
+            gridViewDecimalColumn184.FieldName = "TOTALHAYFEVERVAL";
+            gridViewDecimalColumn184.FormatString = "{0:###,###,##0.##}";
+            gridViewDecimalColumn184.HeaderText = "$ Total Incidence, Hay Fever/Rhinitis";
+            gridViewDecimalColumn184.IsAutoGenerated = true;
+            gridViewDecimalColumn184.Name = "TOTALHAYFEVERVAL";
+            gridViewDecimalColumn184.ThousandsSeparator = true;
+            gridViewDecimalColumn184.Width = 190;
+            gridViewDecimalColumn185.DataType = typeof(double);
+            gridViewDecimalColumn185.EnableExpressionEditor = false;
+            gridViewDecimalColumn185.FieldName = "PM Incidence Hay Fever Rhinitis";
+            gridViewDecimalColumn185.FormatString = "{0:0.####}";
+            gridViewDecimalColumn185.HeaderText = "PM Incidence, Hay Fever/Rhinitis";
+            gridViewDecimalColumn185.IsAutoGenerated = true;
+            gridViewDecimalColumn185.Name = "PM Incidence Hay Fever Rhinitis";
+            gridViewDecimalColumn185.Width = 180;
+            gridViewDecimalColumn186.DataType = typeof(double);
+            gridViewDecimalColumn186.EnableExpressionEditor = false;
+            gridViewDecimalColumn186.FieldName = "$ PM Incidence Hay Fever Rhinitis";
+            gridViewDecimalColumn186.FormatString = "{0:###,###,##0.##}";
+            gridViewDecimalColumn186.HeaderText = "$ PM Incidence, Hay Fever/Rhinitis";
+            gridViewDecimalColumn186.IsAutoGenerated = true;
+            gridViewDecimalColumn186.Name = "$ PM Incidence Hay Fever Rhinitis";
+            gridViewDecimalColumn186.ThousandsSeparator = true;
+            gridViewDecimalColumn186.Width = 180;
+            gridViewDecimalColumn187.DataType = typeof(double);
+            gridViewDecimalColumn187.EnableExpressionEditor = false;
+            gridViewDecimalColumn187.FieldName = "O3 Incidence Hay Fever Rhinitis";
+            gridViewDecimalColumn187.FormatString = "{0:0.####}";
+            gridViewDecimalColumn187.HeaderText = "O3 Incidence, Hay Fever/Rhinitis";
+            gridViewDecimalColumn187.IsAutoGenerated = true;
+            gridViewDecimalColumn187.Name = "O3 Incidence Hay Fever Rhinitis";
+            gridViewDecimalColumn187.Width = 180;
+            gridViewDecimalColumn188.DataType = typeof(double);
+            gridViewDecimalColumn188.EnableExpressionEditor = false;
+            gridViewDecimalColumn188.FieldName = "$ O3 Incidence Hay Fever Rhinitis";
+            gridViewDecimalColumn188.FormatString = "{0:###,###,##0.##}";
+            gridViewDecimalColumn188.HeaderText = "$ O3 Incidence, Hay Fever/Rhinitis";
+            gridViewDecimalColumn188.IsAutoGenerated = true;
+            gridViewDecimalColumn188.Name = "$ O3 Incidence Hay Fever Rhinitis";
+            gridViewDecimalColumn188.ThousandsSeparator = true;
+            gridViewDecimalColumn188.Width = 180;
+            gridViewDecimalColumn189.DataType = typeof(double);
+            gridViewDecimalColumn189.EnableExpressionEditor = false;
+            gridViewDecimalColumn189.FieldName = "TOTALERRESP";
+            gridViewDecimalColumn189.FormatString = "{0:0.####}";
+            gridViewDecimalColumn189.HeaderText = "Total ER Visits, Respiratory";
+            gridViewDecimalColumn189.IsAutoGenerated = true;
+            gridViewDecimalColumn189.Name = "TOTALERRESP";
+            gridViewDecimalColumn189.Width = 180;
+            gridViewDecimalColumn190.DataType = typeof(double);
+            gridViewDecimalColumn190.EnableExpressionEditor = false;
+            gridViewDecimalColumn190.FieldName = "TOTALERRESPVAL";
+            gridViewDecimalColumn190.FormatString = "{0:###,###,##0.##}";
+            gridViewDecimalColumn190.HeaderText = "$ Total ER Visits, Respiratory";
+            gridViewDecimalColumn190.IsAutoGenerated = true;
+            gridViewDecimalColumn190.Name = "TOTALERRESPVAL";
+            gridViewDecimalColumn190.ThousandsSeparator = true;
+            gridViewDecimalColumn190.Width = 180;
+            gridViewDecimalColumn191.DataType = typeof(double);
+            gridViewDecimalColumn191.EnableExpressionEditor = false;
+            gridViewDecimalColumn191.FieldName = "PM ER visits respiratory";
+            gridViewDecimalColumn191.FormatString = "{0:0.####}";
+            gridViewDecimalColumn191.HeaderText = "PM ER visits, respiratory";
+            gridViewDecimalColumn191.IsAutoGenerated = true;
+            gridViewDecimalColumn191.Name = "PM ER visits respiratory";
+            gridViewDecimalColumn191.Width = 130;
+            gridViewDecimalColumn192.DataType = typeof(double);
+            gridViewDecimalColumn192.EnableExpressionEditor = false;
+            gridViewDecimalColumn192.FieldName = "$ PM ER visits respiratory";
+            gridViewDecimalColumn192.FormatString = "{0:###,###,##0.##}";
+            gridViewDecimalColumn192.HeaderText = "$ PM ER visits, respiratory";
+            gridViewDecimalColumn192.IsAutoGenerated = true;
+            gridViewDecimalColumn192.Name = "$ PM ER visits respiratory";
+            gridViewDecimalColumn192.ThousandsSeparator = true;
+            gridViewDecimalColumn192.Width = 140;
+            gridViewDecimalColumn193.DataType = typeof(double);
+            gridViewDecimalColumn193.EnableExpressionEditor = false;
+            gridViewDecimalColumn193.FieldName = "O3 ER visits respiratory";
+            gridViewDecimalColumn193.FormatString = "{0:0.####}";
+            gridViewDecimalColumn193.HeaderText = "O3 ER visits, respiratory";
+            gridViewDecimalColumn193.IsAutoGenerated = true;
+            gridViewDecimalColumn193.Name = "O3 ER visits respiratory";
+            gridViewDecimalColumn193.Width = 130;
+            gridViewDecimalColumn194.DataType = typeof(double);
+            gridViewDecimalColumn194.EnableExpressionEditor = false;
+            gridViewDecimalColumn194.FieldName = "$ O3 ER visits respiratory";
+            gridViewDecimalColumn194.FormatString = "{0:###,###,##0.##}";
+            gridViewDecimalColumn194.HeaderText = "$ O3 ER visits, respiratory";
+            gridViewDecimalColumn194.IsAutoGenerated = true;
+            gridViewDecimalColumn194.Name = "$ O3 ER visits respiratory";
+            gridViewDecimalColumn194.ThousandsSeparator = true;
+            gridViewDecimalColumn194.Width = 140;
+            gridViewDecimalColumn195.DataType = typeof(double);
+            gridViewDecimalColumn195.EnableExpressionEditor = false;
+            gridViewDecimalColumn195.FieldName = "HAALLRESP";
+            gridViewDecimalColumn195.FormatString = "{0:0.####}";
+            gridViewDecimalColumn195.HeaderText = "Total Hospital Admits, All Respiratory";
+            gridViewDecimalColumn195.IsAutoGenerated = true;
+            gridViewDecimalColumn195.Name = "HAALLRESP";
+            gridViewDecimalColumn195.ReadOnly = true;
+            gridViewDecimalColumn195.Width = 200;
+            gridViewDecimalColumn196.DataType = typeof(double);
+            gridViewDecimalColumn196.EnableExpressionEditor = false;
+            gridViewDecimalColumn196.FieldName = "HAALLRESPVAL";
+            gridViewDecimalColumn196.FormatString = "{0:0.####}";
+            gridViewDecimalColumn196.HeaderText = "$ Total Hospital Admits, All Respiratory";
+            gridViewDecimalColumn196.IsAutoGenerated = true;
+            gridViewDecimalColumn196.Name = "HAALLRESPVAL";
+            gridViewDecimalColumn196.ReadOnly = true;
+            gridViewDecimalColumn196.Width = 215;
+            gridViewDecimalColumn197.DataType = typeof(double);
+            gridViewDecimalColumn197.EnableExpressionEditor = false;
+            gridViewDecimalColumn197.FieldName = "PMHAALLRESP";
+            gridViewDecimalColumn197.FormatString = "{0:0.####}";
+            gridViewDecimalColumn197.HeaderText = "PM Hospital Admits, All Respiratory";
+            gridViewDecimalColumn197.IsAutoGenerated = true;
+            gridViewDecimalColumn197.Name = "PMHAALLRESP";
+            gridViewDecimalColumn197.ReadOnly = true;
+            gridViewDecimalColumn197.Width = 200;
+            gridViewDecimalColumn198.DataType = typeof(double);
+            gridViewDecimalColumn198.EnableExpressionEditor = false;
+            gridViewDecimalColumn198.FieldName = "PMHAALLRESPVAL";
+            gridViewDecimalColumn198.FormatString = "{0:0.####}";
+            gridViewDecimalColumn198.HeaderText = "$ PM Hospital Admits, All Respiratory";
+            gridViewDecimalColumn198.IsAutoGenerated = true;
+            gridViewDecimalColumn198.Name = "PMHAALLRESPVAL";
+            gridViewDecimalColumn198.ReadOnly = true;
+            gridViewDecimalColumn198.Width = 200;
+            gridViewDecimalColumn199.DataType = typeof(double);
+            gridViewDecimalColumn199.EnableExpressionEditor = false;
+            gridViewDecimalColumn199.FieldName = "O3 HA All Respiratory";
+            gridViewDecimalColumn199.FormatString = "{0:0.####}";
+            gridViewDecimalColumn199.HeaderText = "O3 Hospital Admits, All Respiratory";
+            gridViewDecimalColumn199.IsAutoGenerated = true;
+            gridViewDecimalColumn199.Name = "O3 HA All Respiratory";
+            gridViewDecimalColumn199.ReadOnly = true;
+            gridViewDecimalColumn199.Width = 200;
+            gridViewDecimalColumn200.DataType = typeof(double);
+            gridViewDecimalColumn200.EnableExpressionEditor = false;
+            gridViewDecimalColumn200.FieldName = "$ O3 HA All Respiratory";
+            gridViewDecimalColumn200.FormatString = "{0:0.####}";
+            gridViewDecimalColumn200.HeaderText = "$ O3 Hospital Admits, All Respiratory";
+            gridViewDecimalColumn200.IsAutoGenerated = true;
+            gridViewDecimalColumn200.Name = "$ O3 HA All Respiratory";
+            gridViewDecimalColumn200.ReadOnly = true;
+            gridViewDecimalColumn200.Width = 196;
+            gridViewDecimalColumn201.DataType = typeof(double);
+            gridViewDecimalColumn201.EnableExpressionEditor = false;
+            gridViewDecimalColumn201.FieldName = "PM Acute Myocardial Infarction Nonfatal";
+            gridViewDecimalColumn201.FormatString = "{0:0.####}";
+            gridViewDecimalColumn201.HeaderText = "Nonfatal Heart Attacks";
+            gridViewDecimalColumn201.IsAutoGenerated = true;
+            gridViewDecimalColumn201.Name = "PM Acute Myocardial Infarction Nonfatal";
+            gridViewDecimalColumn201.Width = 166;
+            gridViewDecimalColumn202.DataType = typeof(double);
+            gridViewDecimalColumn202.EnableExpressionEditor = false;
+            gridViewDecimalColumn202.FieldName = "$ PM Acute Myocardial Infarction Nonfatal";
+            gridViewDecimalColumn202.FormatString = "{0:###,###,##0.##}";
+            gridViewDecimalColumn202.HeaderText = "$ Nonfatal Heart Attacks";
+            gridViewDecimalColumn202.IsAutoGenerated = true;
+            gridViewDecimalColumn202.Name = "$ PM Acute Myocardial Infarction Nonfatal";
+            gridViewDecimalColumn202.ThousandsSeparator = true;
+            gridViewDecimalColumn202.Width = 150;
+            gridViewDecimalColumn203.DataType = typeof(double);
+            gridViewDecimalColumn203.EnableExpressionEditor = false;
+            gridViewDecimalColumn203.FieldName = "PM Minor Restricted Activity Days";
+            gridViewDecimalColumn203.FormatString = "{0:0.####}";
+            gridViewDecimalColumn203.HeaderText = "PM Minor Restricted Activity Days";
+            gridViewDecimalColumn203.IsAutoGenerated = true;
+            gridViewDecimalColumn203.Name = "PM Minor Restricted Activity Days";
+            gridViewDecimalColumn203.Width = 190;
+            gridViewDecimalColumn204.DataType = typeof(double);
+            gridViewDecimalColumn204.EnableExpressionEditor = false;
+            gridViewDecimalColumn204.FieldName = "$ PM Minor Restricted Activity Days";
+            gridViewDecimalColumn204.FormatString = "{0:###,###,##0.##}";
+            gridViewDecimalColumn204.HeaderText = "$ PM Minor Restricted Activity Days";
+            gridViewDecimalColumn204.IsAutoGenerated = true;
+            gridViewDecimalColumn204.Name = "$ PM Minor Restricted Activity Days";
+            gridViewDecimalColumn204.ThousandsSeparator = true;
+            gridViewDecimalColumn204.Width = 190;
+            gridViewDecimalColumn205.DataType = typeof(double);
+            gridViewDecimalColumn205.EnableExpressionEditor = false;
+            gridViewDecimalColumn205.FieldName = "PM Work Loss Days";
+            gridViewDecimalColumn205.FormatString = "{0:0.####}";
+            gridViewDecimalColumn205.HeaderText = "PM Work Loss Days";
+            gridViewDecimalColumn205.IsAutoGenerated = true;
+            gridViewDecimalColumn205.Name = "PM Work Loss Days";
+            gridViewDecimalColumn205.Width = 105;
+            gridViewDecimalColumn206.DataType = typeof(double);
+            gridViewDecimalColumn206.EnableExpressionEditor = false;
+            gridViewDecimalColumn206.FieldName = "$ PM Work Loss Days";
+            gridViewDecimalColumn206.FormatString = "{0:###,###,##0.##}";
+            gridViewDecimalColumn206.HeaderText = "$ PM Work Loss Days";
+            gridViewDecimalColumn206.IsAutoGenerated = true;
+            gridViewDecimalColumn206.Name = "$ PM Work Loss Days";
+            gridViewDecimalColumn206.ThousandsSeparator = true;
+            gridViewDecimalColumn206.Width = 110;
+            gridViewDecimalColumn207.DataType = typeof(double);
+            gridViewDecimalColumn207.EnableExpressionEditor = false;
+            gridViewDecimalColumn207.FieldName = "PM Incidence Lung Cancer";
+            gridViewDecimalColumn207.FormatString = "{0:0.####}";
+            gridViewDecimalColumn207.HeaderText = "PM Incidence, Lung Cancer";
+            gridViewDecimalColumn207.IsAutoGenerated = true;
+            gridViewDecimalColumn207.Name = "PM Incidence Lung Cancer";
+            gridViewDecimalColumn207.Width = 190;
+            gridViewDecimalColumn208.DataType = typeof(double);
+            gridViewDecimalColumn208.EnableExpressionEditor = false;
+            gridViewDecimalColumn208.FieldName = "$ PM Incidence Lung Cancer";
+            gridViewDecimalColumn208.FormatString = "{0:###,###,##0.##}";
+            gridViewDecimalColumn208.HeaderText = "$ PM Incidence, Lung Cancer";
+            gridViewDecimalColumn208.IsAutoGenerated = true;
+            gridViewDecimalColumn208.Name = "$ PM Incidence Lung Cancer";
+            gridViewDecimalColumn208.ThousandsSeparator = true;
+            gridViewDecimalColumn208.Width = 190;
+            gridViewDecimalColumn209.DataType = typeof(double);
+            gridViewDecimalColumn209.EnableExpressionEditor = false;
+            gridViewDecimalColumn209.FieldName = "PM HA Cardio Cerebro and Peripheral Vascular Disease";
+            gridViewDecimalColumn209.FormatString = "{0:0.####}";
+            gridViewDecimalColumn209.HeaderText = "PM Hospital Admits, Cardio-, Cerebro- and Peripheral Vascular Disease";
+            gridViewDecimalColumn209.IsAutoGenerated = true;
+            gridViewDecimalColumn209.Name = "PM HA Cardio Cerebro and Peripheral Vascular Disease";
+            gridViewDecimalColumn209.Width = 380;
+            gridViewDecimalColumn210.DataType = typeof(double);
+            gridViewDecimalColumn210.EnableExpressionEditor = false;
+            gridViewDecimalColumn210.FieldName = "$ PM HA Cardio Cerebro and Peripheral Vascular Disease";
+            gridViewDecimalColumn210.FormatString = "{0:###,###,##0.##}";
+            gridViewDecimalColumn210.HeaderText = "$ PM Hospital Admits, Cardio-, Cerebro and Peripheral Vascular Disease";
+            gridViewDecimalColumn210.IsAutoGenerated = true;
+            gridViewDecimalColumn210.Name = "$ PM HA Cardio Cerebro and Peripheral Vascular Disease";
+            gridViewDecimalColumn210.ThousandsSeparator = true;
+            gridViewDecimalColumn210.Width = 380;
+            gridViewDecimalColumn211.DataType = typeof(double);
+            gridViewDecimalColumn211.EnableExpressionEditor = false;
+            gridViewDecimalColumn211.FieldName = "PM HA Alzheimers Disease";
+            gridViewDecimalColumn211.FormatString = "{0:0.####}";
+            gridViewDecimalColumn211.HeaderText = "PM Hospital Admits, Alzheimers Disease";
+            gridViewDecimalColumn211.IsAutoGenerated = true;
+            gridViewDecimalColumn211.Name = "PM HA Alzheimers Disease";
+            gridViewDecimalColumn211.Width = 230;
+            gridViewDecimalColumn212.DataType = typeof(double);
+            gridViewDecimalColumn212.EnableExpressionEditor = false;
+            gridViewDecimalColumn212.FieldName = "$ PM HA Alzheimers Disease";
+            gridViewDecimalColumn212.FormatString = "{0:###,###,##0.##}";
+            gridViewDecimalColumn212.HeaderText = "$ PM Hospital Admits, Alzheimers Disease";
+            gridViewDecimalColumn212.IsAutoGenerated = true;
+            gridViewDecimalColumn212.Name = "$ PM HA Alzheimers Disease";
+            gridViewDecimalColumn212.ThousandsSeparator = true;
+            gridViewDecimalColumn212.Width = 230;
+            gridViewDecimalColumn213.DataType = typeof(double);
+            gridViewDecimalColumn213.EnableExpressionEditor = false;
+            gridViewDecimalColumn213.FieldName = "PM HA Parkinsons Disease";
+            gridViewDecimalColumn213.FormatString = "{0:0.####}";
+            gridViewDecimalColumn213.HeaderText = "PM Hospital Admits, Parkinsons Disease";
+            gridViewDecimalColumn213.IsAutoGenerated = true;
+            gridViewDecimalColumn213.Name = "PM HA Parkinsons Disease";
+            gridViewDecimalColumn213.Width = 230;
+            gridViewDecimalColumn214.DataType = typeof(double);
+            gridViewDecimalColumn214.EnableExpressionEditor = false;
+            gridViewDecimalColumn214.FieldName = "$ PM HA Parkinsons Disease";
+            gridViewDecimalColumn214.FormatString = "{0:###,###,##0.##}";
+            gridViewDecimalColumn214.HeaderText = "$ PM Hospital Admits, Parkinsons Disease";
+            gridViewDecimalColumn214.IsAutoGenerated = true;
+            gridViewDecimalColumn214.Name = "$ PM HA Parkinsons Disease";
+            gridViewDecimalColumn214.ThousandsSeparator = true;
+            gridViewDecimalColumn214.Width = 230;
+            gridViewDecimalColumn215.DataType = typeof(double);
+            gridViewDecimalColumn215.EnableExpressionEditor = false;
+            gridViewDecimalColumn215.FieldName = "PM Incidence Stroke";
+            gridViewDecimalColumn215.FormatString = "{0:0.####}";
+            gridViewDecimalColumn215.HeaderText = "PM Incidence, Stroke";
+            gridViewDecimalColumn215.IsAutoGenerated = true;
+            gridViewDecimalColumn215.Name = "PM Incidence Stroke";
+            gridViewDecimalColumn215.Width = 130;
+            gridViewDecimalColumn216.DataType = typeof(double);
+            gridViewDecimalColumn216.EnableExpressionEditor = false;
+            gridViewDecimalColumn216.FieldName = "$ PM Incidence Stroke";
+            gridViewDecimalColumn216.FormatString = "{0:###,###,##0.##}";
+            gridViewDecimalColumn216.HeaderText = "$ PM Incidence, Stroke";
+            gridViewDecimalColumn216.IsAutoGenerated = true;
+            gridViewDecimalColumn216.Name = "$ PM Incidence Stroke";
+            gridViewDecimalColumn216.ThousandsSeparator = true;
+            gridViewDecimalColumn216.Width = 140;
+            gridViewDecimalColumn217.DataType = typeof(double);
+            gridViewDecimalColumn217.EnableExpressionEditor = false;
+            gridViewDecimalColumn217.FieldName = "PM Incidence Out of Hospital Cardiac Arrest";
+            gridViewDecimalColumn217.FormatString = "{0:0.####}";
+            gridViewDecimalColumn217.HeaderText = "PM Incidence, Out of Hospital Cardiac Arrest";
+            gridViewDecimalColumn217.IsAutoGenerated = true;
+            gridViewDecimalColumn217.Name = "PM Incidence Out of Hospital Cardiac Arrest";
+            gridViewDecimalColumn217.Width = 240;
+            gridViewDecimalColumn218.DataType = typeof(double);
+            gridViewDecimalColumn218.EnableExpressionEditor = false;
+            gridViewDecimalColumn218.FieldName = "$ PM Incidence Out of Hospital Cardiac Arrest";
+            gridViewDecimalColumn218.FormatString = "{0:###,###,##0.##}";
+            gridViewDecimalColumn218.HeaderText = "$ PM Incidence, Out of Hospital Cardiac Arrest";
+            gridViewDecimalColumn218.IsAutoGenerated = true;
+            gridViewDecimalColumn218.Name = "$ PM Incidence Out of Hospital Cardiac Arrest";
+            gridViewDecimalColumn218.ThousandsSeparator = true;
+            gridViewDecimalColumn218.Width = 240;
+            gridViewDecimalColumn219.DataType = typeof(double);
+            gridViewDecimalColumn219.EnableExpressionEditor = false;
+            gridViewDecimalColumn219.FieldName = "PM ER visits All Cardiac Outcomes";
+            gridViewDecimalColumn219.FormatString = "{0:0.####}";
+            gridViewDecimalColumn219.HeaderText = "PM ER visits, All Cardiac Outcomes";
+            gridViewDecimalColumn219.IsAutoGenerated = true;
+            gridViewDecimalColumn219.Name = "PM ER visits All Cardiac Outcomes";
+            gridViewDecimalColumn219.Width = 180;
+            gridViewDecimalColumn220.DataType = typeof(double);
+            gridViewDecimalColumn220.EnableExpressionEditor = false;
+            gridViewDecimalColumn220.FieldName = "$ PM ER visits All Cardiac Outcomes";
+            gridViewDecimalColumn220.FormatString = "{0:###,###,##0.##}";
+            gridViewDecimalColumn220.HeaderText = "$ PM ER visits, All Cardiac Outcomes";
+            gridViewDecimalColumn220.IsAutoGenerated = true;
+            gridViewDecimalColumn220.Name = "$ PM ER visits All Cardiac Outcomes";
+            gridViewDecimalColumn220.ThousandsSeparator = true;
+            gridViewDecimalColumn220.Width = 180;
+            gridViewDecimalColumn221.DataType = typeof(double);
+            gridViewDecimalColumn221.EnableExpressionEditor = false;
+            gridViewDecimalColumn221.FieldName = "O3 ER Visits Asthma";
+            gridViewDecimalColumn221.FormatString = "{0:0.####}";
+            gridViewDecimalColumn221.HeaderText = "O3 ER visits, Asthma";
+            gridViewDecimalColumn221.IsAutoGenerated = true;
+            gridViewDecimalColumn221.Name = "O3 ER Visits Asthma";
+            gridViewDecimalColumn221.Width = 180;
+            gridViewDecimalColumn222.DataType = typeof(double);
+            gridViewDecimalColumn222.EnableExpressionEditor = false;
+            gridViewDecimalColumn222.FieldName = "$ O3 ER Visits Asthma";
+            gridViewDecimalColumn222.FormatString = "{0:###,###,##0.##}";
+            gridViewDecimalColumn222.HeaderText = "$ O3 ER visits, Asthma";
+            gridViewDecimalColumn222.IsAutoGenerated = true;
+            gridViewDecimalColumn222.Name = "$ O3 ER Visits Asthma";
+            gridViewDecimalColumn222.ThousandsSeparator = true;
+            gridViewDecimalColumn222.Width = 180;
+            gridViewDecimalColumn223.DataType = typeof(double);
+            gridViewDecimalColumn223.EnableExpressionEditor = false;
+            gridViewDecimalColumn223.FieldName = "O3 School Loss Days";
+            gridViewDecimalColumn223.FormatString = "{0:0.####}";
+            gridViewDecimalColumn223.HeaderText = "O3 School Loss Days, All Cause";
+            gridViewDecimalColumn223.IsAutoGenerated = true;
+            gridViewDecimalColumn223.Name = "O3 School Loss Days";
+            gridViewDecimalColumn223.Width = 180;
+            gridViewDecimalColumn224.DataType = typeof(double);
+            gridViewDecimalColumn224.EnableExpressionEditor = false;
+            gridViewDecimalColumn224.FieldName = "$ O3 School Loss Days";
+            gridViewDecimalColumn224.FormatString = "{0:###,###,##0.##}";
+            gridViewDecimalColumn224.HeaderText = "$ O3 School Loss Days, All Cause";
+            gridViewDecimalColumn224.IsAutoGenerated = true;
+            gridViewDecimalColumn224.Name = "$ O3 School Loss Days";
+            gridViewDecimalColumn224.ThousandsSeparator = true;
+            gridViewDecimalColumn224.Width = 180;
+            gridViewDecimalColumn225.DataType = typeof(double);
+            gridViewDecimalColumn225.FieldName = "PM HA All Respiratory";
+            gridViewDecimalColumn225.HeaderText = "PM HA All Respiratory";
+            gridViewDecimalColumn225.IsAutoGenerated = true;
+            gridViewDecimalColumn225.Name = "PM HA All Respiratory";
+            gridViewDecimalColumn226.DataType = typeof(double);
+            gridViewDecimalColumn226.FieldName = "PM Mortality All Cause (low)";
+            gridViewDecimalColumn226.HeaderText = "PM Mortality All Cause (low)";
+            gridViewDecimalColumn226.IsAutoGenerated = true;
+            gridViewDecimalColumn226.Name = "PM Mortality All Cause (low)";
+            gridViewDecimalColumn227.DataType = typeof(double);
+            gridViewDecimalColumn227.FieldName = "PM Mortality All Cause (high)";
+            gridViewDecimalColumn227.HeaderText = "PM Mortality All Cause (high)";
+            gridViewDecimalColumn227.IsAutoGenerated = true;
+            gridViewDecimalColumn227.Name = "PM Mortality All Cause (high)";
+            gridViewDecimalColumn228.DataType = typeof(double);
+            gridViewDecimalColumn228.FieldName = "PM Infant Mortality";
+            gridViewDecimalColumn228.HeaderText = "PM Infant Mortality";
+            gridViewDecimalColumn228.IsAutoGenerated = true;
+            gridViewDecimalColumn228.Name = "PM Infant Mortality";
+            gridViewDecimalColumn229.DataType = typeof(double);
+            gridViewDecimalColumn229.FieldName = "PM HA Respiratory2";
+            gridViewDecimalColumn229.HeaderText = "PM HA Respiratory2";
+            gridViewDecimalColumn229.IsAutoGenerated = true;
+            gridViewDecimalColumn229.Name = "PM HA Respiratory2";
+            gridViewDecimalColumn230.DataType = typeof(double);
+            gridViewDecimalColumn230.FieldName = "$ PM Resp Hosp Adm";
+            gridViewDecimalColumn230.HeaderText = "$ PM Resp Hosp Adm";
+            gridViewDecimalColumn230.IsAutoGenerated = true;
+            gridViewDecimalColumn230.Name = "$ PM Resp Hosp Adm";
+            gridViewDecimalColumn231.DataType = typeof(double);
+            gridViewDecimalColumn231.FieldName = "$ PM Mortality All Cause (low)";
+            gridViewDecimalColumn231.HeaderText = "$ PM Mortality All Cause (low)";
+            gridViewDecimalColumn231.IsAutoGenerated = true;
+            gridViewDecimalColumn231.Name = "$ PM Mortality All Cause (low)";
+            gridViewDecimalColumn232.DataType = typeof(double);
+            gridViewDecimalColumn232.FieldName = "$ PM Mortality All Cause (high)";
+            gridViewDecimalColumn232.HeaderText = "$ PM Mortality All Cause (high)";
+            gridViewDecimalColumn232.IsAutoGenerated = true;
+            gridViewDecimalColumn232.Name = "$ PM Mortality All Cause (high)";
+            gridViewDecimalColumn233.DataType = typeof(double);
+            gridViewDecimalColumn233.FieldName = "$ PM Infant Mortality";
+            gridViewDecimalColumn233.HeaderText = "$ PM Infant Mortality";
+            gridViewDecimalColumn233.IsAutoGenerated = true;
+            gridViewDecimalColumn233.Name = "$ PM Infant Mortality";
+            gridViewDecimalColumn234.DataType = typeof(double);
+            gridViewDecimalColumn234.FieldName = "$ PM HA Respiratory2";
+            gridViewDecimalColumn234.HeaderText = "$ PM HA Respiratory2";
+            gridViewDecimalColumn234.IsAutoGenerated = true;
+            gridViewDecimalColumn234.Name = "$ PM HA Respiratory2";
             this.radGridView1.MasterTemplate.Columns.AddRange(new Telerik.WinControls.UI.GridViewDataColumn[] {
-            gridViewDecimalColumn24,
-            gridViewDecimalColumn25,
-            gridViewTextBoxColumn8,
-            gridViewTextBoxColumn9,
-            gridViewTextBoxColumn10,
-            gridViewDecimalColumn26,
-            gridViewDecimalColumn27,
-            gridViewDecimalColumn28,
-            gridViewDecimalColumn29,
-            gridViewDecimalColumn30,
-            gridViewDecimalColumn31,
-            gridViewDecimalColumn32,
-            gridViewDecimalColumn33,
-            gridViewDecimalColumn34,
-            gridViewDecimalColumn35,
-            gridViewDecimalColumn36,
-            gridViewDecimalColumn37,
-            gridViewDecimalColumn38,
-            gridViewDecimalColumn39,
-            gridViewDecimalColumn40,
-            gridViewDecimalColumn41,
-            gridViewDecimalColumn42,
-            gridViewDecimalColumn43,
-            gridViewDecimalColumn44,
-            gridViewDecimalColumn45,
-            gridViewDecimalColumn46,
-            gridViewDecimalColumn47,
-            gridViewDecimalColumn48,
-            gridViewDecimalColumn49,
-            gridViewDecimalColumn50,
-            gridViewDecimalColumn51,
-            gridViewDecimalColumn52,
-            gridViewDecimalColumn53,
-            gridViewDecimalColumn54,
-            gridViewDecimalColumn55,
-            gridViewDecimalColumn56,
-            gridViewDecimalColumn57,
-            gridViewDecimalColumn58,
-            gridViewDecimalColumn59,
-            gridViewDecimalColumn60,
-            gridViewDecimalColumn61,
-            gridViewDecimalColumn62,
-            gridViewDecimalColumn63,
-            gridViewDecimalColumn64,
-            gridViewDecimalColumn65,
-            gridViewDecimalColumn66,
-            gridViewDecimalColumn67,
-            gridViewDecimalColumn68,
-            gridViewDecimalColumn69,
-            gridViewDecimalColumn70,
-            gridViewDecimalColumn71,
-            gridViewDecimalColumn72,
-            gridViewDecimalColumn73,
-            gridViewDecimalColumn74,
-            gridViewDecimalColumn75,
-            gridViewDecimalColumn76,
-            gridViewDecimalColumn77,
-            gridViewDecimalColumn78,
-            gridViewDecimalColumn79,
-            gridViewDecimalColumn80,
-            gridViewDecimalColumn81,
-            gridViewDecimalColumn82,
-            gridViewDecimalColumn83,
-            gridViewDecimalColumn84,
-            gridViewDecimalColumn85,
-            gridViewDecimalColumn86,
-            gridViewDecimalColumn87,
-            gridViewDecimalColumn88,
-            gridViewDecimalColumn89,
-            gridViewDecimalColumn90,
-            gridViewDecimalColumn91,
-            gridViewDecimalColumn92,
-            gridViewDecimalColumn93,
-            gridViewDecimalColumn94,
-            gridViewDecimalColumn95,
-            gridViewDecimalColumn96,
-            gridViewDecimalColumn97,
-            gridViewDecimalColumn98,
-            gridViewDecimalColumn99,
-            gridViewDecimalColumn100,
-            gridViewDecimalColumn101,
-            gridViewDecimalColumn102,
-            gridViewDecimalColumn103,
-            gridViewDecimalColumn104,
-            gridViewDecimalColumn105,
-            gridViewDecimalColumn106,
-            gridViewDecimalColumn107,
-            gridViewDecimalColumn108,
-            gridViewDecimalColumn109,
-            gridViewDecimalColumn110,
-            gridViewDecimalColumn111,
-            gridViewDecimalColumn112,
-            gridViewDecimalColumn113,
-            gridViewDecimalColumn114,
-            gridViewDecimalColumn115,
-            gridViewDecimalColumn116,
-            gridViewDecimalColumn117});
+            gridViewDecimalColumn141,
+            gridViewDecimalColumn142,
+            gridViewTextBoxColumn18,
+            gridViewTextBoxColumn19,
+            gridViewTextBoxColumn20,
+            gridViewDecimalColumn143,
+            gridViewDecimalColumn144,
+            gridViewDecimalColumn145,
+            gridViewDecimalColumn146,
+            gridViewDecimalColumn147,
+            gridViewDecimalColumn148,
+            gridViewDecimalColumn149,
+            gridViewDecimalColumn150,
+            gridViewDecimalColumn151,
+            gridViewDecimalColumn152,
+            gridViewDecimalColumn153,
+            gridViewDecimalColumn154,
+            gridViewDecimalColumn155,
+            gridViewDecimalColumn156,
+            gridViewDecimalColumn157,
+            gridViewDecimalColumn158,
+            gridViewDecimalColumn159,
+            gridViewDecimalColumn160,
+            gridViewDecimalColumn161,
+            gridViewDecimalColumn162,
+            gridViewDecimalColumn163,
+            gridViewDecimalColumn164,
+            gridViewDecimalColumn165,
+            gridViewDecimalColumn166,
+            gridViewDecimalColumn167,
+            gridViewDecimalColumn168,
+            gridViewDecimalColumn169,
+            gridViewDecimalColumn170,
+            gridViewDecimalColumn171,
+            gridViewDecimalColumn172,
+            gridViewDecimalColumn173,
+            gridViewDecimalColumn174,
+            gridViewDecimalColumn175,
+            gridViewDecimalColumn176,
+            gridViewDecimalColumn177,
+            gridViewDecimalColumn178,
+            gridViewDecimalColumn179,
+            gridViewDecimalColumn180,
+            gridViewDecimalColumn181,
+            gridViewDecimalColumn182,
+            gridViewDecimalColumn183,
+            gridViewDecimalColumn184,
+            gridViewDecimalColumn185,
+            gridViewDecimalColumn186,
+            gridViewDecimalColumn187,
+            gridViewDecimalColumn188,
+            gridViewDecimalColumn189,
+            gridViewDecimalColumn190,
+            gridViewDecimalColumn191,
+            gridViewDecimalColumn192,
+            gridViewDecimalColumn193,
+            gridViewDecimalColumn194,
+            gridViewDecimalColumn195,
+            gridViewDecimalColumn196,
+            gridViewDecimalColumn197,
+            gridViewDecimalColumn198,
+            gridViewDecimalColumn199,
+            gridViewDecimalColumn200,
+            gridViewDecimalColumn201,
+            gridViewDecimalColumn202,
+            gridViewDecimalColumn203,
+            gridViewDecimalColumn204,
+            gridViewDecimalColumn205,
+            gridViewDecimalColumn206,
+            gridViewDecimalColumn207,
+            gridViewDecimalColumn208,
+            gridViewDecimalColumn209,
+            gridViewDecimalColumn210,
+            gridViewDecimalColumn211,
+            gridViewDecimalColumn212,
+            gridViewDecimalColumn213,
+            gridViewDecimalColumn214,
+            gridViewDecimalColumn215,
+            gridViewDecimalColumn216,
+            gridViewDecimalColumn217,
+            gridViewDecimalColumn218,
+            gridViewDecimalColumn219,
+            gridViewDecimalColumn220,
+            gridViewDecimalColumn221,
+            gridViewDecimalColumn222,
+            gridViewDecimalColumn223,
+            gridViewDecimalColumn224,
+            gridViewDecimalColumn225,
+            gridViewDecimalColumn226,
+            gridViewDecimalColumn227,
+            gridViewDecimalColumn228,
+            gridViewDecimalColumn229,
+            gridViewDecimalColumn230,
+            gridViewDecimalColumn231,
+            gridViewDecimalColumn232,
+            gridViewDecimalColumn233,
+            gridViewDecimalColumn234});
             this.radGridView1.MasterTemplate.DataSource = this.sYSResultsBindingSource;
             this.radGridView1.MasterTemplate.EnableFiltering = true;
             this.radGridView1.MasterTemplate.EnableGrouping = false;
-            gridViewSummaryItem5.Aggregate = Telerik.WinControls.UI.GridAggregateFunction.Avg;
-            gridViewSummaryItem5.AggregateExpression = null;
-            gridViewSummaryItem5.FormatString = "{0:0.####}";
-            gridViewSummaryItem5.Name = "DELTA_FINAL_PM";
-            gridViewSummaryItem6.Aggregate = Telerik.WinControls.UI.GridAggregateFunction.Avg;
-            gridViewSummaryItem6.AggregateExpression = null;
-            gridViewSummaryItem6.FormatString = "{0:0.####}";
-            gridViewSummaryItem6.Name = "DELTA_FINAL_O3";
+            gridViewSummaryItem13.Aggregate = Telerik.WinControls.UI.GridAggregateFunction.Avg;
+            gridViewSummaryItem13.AggregateExpression = null;
+            gridViewSummaryItem13.FormatString = "{0:0.####}";
+            gridViewSummaryItem13.Name = "DELTA_FINAL_PM";
+            gridViewSummaryItem14.Aggregate = Telerik.WinControls.UI.GridAggregateFunction.Avg;
+            gridViewSummaryItem14.AggregateExpression = null;
+            gridViewSummaryItem14.FormatString = "{0:0.####}";
+            gridViewSummaryItem14.Name = "DELTA_FINAL_O3";
             this.radGridView1.MasterTemplate.SummaryRowsBottom.Add(new Telerik.WinControls.UI.GridViewSummaryRowItem(new Telerik.WinControls.UI.GridViewSummaryItem[] {
-                gridViewSummaryItem5}));
+                gridViewSummaryItem13}));
             this.radGridView1.MasterTemplate.SummaryRowsBottom.Add(new Telerik.WinControls.UI.GridViewSummaryRowItem(new Telerik.WinControls.UI.GridViewSummaryItem[] {
-                gridViewSummaryItem6}));
-            gridViewSummaryItem7.Aggregate = Telerik.WinControls.UI.GridAggregateFunction.Sum;
-            gridViewSummaryItem7.AggregateExpression = null;
-            gridViewSummaryItem7.FormatString = "Total: {0:0.####}";
-            gridViewSummaryItem7.Name = "PM Mortality All Cause (low)";
-            gridViewSummaryItem8.AggregateExpression = null;
-            gridViewSummaryItem8.FormatString = "{0}";
-            gridViewSummaryItem8.Name = null;
+                gridViewSummaryItem14}));
+            gridViewSummaryItem15.Aggregate = Telerik.WinControls.UI.GridAggregateFunction.Sum;
+            gridViewSummaryItem15.AggregateExpression = null;
+            gridViewSummaryItem15.FormatString = "Total: {0:0.####}";
+            gridViewSummaryItem15.Name = "PM Mortality All Cause (low)";
+            gridViewSummaryItem16.AggregateExpression = null;
+            gridViewSummaryItem16.FormatString = "{0}";
+            gridViewSummaryItem16.Name = null;
             this.radGridView1.MasterTemplate.SummaryRowsTop.Add(new Telerik.WinControls.UI.GridViewSummaryRowItem(new Telerik.WinControls.UI.GridViewSummaryItem[] {
-                gridViewSummaryItem7,
-                gridViewSummaryItem8}));
-            this.radGridView1.MasterTemplate.ViewDefinition = tableViewDefinition2;
+                gridViewSummaryItem15,
+                gridViewSummaryItem16}));
+            this.radGridView1.MasterTemplate.ViewDefinition = tableViewDefinition4;
             this.radGridView1.Name = "radGridView1";
             this.radGridView1.Padding = new System.Windows.Forms.Padding(1);
             this.radGridView1.ReadOnly = true;
@@ -3746,6 +3748,18 @@
             // sYS_AnalysisYearTableAdapter
             // 
             this.sYS_AnalysisYearTableAdapter.ClearBeforeFill = true;
+            // 
+            // radioButtonDR7
+            // 
+            this.radioButtonDR7.AutoSize = true;
+            this.radioButtonDR7.Location = new System.Drawing.Point(73, 32);
+            this.radioButtonDR7.Name = "radioButtonDR7";
+            this.radioButtonDR7.Size = new System.Drawing.Size(50, 24);
+            this.radioButtonDR7.TabIndex = 5;
+            this.radioButtonDR7.Text = "7%";
+            this.radioButtonDR7.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
+            this.radioButtonDR7.UseVisualStyleBackColor = true;
+            this.radioButtonDR7.CheckedChanged += new System.EventHandler(this.radioButtonDR7_CheckedChanged);
             // 
             // MainGUI
             // 
@@ -4066,6 +4080,7 @@
         private System.Windows.Forms.TextBox textBox2;
         private System.Windows.Forms.RadioButton customRadio;
         private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.RadioButton radioButtonDR7;
     }
 }
 
