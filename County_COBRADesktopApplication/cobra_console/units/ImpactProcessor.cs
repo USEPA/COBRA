@@ -662,6 +662,7 @@ namespace cobra_console.units
                     double[] totals = new double[colnames.Length - 5];
                     // List to temporarily store all rows
                     List<List<object>> allRows = new List<List<object>>();
+                    List<SYS_Dict> dict = context.SYS_Dict.ToList();
 
 
                     foreach (var destination in destinations)
@@ -674,7 +675,6 @@ namespace cobra_console.units
                             };
 
                         // Get FIPS, State, and County from the dictionary
-                        List<SYS_Dict> dict = context.SYS_Dict.ToList();
                         var loc = dict.First(d => d.SOURCEINDX == destination.destindx);
                         row.Add(loc.FIPS);
                         row.Add(loc.STNAME);
